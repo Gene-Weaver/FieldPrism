@@ -49,29 +49,29 @@ with dai.Device(pipeline) as device:
 
     while True:
         inRgb = qRgb.tryGet()  # Non-blocking call, will return a new data that has arrived or None otherwise
+        print(inRgb)
         if inRgb is not None:
+            print('inRgb')
             frame = inRgb.getCvFrame()
             # 4k / 4
             frame = cv2.pyrDown(frame)
             frame = cv2.pyrDown(frame)
             cv2.imshow("rgb", frame)
-
-
-            key = cv2.waitKey(1)
-            if key == ord('q'):
-                break
-            elif key == ord('c'):
-                ctrl = dai.CameraControl()
-                ctrl.setCaptureStill(True)
-                qControl.send(ctrl)
-                print("Sent 'still' event to the camera!")
-                
+            print('inRgb1')
             if qStill.has():
                 fName = f"{dirName}/{int(time.time() * 1000)}.jpeg"
                 with open(fName, "wb") as f:
                     f.write(qStill.get().getData())
                     print('Image saved to', fName)
         
+        key = cv2.waitKey(1)
+        if key == ord('q'):
+            break
+        elif key == ord('c'):
+            ctrl = dai.CameraControl()
+            ctrl.setCaptureStill(True)
+            qControl.send(ctrl)
+            print("Sent 'still' event to the camera!")
 
 '''
 # Connect to device and start pipeline
