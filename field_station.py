@@ -5,7 +5,7 @@ Requires:
     - Luxonis OAK-1 camera
 '''
 
-import time
+import time, os
 from pathlib import Path
 import cv2
 import depthai as dai
@@ -13,67 +13,88 @@ import depthai as dai
 # Create pipeline
 pipeline = dai.Pipeline()
 
+# Define sources and outputs
 camRgb = pipeline.create(dai.node.ColorCamera)
-camRgb.setBoardSocket(dai.CameraBoardSocket.RGB)
-camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_4_K)
+manip = pipeline.create(dai.node.ImageManip)
 
-xoutRgb = pipeline.create(dai.node.XLinkOut)
-xoutRgb.setStreamName("rgb")
-camRgb.video.link(xoutRgb.input)
+camOut = pipeline.create(dai.node.XLinkOut)
+manipOut = pipeline.create(dai.node.XLinkOut)
+manipCfg = pipeline.create(dai.node.XLinkIn)
 
-xin = pipeline.create(dai.node.XLinkIn)
-xin.setStreamName("control")
-xin.out.link(camRgb.inputControl)
+camOut.setStreamName("preview")
+manipOut.setStreamName("manip")
+manipCfg.setStreamName("manipCfg")
 
 # Properties
-videoEnc = pipeline.create(dai.node.VideoEncoder)
-videoEnc.setDefaultProfilePreset(1, dai.VideoEncoderProperties.Profile.MJPEG)
-camRgb.still.link(videoEnc.input)
+camRgb.setPreviewSize(640, 480)
+camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_4_K)
+camRgb.setInterleaved(False)
+camRgb.setColorOrder(dai.ColorCameraProperties.ColorOrder.RGB)
+manip.setMaxOutputFrameSize(3840 * 2160 * 3)
 
 # Linking
-xoutStill = pipeline.create(dai.node.XLinkOut)
-xoutStill.setStreamName("still")
-videoEnc.bitstream.link(xoutStill.input)
+camRgb.preview.link(camOut.input)
+camRgb.preview.link(manip.inputImage)
+manip.out.link(manipOut.input)
+manipCfg.out.link(manip.inputConfig)
 
 # Connect to device and start pipeline
 with dai.Device(pipeline) as device:
 
-    # Output queue will be used to get the rgb frames from the output defined above
-    qRgb = device.getOutputQueue(name="rgb", maxSize=30, blocking=False)
-    qStill = device.getOutputQueue(name="still", maxSize=30, blocking=True)
-    qControl = device.getInputQueue(name="control")
+    # Create input & output queues
+    qPreview = device.getOutputQueue(name="preview", maxSize=4)
+    qManip = device.getOutputQueue(name="manip", maxSize=4)
+    qManipCfg = device.getInputQueue(name="manipCfg")
 
+    key = -1
     # Make sure the destination path is present before starting to store the examples
-    dirName = "rgb_data"
-    Path(dirName).mkdir(parents=True, exist_ok=True)
+    dir_name = "rgb_data"
+    USB_PATH = '/media/pi/'
+    has_1_USB = False
+    has_2_USB = False
+    USB_DRIVE_1 = ''
+    USB_DRIVE_2 = ''
+    print(USB_PATH)
+    print(os.listdir(USB_PATH))
+    if len(os.listdir(USB_PATH)) == 1:
+        USB_DRIVE_1 = os.path.join(USB_PATH,os.listdir(USB_PATH)[0],dir_name)
+        has_1_USB = True
+    elif len(os.listdir(USB_PATH)) == 2:
+        USB_DRIVE_1 = os.path.join(USB_PATH,os.listdir(USB_PATH)[0],dir_name)
+        USB_DRIVE_2 = os.path.join(USB_PATH,os.listdir(USB_PATH)[1],dir_name)
+        has_1_USB = True
+        has_2_USB = True
+    print(f"path to USB_DRIVE_1: {USB_DRIVE_1}")
+    print(f"path to USB_DRIVE_2: {USB_DRIVE_2}")
 
-    while True:
-        inRgb = qRgb.tryGet()  # Non-blocking call, will return a new data that has arrived or None otherwise
-        # print(inRgb)
-        if inRgb is not None:
-            print('inRgb')
-            frame = inRgb.getCvFrame()
-            # 4k / 4
-            frame = cv2.pyrDown(frame)
-            frame = cv2.pyrDown(frame)
-            cv2.imshow("rgb", frame)
-            print('inRgb1')
-            if qRgb.has():
-                print('inRgb2')
-                fName = f"{dirName}/{int(time.time() * 1000)}.jpeg"
-                print('fName')
-                with open(fName, "wb") as f:
-                    f.write(qRgb.get().getData())
-                    print('Image saved to', fName)
-        
+    print(f"Creating save dirs")
+    if not has_1_USB and not has_2_USB:
+        USB_DRIVE_0 = dir_name
+        Path(USB_DRIVE_0).mkdir(parents=True, exist_ok=True)
+    elif has_1_USB and not has_2_USB:
+        Path(USB_DRIVE_1).mkdir(parents=True, exist_ok=True)
+    elif has_1_USB and has_2_USB:
+        Path(USB_DRIVE_1).mkdir(parents=True, exist_ok=True)
+        Path(USB_DRIVE_2).mkdir(parents=True, exist_ok=True)
+
+    while key != ord('q'):
+        for q in [qPreview, qManip]:
+            if key == ord('c'):
+                name_time = str(int(time.time() * 1000))
+
+                pkt = q.get()
+                name = q.getName()
+                shape = (3, pkt.getHeight(), pkt.getWidth())
+                frame = pkt.getCvFrame()
+
+                fname0 = "".join(name_time,'.jpg')
+                fname0 = os.path.join(USB_DRIVE_0,fname0)
+                print(f"fname1 ==> {fname0}")
+                
+                with open(fname0, "wb") as f:
+                        f.write(frame.getData())
+                        print('Image saved to', fname0)
         key = cv2.waitKey(1)
-        if key == ord('q'):
-            break
-        elif key == ord('c'):
-            ctrl = dai.CameraControl()
-            ctrl.setCaptureStill(True)
-            qControl.send(ctrl)
-            print("Sent 'still' event to the camera!")
 
 '''
 # Connect to device and start pipeline
