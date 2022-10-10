@@ -20,7 +20,6 @@ manip = pipeline.create(dai.node.ImageManip)
 camOut = pipeline.create(dai.node.XLinkOut)
 manipOut = pipeline.create(dai.node.XLinkOut)
 manipCfg = pipeline.create(dai.node.XLinkIn)
-videoOut = pipeline.create(dai.node.XLinkOut)
 
 camOut.setStreamName("preview")
 manipOut.setStreamName("still")
@@ -31,14 +30,12 @@ camRgb.setPreviewSize(640, 480)
 camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_4_K)
 camRgb.setInterleaved(False)
 camRgb.setColorOrder(dai.ColorCameraProperties.ColorOrder.RGB)
-camRgb.video.link(videoOut.input)
 manip.setMaxOutputFrameSize(3840 * 2160 * 3)
 
 # Linking
 camRgb.preview.link(camOut.input)
 camRgb.preview.link(manip.inputImage)
 manip.out.link(manipOut.input)
-videoOut.setStreamName('video')
 manipCfg.out.link(manip.inputConfig)
 
 # Connect to device and start pipeline
@@ -48,7 +45,6 @@ with dai.Device(pipeline) as device:
     qPreview = device.getOutputQueue(name="preview", maxSize=30, blocking=False)
     qStill = device.getOutputQueue(name="still", maxSize=30, blocking=True)
     qManipCfg = device.getInputQueue(name="manipCfg")
-    videoQueue = device.getOutputQueue('video')
 
     # key = -1
     # Make sure the destination path is present before starting to store the examples
@@ -82,9 +78,13 @@ with dai.Device(pipeline) as device:
         Path(USB_DRIVE_2).mkdir(parents=True, exist_ok=True)
 
     while True:
-        vidFrames = videoQueue.tryGetAll()
-        for vidFrame in vidFrames:
-            cv2.imshow('video', vidFrame.getCvFrame())
+        inRgb = qPreview.tryGet()  # Non-blocking call, will return a new data that has arrived or None otherwise
+        if inRgb is not None:
+            frame = inRgb.getCvFrame()
+            # 4k / 4
+            frame = cv2.pyrDown(frame)
+            frame = cv2.pyrDown(frame)
+            cv2.imshow("rgb", frame)
 
         key = cv2.waitKey(1)
         if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -94,25 +94,25 @@ with dai.Device(pipeline) as device:
             ctrl.setCaptureStill(True)
             # qManipCfg.send(ctrl)
             # print(f"Sent 'still' event to the camera!")
-            for q in [qStill]:#[qPreview, qStill]:
+            for q in [qPreview]:#[qPreview, qStill]:
                 name_time = str(int(time.time() * 1000))
 
                 pkt = q.get()
                 name = q.getName()
                 shape = (3, pkt.getHeight(), pkt.getWidth())
-                frame = pkt.getCvFrame()
+                save_frame = pkt.getCvFrame()
 
                 if not has_1_USB and not has_2_USB:
                     fname0 = "".join([name_time,'.jpg'])
                     fname0 = os.path.join(USB_DRIVE_0,fname0)
                     print(f"Capturing image ==> {fname0}")
-                    cv2.imwrite(fname0, frame)
+                    cv2.imwrite(fname0, save_frame)
                     print('Image saved to', fname0)
                 elif has_1_USB and not has_2_USB:
                     fname1 = "".join([name_time,'.jpg'])
                     fname1 = os.path.join(USB_DRIVE_1,fname1)
                     print(f"Capturing image ==> {fname1}")
-                    cv2.imwrite(fname1, frame)
+                    cv2.imwrite(fname1, save_frame)
                     print('Image saved to', fname1)
                 elif has_1_USB and has_2_USB:
                     fname1 = "".join([name_time,'.jpg'])
@@ -120,9 +120,9 @@ with dai.Device(pipeline) as device:
                     fname2 = "".join([name_time,'.jpg'])
                     fname2 = os.path.join(USB_DRIVE_2,fname2)
                     print(f"Capturing image. Saving redundant ==> {fname1}   &   {fname2}")
-                    cv2.imwrite(fname1, frame)
+                    cv2.imwrite(fname1, save_frame)
                     print('Image saved to', fname1)  
-                    cv2.imwrite(fname2, frame)
+                    cv2.imwrite(fname2, save_frame)
                     print('Image saved to', fname2)  
                     
         
