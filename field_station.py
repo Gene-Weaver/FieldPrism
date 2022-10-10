@@ -53,6 +53,7 @@ with dai.Device(pipeline) as device:
     has_2_USB = False
     USB_DRIVE_1 = ''
     USB_DRIVE_2 = ''
+    print(os.listdir(USB_PATH))
     if len(os.listdir(USB_PATH)) == 1:
         USB_DRIVE_1 = os.path.join(USB_PATH,os.listdir(USB_PATH)[0],dir_name)
         has_1_USB = True
@@ -117,7 +118,7 @@ with dai.Device(pipeline) as device:
             ctrl = dai.CameraControl()
             ctrl.setCaptureStill(True)
             qControl.send(ctrl)
-            print(f"Sent 'still' event to the camera! img = {IMG_COUNT}")
+            print(f"Sent 'still' event to the camera! img = {i}")
         break
         # key = cv2.waitKey(1)
         # if key == ord('q'):
