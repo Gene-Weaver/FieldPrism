@@ -12,6 +12,7 @@ import depthai as dai
 from glob import glob
 
 # Create pipeline
+print(f"Creating pipline")
 pipeline = dai.Pipeline()
 
 camRgb = pipeline.create(dai.node.ColorCamera)
@@ -38,6 +39,7 @@ videoEnc.bitstream.link(xoutStill.input)
 
 # Connect to device and start pipeline
 with dai.Device(pipeline) as device:
+    print(f"Pipline started")
 
     # Output queue will be used to get the rgb frames from the output defined above
     qRgb = device.getOutputQueue(name="rgb", maxSize=30, blocking=False)
@@ -62,7 +64,7 @@ with dai.Device(pipeline) as device:
     print(f"path to USB_DRIVE_1: {USB_DRIVE_1}")
     print(f"path to USB_DRIVE_2: {USB_DRIVE_2}")
 
-    
+    print(f"Creating save dirs")
     if not has_1_USB and not has_2_USB:
         USB_DRIVE_0 = dir_name
         Path(USB_DRIVE_0).mkdir(parents=True, exist_ok=True)
@@ -101,12 +103,19 @@ with dai.Device(pipeline) as device:
                 with open(fName2, "wb") as f:
                     f.write(qStill.get().getData())
                     print('Image saved to', fName2)   
-        
-        key = cv2.waitKey(1)
-        if key == ord('q'):
-            break
-        elif key == ord('c'):
+        IMG_COUNT = 0
+        while IMG_COUNT < 20: 
+            time. sleep(2)
+            IMG_COUNT += 1
             ctrl = dai.CameraControl()
             ctrl.setCaptureStill(True)
             qControl.send(ctrl)
-            print("Sent 'still' event to the camera!")
+            print(f"Sent 'still' event to the camera! img = {IMG_COUNT}")
+        # key = cv2.waitKey(1)
+        # if key == ord('q'):
+        #     break
+        # elif key == ord('c'):
+        #     ctrl = dai.CameraControl()
+        #     ctrl.setCaptureStill(True)
+        #     qControl.send(ctrl)
+        #     print("Sent 'still' event to the camera!")
