@@ -114,18 +114,17 @@ with dai.Device(pipeline) as device:
                 with open(fname2, "wb") as f:
                     f.write(qStill.get().getData())
                     print('Image saved to', fname2)   
-        for i in range(0,20):# IMG_COUNT < 20: 
-            time. sleep(2)
-            ctrl = dai.CameraControl()
-            ctrl.setCaptureStill(True)
-            qControl.send(ctrl)
-            print(f"Sent 'still' event to the camera! img = {i}")
-        break
-        # key = cv2.waitKey(1)
-        # if key == ord('q'):
-        #     break
-        # elif key == ord('c'):
+        # for i in range(0,20):# IMG_COUNT < 20: 
+        #     time. sleep(2)
         #     ctrl = dai.CameraControl()
         #     ctrl.setCaptureStill(True)
         #     qControl.send(ctrl)
-        #     print("Sent 'still' event to the camera!")
+        #     print(f"Sent 'still' event to the camera! img = {i}")
+        key = cv2.waitKey(1)
+        if key == ord('q'):
+            break
+        elif key == ord('c'):
+            ctrl = dai.CameraControl()
+            ctrl.setCaptureStill(True)
+            qControl.send(ctrl)
+            print("Sent 'still' event to the camera!")
