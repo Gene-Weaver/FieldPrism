@@ -93,7 +93,7 @@ with dai.Device(pipeline) as device:
             frame = cv2.pyrDown(frame)
             cv2.imshow("rgb", frame)
 
-        print(qStill.has())
+        # print(qStill.has())
         if qStill.has():
             print(f"qStill ==> {qStill.has()}")
             fName = f"{dirName}/{int(time.time() * 1000)}.jpeg"
