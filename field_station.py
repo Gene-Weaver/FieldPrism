@@ -119,15 +119,15 @@ with dai.Device(pipeline) as device:
                     cv2.imwrite(fname2, frame)
                     print('Image saved to', fname2)  
                     
-            key = cv2.waitKey(1)
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
-            elif cv2.waitKey(1) & 0xFF == ord('c'):
-                ctrl = dai.CameraControl()
-                ctrl.setCaptureStill(True)
-                qManipCfg.send(ctrl)
-                print(f"Sent 'still' event to the camera!")
-        
+        key = cv2.waitKey(1)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+        elif cv2.waitKey(1) & 0xFF == ord('c'):
+            ctrl = dai.CameraControl()
+            ctrl.setCaptureStill(True)
+            qManipCfg.send(ctrl)
+            print(f"Sent 'still' event to the camera!")
+    
 
 '''
 # Connect to device and start pipeline
