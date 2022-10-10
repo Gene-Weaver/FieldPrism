@@ -49,7 +49,7 @@ with dai.Device(pipeline) as device:
 
     while True:
         inRgb = qRgb.tryGet()  # Non-blocking call, will return a new data that has arrived or None otherwise
-        print(inRgb)
+        # print(inRgb)
         if inRgb is not None:
             print('inRgb')
             frame = inRgb.getCvFrame()
@@ -58,12 +58,12 @@ with dai.Device(pipeline) as device:
             frame = cv2.pyrDown(frame)
             cv2.imshow("rgb", frame)
             print('inRgb1')
-            if qStill.has():
+            if qRgb.has():
                 print('inRgb2')
                 fName = f"{dirName}/{int(time.time() * 1000)}.jpeg"
                 print('fName')
                 with open(fName, "wb") as f:
-                    f.write(qStill.get().getData())
+                    f.write(qRgb.get().getData())
                     print('Image saved to', fName)
         
         key = cv2.waitKey(1)
