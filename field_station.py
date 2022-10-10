@@ -90,11 +90,11 @@ with dai.Device(pipeline) as device:
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
         elif cv2.waitKey(1) & 0xFF == ord('c'):
-            ctrl = dai.CameraControl()
-            ctrl.setCaptureStill(True)
+            # ctrl = dai.CameraControl()
+            # ctrl.setCaptureStill(True)
             # qManipCfg.send(ctrl)
             # print(f"Sent 'still' event to the camera!")
-            for q in [qPreview]:#[qPreview, qStill]:
+            for q in [qStill]:#[qPreview, qStill]:
                 name_time = str(int(time.time() * 1000))
 
                 pkt = q.get()
