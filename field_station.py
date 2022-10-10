@@ -40,10 +40,16 @@ manipCfg.out.link(manip.inputConfig)
 
 # Connect to device and start pipeline
 with dai.Device(pipeline) as device:
+    print(f"Pipline started")
+
+    # Output queue will be used to get the rgb frames from the output defined above
+    qRgb = device.getOutputQueue(name="rgb", maxSize=30, blocking=False)
+    qStill = device.getOutputQueue(name="still", maxSize=30, blocking=True)
+    qControl = device.getInputQueue(name="control")
 
     # Create input & output queues
-    qPreview = device.getOutputQueue(name="preview", maxSize=4)
-    qManip = device.getOutputQueue(name="manip", maxSize=4)
+    qPreview = device.getOutputQueue(name="preview", maxSize=30, blocking=False)
+    qStill = device.getOutputQueue(name="still", maxSize=30, blocking=True)
     qManipCfg = device.getInputQueue(name="manipCfg")
 
     key = -1
@@ -78,7 +84,7 @@ with dai.Device(pipeline) as device:
         Path(USB_DRIVE_2).mkdir(parents=True, exist_ok=True)
 
     while key != ord('q'):
-        inRgb = qManip.tryGet()  # Non-blocking call, will return a new data that has arrived or None otherwise
+        inRgb = qStill.tryGet()  # Non-blocking call, will return a new data that has arrived or None otherwise
         if inRgb is not None:
             frame = inRgb.getCvFrame()
             # 4k / 4
@@ -86,23 +92,23 @@ with dai.Device(pipeline) as device:
             frame = cv2.pyrDown(frame)
             cv2.imshow("rgb", frame)
 
-            for q in [qPreview, qManip]:
-                if key == ord('c'):
-                    name_time = str(int(time.time() * 1000))
+        if key == ord('c') and inRgb is not None:
+            for q in [qPreview, qStill]:
+                name_time = str(int(time.time() * 1000))
 
-                    pkt = q.get()
-                    name = q.getName()
-                    shape = (3, pkt.getHeight(), pkt.getWidth())
-                    frame = pkt.getCvFrame()
+                pkt = q.get()
+                name = q.getName()
+                shape = (3, pkt.getHeight(), pkt.getWidth())
+                frame = pkt.getCvFrame()
 
-                    fname0 = "".join([name_time,'.jpg'])
-                    fname0 = os.path.join(USB_DRIVE_0,fname0)
-                    print(f"fname1 ==> {fname0}")
-                    
-                    with open(fname0, "wb") as f:
-                            f.write(frame.getData())
-                            print('Image saved to', fname0)
-            key = cv2.waitKey(1)
+                fname0 = "".join([name_time,'.jpg'])
+                fname0 = os.path.join(USB_DRIVE_0,fname0)
+                print(f"fname1 ==> {fname0}")
+                
+                with open(fname0, "wb") as f:
+                        f.write(frame.getData())
+                        print('Image saved to', fname0)
+        key = cv2.waitKey(1)
 
 '''
 # Connect to device and start pipeline
