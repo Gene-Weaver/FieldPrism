@@ -26,7 +26,7 @@ manipOut.setStreamName("manip")
 manipCfg.setStreamName("manipCfg")
 
 # Properties
-camRgb.setPreviewSize(640, 480)
+camRgb.setPreviewSize(1920, 1080)
 camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_4_K)
 camRgb.setInterleaved(False)
 camRgb.setColorOrder(dai.ColorCameraProperties.ColorOrder.RGB)
@@ -86,23 +86,23 @@ with dai.Device(pipeline) as device:
             frame = cv2.pyrDown(frame)
             cv2.imshow("rgb", frame)
 
-        for q in [qPreview, qManip]:
-            if key == ord('c'):
-                name_time = str(int(time.time() * 1000))
+            for q in [qPreview, qManip]:
+                if key == ord('c'):
+                    name_time = str(int(time.time() * 1000))
 
-                pkt = q.get()
-                name = q.getName()
-                shape = (3, pkt.getHeight(), pkt.getWidth())
-                frame = pkt.getCvFrame()
+                    pkt = q.get()
+                    name = q.getName()
+                    shape = (3, pkt.getHeight(), pkt.getWidth())
+                    frame = pkt.getCvFrame()
 
-                fname0 = "".join(name_time,'.jpg')
-                fname0 = os.path.join(USB_DRIVE_0,fname0)
-                print(f"fname1 ==> {fname0}")
-                
-                with open(fname0, "wb") as f:
-                        f.write(frame.getData())
-                        print('Image saved to', fname0)
-        key = cv2.waitKey(1)
+                    fname0 = "".join([name_time,'.jpg'])
+                    fname0 = os.path.join(USB_DRIVE_0,fname0)
+                    print(f"fname1 ==> {fname0}")
+                    
+                    with open(fname0, "wb") as f:
+                            f.write(frame.getData())
+                            print('Image saved to', fname0)
+            key = cv2.waitKey(1)
 
 '''
 # Connect to device and start pipeline
