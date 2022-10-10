@@ -78,7 +78,7 @@ with dai.Device(pipeline) as device:
         Path(USB_DRIVE_2).mkdir(parents=True, exist_ok=True)
 
     while key != ord('q'):
-        inRgb = camRgb.tryGet()  # Non-blocking call, will return a new data that has arrived or None otherwise
+        inRgb = qManip.tryGet()  # Non-blocking call, will return a new data that has arrived or None otherwise
         if inRgb is not None:
             frame = inRgb.getCvFrame()
             # 4k / 4
