@@ -86,10 +86,8 @@ with dai.Device(pipeline) as device:
             frame = cv2.pyrDown(frame)
             cv2.imshow("rgb", frame)
 
-        key = cv2.waitKey(1)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-        elif cv2.waitKey(1) & 0xFF == ord('c'):
+        if qStill.has():
+            
             for q in [qStill]:#[qPreview, qStill]:
                 name_time = str(int(time.time() * 1000))
 
@@ -120,6 +118,15 @@ with dai.Device(pipeline) as device:
                     print('Image saved to', fname1)  
                     cv2.imwrite(fname2, frame)
                     print('Image saved to', fname2)  
+                    
+            key = cv2.waitKey(1)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+            elif cv2.waitKey(1) & 0xFF == ord('c'):
+                ctrl = dai.CameraControl()
+                ctrl.setCaptureStill(True)
+                qManipCfg.send(ctrl)
+                print(f"Sent 'still' event to the camera!")
         
 
 '''
