@@ -93,7 +93,9 @@ with dai.Device(pipeline) as device:
             frame = cv2.pyrDown(frame)
             cv2.imshow("rgb", frame)
 
+        print(qStill.has())
         if qStill.has():
+            print(f"qStill ==> {qStill.has()}")
             fName = f"{dirName}/{int(time.time() * 1000)}.jpeg"
             with open(fName, "wb") as f:
                 f.write(qStill.get().getData())
@@ -194,10 +196,10 @@ with dai.Device(pipeline) as device:
         #     ctrl.setCaptureStill(True)
         #     qControl.send(ctrl)
         #     print(f"Sent 'still' event to the camera! img = {i}")
-        key = cv2.waitKey(10)
-        if cv2.waitKey(10) & 0xFF == ord('q'):
+        key = cv2.waitKey(1)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
             break
-        elif cv2.waitKey(10) & 0xFF == ord('c'):
+        elif cv2.waitKey(1) & 0xFF == ord('c'):
             ctrl = dai.CameraControl()
             ctrl.setCaptureStill(True)
             qControl.send(ctrl)
