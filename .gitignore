@@ -1,3 +1,10 @@
+# Files
+#requirements-d2.txt
+
+# Dirs
+data/
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
