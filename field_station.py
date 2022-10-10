@@ -56,20 +56,22 @@ with dai.Device(pipeline) as device:
             frame = cv2.pyrDown(frame)
             cv2.imshow("rgb", frame)
 
+
+            key = cv2.waitKey(1)
+            if key == ord('q'):
+                break
+            elif key == ord('c'):
+                ctrl = dai.CameraControl()
+                ctrl.setCaptureStill(True)
+                qControl.send(ctrl)
+                print("Sent 'still' event to the camera!")
+                
             if qStill.has():
                 fName = f"{dirName}/{int(time.time() * 1000)}.jpeg"
                 with open(fName, "wb") as f:
                     f.write(qStill.get().getData())
                     print('Image saved to', fName)
         
-        key = cv2.waitKey(1)
-        if key == ord('q'):
-            break
-        elif key == ord('c'):
-            ctrl = dai.CameraControl()
-            ctrl.setCaptureStill(True)
-            qControl.send(ctrl)
-            print("Sent 'still' event to the camera!")
 
 '''
 # Connect to device and start pipeline
