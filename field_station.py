@@ -87,46 +87,47 @@ with dai.Device(pipeline) as device:
             cv2.imshow("rgb", frame)
 
         if qStill.has():
-            
-            for q in [qStill]:#[qPreview, qStill]:
-                name_time = str(int(time.time() * 1000))
+            key = cv2.waitKey(1)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+            elif cv2.waitKey(1) & 0xFF == ord('c'):
+                ctrl = dai.CameraControl()
+                ctrl.setCaptureStill(True)
+                # qManipCfg.send(ctrl)
+                # print(f"Sent 'still' event to the camera!")
+                for q in [qStill]:#[qPreview, qStill]:
+                    name_time = str(int(time.time() * 1000))
 
-                pkt = q.get()
-                name = q.getName()
-                shape = (3, pkt.getHeight(), pkt.getWidth())
-                frame = pkt.getCvFrame()
+                    pkt = q.get()
+                    name = q.getName()
+                    shape = (3, pkt.getHeight(), pkt.getWidth())
+                    frame = pkt.getCvFrame()
 
-                if not has_1_USB and not has_2_USB:
-                    fname0 = "".join([name_time,'.jpg'])
-                    fname0 = os.path.join(USB_DRIVE_0,fname0)
-                    print(f"Capturing image ==> {fname0}")
-                    cv2.imwrite(fname0, frame)
-                    print('Image saved to', fname0)
-                elif has_1_USB and not has_2_USB:
-                    fname1 = "".join([name_time,'.jpg'])
-                    fname1 = os.path.join(USB_DRIVE_1,fname1)
-                    print(f"Capturing image ==> {fname1}")
-                    cv2.imwrite(fname1, frame)
-                    print('Image saved to', fname1)
-                elif has_1_USB and has_2_USB:
-                    fname1 = "".join([name_time,'.jpg'])
-                    fname1 = os.path.join(USB_DRIVE_1,fname1)
-                    fname2 = "".join([name_time,'.jpg'])
-                    fname2 = os.path.join(USB_DRIVE_2,fname2)
-                    print(f"Capturing image. Saving redundant ==> {fname1}   &   {fname2}")
-                    cv2.imwrite(fname1, frame)
-                    print('Image saved to', fname1)  
-                    cv2.imwrite(fname2, frame)
-                    print('Image saved to', fname2)  
+                    if not has_1_USB and not has_2_USB:
+                        fname0 = "".join([name_time,'.jpg'])
+                        fname0 = os.path.join(USB_DRIVE_0,fname0)
+                        print(f"Capturing image ==> {fname0}")
+                        cv2.imwrite(fname0, frame)
+                        print('Image saved to', fname0)
+                    elif has_1_USB and not has_2_USB:
+                        fname1 = "".join([name_time,'.jpg'])
+                        fname1 = os.path.join(USB_DRIVE_1,fname1)
+                        print(f"Capturing image ==> {fname1}")
+                        cv2.imwrite(fname1, frame)
+                        print('Image saved to', fname1)
+                    elif has_1_USB and has_2_USB:
+                        fname1 = "".join([name_time,'.jpg'])
+                        fname1 = os.path.join(USB_DRIVE_1,fname1)
+                        fname2 = "".join([name_time,'.jpg'])
+                        fname2 = os.path.join(USB_DRIVE_2,fname2)
+                        print(f"Capturing image. Saving redundant ==> {fname1}   &   {fname2}")
+                        cv2.imwrite(fname1, frame)
+                        print('Image saved to', fname1)  
+                        cv2.imwrite(fname2, frame)
+                        print('Image saved to', fname2)  
                     
-        key = cv2.waitKey(1)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-        elif cv2.waitKey(1) & 0xFF == ord('c'):
-            ctrl = dai.CameraControl()
-            ctrl.setCaptureStill(True)
-            qManipCfg.send(ctrl)
-            print(f"Sent 'still' event to the camera!")
+        
+        
     
 
 '''
