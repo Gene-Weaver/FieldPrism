@@ -98,6 +98,36 @@ with dai.Device(pipeline) as device:
                 shape = (3, pkt.getHeight(), pkt.getWidth())
                 frame = pkt.getCvFrame()
 
+
+                if not has_1_USB and not has_2_USB:
+                    fname0 = "".join(name_time,'.jpg')
+                    fname0 = os.path.join(USB_DRIVE_0,fname0)
+                    print(f"fname1 ==> {fname0}")
+                    with open(fname0, "wb") as f:
+                        f.write(frame.get().getData())
+                        print('Image saved to', fname0)
+                elif has_1_USB and not has_2_USB:
+                    fname1 = "".join(name_time,'.jpg')
+                    fname1 = os.path.join(USB_DRIVE_1,fname1)
+                    print(f"fname1 ==> {fname1}")
+                    with open(fname1, "wb") as f:
+                        f.write(frame.get().getData())
+                        print('Image saved to', fname1)
+                elif has_1_USB and has_2_USB:
+                    fname1 = "".join(name_time,'.jpg')
+                    fname1 = os.path.join(USB_DRIVE_1,fname1)
+                    fname2 = "".join(name_time,'.jpg')
+                    fname2 = os.path.join(USB_DRIVE_2,fname2)
+                    print(f"fname1 ==> {fname1}")
+                    print(f"fname2 ==> {fname2}")
+                    with open(fname1, "wb") as f:
+                        f.write(frame.get().getData())
+                        print('Image saved to', fname1)
+                    with open(fname2, "wb") as f:
+                        f.write(frame.get().getData())
+                        print('Image saved to', fname2)  
+
+
                 fname0 = "".join([name_time,'.jpg'])
                 fname0 = os.path.join([USB_DRIVE_0,fname0])
                 print(f"fname1 ==> {fname0}")
