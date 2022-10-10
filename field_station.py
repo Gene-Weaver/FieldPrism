@@ -23,7 +23,7 @@ manipCfg = pipeline.create(dai.node.XLinkIn)
 
 camOut.setStreamName("preview")
 manipOut.setStreamName("still")
-# manipCfg.setStreamName("manipCfg")
+manipCfg.setStreamName("manipCfg")
 
 # Properties
 camRgb.setPreviewSize(1920, 1080)
