@@ -27,10 +27,10 @@ manipCfg.setStreamName("manipCfg")
 
 # Properties
 camRgb.setPreviewSize(640, 480)
-camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_4_K)
+camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_720_P)
 camRgb.setInterleaved(False)
-camRgb.setColorOrder(dai.ColorCameraProperties.ColorOrder.RGB)
-manip.setMaxOutputFrameSize(3840 * 2160 * 3)
+camRgb.setColorOrder(dai.ColorCameraProperties.ColorOrder.BGR)
+manip.setMaxOutputFrameSize(1280 * 720 * 3)
 
 # Linking
 camRgb.preview.link(camOut.input)
