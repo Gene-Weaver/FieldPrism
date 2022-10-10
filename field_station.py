@@ -84,33 +84,41 @@ with dai.Device(pipeline) as device:
             cv2.imshow("rgb", frame)
 
         if qStill.has():
+            name_time = str(int(time.time() * 1000))
             if not has_1_USB and not has_2_USB:
-                fName = f"{USB_DRIVE_0}/{int(time.time() * 1000)}.jpg"
-                with open(fName, "wb") as f:
+                fname0 = "".join(name_time,'.jpg')
+                fname0 = os.path.join(USB_DRIVE_0,fname0)
+                print(f"fname1 ==> {fname0}")
+                with open(fname0, "wb") as f:
                     f.write(qStill.get().getData())
-                    print('Image saved to', fName)
+                    print('Image saved to', fname0)
             elif has_1_USB and not has_2_USB:
-                fName = f"{USB_DRIVE_1}/{int(time.time() * 1000)}.jpg"
-                with open(fName, "wb") as f:
+                fname1 = "".join(name_time,'.jpg')
+                fname1 = os.path.join(USB_DRIVE_1,fname1)
+                print(f"fname1 ==> {fname1}")
+                with open(fname1, "wb") as f:
                     f.write(qStill.get().getData())
-                    print('Image saved to', fName)
+                    print('Image saved to', fname1)
             elif has_1_USB and has_2_USB:
-                fName1 = f"{USB_DRIVE_1}/{int(time.time() * 1000)}.jpg"
-                fName2 = f"{USB_DRIVE_2}/{int(time.time() * 1000)}.jpg"
-                with open(fName1, "wb") as f:
+                fname1 = "".join(name_time,'.jpg')
+                fname1 = os.path.join(USB_DRIVE_1,fname1)
+                fname2 = "".join(name_time,'.jpg')
+                fname2 = os.path.join(USB_DRIVE_2,fname2)
+                print(f"fname1 ==> {fname1}")
+                print(f"fname2 ==> {fname2}")
+                with open(fname1, "wb") as f:
                     f.write(qStill.get().getData())
-                    print('Image saved to', fName1)
-                with open(fName2, "wb") as f:
+                    print('Image saved to', fname1)
+                with open(fname2, "wb") as f:
                     f.write(qStill.get().getData())
-                    print('Image saved to', fName2)   
-        IMG_COUNT = 0
-        while IMG_COUNT < 20: 
+                    print('Image saved to', fname2)   
+        for i in range(0,20):# IMG_COUNT < 20: 
             time. sleep(2)
-            IMG_COUNT += 1
             ctrl = dai.CameraControl()
             ctrl.setCaptureStill(True)
             qControl.send(ctrl)
             print(f"Sent 'still' event to the camera! img = {IMG_COUNT}")
+        break
         # key = cv2.waitKey(1)
         # if key == ord('q'):
         #     break
