@@ -37,6 +37,42 @@ xoutStill.setStreamName("still")
 videoEnc.bitstream.link(xoutStill.input)
 
 # Connect to device and start pipeline
+# with dai.Device(pipeline) as device:
+
+#     # Output queue will be used to get the rgb frames from the output defined above
+#     qRgb = device.getOutputQueue(name="rgb", maxSize=30, blocking=False)
+#     qStill = device.getOutputQueue(name="still", maxSize=30, blocking=True)
+#     qControl = device.getInputQueue(name="control")
+
+#     # Make sure the destination path is present before starting to store the examples
+#     dirName = "rgb_data"
+#     Path(dirName).mkdir(parents=True, exist_ok=True)
+
+#     while True:
+#         inRgb = qRgb.tryGet()  # Non-blocking call, will return a new data that has arrived or None otherwise
+#         if inRgb is not None:
+#             frame = inRgb.getCvFrame()
+#             # 4k / 4
+#             frame = cv2.pyrDown(frame)
+#             frame = cv2.pyrDown(frame)
+#             cv2.imshow("rgb", frame)
+
+#         if qStill.has():
+#             fName = f"{dirName}/{int(time.time() * 1000)}.jpeg"
+#             with open(fName, "wb") as f:
+#                 f.write(qStill.get().getData())
+#                 print('Image saved to', fName)
+        
+#         key = cv2.waitKey(10)
+#         if cv2.waitKey(10) & 0xFF == ord('q'):
+#             break
+#         elif cv2.waitKey(10) & 0xFF == ord('c'):
+#             ctrl = dai.CameraControl()
+#             ctrl.setCaptureStill(True)
+#             qControl.send(ctrl)
+#             print("Sent 'still' event to the camera!")
+
+# Connect to device and start pipeline
 with dai.Device(pipeline) as device:
 
     # Output queue will be used to get the rgb frames from the output defined above
@@ -63,19 +99,16 @@ with dai.Device(pipeline) as device:
                 f.write(qStill.get().getData())
                 print('Image saved to', fName)
         
-        key = cv2.waitKey(10)
-        if cv2.waitKey(10) & 0xFF == ord('q'):
+        key = cv2.waitKey(1)
+        if key == ord('q'):
             break
-        elif cv2.waitKey(10) & 0xFF == ord('c'):
+        elif key == ord('c'):
             ctrl = dai.CameraControl()
             ctrl.setCaptureStill(True)
             qControl.send(ctrl)
             print("Sent 'still' event to the camera!")
 
 
-
-
-'''
 # Connect to device and start pipeline
 with dai.Device(pipeline) as device:
     print(f"Pipline started")
@@ -125,6 +158,7 @@ with dai.Device(pipeline) as device:
             cv2.imshow("rgb", frame)
 
         if qStill.has():
+            print(f"qStill ==> {qStill.has()}")
             name_time = str(int(time.time() * 1000))
             if not has_1_USB and not has_2_USB:
                 fname0 = "".join(name_time,'.jpg')
@@ -159,12 +193,11 @@ with dai.Device(pipeline) as device:
         #     ctrl.setCaptureStill(True)
         #     qControl.send(ctrl)
         #     print(f"Sent 'still' event to the camera! img = {i}")
-        key = cv2.waitKey(1)
-        if key == ord('q'):
+        key = cv2.waitKey(10)
+        if cv2.waitKey(10) & 0xFF == ord('q'):
             break
-        elif key == ord('c'):
+        elif cv2.waitKey(10) & 0xFF == ord('c'):
             ctrl = dai.CameraControl()
             ctrl.setCaptureStill(True)
             qControl.send(ctrl)
-            print("Sent 'still' event to the camera!")
-'''
+            print(f"Sent 'still' event to the camera!")
