@@ -46,7 +46,7 @@ with dai.Device(pipeline) as device:
 
     # Make sure the destination path is present before starting to store the examples
     dir_name = "rgb_data"
-    USB_PATH = 'media/pi/'
+    USB_PATH = '/media/pi/'
     has_1_USB = False
     has_2_USB = False
     USB_DRIVE_1 = ''
