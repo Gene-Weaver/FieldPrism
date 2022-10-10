@@ -64,9 +64,9 @@ with dai.Device(pipeline) as device:
                 print('Image saved to', fName)
         
         key = cv2.waitKey(1)
-        if key == ord('q'):
+        if cv2.waitKey(1) & 0xFF == ord('q'):
             break
-        elif key == ord('c'):
+        elif cv2.waitKey(1) & 0xFF == ord('c'):
             ctrl = dai.CameraControl()
             ctrl.setCaptureStill(True)
             qControl.send(ctrl)
