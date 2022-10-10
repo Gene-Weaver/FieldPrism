@@ -110,9 +110,8 @@ with dai.Device(pipeline) as device:
                     fname1 = "".join([name_time,'.jpg'])
                     fname1 = os.path.join(USB_DRIVE_1,fname1)
                     print(f"fname1 ==> {fname1}")
-                    with open(fname1, "wb") as f:
-                        f.write(frame)
-                        print('Image saved to', fname1)
+                    cv2.imwrite(fname1, frame)
+                    print('Image saved to', fname1)
                 elif has_1_USB and has_2_USB:
                     fname1 = "".join([name_time,'.jpg'])
                     fname1 = os.path.join(USB_DRIVE_1,fname1)
