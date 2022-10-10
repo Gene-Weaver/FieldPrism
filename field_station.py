@@ -22,7 +22,7 @@ manipOut = pipeline.create(dai.node.XLinkOut)
 manipCfg = pipeline.create(dai.node.XLinkIn)
 
 camOut.setStreamName("preview")
-manipOut.setStreamName("manip")
+manipOut.setStreamName("still")
 manipCfg.setStreamName("manipCfg")
 
 # Properties
