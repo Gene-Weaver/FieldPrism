@@ -41,12 +41,6 @@ manipCfg.out.link(manip.inputConfig)
 # Connect to device and start pipeline
 with dai.Device(pipeline) as device:
     print(f"Pipline started")
-
-    # Output queue will be used to get the rgb frames from the output defined above
-    qRgb = device.getOutputQueue(name="rgb", maxSize=30, blocking=False)
-    qStill = device.getOutputQueue(name="still", maxSize=30, blocking=True)
-    qControl = device.getInputQueue(name="control")
-
     # Create input & output queues
     qPreview = device.getOutputQueue(name="preview", maxSize=30, blocking=False)
     qStill = device.getOutputQueue(name="still", maxSize=30, blocking=True)
