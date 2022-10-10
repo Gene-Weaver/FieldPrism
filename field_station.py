@@ -108,7 +108,7 @@ with dai.Device(pipeline) as device:
             ctrl = dai.CameraControl()
             ctrl.setCaptureStill(True)
             qControl.send(ctrl)
-            print("Sent 'still' event to the camera!")
+            print(f"Sent 'still' event to the camera!{ctrl.setCaptureStill(True)}")
 
 
 # Connect to device and start pipeline
