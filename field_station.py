@@ -99,12 +99,12 @@ with dai.Device(pipeline) as device:
                 frame = pkt.getCvFrame()
 
                 fname0 = "".join([name_time,'.jpg'])
-                fname0 = os.path.join(USB_DRIVE_0,fname0)
+                fname0 = os.path.join([USB_DRIVE_0,fname0])
                 print(f"fname1 ==> {fname0}")
                 
                 with open(fname0, "wb") as f:
-                        f.write(frame.getData())
-                        print('Image saved to', fname0)
+                    f.write(frame.getData())
+                    print('Image saved to', fname0)
         
 
 '''
