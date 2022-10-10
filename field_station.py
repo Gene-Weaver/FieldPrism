@@ -10,6 +10,14 @@ from pathlib import Path
 import depthai as dai
 from glob import glob
 from subprocess import check_output, CalledProcessError
+import subprocess
+driver_name = "my_usb_stick"
+
+path = subprocess.check_output("cat /proc/mounts | grep '"+driver_name+"' | awk '{print $2}'", shell=True)
+
+path = path.decode('utf-8') # convert bytes in string
+print(f"path ==> {path}")
+print("#############")
 
 def get_usb_devices():
     sdb_devices = map(os.path.realpath, glob('/sys/block/sd*'))
@@ -17,20 +25,41 @@ def get_usb_devices():
         if 'usb' in dev.split('/')[5])
     return dict((os.path.basename(dev), dev) for dev in usb_devices)
 
+# def get_mount_points(devices=None):
+#     devices = devices or get_usb_devices() # if devices are None: get_usb_devices
+#     print(devices)
+#     print("######################################")
+#     output = check_output(['mount']).splitlines()
+#     print(output)
+#     print("######################################")
+#     is_usb = lambda path: any(dev in path for dev in devices)
+#     print(is_usb)
+#     print("######################################")
+#     usb_info = (line for line in output if is_usb(line.split()[0]))
+#     print(usb_info)
+#     print("######################################")
+#     return [(info.split()[0], info.split()[2]) for info in usb_info]
 def get_mount_points(devices=None):
-    devices = devices or get_usb_devices() # if devices are None: get_usb_devices
-    print(devices)
-    print("######################################")
-    output = check_output(['dev']).splitlines()
-    print(output)
-    print("######################################")
-    is_usb = lambda path: any(dev in path for dev in devices)
-    print(is_usb)
-    print("######################################")
+    devices = devices or get_usb_devices()  # if devices are None: get_usb_devices
+    output = check_output(['mount']).splitlines()
+    output = [tmp.decode('UTF-8') for tmp in output]
+
+    def is_usb(path):
+        return any(dev in path for dev in devices)
     usb_info = (line for line in output if is_usb(line.split()[0]))
-    print(usb_info)
-    print("######################################")
-    return [(info.split()[0], info.split()[2]) for info in usb_info]
+    fullInfo = []
+    for info in usb_info:
+        print(info)
+        mountURI = info.split()[0]
+        usbURI = info.split()[2]
+        print(info.split().__sizeof__())
+        for x in range(3, info.split().__sizeof__()):
+            if info.split()[x].__eq__("type"):
+                for m in range(3, x):
+                    usbURI += " "+info.split()[m]
+                break
+        fullInfo.append([mountURI, usbURI])
+    return fullInfo
 
 if __name__ == '__main__':
     print(get_mount_points())
