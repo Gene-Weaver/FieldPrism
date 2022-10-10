@@ -77,7 +77,7 @@ with dai.Device(pipeline) as device:
         Path(USB_DRIVE_1).mkdir(parents=True, exist_ok=True)
         Path(USB_DRIVE_2).mkdir(parents=True, exist_ok=True)
 
-    while key != ord('q'):
+    while True:
         inRgb = qStill.tryGet()  # Non-blocking call, will return a new data that has arrived or None otherwise
         if inRgb is not None:
             frame = inRgb.getCvFrame()
@@ -86,7 +86,10 @@ with dai.Device(pipeline) as device:
             frame = cv2.pyrDown(frame)
             cv2.imshow("rgb", frame)
 
-        if key == ord('c') and inRgb is not None:
+        key = cv2.waitKey(1)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+        elif cv2.waitKey(1) & 0xFF == ord('c'):
             for q in [qPreview, qStill]:
                 name_time = str(int(time.time() * 1000))
 
@@ -102,7 +105,7 @@ with dai.Device(pipeline) as device:
                 with open(fname0, "wb") as f:
                         f.write(frame.getData())
                         print('Image saved to', fname0)
-        key = cv2.waitKey(1)
+        
 
 '''
 # Connect to device and start pipeline
