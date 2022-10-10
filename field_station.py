@@ -44,9 +44,9 @@ with dai.Device(pipeline) as device:
     # Create input & output queues
     qPreview = device.getOutputQueue(name="preview", maxSize=30, blocking=False)
     qStill = device.getOutputQueue(name="still", maxSize=30, blocking=True)
-    # qManipCfg = device.getInputQueue(name="manipCfg")
+    qManipCfg = device.getInputQueue(name="manipCfg")
 
-    key = -1
+    # key = -1
     # Make sure the destination path is present before starting to store the examples
     dir_name = "rgb_data"
     USB_PATH = '/media/pi/'
