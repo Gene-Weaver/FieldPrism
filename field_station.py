@@ -23,7 +23,7 @@ manipCfg = pipeline.create(dai.node.XLinkIn)
 
 camOut.setStreamName("preview")
 manipOut.setStreamName("still")
-manipCfg.setStreamName("manipCfg")
+# manipCfg.setStreamName("manipCfg")
 
 # Properties
 camRgb.setPreviewSize(1920, 1080)
@@ -44,7 +44,7 @@ with dai.Device(pipeline) as device:
     # Create input & output queues
     qPreview = device.getOutputQueue(name="preview", maxSize=30, blocking=False)
     qStill = device.getOutputQueue(name="still", maxSize=30, blocking=True)
-    qManipCfg = device.getInputQueue(name="manipCfg")
+    # qManipCfg = device.getInputQueue(name="manipCfg")
 
     key = -1
     # Make sure the destination path is present before starting to store the examples
@@ -78,7 +78,7 @@ with dai.Device(pipeline) as device:
         Path(USB_DRIVE_2).mkdir(parents=True, exist_ok=True)
 
     while True:
-        inRgb = qStill.tryGet()  # Non-blocking call, will return a new data that has arrived or None otherwise
+        inRgb = qPreview.tryGet()  # Non-blocking call, will return a new data that has arrived or None otherwise
         if inRgb is not None:
             frame = inRgb.getCvFrame()
             # 4k / 4
@@ -90,14 +90,13 @@ with dai.Device(pipeline) as device:
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
         elif cv2.waitKey(1) & 0xFF == ord('c'):
-            for q in [qPreview, qStill]:
+            for q in [qStill]:#[qPreview, qStill]:
                 name_time = str(int(time.time() * 1000))
 
                 pkt = q.get()
                 name = q.getName()
                 shape = (3, pkt.getHeight(), pkt.getWidth())
                 frame = pkt.getCvFrame()
-
 
                 if not has_1_USB and not has_2_USB:
                     fname0 = "".join([name_time,'.jpg'])
