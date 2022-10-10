@@ -56,11 +56,11 @@ with dai.Device(pipeline) as device:
             frame = cv2.pyrDown(frame)
             cv2.imshow("rgb", frame)
 
-        if qStill.has():
-            fName = f"{dirName}/{int(time.time() * 1000)}.jpeg"
-            with open(fName, "wb") as f:
-                f.write(qStill.get().getData())
-                print('Image saved to', fName)
+            if qStill.has():
+                fName = f"{dirName}/{int(time.time() * 1000)}.jpeg"
+                with open(fName, "wb") as f:
+                    f.write(qStill.get().getData())
+                    print('Image saved to', fName)
         
         key = cv2.waitKey(1)
         if key == ord('q'):
