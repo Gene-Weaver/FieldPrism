@@ -59,7 +59,9 @@ with dai.Device(pipeline) as device:
             cv2.imshow("rgb", frame)
             print('inRgb1')
             if qStill.has():
+                print('inRgb2')
                 fName = f"{dirName}/{int(time.time() * 1000)}.jpeg"
+                print('fName')
                 with open(fName, "wb") as f:
                     f.write(qStill.get().getData())
                     print('Image saved to', fName)
