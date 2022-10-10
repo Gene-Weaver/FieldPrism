@@ -21,7 +21,7 @@ def get_mount_points(devices=None):
     devices = devices or get_usb_devices() # if devices are None: get_usb_devices
     print(devices)
     print("######################################")
-    output = check_output(['mount']).splitlines()
+    output = check_output(['dev']).splitlines()
     print(output)
     print("######################################")
     is_usb = lambda path: any(dev in path for dev in devices)
