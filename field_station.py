@@ -14,6 +14,7 @@ def main():
     pipeline = dai.Pipeline()
 
     camRgb = pipeline.create(dai.node.ColorCamera)
+    camRgb.setPreviewSize(640, 480)
     camRgb.setBoardSocket(dai.CameraBoardSocket.RGB)
     camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_4_K)
 
