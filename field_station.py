@@ -87,8 +87,8 @@ with dai.Device(pipeline) as device:
         elif key == ord('c'):
             name_time = str(int(time.time() * 1000))
 
-            pkt = qStill.get()
-            name = qStill.getName()
+            pkt = qRgb.get()
+            name = qRgb.getName()
             shape = (3, pkt.getHeight(), pkt.getWidth())
             save_frame = pkt.getCvFrame()
 
