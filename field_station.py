@@ -89,7 +89,7 @@ def main():
             elif key == ord('c'):
                 ctrl = dai.CameraControl()
                 ctrl.setCaptureStill(True)
-                xin.send(ctrl)
+                qControl.send(ctrl)
 
             if qStill.has():
                 name_time = str(int(time.time() * 1000))
