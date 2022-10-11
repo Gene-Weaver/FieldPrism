@@ -74,12 +74,12 @@ with dai.Device(pipeline) as device:
 
     while True:
         inRgb = qRgb.tryGet()  # Non-blocking call, will return a new data that has arrived or None otherwise
-        # if inRgb is not None:
-        #     frame = inRgb.getCvFrame()
-        #     # 4k / 4
-        #     frame = cv2.pyrDown(frame)
-        #     frame = cv2.pyrDown(frame)
-        #     cv2.imshow("rgb", frame)
+        if inRgb is not None:
+            frame = inRgb.getCvFrame()
+            # 4k / 4
+            frame = cv2.pyrDown(frame)
+            frame = cv2.pyrDown(frame)
+            cv2.imshow("rgb", frame)
         
         key = cv2.waitKey(1)
         if key == ord('q'):
