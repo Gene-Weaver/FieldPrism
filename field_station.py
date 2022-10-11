@@ -15,7 +15,7 @@ def main():
 
     camRgb = pipeline.create(dai.node.ColorCamera)
     camRgb.setBoardSocket(dai.CameraBoardSocket.RGB)
-    camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_720_P)
+    camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_4_K)
 
     xoutRgb = pipeline.create(dai.node.XLinkOut)
     xoutRgb.setStreamName("rgb")
