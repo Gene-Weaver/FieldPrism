@@ -75,17 +75,22 @@ def main():
 
         while True:
             inRgb = qRgb.tryGet()  # Non-blocking call, will return a new data that has arrived or None otherwise
-            # if inRgb is not None:
-            #     frame = inRgb.getCvFrame()
-            #     # 4k / 4
-            #     frame = cv2.pyrDown(frame)
-            #     frame = cv2.pyrDown(frame)
-            #     cv2.imshow("rgb", frame)
+            if inRgb is not None:
+                frame = inRgb.getCvFrame()
+                # 4k / 4
+                frame = cv2.pyrDown(frame)
+                frame = cv2.pyrDown(frame)
+                cv2.imshow("rgb", frame)
             
             key = cv2.waitKey(1)
             if key == ord('q'):
                 break
             elif key == ord('c'):
+                ctrl = dai.CameraControl()
+                ctrl.setCaptureStill(True)
+                camRgb.send(ctrl)
+
+            if qStill.has():
                 name_time = str(int(time.time() * 1000))
 
                 # save_frame = inRgb.getCvFrame()
