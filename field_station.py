@@ -43,7 +43,7 @@ with dai.Device(pipeline) as device:
     qControl = device.getInputQueue(name="control")
 
     # Make sure the destination path is present before starting to store the examples
-    dir_name = "rgb_data"
+    dir_name = os.path.join('FieldPrism','Unprocessed_Images')
     USB_PATH = '/media/pi/'
     has_1_USB = False
     has_2_USB = False
@@ -87,10 +87,11 @@ with dai.Device(pipeline) as device:
         elif key == ord('c'):
             name_time = str(int(time.time() * 1000))
 
-            pkt = qRgb.get()
-            name = qRgb.getName()
-            shape = (3, pkt.getHeight(), pkt.getWidth())
-            save_frame = pkt.getCvFrame()
+            save_frame = inRgb.getCvFrame()
+            # pkt = qRgb.get()
+            # name = qRgb.getName()
+            # shape = (3, pkt.getHeight(), pkt.getWidth())
+            # save_frame = pkt.getCvFrame()
 
             if not has_1_USB and not has_2_USB:
                 fname0 = "".join([name_time,'.jpg'])
@@ -157,6 +158,7 @@ with dai.Device(pipeline) as device:
 # manipCfg.out.link(manip.inputConfig)
 
 # Connect to device and start pipeline
+'''
 with dai.Device(pipeline) as device:
     print(f"Pipline started")
     # Create input & output queues
@@ -242,7 +244,7 @@ with dai.Device(pipeline) as device:
                     print('Image saved to', fname1)  
                     cv2.imwrite(fname2, save_frame)
                     print('Image saved to', fname2)  
-                    
+'''                    
         
         
     
