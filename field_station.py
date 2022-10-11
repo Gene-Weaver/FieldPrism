@@ -16,6 +16,7 @@ def main():
     camRgb = pipeline.create(dai.node.ColorCamera)
     camRgb.setBoardSocket(dai.CameraBoardSocket.RGB)
     camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_4_K)
+    
 
     xoutRgb = pipeline.create(dai.node.XLinkOut)
     xoutRgb.setStreamName("rgb")
@@ -88,7 +89,7 @@ def main():
             elif key == ord('c'):
                 ctrl = dai.CameraControl()
                 ctrl.setCaptureStill(True)
-                camRgb.send(ctrl)
+                xin.send(ctrl)
 
             if qStill.has():
                 name_time = str(int(time.time() * 1000))
