@@ -87,15 +87,14 @@ def main():
             if key == ord('q'):
                 break
             elif key == ord('c'):
-                ctrl = dai.CameraControl()
-                ctrl.setCaptureStill(True)
-                qControl.send(ctrl)
+                # ctrl = dai.CameraControl()
+                # ctrl.setCaptureStill(True)
+                # qControl.send(ctrl)
 
-            if qStill.has():
                 name_time = str(int(time.time() * 1000))
 
                 # save_frame = inRgb.getCvFrame()
-                pkt = qRgb.get()
+                pkt = qStill.get()
                 # name = qRgb.getName()
                 # shape = (3, pkt.getHeight(), pkt.getWidth())
                 save_frame = pkt.getCvFrame()
