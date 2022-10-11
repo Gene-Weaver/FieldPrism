@@ -80,7 +80,7 @@ def main():
                 # 4k / 4
                 frame = cv2.pyrDown(frame)
                 frame = cv2.pyrDown(frame)
-                cv2.imshow("rgb", frame)
+                cv2.imshow("rgb", cv2.rotate(frame, cv2.ROTATE_180))
             
             key = cv2.waitKey(1)
             if key == ord('q'):
@@ -98,13 +98,13 @@ def main():
                     fname0 = "".join([name_time,'.jpg'])
                     fname0 = os.path.join(USB_DRIVE_0,fname0)
                     print(f"Capturing image ==> {fname0}")
-                    cv2.imwrite(fname0, save_frame)
+                    cv2.imwrite(fname0, cv2.rotate(save_frame, cv2.ROTATE_180))
                     print('Image saved to', fname0)
                 elif has_1_USB and not has_2_USB:
                     fname1 = "".join([name_time,'.jpg'])
                     fname1 = os.path.join(USB_DRIVE_1,fname1)
                     print(f"Capturing image ==> {fname1}")
-                    cv2.imwrite(fname1, save_frame)
+                    cv2.imwrite(fname1, cv2.rotate(save_frame, cv2.ROTATE_180))
                     print('Image saved to', fname1)
                 elif has_1_USB and has_2_USB:
                     fname1 = "".join([name_time,'.jpg'])
@@ -112,9 +112,9 @@ def main():
                     fname2 = "".join([name_time,'.jpg'])
                     fname2 = os.path.join(USB_DRIVE_2,fname2)
                     print(f"Capturing image. Saving redundant ==> {fname1}   &   {fname2}")
-                    cv2.imwrite(fname1, save_frame)
+                    cv2.imwrite(fname1, cv2.rotate(save_frame, cv2.ROTATE_180))
                     print('Image saved to', fname1)  
-                    cv2.imwrite(fname2, save_frame)
+                    cv2.imwrite(fname2, cv2.rotate(save_frame, cv2.ROTATE_180))
                     print('Image saved to', fname2)  
 
 if __name__ == '__main__':
