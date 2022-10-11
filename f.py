@@ -75,7 +75,8 @@ with dai.Device(pipeline) as device:
             cv2.imshow("rgb", cv2.rotate(frame, cv2.ROTATE_180))
 
         if cv2.waitKey(1) == ord('c'):
-            save_frame = cv2.rotate(inRgb.getCvFrame(), cv2.ROTATE_180)
+            save_frame = qJpeg.getCvFrame()
+            save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
             name_time = str(int(time.time() * 1000))
 
             if not has_1_USB and not has_2_USB:
