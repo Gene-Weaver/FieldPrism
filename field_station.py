@@ -163,6 +163,7 @@ def main():
                     print('Image saved to', fname1)  
                     cv2.imwrite(fname2, save_frame)
                     print('Image saved to', fname2)
+                time.sleep(2)
                     
 
 if __name__ == '__main__':
