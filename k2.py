@@ -3,9 +3,9 @@ from sshkeyboard import listen_keyboard
 def press(key):
     print(f"'{key}' pressed")
 
-def release(key,keypress):
+def release(key):
     print(f"'{key}' released")
-    selection(key,keypress)
+    # selection(key,keypress)
 
     
 def selection(key,keypress):
@@ -24,7 +24,8 @@ class KeyPress:
 
 while True:
     keypress = KeyPress
-    listen_keyboard(on_press=press, on_release=release)
+    XXX = listen_keyboard(on_press=press, on_release=release)
+    print(XXX)
 
     if keypress.stop_all:
         break
