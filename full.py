@@ -27,12 +27,10 @@ class SetupFP():
         self.dir_images_unprocessed = os.path.join('FieldPrism','Images_Unprocessed')
 
         print(f"{bcolors.HEADER}Base USB Path: {self.usb_base_path}{bcolors.ENDC}")
-        print(f"{bcolors.OKCYAN}     Available USB Devices: {os.listdir(self.usb_base_path)}{bcolors.ENDC}")
+        print(f"{bcolors.OKCYAN}       Available USB Devices: {os.listdir(self.usb_base_path)}{bcolors.ENDC}")
 
         if os.listdir(self.usb_base_path) == []:
-            print(f"{bcolors.FAIL}ERROR: USB device/s not mounted correctly. {bcolors.ENDC}")
-            print(f"{bcolors.FAIL}       Quit and mount USB device/s otherwise images will{bcolors.ENDC}")
-            print(f"{bcolors.FAIL}       save to boot device (microSD card) in:{bcolors.ENDC}")
+            print_usb_error()
             self.usb_none = os.path.join('/home','pi','FieldPrism','Data','Images_Unprocessed')
             print(f"{bcolors.FAIL}            {self.usb_none}{bcolors.ENDC}")
             self.save_to_boot = True
@@ -40,15 +38,15 @@ class SetupFP():
         elif len(os.listdir(self.usb_base_path)) == 1:
             self.usb_1 = os.path.join(self.usb_base_path,os.listdir(self.usb_base_path)[0],self.dir_images_unprocessed)
             self.has_1_usb = True
-            print(f"{bcolors.OKGREEN}     Path to USB 1: {self.usb_1}{bcolors.ENDC}")
+            print(f"{bcolors.OKGREEN}       Path to USB 1: {self.usb_1}{bcolors.ENDC}")
 
         elif len(os.listdir(self.usb_base_path)) == 2:
             self.usb_1 = os.path.join(self.usb_base_path,os.listdir(self.usb_base_path)[0],self.dir_images_unprocessed)
             self.usb_2 = os.path.join(self.usb_base_path,os.listdir(self.usb_base_path)[1],self.dir_images_unprocessed)
             self.has_1_usb = True
             self.has_2_usb = True 
-            print(f"{bcolors.OKGREEN}     Path to USB 1: {self.usb_1}{bcolors.ENDC}")
-            print(f"{bcolors.OKGREEN}     Path to USB 2: {self.usb_2}{bcolors.ENDC}")
+            print(f"{bcolors.OKGREEN}       Path to USB 1: {self.usb_1}{bcolors.ENDC}")
+            print(f"{bcolors.OKGREEN}       Path to USB 2: {self.usb_2}{bcolors.ENDC}")
         
         print(f"{bcolors.HEADER}Creating Save Directories{bcolors.ENDC}")
         if not self.has_1_usb and not self.has_2_usb and self.save_to_boot:
@@ -59,11 +57,23 @@ class SetupFP():
             Path(self.usb_1).mkdir(parents=True, exist_ok=True)
             Path(self.usb_2).mkdir(parents=True, exist_ok=True)
 
+def print_usb_error():
+    print(f"{bcolors.FAIL}ERROR: USB device/s not mounted correctly. {bcolors.ENDC}")
+    print(f"")
+    print(f"{bcolors.FAIL}       For 1 USB use command: {bcolors.ENDC}")
+    print(f"{bcolors.FAIL}              udisksctl mount -b /dev/sda1{bcolors.ENDC}")
+    print(f"{bcolors.FAIL}       For 2 USBs use commands: {bcolors.ENDC}")
+    print(f"{bcolors.FAIL}              udisksctl mount -b /dev/sda1{bcolors.ENDC}")
+    print(f"{bcolors.FAIL}              udisksctl mount -b /dev/sdb1{bcolors.ENDC}")
+    print(f"")
+    print(f"{bcolors.FAIL}       Quit and mount USB device/s otherwise images will{bcolors.ENDC}")
+    print(f"{bcolors.FAIL}       save to boot device (microSD card) in:{bcolors.ENDC}")
+
 def save_image(save_frame, name_time, save_dir):
     fname = "".join([name_time,'.jpg'])
     fname = os.path.join(save_dir,fname)
     cv2.imwrite(fname, save_frame)
-    print(f"{bcolors.OKGREEN}     Image Saved: {fname}{bcolors.ENDC}")
+    print(f"{bcolors.OKGREEN}       Image Saved: {fname}{bcolors.ENDC}")
 
 def route_save_image(Setup,save_frame):
     name_time = str(int(time.time() * 1000))
@@ -150,7 +160,7 @@ def main():
                 stillFrames = stillQueue.tryGetAll()
                 if len(stillFrames) == 1:
                     for stillFrame in stillFrames:
-                        print(f"     Capturing Still")
+                        print(f"       Capturing Still")
                         # Decode JPEG
                         save_frame = cv2.imdecode(stillFrame.getData(), cv2.IMREAD_UNCHANGED)
                         save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
@@ -162,7 +172,7 @@ def main():
                         route_save_image(cfg,save_frame)
                         TAKE_PHOTO = False
                 else:
-                    print(f"     Capturing Image")
+                    print(f"       Capturing Image")
                     save_frame = ispFrames.getCvFrame()
                     save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
                     frame = cv2.pyrDown(save_frame)
@@ -180,7 +190,7 @@ def main():
                 ctrl.setCaptureStill(True)
                 controlQueue.send(ctrl)
                 TAKE_PHOTO = True
-                print(f"     Camera Activated")
+                print(f"       Camera Activated")
                 time.sleep(3)
 
 if __name__ == '__main__':
