@@ -68,10 +68,11 @@ def main():
                 frame = cv2.pyrDown(frame)
                 cv2.imshow('video', frame)
 
-            ispFrames = ispQueue.tryGetAll()
-            for ispFrame in ispFrames:
-                # time.sleep(0.1)
-                pass
+            ispFrames = ispQueue.get()
+            # ispFrames = ispQueue.tryGetAll()
+            # for ispFrame in ispFrames:
+            #     # time.sleep(0.1)
+            #     pass
                 # cv2.imshow('isp', ispFrame.getCvFrame())
 
             if TAKE_PHOTO:
