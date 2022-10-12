@@ -153,8 +153,11 @@ def main():
                         print(f"     Capturing Still")
                         # Decode JPEG
                         save_frame = cv2.imdecode(stillFrame.getData(), cv2.IMREAD_UNCHANGED)
+                        save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
                         # Display
-                        cv2.imshow('still', save_frame)
+                        frame = cv2.pyrDown(save_frame)
+                        frame = cv2.pyrDown(frame)  
+                        cv2.imshow('still', frame)
                         # Save
                         route_save_image(cfg,save_frame)
                         TAKE_PHOTO = False
@@ -162,7 +165,9 @@ def main():
                     print(f"     Capturing Image")
                     save_frame = ispFrames.getCvFrame()
                     save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
-                    cv2.imshow('still', save_frame)
+                    frame = cv2.pyrDown(save_frame)
+                    frame = cv2.pyrDown(frame)  
+                    cv2.imshow('still', frame)
                     # Save
                     route_save_image(cfg,save_frame)
                     TAKE_PHOTO = False
