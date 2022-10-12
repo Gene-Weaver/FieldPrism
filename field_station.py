@@ -42,7 +42,7 @@ def main():
     pipeline = dai.Pipeline()
 
     camRgb = pipeline.create(dai.node.ColorCamera)
-    camRgb.setPreviewSize(640, 480)
+    camRgb.setPreviewSize(480, 270)
     camRgb.setBoardSocket(dai.CameraBoardSocket.RGB)
     camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_4_K)
 
@@ -117,7 +117,7 @@ def main():
         while True:
             # Wait for the next event.
             # event = keyboard.read_event()
-            inRgb = camRgb.get()  # blocking call, will wait until a new data has arrived
+            inRgb = qRgb.get()  # blocking call, will wait until a new data has arrived
 
             # Retrieve 'bgr' (opencv format) frame
             cv2.imshow("rgb", cv2.rotate(inRgb.getCvFrame(), cv2.ROTATE_180))
