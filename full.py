@@ -26,7 +26,7 @@ class SetupFP():
         self.usb_base_path = '/media/pi/'#os.path.join('media','pi')
         self.dir_images_unprocessed = os.path.join('FieldPrism','Images_Unprocessed')
 
-        print(f"{bcolors.OKCYAN}Base USB Path: {self.usb_base_path}{bcolors.ENDC}")
+        print(f"{bcolors.HEADER}Base USB Path: {self.usb_base_path}{bcolors.ENDC}")
         print(f"{bcolors.OKCYAN}     Available USB Devices{os.listdir(self.usb_base_path)}{bcolors.ENDC}")
 
         if os.listdir(self.usb_base_path) is None:
@@ -50,7 +50,7 @@ class SetupFP():
             print(f"{bcolors.OKGREEN}     Path to USB 1: {self.usb_1}{bcolors.ENDC}")
             print(f"{bcolors.OKGREEN}     Path to USB 2: {self.usb_2}{bcolors.ENDC}")
         
-        print(f"{bcolors.OKCYAN}Creating Save Directories{bcolors.ENDC}")
+        print(f"{bcolors.HEADER}Creating Save Directories{bcolors.ENDC}")
         if not self.has_1_usb and not self.has_2_usb and self.save_to_boot:
             Path(self.dir_images_unprocessed).mkdir(parents=True, exist_ok=True)
         elif self.has_1_usb and not self.has_2_usb:
@@ -148,9 +148,8 @@ def main():
             if TAKE_PHOTO:
                 stillFrames = stillQueue.tryGetAll()
                 if len(stillFrames) == 1:
-                    print("if")
                     for stillFrame in stillFrames:
-                        print(f"{bcolors.BOLD}     Capturing Photo{bcolors.ENDC}")
+                        print(f"     Capturing Still")
                         # Decode JPEG
                         save_frame = cv2.imdecode(stillFrame.getData(), cv2.IMREAD_UNCHANGED)
                         # Display
@@ -159,8 +158,7 @@ def main():
                         route_save_image(cfg,save_frame)
                         TAKE_PHOTO = False
                 else:
-                    print(f"{bcolors.BOLD}     Capturing Image{bcolors.ENDC}")
-                    # pkt = ispQueue.get()
+                    print(f"     Capturing Image")
                     save_frame = ispFrames.getCvFrame()
                     save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
                     cv2.imshow('still', save_frame)
@@ -168,7 +166,6 @@ def main():
                     route_save_image(cfg,save_frame)
                     TAKE_PHOTO = False
 
-            # Update screen (1ms pooling rate)
             key = cv2.waitKey(1)
             if keyboard.is_pressed('6'):
                 break
@@ -177,7 +174,7 @@ def main():
                 ctrl.setCaptureStill(True)
                 controlQueue.send(ctrl)
                 TAKE_PHOTO = True
-                print(f"{bcolors.BOLD}     Camera Activated{bcolors.ENDC}")
+                print(f"     Camera Activated")
                 time.sleep(3)
 
 if __name__ == '__main__':
