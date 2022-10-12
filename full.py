@@ -63,7 +63,7 @@ def save_image(save_frame, name_time, save_dir):
     fname = "".join([name_time,'.jpg'])
     fname = os.path.join(save_dir,fname)
     cv2.imwrite(fname, save_frame)
-    print(f"{bcolors.BOLD}     Image Saved: {fname}{bcolors.ENDC}")
+    print(f"{bcolors.OKGREEN}     Image Saved: {fname}{bcolors.ENDC}")
 
 def route_save_image(Setup,save_frame):
     name_time = str(int(time.time() * 1000))
@@ -150,7 +150,7 @@ def main():
                 if len(stillFrames) == 1:
                     print("if")
                     for stillFrame in stillFrames:
-                        print("STILL STILL STILL")
+                        print(f"{bcolors.BOLD}     Capturing Photo{bcolors.ENDC}")
                         # Decode JPEG
                         save_frame = cv2.imdecode(stillFrame.getData(), cv2.IMREAD_UNCHANGED)
                         # Display
@@ -159,7 +159,7 @@ def main():
                         route_save_image(cfg,save_frame)
                         TAKE_PHOTO = False
                 else:
-                    print('else')
+                    print(f"{bcolors.BOLD}     Capturing Image{bcolors.ENDC}")
                     # pkt = ispQueue.get()
                     save_frame = ispFrames.getCvFrame()
                     save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
@@ -177,7 +177,7 @@ def main():
                 ctrl.setCaptureStill(True)
                 controlQueue.send(ctrl)
                 TAKE_PHOTO = True
-                print("Sent 'still' event to the camera!")
+                print(f"{bcolors.BOLD}     Camera Activated{bcolors.ENDC}")
                 time.sleep(3)
 
 if __name__ == '__main__':
