@@ -27,9 +27,9 @@ class SetupFP():
         self.dir_images_unprocessed = os.path.join('FieldPrism','Images_Unprocessed')
 
         print(f"{bcolors.HEADER}Base USB Path: {self.usb_base_path}{bcolors.ENDC}")
-        print(f"{bcolors.OKCYAN}     Available USB Devices{os.listdir(self.usb_base_path)}{bcolors.ENDC}")
+        print(f"{bcolors.OKCYAN}     Available USB Devices: {os.listdir(self.usb_base_path)}{bcolors.ENDC}")
 
-        if os.listdir(self.usb_base_path) is None:
+        if os.listdir(self.usb_base_path) == []:
             print(f"{bcolors.FAIL}ERROR: USB device/s not mounted correctly. {bcolors.ENDC}")
             print(f"{bcolors.FAIL}       Quit and mount USB device/s otherwise images will{bcolors.ENDC}")
             print(f"{bcolors.FAIL}       save to boot device (microSD card) in:{bcolors.ENDC}")
