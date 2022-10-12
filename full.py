@@ -76,14 +76,20 @@ def main():
 
             while TAKE_PHOTO:
                 stillFrames = stillQueue.tryGetAll()
-                for stillFrame in stillFrames:
-                    print("STILL STILL STILL")
-                    # Decode JPEG
-                    frame = cv2.imdecode(stillFrame.getData(), cv2.IMREAD_UNCHANGED)
-                    # Display
-                    cv2.imshow('still', frame)
+                if stillFrames.has():
+                    for stillFrame in stillFrames:
+                        print("STILL STILL STILL")
+                        # Decode JPEG
+                        frame = cv2.imdecode(stillFrame.getData(), cv2.IMREAD_UNCHANGED)
+                        # Display
+                        cv2.imshow('still', frame)
+                        TAKE_PHOTO = False
+                        # time.sleep(2)
+                else:
+                    pkt = stillQueue.get()
+                    save_frame = pkt.getCvFrame()
+                    save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
                     TAKE_PHOTO = False
-                    # time.sleep(2)
                 if not TAKE_PHOTO:
                     break
 
