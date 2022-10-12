@@ -29,7 +29,8 @@ def main():
     stillMjpegOut.setStreamName('still')
 
     # Properties
-    camRgb.setVideoSize(3140, 2160)
+    # camRgb.setVideoSize(3140, 2160)
+    camRgb.setVideoSize(1280, 720)
     stillEncoder.setDefaultProfilePreset(1, dai.VideoEncoderProperties.Profile.MJPEG)
 
     # Linking
