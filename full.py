@@ -93,6 +93,7 @@ def main():
                     # pkt = ispQueue.get()
                     save_frame = ispFrames.getCvFrame()
                     save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
+                    cv2.imshow('still', save_frame)
                     TAKE_PHOTO = False
                     # break
                 # if not TAKE_PHOTO:
