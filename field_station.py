@@ -117,6 +117,7 @@ def main():
                 frame = inRgb.getCvFrame()
                 # 4k / 4
                 frame = cv2.pyrDown(frame)
+                frame = cv2.pyrDown(frame)
                 cv2.imshow("rgb", cv2.rotate(frame, cv2.ROTATE_180))
             
             key = cv2.waitKey(1)
@@ -134,7 +135,7 @@ def main():
                 print(f"Pressed - 1 - PHOTO")
                 name_time = str(int(time.time() * 1000))
                 # save_frame = inRgb.getCvFrame()
-                pkt = qRgb.get()
+                pkt = qStill.get()
                 # name = qRgb.getName()
                 # shape = (3, pkt.getHeight(), pkt.getWidth())
                 save_frame = pkt.getCvFrame()
