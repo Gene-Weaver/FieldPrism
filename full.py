@@ -7,7 +7,7 @@ import depthai as dai
 import keyboard
 from dataclasses import dataclass
 from utils import bcolors
-from subprocess import call, run
+import subprocess
 
 # print(f"{bcolors.OKGREEN}     {bcolors.ENDC}")
 
@@ -71,7 +71,9 @@ def print_usb_error():
     print(f"{bcolors.FAIL}       save to boot device (microSD card) in:{bcolors.ENDC}")
 
 def mount_usb():
-    rc = run("sh", "mount_usb_drives.sh")
+    result = subprocess.run(["sh", "./mount_usb_drives.sh"], stderr=subprocess.PIPE, text=True)
+    print(result.stderr)
+    # rc = run("sh", "./mount_usb_drives.sh")
     # rc = call("./mount_usb_drives.sh")
 
 def save_image(save_frame, name_time, save_dir):
