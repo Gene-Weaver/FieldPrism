@@ -83,7 +83,7 @@ def main():
                 time.sleep(2)
 
             # Update screen (1ms pooling rate)
-            key = cv2.waitKey(50)
+            key = cv2.waitKey(1)
             if keyboard.is_pressed('6'):
                 break
             elif keyboard.is_pressed('1'):
