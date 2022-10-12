@@ -78,9 +78,6 @@ def route_save_image(Setup,save_frame):
         save_image(save_frame, name_time, Setup.usb_2)
 
 def main():
-    # Make sure the destination path is present before starting to store the examples
-    Setup = SetupFP
-
     # Create pipeline
     pipeline = dai.Pipeline()
 
@@ -117,6 +114,9 @@ def main():
 
     # Connect to device and start pipeline
     with dai.Device(pipeline) as device:
+        # Make sure the destination path is present before starting to store the examples
+        Setup = SetupFP
+        
         # Get data queues
         controlQueue = device.getInputQueue('control')
         configQueue = device.getInputQueue('config')
