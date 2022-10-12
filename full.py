@@ -29,7 +29,7 @@ def main():
     stillMjpegOut.setStreamName('still')
 
     # Properties
-    camRgb.setVideoSize(480, 270)
+    camRgb.setVideoSize(3140, 2160)
     stillEncoder.setDefaultProfilePreset(1, dai.VideoEncoderProperties.Profile.MJPEG)
 
     # Linking
@@ -61,7 +61,12 @@ def main():
         while True:
             vidFrames = videoQueue.tryGetAll()
             for vidFrame in vidFrames:
-                cv2.imshow('video', vidFrame.getCvFrame())
+                frame = vidFrame.getCvFrame()
+                frame = cv2.pyrDown(frame)
+                frame = cv2.pyrDown(frame)
+                frame = cv2.pyrDown(frame)
+                frame = cv2.pyrDown(frame)
+                cv2.imshow('video', frame)
 
             ispFrames = ispQueue.tryGetAll()
             # for ispFrame in ispFrames:
