@@ -26,8 +26,8 @@ class SetupFP():
         self.usb_base_path = '/media/pi/'#os.path.join('media','pi')
         self.dir_images_unprocessed = os.path.join('FieldPrism','Images_Unprocessed')
 
-        print(f"{bcolors.WARNING}Base USB Path: {self.usb_base_path}{bcolors.ENDC}")
-        print(f"{bcolors.WARNING}     Available USB Devices{os.listdir(self.usb_base_path)}{bcolors.ENDC}")
+        print(f"{bcolors.OKCYAN}Base USB Path: {self.usb_base_path}{bcolors.ENDC}")
+        print(f"{bcolors.OKCYAN}     Available USB Devices{os.listdir(self.usb_base_path)}{bcolors.ENDC}")
 
         if os.listdir(self.usb_base_path) is None:
             print(f"{bcolors.FAIL}ERROR: USB device/s not mounted correctly. {bcolors.ENDC}")
@@ -50,7 +50,7 @@ class SetupFP():
             print(f"{bcolors.OKGREEN}     Path to USB 1: {self.usb_1}{bcolors.ENDC}")
             print(f"{bcolors.OKGREEN}     Path to USB 2: {self.usb_2}{bcolors.ENDC}")
         
-        print(f"{bcolors.WARNING}Creating Save Directories{bcolors.ENDC}")
+        print(f"{bcolors.OKCYAN}Creating Save Directories{bcolors.ENDC}")
         if not self.has_1_usb and not self.has_2_usb and self.save_to_boot:
             Path(self.dir_images_unprocessed).mkdir(parents=True, exist_ok=True)
         elif self.has_1_usb and not self.has_2_usb:
