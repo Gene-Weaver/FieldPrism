@@ -114,9 +114,9 @@ def main():
 
             inRgb = qRgb.tryGet()  # Non-blocking call, will return a new data that has arrived or None otherwise
             if inRgb is not None:
-                frame = inRgb.getCvFrame()
+                save_frame = inRgb.getCvFrame()
                 # 4k / 4
-                frame = cv2.pyrDown(frame)
+                frame = cv2.pyrDown(save_frame)
                 frame = cv2.pyrDown(frame)
                 cv2.imshow("rgb", cv2.rotate(frame, cv2.ROTATE_180))
             
@@ -135,10 +135,10 @@ def main():
                 print(f"Pressed - 1 - PHOTO")
                 name_time = str(int(time.time() * 1000))
                 # save_frame = inRgb.getCvFrame()
-                pkt = qStill.get()
+                # pkt = qRgb.get()
                 # name = qRgb.getName()
                 # shape = (3, pkt.getHeight(), pkt.getWidth())
-                save_frame = pkt.getCvFrame()
+                # save_frame = pkt.getCvFrame()
                 save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
 
                 if not has_1_USB and not has_2_USB:
