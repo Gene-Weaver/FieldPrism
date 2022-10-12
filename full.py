@@ -51,11 +51,11 @@ class SetupFP():
             print(f"{bcolors.OKGREEN}     Path to USB 2: {self.usb_2}{bcolors.ENDC}")
         
         print(f"{bcolors.WARNING}Creating Save Directories{bcolors.ENDC}")
-        if not self.has_1_USB and not self.has_2_USB and self.save_to_boot:
+        if not self.has_1_usb and not self.has_2_usb and self.save_to_boot:
             Path(self.dir_images_unprocessed).mkdir(parents=True, exist_ok=True)
-        elif self.has_1_USB and not self.has_2_USB:
+        elif self.has_1_usb and not self.has_2_usb:
             Path(self.usb_1).mkdir(parents=True, exist_ok=True)
-        elif self.has_1_USB and self.has_2_USB:
+        elif self.has_1_usb and self.has_2_usb:
             Path(self.usb_1).mkdir(parents=True, exist_ok=True)
             Path(self.usb_2).mkdir(parents=True, exist_ok=True)
 
