@@ -25,8 +25,8 @@ import keyboard
 
 
 def main():
-    # keyboard.add_hotkey('1', lambda: print('1 - PHOTO was pressed'))
-    # keyboard.add_hotkey('6', lambda: print('6 - EXIT was pressed'))
+    keyboard.add_hotkey('1', lambda: print('1 - PHOTO was pressed'))
+    keyboard.add_hotkey('6', lambda: print('6 - EXIT was pressed'))
 
     # or this
     def on_PHOTO():
