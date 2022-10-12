@@ -88,7 +88,9 @@ def main():
             if keyboard.is_pressed('q'):#key == ord('q'):
                 break
             elif keyboard.is_pressed('c'):#key == ord('c'):
+                print(f"Pressed - C")
                 if keyboard.on_release_key('c'):
+                    print(f"Released - C")
                     name_time = str(int(time.time() * 1000))
 
                     # save_frame = inRgb.getCvFrame()
