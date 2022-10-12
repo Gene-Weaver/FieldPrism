@@ -76,7 +76,7 @@ def main():
 
             while TAKE_PHOTO:
                 stillFrames = stillQueue.tryGetAll()
-                if stillFrames.has():
+                if stillFrames == 1:
                     for stillFrame in stillFrames:
                         print("STILL STILL STILL")
                         # Decode JPEG
