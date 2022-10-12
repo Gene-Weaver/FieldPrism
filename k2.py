@@ -21,9 +21,10 @@ class KeyPress:
         self.photo = False
         self.stop_all = False
 
-keypress = KeyPress
+
 while True:
-    listen_keyboard(on_press=press, on_release=release(keypress))
+    keypress = KeyPress
+    listen_keyboard(on_press=press, on_release=release(key,keypress))
 
     if keypress.stop_all:
         break
