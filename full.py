@@ -29,7 +29,7 @@ def main():
     stillMjpegOut.setStreamName('still')
 
     # Properties
-    camRgb.setVideoSize(640,360)
+    camRgb.setVideoSize(480, 270)
     stillEncoder.setDefaultProfilePreset(1, dai.VideoEncoderProperties.Profile.MJPEG)
 
     # Linking
@@ -75,7 +75,7 @@ def main():
                 frame = cv2.imdecode(stillFrame.getData(), cv2.IMREAD_UNCHANGED)
                 # Display
                 cv2.imshow('still', frame)
-                time.sleep(2)
+                # time.sleep(2)
 
             # Update screen (1ms pooling rate)
             key = cv2.waitKey(1)
@@ -86,6 +86,7 @@ def main():
                 ctrl.setCaptureStill(True)
                 controlQueue.send(ctrl)
                 print("Sent 'still' event to the camera!")
+                time.sleep(2)
                 
             
             # key = cv2.waitKey(1)
