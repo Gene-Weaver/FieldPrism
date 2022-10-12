@@ -69,8 +69,9 @@ def main():
 
             ispFrames = ispQueue.tryGetAll()
             for ispFrame in ispFrames:
-                # pass
-                cv2.imshow('isp', ispFrame.getCvFrame())
+                time.sleep(0.1)
+                pass
+                # cv2.imshow('isp', ispFrame.getCvFrame())
 
 
             stillFrames = stillQueue.tryGetAll()
@@ -91,7 +92,7 @@ def main():
                 ctrl.setCaptureStill(True)
                 controlQueue.send(ctrl)
                 print("Sent 'still' event to the camera!")
-                time.sleep(2)
+                time.sleep(3)
                 
             
             # key = cv2.waitKey(1)
