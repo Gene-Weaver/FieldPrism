@@ -17,8 +17,8 @@ def selection(key,keypress):
         print(f"keypress.stop_all == True'{key}'")
 
 class KeyPress:
-    def __init__(self, name):
-        self.photo = False
+    def __init__(self):
+        self.photo = True
         self.stop_all = False
 
 
