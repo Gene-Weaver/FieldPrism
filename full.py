@@ -74,10 +74,10 @@ def main():
                 pass
                 # cv2.imshow('isp', ispFrame.getCvFrame())
 
-            while TAKE_PHOTO:
+            if TAKE_PHOTO:
                 stillFrames = stillQueue.tryGetAll()
-                if stillFrames == 1:
-
+                if len(stillFrames) == 1:
+                    print("if")
                     for stillFrame in stillFrames:
                         print("STILL STILL STILL")
                         # Decode JPEG
@@ -85,7 +85,7 @@ def main():
                         # Display
                         cv2.imshow('still', frame)
                         TAKE_PHOTO = False
-                        break
+                        # break
                         # time.sleep(2)
                 else:
                     print('else')
@@ -93,7 +93,7 @@ def main():
                     save_frame = pkt.getCvFrame()
                     save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
                     TAKE_PHOTO = False
-                    break
+                    # break
                 # if not TAKE_PHOTO:
                 #     break
 
