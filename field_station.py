@@ -85,12 +85,13 @@ def main():
                 cv2.imshow("rgb", cv2.rotate(frame, cv2.ROTATE_180))
             
             key = cv2.waitKey(1)
-            if keyboard.is_pressed('q'):#key == ord('q'):
+            if keyboard.is_pressed('6'):#key == ord('q'):
+                print(f"Pressed - 6")
                 break
-            elif keyboard.is_pressed('c'):#key == ord('c'):
-                print(f"Pressed - C")
-                if keyboard.on_release_key('c'):
-                    print(f"Released - C")
+            elif keyboard.is_pressed('1'):#key == ord('c'):
+                print(f"Pressed - 1")
+                if keyboard.on_release_key('1'):
+                    print(f"Released - 1")
                     name_time = str(int(time.time() * 1000))
 
                     # save_frame = inRgb.getCvFrame()
