@@ -116,8 +116,10 @@ def main():
             if inRgb is not None:
                 frame = inRgb.getCvFrame()
                 # 4k / 4
-                # frame = cv2.pyrDown(frame)
-                # frame = cv2.pyrDown(frame)
+                frame = cv2.pyrDown(frame)
+                frame = cv2.pyrDown(frame)
+                frame = cv2.pyrDown(frame)
+                frame = cv2.pyrDown(frame)
                 cv2.imshow("rgb", cv2.rotate(frame, cv2.ROTATE_180))
             
             key = cv2.waitKey(1)
