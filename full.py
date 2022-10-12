@@ -24,7 +24,7 @@ class SetupFP():
     save_to_boot: bool = False
 
     def __post_init__(self) -> None:
-        self.usb_base_path = '/media/pi/'#os.path.join('media','pi')
+        self.usb_base_path = '/media/'# OR '/media/pi/' # os.path.join('media','pi')
         self.dir_images_unprocessed = os.path.join('FieldPrism','Images_Unprocessed')
 
         print(f"{bcolors.HEADER}Base USB Path: {self.usb_base_path}{bcolors.ENDC}")
@@ -73,8 +73,6 @@ def print_usb_error():
 def mount_usb():
     result = subprocess.run(["sh", "./mount_usb_drives.sh"], stderr=subprocess.PIPE, text=True)
     print(result.stderr)
-    # rc = run("sh", "./mount_usb_drives.sh")
-    # rc = call("./mount_usb_drives.sh")
 
 def save_image(save_frame, name_time, save_dir):
     fname = "".join([name_time,'.jpg'])

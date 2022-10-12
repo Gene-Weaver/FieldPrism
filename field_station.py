@@ -81,7 +81,7 @@ def main():
 
         # Make sure the destination path is present before starting to store the examples
         dir_name = os.path.join('FieldPrism','Unprocessed_Images')
-        USB_PATH = '/media/pi/'
+        USB_PATH = '/media/'
         has_1_USB = False
         has_2_USB = False
         USB_DRIVE_1 = ''
