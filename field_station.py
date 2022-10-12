@@ -103,10 +103,10 @@ def main():
             Path(USB_DRIVE_2).mkdir(parents=True, exist_ok=True)
 
 
-        keypress_EXIT = False
-        keypress_1 = False
-        key_1 = '1'
-        key_EXIT = '6'
+        # keypress_EXIT = False
+        # keypress_1 = False
+        # key_1 = '1'
+        # key_EXIT = '6'
         while True:
             # Wait for the next event.
             # event = keyboard.read_event()
@@ -120,7 +120,7 @@ def main():
                 frame = cv2.pyrDown(frame)
                 cv2.imshow("rgb", cv2.rotate(frame, cv2.ROTATE_180))
             
-            key = cv2.waitKey(0)
+            key = cv2.waitKey(1)
             # if keypress_EXIT and not keyboard.is_pressed(key_EXIT):
             #     print(f"Pressed - 6 - EXIT")
             #     keypress_EXIT = False
