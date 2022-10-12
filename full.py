@@ -59,6 +59,7 @@ def main():
         dirName = "rgb_data"
         Path(dirName).mkdir(parents=True, exist_ok=True)
 
+        TAKE_PHOTO = False
         while True:
             vidFrames = videoQueue.tryGetAll()
             for vidFrame in vidFrames:
@@ -73,15 +74,18 @@ def main():
                 pass
                 # cv2.imshow('isp', ispFrame.getCvFrame())
 
-
-            stillFrames = stillQueue.tryGetAll()
-            for stillFrame in stillFrames:
-                print("STILL STILL STILL")
-                # Decode JPEG
-                frame = cv2.imdecode(stillFrame.getData(), cv2.IMREAD_UNCHANGED)
-                # Display
-                cv2.imshow('still', frame)
-                # time.sleep(2)
+            while TAKE_PHOTO:
+                stillFrames = stillQueue.tryGetAll()
+                for stillFrame in stillFrames:
+                    print("STILL STILL STILL")
+                    # Decode JPEG
+                    frame = cv2.imdecode(stillFrame.getData(), cv2.IMREAD_UNCHANGED)
+                    # Display
+                    cv2.imshow('still', frame)
+                    TAKE_PHOTO = False
+                    # time.sleep(2)
+                if not TAKE_PHOTO:
+                    break
 
             # Update screen (1ms pooling rate)
             key = cv2.waitKey(1)
@@ -91,6 +95,7 @@ def main():
                 ctrl = dai.CameraControl()
                 ctrl.setCaptureStill(True)
                 controlQueue.send(ctrl)
+                TAKE_PHOTO = True
                 print("Sent 'still' event to the camera!")
                 time.sleep(3)
                 
