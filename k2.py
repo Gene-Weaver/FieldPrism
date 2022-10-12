@@ -24,7 +24,7 @@ class KeyPress:
 
 while True:
     keypress = KeyPress
-    listen_keyboard(on_press=press, on_release=release(key,keypress))
+    listen_keyboard(on_press=press, on_release=release)
 
     if keypress.stop_all:
         break
