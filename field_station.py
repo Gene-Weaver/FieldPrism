@@ -8,19 +8,28 @@ Requires:
 import time, os, cv2
 from pathlib import Path
 import depthai as dai
-from pynput.keyboard import Key, Listener, KeyCode
+from sshkeyboard import listen_keyboard
 
-def print_key(*key): ## prints key that is pressed
-# key is a tuple, so access the key(char) from key[1]
-    if key[1] == KeyCode.from_char('1'):
-        print('yes! - 1')
-    elif key[1] == KeyCode.from_char('6'):
-        print('yes! - 1')
-        
+def press(key):
+    print(f"'{key}' pressed")
 
-def key_listener(): ## starts listener module
-    with Listener(on_press=print_key) as listener:
-        listener.join()
+def release(key,keypress):
+    print(f"'{key}' released")
+    selection(key,keypress)
+
+    
+def selection(key,keypress):
+    if key == '1':
+        keypress.photo = True
+        print(f"keypress.photo == True'{key}'")
+    elif key == '6':
+        keypress.stop_all = True
+        print(f"keypress.stop_all == True'{key}'")
+
+class KeyPress:
+    def __init__(self, name):
+        self.photo = False
+        self.stop_all = False
 
 def main():
 
@@ -88,8 +97,10 @@ def main():
             Path(USB_DRIVE_1).mkdir(parents=True, exist_ok=True)
             Path(USB_DRIVE_2).mkdir(parents=True, exist_ok=True)
 
+        keypress = KeyPress
         while True:
-            key_listener()
+            listen_keyboard(on_press=press, on_release=release(keypress))
+
             inRgb = qRgb.tryGet()  # Non-blocking call, will return a new data that has arrived or None otherwise
             if inRgb is not None:
                 frame = inRgb.getCvFrame()
