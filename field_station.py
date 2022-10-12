@@ -25,18 +25,18 @@ import keyboard
 
 
 def main():
-    keyboard.add_hotkey('1', lambda: print('1 - PHOTO was pressed'))
-    keyboard.add_hotkey('6', lambda: print('6 - EXIT was pressed'))
+    # keyboard.add_hotkey('1', lambda: print('1 - PHOTO was pressed'))
+    # keyboard.add_hotkey('6', lambda: print('6 - EXIT was pressed'))
 
-    # or this
-    def on_PHOTO():
-        print('PHOTO')
+    # # or this
+    # def on_PHOTO():
+    #     print('PHOTO')
           
-    keyboard.add_hotkey('1', on_PHOTO)
+    # keyboard.add_hotkey('1', on_PHOTO)
 
-    def on_EXIT():
-        print('EXIT')
-    keyboard.add_hotkey('6', on_EXIT)
+    # def on_EXIT():
+    #     print('EXIT')
+    # keyboard.add_hotkey('6', on_EXIT)
 
     # Create pipeline
     pipeline = dai.Pipeline()
