@@ -103,7 +103,7 @@ def main():
 
         while True:
             # Wait for the next event.
-            event = keyboard.read_event()
+            # event = keyboard.read_event()
             
 
             inRgb = qRgb.tryGet()  # Non-blocking call, will return a new data that has arrived or None otherwise
@@ -115,14 +115,14 @@ def main():
                 cv2.imshow("rgb", cv2.rotate(frame, cv2.ROTATE_180))
             
             key = cv2.waitKey(1)
-            if event.event_type == keyboard.KEY_DOWN and event.name == '6': #if keyboard.is_pressed('6'):#key == ord('q'):
+            if keyboard.KEY_DOWN and keyboard.is_pressed('6'): #if keyboard.is_pressed('6'):#key == ord('q'):
                 print(f"Pressed - 6 - EXIT")
-                if event.event_type == keyboard.KEY_UP and event.name == '6':
+                if keyboard.KEY_UP and keyboard.is_pressed('6'):
                     print(f"Released - 6 - EXIT")
                     break
-            elif event.event_type == keyboard.KEY_DOWN and event.name == '1': #elif keyboard.is_pressed('1'):#key == ord('c'):
+            elif keyboard.KEY_DOWN and keyboard.is_pressed('1'): #elif keyboard.is_pressed('1'):#key == ord('c'):
                 print(f"Pressed - 1 - PHOTO")
-                if event.event_type == keyboard.KEY_UP and event.name == '1':
+                if keyboard.KEY_UP and keyboard.is_pressed('1'):
                     # if keyboard.on_release_key('1'):
                     print(f"Released - 1 - PHOTO")
                     name_time = str(int(time.time() * 1000))
