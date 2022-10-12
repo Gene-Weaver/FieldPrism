@@ -34,7 +34,7 @@ class SetupFP():
             print(f"{bcolors.FAIL}       Quit and mount USB device/s otherwise images will{bcolors.ENDC}")
             print(f"{bcolors.FAIL}       save to boot device (microSD card) in:{bcolors.ENDC}")
             print(f"{bcolors.FAIL}            home/pi/FieldPrism/Data/Images_Unprocessed{bcolors.ENDC}")
-            self.usb_none = os.path.join('Data','Images_Unprocessed')
+            self.usb_none = os.path.join('/home','pi','FieldPrism','Data','Images_Unprocessed')
             self.save_to_boot = True
 
         elif len(os.listdir(self.usb_base_path)) == 1:
