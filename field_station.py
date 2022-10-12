@@ -8,9 +8,29 @@ Requires:
 import time, os, cv2
 from pathlib import Path
 import depthai as dai
-import keyboard
+from pynput import keyboard
+
+def on_press(key):
+    try:
+        print('alphanumeric key {0} pressed'.format(
+            key.char))
+    except AttributeError:
+        print('special key {0} pressed'.format(
+            key))
+
+def on_release(key):
+    print('{0} released'.format(
+        key))
+    if key == keyboard.Key.esc:
+        # Stop listener
+        return False
 
 def main():
+    listener = keyboard.Listener(
+    on_press=on_press,
+    on_release=on_release)
+    listener.start()
+
     # Create pipeline
     pipeline = dai.Pipeline()
 
@@ -76,6 +96,12 @@ def main():
             Path(USB_DRIVE_2).mkdir(parents=True, exist_ok=True)
 
         while True:
+            try:
+                on_press(key)
+                print('here')
+            except:
+                print('fail')
+
             inRgb = qRgb.tryGet()  # Non-blocking call, will return a new data that has arrived or None otherwise
             if inRgb is not None:
                 frame = inRgb.getCvFrame()
