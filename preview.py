@@ -11,7 +11,7 @@ xoutRgb = pipeline.create(dai.node.XLinkOut)
 xoutRgb.setStreamName("rgb")
 
 # Properties
-camRgb.setPreviewSize(1920, 1080)
+camRgb.setPreviewSize(480, 270)
 camRgb.setInterleaved(False)
 camRgb.setColorOrder(dai.ColorCameraProperties.ColorOrder.RGB)
 
