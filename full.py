@@ -63,9 +63,9 @@ def main():
             for vidFrame in vidFrames:
                 cv2.imshow('video', vidFrame.getCvFrame())
 
-            ispFrames = ispQueue.tryGetAll()
-            for ispFrame in ispFrames:
-                cv2.imshow('isp', ispFrame.getCvFrame())
+            # ispFrames = ispQueue.tryGetAll()
+            # for ispFrame in ispFrames:
+            #     cv2.imshow('isp', ispFrame.getCvFrame())
 
 
             stillFrames = stillQueue.tryGetAll()
@@ -75,6 +75,7 @@ def main():
                 frame = cv2.imdecode(stillFrame.getData(), cv2.IMREAD_UNCHANGED)
                 # Display
                 cv2.imshow('still', frame)
+                time.sleep(2)
 
             # Update screen (1ms pooling rate)
             key = cv2.waitKey(1)
