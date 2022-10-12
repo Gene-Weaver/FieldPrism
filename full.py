@@ -73,13 +73,13 @@ def main():
                 # cv2.imshow('isp', ispFrame.getCvFrame())
 
 
-            stillFrames = stillQueue.tryGetAll()
-            for stillFrame in stillFrames:
-                print("STILL STILL STILL")
-                # Decode JPEG
-                frame = cv2.imdecode(stillFrame.getData(), cv2.IMREAD_UNCHANGED)
-                # Display
-                cv2.imshow('still', frame)
+            # stillFrames = stillQueue.tryGetAll()
+            # for stillFrame in stillFrames:
+            #     print("STILL STILL STILL")
+            #     # Decode JPEG
+            #     frame = cv2.imdecode(stillFrame.getData(), cv2.IMREAD_UNCHANGED)
+            #     # Display
+            #     cv2.imshow('still', frame)
                 # time.sleep(2)
 
             # Update screen (1ms pooling rate)
@@ -92,6 +92,14 @@ def main():
                 controlQueue.send(ctrl)
                 print("Sent 'still' event to the camera!")
                 time.sleep(2)
+                
+                stillFrames = stillQueue.tryGetAll()
+                for stillFrame in stillFrames:
+                    print("STILL STILL STILL")
+                    # Decode JPEG
+                    frame = cv2.imdecode(stillFrame.getData(), cv2.IMREAD_UNCHANGED)
+                    # Display
+                    cv2.imshow('still', frame)
                 
             
             # key = cv2.waitKey(1)
