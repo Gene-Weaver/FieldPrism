@@ -74,8 +74,8 @@ def main():
         print('Usb speed: ', device.getUsbSpeed().name)
 
         # Output queue will be used to get the rgb frames from the output defined above
-        # qRgb = device.getOutputQueue(name="rgb", maxSize=1, blocking=False)
-        qRgb = device.getOutputQueue(name="rgb", maxSize=4, blocking=False)
+        qRgb = device.getOutputQueue(name="rgb", maxSize=1, blocking=False)
+        # qRgb = device.getOutputQueue(name="rgb", maxSize=4, blocking=False)
         qStill = device.getOutputQueue(name="still", maxSize=1, blocking=True)
         qControl = device.getInputQueue(name="control")
 
@@ -117,7 +117,7 @@ def main():
         while True:
             # Wait for the next event.
             # event = keyboard.read_event()
-            inRgb = qRgb.get()  # blocking call, will wait until a new data has arrived
+            inRgb = camRgb.get()  # blocking call, will wait until a new data has arrived
 
             # Retrieve 'bgr' (opencv format) frame
             cv2.imshow("rgb", cv2.rotate(inRgb.getCvFrame(), cv2.ROTATE_180))
@@ -146,10 +146,10 @@ def main():
                 print(f"Pressed - 1 - PHOTO")
                 name_time = str(int(time.time() * 1000))
                 # save_frame = inRgb.getCvFrame()
-                # pkt = qRgb.get()
+                pkt = qRgb.get()
                 # name = qRgb.getName()
                 # shape = (3, pkt.getHeight(), pkt.getWidth())
-                # save_frame = pkt.getCvFrame()
+                save_frame = pkt.getCvFrame()
                 save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
 
                 if not has_1_USB and not has_2_USB:
