@@ -25,17 +25,18 @@ import keyboard
 
 
 def main():
-    keyboard.add_hotkey('1', lambda: print('1 - PHOTO was pressed'))
-    keyboard.add_hotkey('6', lambda: print('6 - EXIT was pressed'))
+    # keyboard.add_hotkey('1', lambda: print('1 - PHOTO was pressed'))
+    # keyboard.add_hotkey('6', lambda: print('6 - EXIT was pressed'))
 
     # or this
     def on_PHOTO():
         print('PHOTO')
-    keyboard.add_hotkey('1', on_PHOTO)
+          
+    keyboard.add_hotkey('1', on_PHOTO, lambda: print('1 - PHOTO was pressed'))
 
     def on_EXIT():
         print('EXIT')
-    keyboard.add_hotkey('6', on_EXIT)
+    keyboard.add_hotkey('6', on_EXIT,lambda: print('6 - EXIT was pressed'))
 
     # Create pipeline
     pipeline = dai.Pipeline()
@@ -117,45 +118,40 @@ def main():
             key = cv2.waitKey(1)
             if keyboard.KEY_DOWN and keyboard.is_pressed('6'): #if keyboard.is_pressed('6'):#key == ord('q'):
                 print(f"Pressed - 6 - EXIT")
-                if keyboard.KEY_UP and keyboard.is_pressed('6'):
-                    print(f"Released - 6 - EXIT")
-                    break
+                break
             elif keyboard.KEY_DOWN and keyboard.is_pressed('1'): #elif keyboard.is_pressed('1'):#key == ord('c'):
                 print(f"Pressed - 1 - PHOTO")
-                if keyboard.KEY_UP and keyboard.is_pressed('1'):
-                    # if keyboard.on_release_key('1'):
-                    print(f"Released - 1 - PHOTO")
-                    name_time = str(int(time.time() * 1000))
+                name_time = str(int(time.time() * 1000))
+                # save_frame = inRgb.getCvFrame()
+                pkt = qRgb.get()
+                # name = qRgb.getName()
+                # shape = (3, pkt.getHeight(), pkt.getWidth())
+                save_frame = pkt.getCvFrame()
+                save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
 
-                    # save_frame = inRgb.getCvFrame()
-                    pkt = qRgb.get()
-                    # name = qRgb.getName()
-                    # shape = (3, pkt.getHeight(), pkt.getWidth())
-                    save_frame = pkt.getCvFrame()
-                    save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
-
-                    if not has_1_USB and not has_2_USB:
-                        fname0 = "".join([name_time,'.jpg'])
-                        fname0 = os.path.join(USB_DRIVE_0,fname0)
-                        print(f"Capturing image ==> {fname0}")
-                        cv2.imwrite(fname0, save_frame)
-                        print('Image saved to', fname0)
-                    elif has_1_USB and not has_2_USB:
-                        fname1 = "".join([name_time,'.jpg'])
-                        fname1 = os.path.join(USB_DRIVE_1,fname1)
-                        print(f"Capturing image ==> {fname1}")
-                        cv2.imwrite(fname1, save_frame)
-                        print('Image saved to', fname1)
-                    elif has_1_USB and has_2_USB:
-                        fname1 = "".join([name_time,'.jpg'])
-                        fname1 = os.path.join(USB_DRIVE_1,fname1)
-                        fname2 = "".join([name_time,'.jpg'])
-                        fname2 = os.path.join(USB_DRIVE_2,fname2)
-                        print(f"Capturing image. Saving redundant ==> \n{fname1}   \n&\n   {fname2}")
-                        cv2.imwrite(fname1, save_frame)
-                        print('Image saved to', fname1)  
-                        cv2.imwrite(fname2, save_frame)
-                        print('Image saved to', fname2)  
+                if not has_1_USB and not has_2_USB:
+                    fname0 = "".join([name_time,'.jpg'])
+                    fname0 = os.path.join(USB_DRIVE_0,fname0)
+                    print(f"Capturing image ==> {fname0}")
+                    cv2.imwrite(fname0, save_frame)
+                    print('Image saved to', fname0)
+                elif has_1_USB and not has_2_USB:
+                    fname1 = "".join([name_time,'.jpg'])
+                    fname1 = os.path.join(USB_DRIVE_1,fname1)
+                    print(f"Capturing image ==> {fname1}")
+                    cv2.imwrite(fname1, save_frame)
+                    print('Image saved to', fname1)
+                elif has_1_USB and has_2_USB:
+                    fname1 = "".join([name_time,'.jpg'])
+                    fname1 = os.path.join(USB_DRIVE_1,fname1)
+                    fname2 = "".join([name_time,'.jpg'])
+                    fname2 = os.path.join(USB_DRIVE_2,fname2)
+                    print(f"Capturing image. Saving redundant ==> \n{fname1}   \n&\n   {fname2}")
+                    cv2.imwrite(fname1, save_frame)
+                    print('Image saved to', fname1)  
+                    cv2.imwrite(fname2, save_frame)
+                    print('Image saved to', fname2)
+                    
 
 if __name__ == '__main__':
     main()
