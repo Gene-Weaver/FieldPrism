@@ -72,10 +72,10 @@ def main():
                 pass
                 # cv2.imshow('isp', ispFrame.getCvFrame())
 
-            time.sleep(0.1)
+
             stillFrames = stillQueue.tryGetAll()
             for stillFrame in stillFrames:
-                print(f"STILL STILL STILL")
+                print("STILL STILL STILL")
                 # Decode JPEG
                 frame = cv2.imdecode(stillFrame.getData(), cv2.IMREAD_UNCHANGED)
                 # Display
