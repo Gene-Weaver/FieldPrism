@@ -91,7 +91,7 @@ def main():
                 ctrl.setCaptureStill(True)
                 controlQueue.send(ctrl)
                 print("Sent 'still' event to the camera!")
-                # time.sleep(2)
+                time.sleep(2)
                 
             
             # key = cv2.waitKey(1)
