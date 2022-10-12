@@ -67,7 +67,7 @@ def main():
                 cv2.imshow('video', frame)
 
             ispFrames = ispQueue.tryGetAll()
-            # for ispFrame in ispFrames:
+            for ispFrame in ispFrames:
                 # cv2.imshow('isp', ispFrame.getCvFrame())
 
 
