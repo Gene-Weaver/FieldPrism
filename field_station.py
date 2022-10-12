@@ -4,7 +4,6 @@ Requires:
     - Raspberry Pi 4 8GB
     - Luxonis OAK-1 camera
 '''
-
 import time, os, cv2
 from pathlib import Path
 import depthai as dai
@@ -94,12 +93,12 @@ def main():
             # key()
 
             inRgb = qRgb.tryGet()  # Non-blocking call, will return a new data that has arrived or None otherwise
-            # if inRgb is not None:
-            #     frame = inRgb.getCvFrame()
-            #     # 4k / 4
-            #     frame = cv2.pyrDown(frame)
-            #     frame = cv2.pyrDown(frame)
-            #     cv2.imshow("rgb", cv2.rotate(frame, cv2.ROTATE_180))
+            if inRgb is not None:
+                frame = inRgb.getCvFrame()
+                # 4k / 4
+                frame = cv2.pyrDown(frame)
+                frame = cv2.pyrDown(frame)
+                cv2.imshow("rgb", cv2.rotate(frame, cv2.ROTATE_180))
             
             key = cv2.waitKey(1)
             if keyboard.is_pressed('6'):#key == ord('q'):
