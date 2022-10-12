@@ -120,17 +120,17 @@ def main():
                 frame = cv2.pyrDown(frame)
                 cv2.imshow("rgb", cv2.rotate(frame, cv2.ROTATE_180))
             
-            key = cv2.waitKey(1)
-            if keypress_EXIT and not keyboard.is_pressed(key_EXIT):
-                print(f"Pressed - 6 - EXIT")
-                keypress_EXIT = False
-                break
-            elif keyboard.is_pressed(key_EXIT) and not keypress_EXIT:
-                keypress_EXIT = True
-
-            # if keyboard.is_pressed('6'):#keyboard.KEY_DOWN and keyboard.is_pressed('6'): #if keyboard.is_pressed('6'):#key == ord('q'):
+            key = cv2.waitKey(0)
+            # if keypress_EXIT and not keyboard.is_pressed(key_EXIT):
             #     print(f"Pressed - 6 - EXIT")
+            #     keypress_EXIT = False
             #     break
+            # elif keyboard.is_pressed(key_EXIT) and not keypress_EXIT:
+            #     keypress_EXIT = True
+
+            if keyboard.is_pressed('6'):#keyboard.KEY_DOWN and keyboard.is_pressed('6'): #if keyboard.is_pressed('6'):#key == ord('q'):
+                print(f"Pressed - 6 - EXIT")
+                break
             elif keyboard.is_pressed('1'): #keyboard.KEY_DOWN and keyboard.is_pressed('1'): #elif keyboard.is_pressed('1'):#key == ord('c'):
                 print(f"Pressed - 1 - PHOTO")
                 name_time = str(int(time.time() * 1000))
