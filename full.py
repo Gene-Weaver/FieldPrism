@@ -1,12 +1,86 @@
 #!/usr/bin/env python3
 
-import time
+import time, os
 from pathlib import Path
 import cv2
 import depthai as dai
 import keyboard
+from dataclasses import dataclass
+from utils import bcolors
+
+# print(f"{bcolors.OKGREEN}     {bcolors.ENDC}")
+
+@dataclass
+class SetupFP:
+    usb_base_path: str = ''
+    dir_images_unprocessed: str = ''
+    usb_none: str = ''
+    usb_1: str = ''
+    usb_2: str = ''
+
+    has_1_usb: bool = False
+    has_2_usb: bool = False
+    save_to_boot: bool = False
+
+    def __post_init__(self) -> None:
+        self.usb_base_path = os.path.join('media','pi')
+        self.dir_images_unprocessed = os.path.join('FieldPrism','Images_Unprocessed')
+
+        print(f"{bcolors.WARNING}Base USB Path: {self.usb_base_path}{bcolors.ENDC}")
+        print(f"{bcolors.WARNING}     Available USB Devices{os.listdir(self.usb_base_path)}{bcolors.ENDC}")
+
+        if os.listdir(self.usb_base_path) is None:
+            print(f"{bcolors.FAIL}ERROR: USB device/s not mounted correctly. {bcolors.ENDC}")
+            print(f"{bcolors.FAIL}       Quit and mount USB device/s otherwise images will{bcolors.ENDC}")
+            print(f"{bcolors.FAIL}       save to boot device (microSD card) in:{bcolors.ENDC}")
+            print(f"{bcolors.FAIL}            home/pi/FieldPrism_Data/Images_Unprocessed{bcolors.ENDC}")
+            self.usb_none = os.path.join('home','pi','FieldPrism_Data','Images_Unprocessed')
+            self.save_to_boot = True
+
+        elif len(os.listdir(self.usb_base_path)) == 1:
+            self.usb_1 = os.path.join(self.usb_base_path,os.listdir(self.usb_base_path)[0],self.dir_images_unprocessed)
+            self.has_1_usb = True
+            print(f"{bcolors.OKGREEN}     Path to USB 1: {self.usb_1}{bcolors.ENDC}")
+
+        elif len(os.listdir(self.usb_base_path)) == 2:
+            self.usb_1 = os.path.join(self.usb_base_path,os.listdir(self.usb_base_path)[0],self.dir_images_unprocessed)
+            self.usb_2 = os.path.join(self.usb_base_path,os.listdir(self.usb_base_path)[1],self.dir_images_unprocessed)
+            self.has_1_usb = True
+            self.has_2_usb = True 
+            print(f"{bcolors.OKGREEN}     Path to USB 1: {self.usb_1}{bcolors.ENDC}")
+            print(f"{bcolors.OKGREEN}     Path to USB 2: {self.usb_2}{bcolors.ENDC}")
+        
+        print(f"{bcolors.WARNING}Creating Save Directories{bcolors.ENDC}")
+        if not self.has_1_USB and not self.has_2_USB and self.save_to_boot:
+            Path(self.dir_images_unprocessed).mkdir(parents=True, exist_ok=True)
+        elif self.has_1_USB and not self.has_2_USB:
+            Path(self.usb_1).mkdir(parents=True, exist_ok=True)
+        elif self.has_1_USB and self.has_2_USB:
+            Path(self.usb_1).mkdir(parents=True, exist_ok=True)
+            Path(self.usb_2).mkdir(parents=True, exist_ok=True)
+
+def save_image(save_frame, name_time, save_dir):
+    fname = "".join([name_time,'.jpg'])
+    fname = os.path.join(save_dir,fname)
+    cv2.imwrite(fname, save_frame)
+    print(f"{bcolors.BOLD}     Image Saved: {fname}{bcolors.ENDC}")
+
+def route_save_image(Setup,save_frame):
+    name_time = str(int(time.time() * 1000))
+    if not Setup.has_1_usb and not Setup.has_2_usb:
+        save_image(save_frame, name_time, Setup.usb_none)
+
+    elif Setup.has_1_usb and not Setup.has_2_usb:
+        save_image(save_frame, name_time, Setup.usb_1)
+
+    elif Setup.has_1_usb and Setup.has_2_usb:
+        save_image(save_frame, name_time, Setup.usb_1)
+        save_image(save_frame, name_time, Setup.usb_2)
 
 def main():
+    # Make sure the destination path is present before starting to store the examples
+    Setup = SetupFP
+
     # Create pipeline
     pipeline = dai.Pipeline()
 
@@ -82,22 +156,21 @@ def main():
                     for stillFrame in stillFrames:
                         print("STILL STILL STILL")
                         # Decode JPEG
-                        frame = cv2.imdecode(stillFrame.getData(), cv2.IMREAD_UNCHANGED)
+                        save_frame = cv2.imdecode(stillFrame.getData(), cv2.IMREAD_UNCHANGED)
                         # Display
-                        cv2.imshow('still', frame)
+                        cv2.imshow('still', save_frame)
+                        # Save
+                        route_save_image(Setup,save_frame)
                         TAKE_PHOTO = False
-                        # break
-                        # time.sleep(2)
                 else:
                     print('else')
                     # pkt = ispQueue.get()
                     save_frame = ispFrames.getCvFrame()
                     save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
                     cv2.imshow('still', save_frame)
+                    # Save
+                    route_save_image(Setup,save_frame)
                     TAKE_PHOTO = False
-                    # break
-                # if not TAKE_PHOTO:
-                #     break
 
             # Update screen (1ms pooling rate)
             key = cv2.waitKey(1)
@@ -110,16 +183,6 @@ def main():
                 TAKE_PHOTO = True
                 print("Sent 'still' event to the camera!")
                 time.sleep(3)
-                
-            
-            # key = cv2.waitKey(1)
-            # if keyboard.is_pressed('6'):
-            #     break
-            # elif keyboard.is_pressed('1'):
-            #     ctrl = dai.CameraControl()
-            #     ctrl.setCaptureStill(True)
-            #     controlQueue.send(ctrl)
-            #     print("Sent 'still' event to the camera!")
 
 if __name__ == '__main__':
     main()
