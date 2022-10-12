@@ -23,7 +23,7 @@ class SetupFP():
     save_to_boot: bool = False
 
     def __post_init__(self) -> None:
-        self.usb_base_path = os.path.join('media','pi')
+        self.usb_base_path = '/media/pi/'#os.path.join('media','pi')
         self.dir_images_unprocessed = os.path.join('FieldPrism','Images_Unprocessed')
 
         print(f"{bcolors.WARNING}Base USB Path: {self.usb_base_path}{bcolors.ENDC}")
