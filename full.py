@@ -12,7 +12,7 @@ def main():
 
     # Define sources and outputs
     camRgb = pipeline.create(dai.node.ColorCamera)
-    camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_1080_P)
+    camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_4_K)
     # camRgb.setIspScale(2,3) # 1080P -> 720P
     stillEncoder = pipeline.create(dai.node.VideoEncoder)
 
