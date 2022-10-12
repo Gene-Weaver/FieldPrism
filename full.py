@@ -77,6 +77,7 @@ def main():
             while TAKE_PHOTO:
                 stillFrames = stillQueue.tryGetAll()
                 if stillFrames == 1:
+
                     for stillFrame in stillFrames:
                         print("STILL STILL STILL")
                         # Decode JPEG
@@ -84,14 +85,17 @@ def main():
                         # Display
                         cv2.imshow('still', frame)
                         TAKE_PHOTO = False
+                        break
                         # time.sleep(2)
                 else:
+                    print('else')
                     pkt = stillQueue.get()
                     save_frame = pkt.getCvFrame()
                     save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
                     TAKE_PHOTO = False
-                if not TAKE_PHOTO:
                     break
+                # if not TAKE_PHOTO:
+                #     break
 
             # Update screen (1ms pooling rate)
             key = cv2.waitKey(1)
