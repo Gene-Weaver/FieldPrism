@@ -8,28 +8,21 @@ Requires:
 import time, os, cv2
 from pathlib import Path
 import depthai as dai
-from sshkeyboard import listen_keyboard
+import keyboard
+# from pynput.keyboard import Key, Listener, KeyCode
 
-def press(key):
-    print(f"'{key}' pressed")
+# def print_key(*key): ## prints key that is pressed
+# # key is a tuple, so access the key(char) from key[1]
+#     if key[1] == KeyCode.from_char('1'):
+#         print('yes! - 1')
+#     elif key[1] == KeyCode.from_char('6'):
+#         print('yes! - 1')
+        
 
-def release(key,keypress):
-    print(f"'{key}' released")
-    selection(key,keypress)
+# def key(): ## starts listener module
+#     with Listener(on_press=CT.print_key) as listener:
+#         listener.join()
 
-    
-def selection(key,keypress):
-    if key == '1':
-        keypress.photo = True
-        print(f"keypress.photo == True'{key}'")
-    elif key == '6':
-        keypress.stop_all = True
-        print(f"keypress.stop_all == True'{key}'")
-
-class KeyPress:
-    def __init__(self, name):
-        self.photo = False
-        self.stop_all = False
 
 def main():
 
@@ -61,7 +54,7 @@ def main():
 
     # Connect to device and start pipeline
     with dai.Device(pipeline) as device:
-        
+
         # Output queue will be used to get the rgb frames from the output defined above
         qRgb = device.getOutputQueue(name="rgb", maxSize=1, blocking=False)
         qStill = device.getOutputQueue(name="still", maxSize=1, blocking=True)
@@ -97,26 +90,25 @@ def main():
             Path(USB_DRIVE_1).mkdir(parents=True, exist_ok=True)
             Path(USB_DRIVE_2).mkdir(parents=True, exist_ok=True)
 
-        keypress = KeyPress
         while True:
-            listen_keyboard(on_press=press, on_release=release(keypress))
+            # key()
 
             inRgb = qRgb.tryGet()  # Non-blocking call, will return a new data that has arrived or None otherwise
-            if inRgb is not None:
-                frame = inRgb.getCvFrame()
-                # 4k / 4
-                frame = cv2.pyrDown(frame)
-                frame = cv2.pyrDown(frame)
-                cv2.imshow("rgb", cv2.rotate(frame, cv2.ROTATE_180))
+            # if inRgb is not None:
+            #     frame = inRgb.getCvFrame()
+            #     # 4k / 4
+            #     frame = cv2.pyrDown(frame)
+            #     frame = cv2.pyrDown(frame)
+            #     cv2.imshow("rgb", cv2.rotate(frame, cv2.ROTATE_180))
             
             key = cv2.waitKey(1)
-            if key == ord('q'):#keyboard.is_pressed('6'):#key == ord('q'):
+            if keyboard.is_pressed('6'):#key == ord('q'):
                 print(f"Pressed - 6")
                 break
-            elif key == ord('q'):#keyboard.is_pressed('1'):#key == ord('c'):
+            elif keyboard.is_pressed('1'):#key == ord('c'):
                 print(f"Pressed - 1")
                 # if keyboard.on_release_key('1'):
-                print(f"Released - 1")
+                    # print(f"Released - 1")
                 name_time = str(int(time.time() * 1000))
 
                 # save_frame = inRgb.getCvFrame()
@@ -124,18 +116,19 @@ def main():
                 # name = qRgb.getName()
                 # shape = (3, pkt.getHeight(), pkt.getWidth())
                 save_frame = pkt.getCvFrame()
+                save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
 
                 if not has_1_USB and not has_2_USB:
                     fname0 = "".join([name_time,'.jpg'])
                     fname0 = os.path.join(USB_DRIVE_0,fname0)
                     print(f"Capturing image ==> {fname0}")
-                    cv2.imwrite(fname0, cv2.rotate(save_frame, cv2.ROTATE_180))
+                    cv2.imwrite(fname0, save_frame)
                     print('Image saved to', fname0)
                 elif has_1_USB and not has_2_USB:
                     fname1 = "".join([name_time,'.jpg'])
                     fname1 = os.path.join(USB_DRIVE_1,fname1)
                     print(f"Capturing image ==> {fname1}")
-                    cv2.imwrite(fname1, cv2.rotate(save_frame, cv2.ROTATE_180))
+                    cv2.imwrite(fname1, save_frame)
                     print('Image saved to', fname1)
                 elif has_1_USB and has_2_USB:
                     fname1 = "".join([name_time,'.jpg'])
@@ -143,9 +136,9 @@ def main():
                     fname2 = "".join([name_time,'.jpg'])
                     fname2 = os.path.join(USB_DRIVE_2,fname2)
                     print(f"Capturing image. Saving redundant ==> {fname1}   &   {fname2}")
-                    cv2.imwrite(fname1, cv2.rotate(save_frame, cv2.ROTATE_180))
+                    cv2.imwrite(fname1, save_frame)
                     print('Image saved to', fname1)  
-                    cv2.imwrite(fname2, cv2.rotate(save_frame, cv2.ROTATE_180))
+                    cv2.imwrite(fname2, save_frame)
                     print('Image saved to', fname2)  
 
 if __name__ == '__main__':
