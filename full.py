@@ -46,9 +46,9 @@ def main():
         # Get data queues
         controlQueue = device.getInputQueue('control')
         configQueue = device.getInputQueue('config')
-        ispQueue = device.getOutputQueue('isp')
-        videoQueue = device.getOutputQueue('video')
-        stillQueue = device.getOutputQueue('still')
+        ispQueue = device.getOutputQueue('isp', maxSize=1, blocking=False)
+        videoQueue = device.getOutputQueue('video', maxSize=1, blocking=False)
+        stillQueue = device.getOutputQueue('still', maxSize=1, blocking=True)
 
         # Output queue will be used to get the rgb frames from the output defined above
         # qRgb = device.getOutputQueue(name="rgb", maxSize=30, blocking=False)
@@ -89,8 +89,8 @@ def main():
                         # time.sleep(2)
                 else:
                     print('else')
-                    pkt = stillQueue.get()
-                    save_frame = pkt.getCvFrame()
+                    # pkt = ispQueue.get()
+                    save_frame = ispFrames.getCvFrame()
                     save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
                     TAKE_PHOTO = False
                     # break
