@@ -102,6 +102,11 @@ def main():
             Path(USB_DRIVE_1).mkdir(parents=True, exist_ok=True)
             Path(USB_DRIVE_2).mkdir(parents=True, exist_ok=True)
 
+
+        keypress_EXIT = False
+        keypress_1 = False
+        key_1 = '1'
+        key_EXIT = '6'
         while True:
             # Wait for the next event.
             # event = keyboard.read_event()
@@ -116,10 +121,17 @@ def main():
                 cv2.imshow("rgb", cv2.rotate(frame, cv2.ROTATE_180))
             
             key = cv2.waitKey(1)
-            if keyboard.KEY_DOWN and keyboard.is_pressed('6'): #if keyboard.is_pressed('6'):#key == ord('q'):
+            if keypress_EXIT and not keyboard.is_pressed(key_EXIT):
                 print(f"Pressed - 6 - EXIT")
+                keypress_EXIT = False
                 break
-            elif keyboard.KEY_DOWN and keyboard.is_pressed('1'): #elif keyboard.is_pressed('1'):#key == ord('c'):
+            elif keyboard.is_pressed(key_EXIT) and not keypress_EXIT:
+                keypress_EXIT = True
+
+            # if keyboard.is_pressed('6'):#keyboard.KEY_DOWN and keyboard.is_pressed('6'): #if keyboard.is_pressed('6'):#key == ord('q'):
+            #     print(f"Pressed - 6 - EXIT")
+            #     break
+            elif keyboard.is_pressed('1'): #keyboard.KEY_DOWN and keyboard.is_pressed('1'): #elif keyboard.is_pressed('1'):#key == ord('c'):
                 print(f"Pressed - 1 - PHOTO")
                 name_time = str(int(time.time() * 1000))
                 # save_frame = inRgb.getCvFrame()
