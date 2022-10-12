@@ -73,7 +73,7 @@ def main():
                 # cv2.imshow('isp', ispFrame.getCvFrame())
 
             time.sleep(0.1)
-            stillFrames = stillQueue.get()
+            stillFrames = stillQueue.tryGetAll()
             for stillFrame in stillFrames:
                 print(f"STILL STILL STILL")
                 # Decode JPEG
@@ -83,7 +83,7 @@ def main():
                 time.sleep(2)
 
             # Update screen (1ms pooling rate)
-            key = cv2.waitKey(1)
+            key = cv2.waitKey(50)
             if keyboard.is_pressed('6'):
                 break
             elif keyboard.is_pressed('1'):
