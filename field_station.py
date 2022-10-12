@@ -49,6 +49,7 @@ def main():
     xoutRgb = pipeline.create(dai.node.XLinkOut)
     xoutRgb.setStreamName("rgb")
     camRgb.video.link(xoutRgb.input)
+    camRgb.preview.link(xoutRgb.input)
 
     xin = pipeline.create(dai.node.XLinkIn)
     xin.setStreamName("control")
@@ -64,11 +65,17 @@ def main():
     xoutStill.setStreamName("still")
     videoEnc.bitstream.link(xoutStill.input)
 
+    
+
     # Connect to device and start pipeline
     with dai.Device(pipeline) as device:
+        print('Connected cameras: ', device.getConnectedCameras())
+        # Print out usb speed
+        print('Usb speed: ', device.getUsbSpeed().name)
 
         # Output queue will be used to get the rgb frames from the output defined above
-        qRgb = device.getOutputQueue(name="rgb", maxSize=1, blocking=False)
+        # qRgb = device.getOutputQueue(name="rgb", maxSize=1, blocking=False)
+        qRgb = device.getOutputQueue(name="rgb", maxSize=4, blocking=False)
         qStill = device.getOutputQueue(name="still", maxSize=1, blocking=True)
         qControl = device.getInputQueue(name="control")
 
@@ -110,15 +117,19 @@ def main():
         while True:
             # Wait for the next event.
             # event = keyboard.read_event()
+            inRgb = qRgb.get()  # blocking call, will wait until a new data has arrived
+
+            # Retrieve 'bgr' (opencv format) frame
+            cv2.imshow("rgb", cv2.rotate(inRgb.getCvFrame(), cv2.ROTATE_180))
             
 
-            inRgb = qRgb.tryGet()  # Non-blocking call, will return a new data that has arrived or None otherwise
-            if inRgb is not None:
-                save_frame = inRgb.getCvFrame()
-                # 4k / 4
-                frame = cv2.pyrDown(save_frame)
-                frame = cv2.pyrDown(frame)
-                cv2.imshow("rgb", cv2.rotate(frame, cv2.ROTATE_180))
+            # inRgb = qRgb.tryGet()  # Non-blocking call, will return a new data that has arrived or None otherwise
+            # if inRgb is not None:
+            #     save_frame = inRgb.getCvFrame()
+            #     # 4k / 4
+            #     frame = cv2.pyrDown(save_frame)
+            #     frame = cv2.pyrDown(frame)
+            #     cv2.imshow("rgb", cv2.rotate(frame, cv2.ROTATE_180))
             
             key = cv2.waitKey(1)
             # if keypress_EXIT and not keyboard.is_pressed(key_EXIT):
