@@ -73,9 +73,9 @@ def main():
                 # cv2.imshow('isp', ispFrame.getCvFrame())
 
             time.sleep(0.1)
-            stillFrames = stillQueue.tryGetAll()
+            stillFrames = stillQueue.get()
             for stillFrame in stillFrames:
-                print(f"STILL STILL STILL {len(stillFrames)}")
+                print(f"STILL STILL STILL")
                 # Decode JPEG
                 frame = cv2.imdecode(stillFrame.getData(), cv2.IMREAD_UNCHANGED)
                 # Display
