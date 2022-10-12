@@ -11,7 +11,7 @@ from utils import bcolors
 # print(f"{bcolors.OKGREEN}     {bcolors.ENDC}")
 
 @dataclass
-class SetupFP:
+class SetupFP():
     usb_base_path: str = ''
     dir_images_unprocessed: str = ''
     usb_none: str = ''
@@ -115,7 +115,7 @@ def main():
     # Connect to device and start pipeline
     with dai.Device(pipeline) as device:
         # Make sure the destination path is present before starting to store the examples
-        Setup = SetupFP
+        cfg = SetupFP()
 
         # Get data queues
         controlQueue = device.getInputQueue('control')
@@ -156,7 +156,7 @@ def main():
                         # Display
                         cv2.imshow('still', save_frame)
                         # Save
-                        route_save_image(Setup,save_frame)
+                        route_save_image(cfg,save_frame)
                         TAKE_PHOTO = False
                 else:
                     print('else')
@@ -165,7 +165,7 @@ def main():
                     save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
                     cv2.imshow('still', save_frame)
                     # Save
-                    route_save_image(Setup,save_frame)
+                    route_save_image(cfg,save_frame)
                     TAKE_PHOTO = False
 
             # Update screen (1ms pooling rate)
