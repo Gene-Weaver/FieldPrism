@@ -12,15 +12,12 @@ from pynput import keyboard
 
 def on_press(key):
     try:
-        print('alphanumeric key {0} pressed'.format(
-            key.char))
+        print('alphanumeric key {0} pressed'.format(key.char))
     except AttributeError:
-        print('special key {0} pressed'.format(
-            key))
+        print('special key {0} pressed'.format(key))
 
 def on_release(key):
-    print('{0} released'.format(
-        key))
+    print('{0} released'.format(key))
     if key == keyboard.Key.esc:
         # Stop listener
         return False
@@ -111,10 +108,10 @@ def main():
                 cv2.imshow("rgb", cv2.rotate(frame, cv2.ROTATE_180))
             
             key = cv2.waitKey(1)
-            if keyboard.is_pressed('6'):#key == ord('q'):
+            if key == ord('q'):#keyboard.is_pressed('6'):#key == ord('q'):
                 print(f"Pressed - 6")
                 break
-            elif keyboard.is_pressed('1'):#key == ord('c'):
+            elif key == ord('q'):#keyboard.is_pressed('1'):#key == ord('c'):
                 print(f"Pressed - 1")
                 if keyboard.on_release_key('1'):
                     print(f"Released - 1")
