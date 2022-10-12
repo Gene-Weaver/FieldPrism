@@ -63,8 +63,8 @@ def main():
             vidFrames = videoQueue.tryGetAll()
             for vidFrame in vidFrames:
                 frame = vidFrame.getCvFrame()
-                frame = cv2.pyrDown(frame)
-                frame = cv2.pyrDown(frame)
+                # frame = cv2.pyrDown(frame)
+                # frame = cv2.pyrDown(frame)
                 cv2.imshow('video', frame)
 
             ispFrames = ispQueue.tryGetAll()
