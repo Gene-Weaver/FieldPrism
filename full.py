@@ -69,7 +69,7 @@ def main():
 
             ispFrames = ispQueue.tryGetAll()
             for ispFrame in ispFrames:
-                time.sleep(0.1)
+                # time.sleep(0.1)
                 pass
                 # cv2.imshow('isp', ispFrame.getCvFrame())
 
