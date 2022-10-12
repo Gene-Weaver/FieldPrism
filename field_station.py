@@ -18,7 +18,7 @@ def print_key(*key): ## prints key that is pressed
         print('yes! - 1')
         
 
-def key(): ## starts listener module
+def key_listener(): ## starts listener module
     with Listener(on_press=print_key) as listener:
         listener.join()
 
@@ -89,8 +89,7 @@ def main():
             Path(USB_DRIVE_2).mkdir(parents=True, exist_ok=True)
 
         while True:
-            key()
-
+            key_listener()
             inRgb = qRgb.tryGet()  # Non-blocking call, will return a new data that has arrived or None otherwise
             if inRgb is not None:
                 frame = inRgb.getCvFrame()
