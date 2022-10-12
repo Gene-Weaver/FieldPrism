@@ -7,6 +7,7 @@ import depthai as dai
 import keyboard
 from dataclasses import dataclass
 from utils import bcolors
+from subprocess import call
 
 # print(f"{bcolors.OKGREEN}     {bcolors.ENDC}")
 
@@ -69,6 +70,9 @@ def print_usb_error():
     print(f"{bcolors.FAIL}       Quit and mount USB device/s otherwise images will{bcolors.ENDC}")
     print(f"{bcolors.FAIL}       save to boot device (microSD card) in:{bcolors.ENDC}")
 
+def mount_usb():
+    rc = call("./mount_usb.sh")
+
 def save_image(save_frame, name_time, save_dir):
     fname = "".join([name_time,'.jpg'])
     fname = os.path.join(save_dir,fname)
@@ -88,6 +92,7 @@ def route_save_image(Setup,save_frame):
         save_image(save_frame, name_time, Setup.usb_2)
 
 def main():
+    mount_usb()
     # Create pipeline
     pipeline = dai.Pipeline()
 
