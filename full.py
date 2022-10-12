@@ -33,8 +33,8 @@ class SetupFP:
             print(f"{bcolors.FAIL}ERROR: USB device/s not mounted correctly. {bcolors.ENDC}")
             print(f"{bcolors.FAIL}       Quit and mount USB device/s otherwise images will{bcolors.ENDC}")
             print(f"{bcolors.FAIL}       save to boot device (microSD card) in:{bcolors.ENDC}")
-            print(f"{bcolors.FAIL}            home/pi/FieldPrism_Data/Images_Unprocessed{bcolors.ENDC}")
-            self.usb_none = os.path.join('home','pi','FieldPrism_Data','Images_Unprocessed')
+            print(f"{bcolors.FAIL}            home/pi/FieldPrism/Data/Images_Unprocessed{bcolors.ENDC}")
+            self.usb_none = os.path.join('Data','Images_Unprocessed')
             self.save_to_boot = True
 
         elif len(os.listdir(self.usb_base_path)) == 1:
@@ -116,7 +116,7 @@ def main():
     with dai.Device(pipeline) as device:
         # Make sure the destination path is present before starting to store the examples
         Setup = SetupFP
-        
+
         # Get data queues
         controlQueue = device.getInputQueue('control')
         configQueue = device.getInputQueue('config')
@@ -128,10 +128,6 @@ def main():
         # qRgb = device.getOutputQueue(name="rgb", maxSize=30, blocking=False)
         # qStill = device.getOutputQueue(name="still", maxSize=30, blocking=True)
         # qControl = device.getInputQueue(name="control")
-
-        # Make sure the destination path is present before starting to store the examples
-        dirName = "rgb_data"
-        Path(dirName).mkdir(parents=True, exist_ok=True)
 
         TAKE_PHOTO = False
         while True:
