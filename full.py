@@ -10,67 +10,91 @@ def main():
     # Create pipeline
     pipeline = dai.Pipeline()
 
+    # Define sources and outputs
     camRgb = pipeline.create(dai.node.ColorCamera)
-    camRgb.setPreviewSize(480, 270)
-    camRgb.setBoardSocket(dai.CameraBoardSocket.RGB)
-    camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_4_K)
+    camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_1080_P)
+    camRgb.setIspScale(2,3) # 1080P -> 720P
+    stillEncoder = pipeline.create(dai.node.VideoEncoder)
 
-    xoutRgb = pipeline.create(dai.node.XLinkOut)
-    xoutRgb.setStreamName("rgb")
-    camRgb.video.link(xoutRgb.input)
+    controlIn = pipeline.create(dai.node.XLinkIn)
+    configIn = pipeline.create(dai.node.XLinkIn)
+    ispOut = pipeline.create(dai.node.XLinkOut)
+    videoOut = pipeline.create(dai.node.XLinkOut)
+    stillMjpegOut = pipeline.create(dai.node.XLinkOut)
 
-    xin = pipeline.create(dai.node.XLinkIn)
-    xin.setStreamName("control")
-    xin.out.link(camRgb.inputControl)
+    controlIn.setStreamName('control')
+    configIn.setStreamName('config')
+    ispOut.setStreamName('isp')
+    videoOut.setStreamName('video')
+    stillMjpegOut.setStreamName('still')
 
     # Properties
-    videoEnc = pipeline.create(dai.node.VideoEncoder)
-    videoEnc.setDefaultProfilePreset(1, dai.VideoEncoderProperties.Profile.MJPEG)
-    camRgb.still.link(videoEnc.input)
+    camRgb.setVideoSize(640,360)
+    stillEncoder.setDefaultProfilePreset(1, dai.VideoEncoderProperties.Profile.MJPEG)
 
     # Linking
-    xoutStill = pipeline.create(dai.node.XLinkOut)
-    xoutStill.setStreamName("still")
-    videoEnc.bitstream.link(xoutStill.input)
+    camRgb.isp.link(ispOut.input)
+    camRgb.still.link(stillEncoder.input)
+    camRgb.video.link(videoOut.input)
+    controlIn.out.link(camRgb.inputControl)
+    configIn.out.link(camRgb.inputConfig)
+    stillEncoder.bitstream.link(stillMjpegOut.input)
 
     # Connect to device and start pipeline
     with dai.Device(pipeline) as device:
+        # Get data queues
+        controlQueue = device.getInputQueue('control')
+        configQueue = device.getInputQueue('config')
+        ispQueue = device.getOutputQueue('isp')
+        videoQueue = device.getOutputQueue('video')
+        stillQueue = device.getOutputQueue('still')
 
         # Output queue will be used to get the rgb frames from the output defined above
-        qRgb = device.getOutputQueue(name="rgb", maxSize=30, blocking=False)
-        qStill = device.getOutputQueue(name="still", maxSize=30, blocking=True)
-        qControl = device.getInputQueue(name="control")
+        # qRgb = device.getOutputQueue(name="rgb", maxSize=30, blocking=False)
+        # qStill = device.getOutputQueue(name="still", maxSize=30, blocking=True)
+        # qControl = device.getInputQueue(name="control")
 
         # Make sure the destination path is present before starting to store the examples
         dirName = "rgb_data"
         Path(dirName).mkdir(parents=True, exist_ok=True)
 
         while True:
-            inRgb = qRgb.tryGet()  # Non-blocking call, will return a new data that has arrived or None otherwise
-            if inRgb is not None:
-                frame = inRgb.getCvFrame()
-                # 4k / 4
-                frame = cv2.pyrDown(frame)
-                frame = cv2.pyrDown(frame)
-                cv2.imshow("rgb", frame)
-                
+            vidFrames = videoQueue.tryGetAll()
+            for vidFrame in vidFrames:
+                cv2.imshow('video', vidFrame.getCvFrame())
 
-            if qStill.has():
-                fName = f"{dirName}/{int(time.time() * 1000)}.jpeg"
-                with open(fName, "wb") as f:
-                    f.write(qStill.get().getData())
-                    print('Image saved to', fName)
-                time.sleep(2)
-                
-            
+            ispFrames = ispQueue.tryGetAll()
+            for ispFrame in ispFrames:
+                cv2.imshow('isp', ispFrame.getCvFrame())
+
+
+            stillFrames = stillQueue.tryGetAll()
+            for stillFrame in stillFrames:
+                print("STILL STILL STILL")
+                # Decode JPEG
+                frame = cv2.imdecode(stillFrame.getData(), cv2.IMREAD_UNCHANGED)
+                # Display
+                cv2.imshow('still', frame)
+
+            # Update screen (1ms pooling rate)
             key = cv2.waitKey(1)
             if keyboard.is_pressed('6'):
                 break
             elif keyboard.is_pressed('1'):
                 ctrl = dai.CameraControl()
                 ctrl.setCaptureStill(True)
-                qControl.send(ctrl)
+                controlQueue.send(ctrl)
                 print("Sent 'still' event to the camera!")
+                
+            
+            # key = cv2.waitKey(1)
+            # if keyboard.is_pressed('6'):
+            #     break
+            # elif keyboard.is_pressed('1'):
+            #     ctrl = dai.CameraControl()
+            #     ctrl.setCaptureStill(True)
+            #     controlQueue.send(ctrl)
+            #     print("Sent 'still' event to the camera!")
 
 if __name__ == '__main__':
     main()
