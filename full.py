@@ -63,9 +63,9 @@ def main():
             for vidFrame in vidFrames:
                 cv2.imshow('video', vidFrame.getCvFrame())
 
-            # ispFrames = ispQueue.tryGetAll()
+            ispFrames = ispQueue.tryGetAll()
             # for ispFrame in ispFrames:
-            #     cv2.imshow('isp', ispFrame.getCvFrame())
+                # cv2.imshow('isp', ispFrame.getCvFrame())
 
 
             stillFrames = stillQueue.tryGetAll()
