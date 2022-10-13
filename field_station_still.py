@@ -113,7 +113,14 @@ def align_camera():
     with dai.Device(pipeline) as device:
         qRgb = device.getOutputQueue('preview', maxSize=1, blocking=False)
         while True:
-            inRgb = qRgb.get()
+            inRgb = qRgb.tryGet()
+            # if inRgb is not None:
+            #     save_frame = inRgb.getCvFrame()
+            #     # 4k / 4
+            #     frame = cv2.pyrDown(save_frame)
+            #     frame = cv2.pyrDown(frame)
+            #     cv2.imshow("rgb", cv2.rotate(frame, cv2.ROTATE_180))
+
             cv2.imshow("rgb", inRgb.getCvFrame())
 
             if keyboard.is_pressed('6'):
