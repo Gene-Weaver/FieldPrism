@@ -1,408 +1,204 @@
-'''
-Run the FieldPrism field station. 
-Requires:
-    - Raspberry Pi 4 8GB
-    - Luxonis OAK-1 camera
-'''
-import time, os, cv2
+#!/usr/bin/env python3
+
+import time, os
 from pathlib import Path
+import cv2
 import depthai as dai
 import keyboard
-# from pynput.keyboard import Key, Listener, KeyCode
+from dataclasses import dataclass
+from utils import bcolors
+import subprocess
 
-# def print_key(*key): ## prints key that is pressed
-# # key is a tuple, so access the key(char) from key[1]
-#     if key[1] == KeyCode.from_char('1'):
-#         print('yes! - 1')
-#     elif key[1] == KeyCode.from_char('6'):
-#         print('yes! - 1')
+# print(f"{bcolors.OKGREEN}     {bcolors.ENDC}")
+
+@dataclass
+class SetupFP():
+    usb_base_path: str = ''
+    dir_images_unprocessed: str = ''
+    usb_none: str = ''
+    usb_1: str = ''
+    usb_2: str = ''
+
+    has_1_usb: bool = False
+    has_2_usb: bool = False
+    save_to_boot: bool = False
+
+    def __post_init__(self) -> None:
+        self.usb_base_path = '/media/'# OR '/media/pi/' # os.path.join('media','pi')
+        self.dir_images_unprocessed = os.path.join('FieldPrism','Images_Unprocessed')
+
+        print(f"{bcolors.HEADER}Base USB Path: {self.usb_base_path}{bcolors.ENDC}")
+        print(f"{bcolors.OKCYAN}       Available USB Devices: {os.listdir(self.usb_base_path)}{bcolors.ENDC}")
+
+        if os.listdir(self.usb_base_path) == []:
+            print_usb_error()
+            self.usb_none = os.path.join('/home','pi','FieldPrism','Data','Images_Unprocessed')
+            print(f"{bcolors.FAIL}            {self.usb_none}{bcolors.ENDC}")
+            self.save_to_boot = True
+
+        elif len(os.listdir(self.usb_base_path)) == 1:
+            self.usb_1 = os.path.join(self.usb_base_path,os.listdir(self.usb_base_path)[0],self.dir_images_unprocessed)
+            self.has_1_usb = True
+            print(f"{bcolors.OKGREEN}       Path to USB 1: {self.usb_1}{bcolors.ENDC}")
+
+        elif len(os.listdir(self.usb_base_path)) == 2:
+            self.usb_1 = os.path.join(self.usb_base_path,os.listdir(self.usb_base_path)[0],self.dir_images_unprocessed)
+            self.usb_2 = os.path.join(self.usb_base_path,os.listdir(self.usb_base_path)[1],self.dir_images_unprocessed)
+            self.has_1_usb = True
+            self.has_2_usb = True 
+            print(f"{bcolors.OKGREEN}       Path to USB 1: {self.usb_1}{bcolors.ENDC}")
+            print(f"{bcolors.OKGREEN}       Path to USB 2: {self.usb_2}{bcolors.ENDC}")
         
+        print(f"{bcolors.HEADER}Creating Save Directories{bcolors.ENDC}")
+        if not self.has_1_usb and not self.has_2_usb and self.save_to_boot:
+            Path(self.usb_none).mkdir(parents=True, exist_ok=True)
+        elif self.has_1_usb and not self.has_2_usb:
+            Path(self.usb_1).mkdir(parents=True, exist_ok=True)
+        elif self.has_1_usb and self.has_2_usb:
+            Path(self.usb_1).mkdir(parents=True, exist_ok=True)
+            Path(self.usb_2).mkdir(parents=True, exist_ok=True)
 
-# def key(): ## starts listener module
-#     with Listener(on_press=CT.print_key) as listener:
-#         listener.join()
+def print_usb_error():
+    print(f"{bcolors.FAIL}ERROR: USB device/s not mounted correctly. {bcolors.ENDC}")
+    print(f"")
+    print(f"{bcolors.FAIL}       For 1 USB use command: {bcolors.ENDC}")
+    print(f"{bcolors.FAIL}              udisksctl mount -b /dev/sda1{bcolors.ENDC}")
+    print(f"{bcolors.FAIL}       For 2 USBs use commands: {bcolors.ENDC}")
+    print(f"{bcolors.FAIL}              udisksctl mount -b /dev/sda1{bcolors.ENDC}")
+    print(f"{bcolors.FAIL}              udisksctl mount -b /dev/sdb1{bcolors.ENDC}")
+    print(f"")
+    print(f"{bcolors.FAIL}       Quit and mount USB device/s otherwise images will{bcolors.ENDC}")
+    print(f"{bcolors.FAIL}       save to boot device (microSD card) in:{bcolors.ENDC}")
 
+def mount_usb():
+    result = subprocess.run(["sh", "./mount_usb_drives.sh"], stderr=subprocess.PIPE, text=True)
+    # print(result.stderr)
 
+def save_image(save_frame, name_time, save_dir):
+    fname = "".join([name_time,'.jpg'])
+    fname = os.path.join(save_dir,fname)
+    cv2.imwrite(fname, save_frame)
+    print(f"{bcolors.OKGREEN}       Image Saved: {fname}{bcolors.ENDC}")
+
+def route_save_image(Setup,save_frame):
+    name_time = str(int(time.time() * 1000))
+    if not Setup.has_1_usb and not Setup.has_2_usb:
+        save_image(save_frame, name_time, Setup.usb_none)
+
+    elif Setup.has_1_usb and not Setup.has_2_usb:
+        save_image(save_frame, name_time, Setup.usb_1)
+
+    elif Setup.has_1_usb and Setup.has_2_usb:
+        save_image(save_frame, name_time, Setup.usb_1)
+        save_image(save_frame, name_time, Setup.usb_2)
 
 def main():
-    # keyboard.add_hotkey('1', lambda: print('1 - PHOTO was pressed'))
-    # keyboard.add_hotkey('6', lambda: print('6 - EXIT was pressed'))
-
-    # # or this
-    # def on_PHOTO():
-    #     print('PHOTO')
-          
-    # keyboard.add_hotkey('1', on_PHOTO)
-
-    # def on_EXIT():
-    #     print('EXIT')
-    # keyboard.add_hotkey('6', on_EXIT)
-
+    mount_usb()
     # Create pipeline
     pipeline = dai.Pipeline()
 
+    # Define sources and outputs
     camRgb = pipeline.create(dai.node.ColorCamera)
     camRgb.setPreviewSize(480, 270)
-    camRgb.setBoardSocket(dai.CameraBoardSocket.RGB)
     camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_4_K)
+    # camRgb.setIspScale(2,6) # 1080P -> 720P
+    stillEncoder = pipeline.create(dai.node.VideoEncoder)
 
-    xoutRgb = pipeline.create(dai.node.XLinkOut)
-    xoutRgb.setStreamName("rgb")
-    camRgb.video.link(xoutRgb.input)
-    camRgb.preview.link(xoutRgb.input)
+    controlIn = pipeline.create(dai.node.XLinkIn)
+    configIn = pipeline.create(dai.node.XLinkIn)
+    ispOut = pipeline.create(dai.node.XLinkOut)
+    videoOut = pipeline.create(dai.node.XLinkOut)
+    stillMjpegOut = pipeline.create(dai.node.XLinkOut)
 
-    xin = pipeline.create(dai.node.XLinkIn)
-    xin.setStreamName("control")
-    xin.out.link(camRgb.inputControl)
+    controlIn.setStreamName('control')
+    configIn.setStreamName('config')
+    ispOut.setStreamName('isp')
+    videoOut.setStreamName('video')
+    stillMjpegOut.setStreamName('still')
 
     # Properties
-    videoEnc = pipeline.create(dai.node.VideoEncoder)
-    videoEnc.setDefaultProfilePreset(1, dai.VideoEncoderProperties.Profile.MJPEG)
-    camRgb.still.link(videoEnc.input)
+    camRgb.setVideoSize(3140, 2160)
+    # camRgb.setVideoSize(1280, 720)
+    stillEncoder.setDefaultProfilePreset(1, dai.VideoEncoderProperties.Profile.MJPEG)
 
     # Linking
-    xoutStill = pipeline.create(dai.node.XLinkOut)
-    xoutStill.setStreamName("still")
-    videoEnc.bitstream.link(xoutStill.input)
-
-    
+    camRgb.isp.link(ispOut.input)
+    camRgb.still.link(stillEncoder.input)
+    camRgb.video.link(videoOut.input)
+    controlIn.out.link(camRgb.inputControl)
+    configIn.out.link(camRgb.inputConfig)
+    stillEncoder.bitstream.link(stillMjpegOut.input)
 
     # Connect to device and start pipeline
     with dai.Device(pipeline) as device:
-        print('Connected cameras: ', device.getConnectedCameras())
-        # Print out usb speed
-        print('Usb speed: ', device.getUsbSpeed().name)
+        # Make sure the destination path is present before starting to store the examples
+        cfg = SetupFP()
+
+        # Get data queues
+        controlQueue = device.getInputQueue('control')
+        configQueue = device.getInputQueue('config')
+        ispQueue = device.getOutputQueue('isp', maxSize=1, blocking=False)
+        videoQueue = device.getOutputQueue('video', maxSize=1, blocking=False)
+        stillQueue = device.getOutputQueue('still', maxSize=1, blocking=True)
 
         # Output queue will be used to get the rgb frames from the output defined above
-        qRgb = device.getOutputQueue(name="rgb", maxSize=1, blocking=False)
-        # qRgb = device.getOutputQueue(name="rgb", maxSize=4, blocking=False)
-        qStill = device.getOutputQueue(name="still", maxSize=1, blocking=True)
-        qControl = device.getInputQueue(name="control")
+        # qRgb = device.getOutputQueue(name="rgb", maxSize=30, blocking=False)
+        # qStill = device.getOutputQueue(name="still", maxSize=30, blocking=True)
+        # qControl = device.getInputQueue(name="control")
 
-        # Make sure the destination path is present before starting to store the examples
-        dir_name = os.path.join('FieldPrism','Unprocessed_Images')
-        USB_PATH = '/media/'
-        has_1_USB = False
-        has_2_USB = False
-        USB_DRIVE_1 = ''
-        USB_DRIVE_2 = ''
-        print(USB_PATH)
-        print(os.listdir(USB_PATH))
-        if len(os.listdir(USB_PATH)) == 1:
-            USB_DRIVE_1 = os.path.join(USB_PATH,os.listdir(USB_PATH)[0],dir_name)
-            has_1_USB = True
-        elif len(os.listdir(USB_PATH)) == 2:
-            USB_DRIVE_1 = os.path.join(USB_PATH,os.listdir(USB_PATH)[0],dir_name)
-            USB_DRIVE_2 = os.path.join(USB_PATH,os.listdir(USB_PATH)[1],dir_name)
-            has_1_USB = True
-            has_2_USB = True
-        print(f"path to USB_DRIVE_1: {USB_DRIVE_1}")
-        print(f"path to USB_DRIVE_2: {USB_DRIVE_2}")
-
-        print(f"Creating save dirs")
-        if not has_1_USB and not has_2_USB:
-            USB_DRIVE_0 = dir_name
-            Path(USB_DRIVE_0).mkdir(parents=True, exist_ok=True)
-        elif has_1_USB and not has_2_USB:
-            Path(USB_DRIVE_1).mkdir(parents=True, exist_ok=True)
-        elif has_1_USB and has_2_USB:
-            Path(USB_DRIVE_1).mkdir(parents=True, exist_ok=True)
-            Path(USB_DRIVE_2).mkdir(parents=True, exist_ok=True)
-
-
-        # keypress_EXIT = False
-        # keypress_1 = False
-        # key_1 = '1'
-        # key_EXIT = '6'
+        TAKE_PHOTO = False
         while True:
-            # Wait for the next event.
-            # event = keyboard.read_event()
-            inRgb = qRgb.get()  # blocking call, will wait until a new data has arrived
+            vidFrames = videoQueue.tryGetAll()
+            for vidFrame in vidFrames:
+                vframe = vidFrame.getCvFrame()
+                vframe2 = cv2.pyrDown(vframe)
+                vframe2 = cv2.pyrDown(vframe2)
+                vframe2 = cv2.rotate(vframe2, cv2.ROTATE_180)
+                cv2.imshow('video', vframe2)
 
-            # Retrieve 'bgr' (opencv format) frame
-            cv2.imshow("rgb", cv2.rotate(inRgb.getCvFrame(), cv2.ROTATE_180))
-            
+            ispFrames = ispQueue.get()
+            # ispFrames = ispQueue.tryGetAll()
+            # for ispFrame in ispFrames:
+            #     # time.sleep(0.1)
+            #     pass
+                # cv2.imshow('isp', ispFrame.getCvFrame())
 
-            # inRgb = qRgb.tryGet()  # Non-blocking call, will return a new data that has arrived or None otherwise
-            # if inRgb is not None:
-            #     save_frame = inRgb.getCvFrame()
-            #     # 4k / 4
-            #     frame = cv2.pyrDown(save_frame)
-            #     frame = cv2.pyrDown(frame)
-            #     cv2.imshow("rgb", cv2.rotate(frame, cv2.ROTATE_180))
-            
+            if TAKE_PHOTO:
+                stillFrames = stillQueue.tryGetAll()
+                if len(stillFrames) == 1:
+                    for stillFrame in stillFrames:
+                        print(f"       Capturing Still")
+                        # Decode JPEG
+                        save_frame = cv2.imdecode(stillFrame.getData(), cv2.IMREAD_UNCHANGED)
+                        save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
+                        # Display
+                        frame = cv2.pyrDown(save_frame)
+                        frame = cv2.pyrDown(frame)  
+                        cv2.imshow('still', frame)
+                        # Save
+                        route_save_image(cfg,save_frame)
+                        TAKE_PHOTO = False
+                else:
+                    print(f"       Capturing Image")
+                    save_frame = ispFrames.getCvFrame()
+                    save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
+                    frame = cv2.pyrDown(save_frame)
+                    frame = cv2.pyrDown(frame)  
+                    cv2.imshow('still', frame)
+                    # Save
+                    route_save_image(cfg,save_frame)
+                    TAKE_PHOTO = False
+
             key = cv2.waitKey(1)
-            # if keypress_EXIT and not keyboard.is_pressed(key_EXIT):
-            #     print(f"Pressed - 6 - EXIT")
-            #     keypress_EXIT = False
-            #     break
-            # elif keyboard.is_pressed(key_EXIT) and not keypress_EXIT:
-            #     keypress_EXIT = True
-
-            if keyboard.is_pressed('6'):#keyboard.KEY_DOWN and keyboard.is_pressed('6'): #if keyboard.is_pressed('6'):#key == ord('q'):
-                print(f"Pressed - 6 - EXIT")
+            if keyboard.is_pressed('6'):
                 break
-            elif keyboard.is_pressed('1'): #keyboard.KEY_DOWN and keyboard.is_pressed('1'): #elif keyboard.is_pressed('1'):#key == ord('c'):
-                print(f"Pressed - 1 - PHOTO")
-                name_time = str(int(time.time() * 1000))
-                # save_frame = inRgb.getCvFrame()
-                pkt = qRgb.get()
-                # name = qRgb.getName()
-                # shape = (3, pkt.getHeight(), pkt.getWidth())
-                save_frame = pkt.getCvFrame()
-                save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
-
-                if not has_1_USB and not has_2_USB:
-                    fname0 = "".join([name_time,'.jpg'])
-                    fname0 = os.path.join(USB_DRIVE_0,fname0)
-                    print(f"Capturing image ==> {fname0}")
-                    cv2.imwrite(fname0, save_frame)
-                    print('Image saved to', fname0)
-                elif has_1_USB and not has_2_USB:
-                    fname1 = "".join([name_time,'.jpg'])
-                    fname1 = os.path.join(USB_DRIVE_1,fname1)
-                    print(f"Capturing image ==> {fname1}")
-                    cv2.imwrite(fname1, save_frame)
-                    print('Image saved to', fname1)
-                elif has_1_USB and has_2_USB:
-                    fname1 = "".join([name_time,'.jpg'])
-                    fname1 = os.path.join(USB_DRIVE_1,fname1)
-                    fname2 = "".join([name_time,'.jpg'])
-                    fname2 = os.path.join(USB_DRIVE_2,fname2)
-                    print(f"Capturing image. Saving redundant ==> \n{fname1}   \n&\n   {fname2}")
-                    cv2.imwrite(fname1, save_frame)
-                    print('Image saved to', fname1)  
-                    cv2.imwrite(fname2, save_frame)
-                    print('Image saved to', fname2)
-                time.sleep(2)
-                    
+            elif keyboard.is_pressed('1'):
+                ctrl = dai.CameraControl()
+                ctrl.setCaptureStill(True)
+                controlQueue.send(ctrl)
+                TAKE_PHOTO = True
+                print(f"       Camera Activated")
+                time.sleep(3)
 
 if __name__ == '__main__':
     main()
-
-
-
-
-
-
-
-# import time, os
-# from pathlib import Path
-# import cv2
-# import depthai as dai
-
-# # Create pipeline
-# pipeline = dai.Pipeline()
-
-# # Define sources and outputs
-# camRgb = pipeline.create(dai.node.ColorCamera)
-# manip = pipeline.create(dai.node.ImageManip)
-
-# camOut = pipeline.create(dai.node.XLinkOut)
-# manipOut = pipeline.create(dai.node.XLinkOut)
-# manipCfg = pipeline.create(dai.node.XLinkIn)
-
-# camOut.setStreamName("preview")
-# manipOut.setStreamName("still")
-# manipCfg.setStreamName("manipCfg")
-
-# # Properties
-# camRgb.setPreviewSize(640, 480)
-# camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_720_P)
-# camRgb.setInterleaved(False)
-# camRgb.setColorOrder(dai.ColorCameraProperties.ColorOrder.BGR)
-# manip.setMaxOutputFrameSize(1280 * 720 * 3)
-
-# # Linking
-# camRgb.preview.link(camOut.input)
-# camRgb.preview.link(manip.inputImage)
-# manip.out.link(manipOut.input)
-# manipCfg.out.link(manip.inputConfig)
-
-# Connect to device and start pipeline
-'''
-with dai.Device(pipeline) as device:
-    print(f"Pipline started")
-    # Create input & output queues
-    qPreview = device.getOutputQueue(name="preview", maxSize=30, blocking=False)
-    qStill = device.getOutputQueue(name="still", maxSize=30, blocking=True)
-    qManipCfg = device.getInputQueue(name="manipCfg")
-
-    # key = -1
-    # Make sure the destination path is present before starting to store the examples
-    dir_name = "rgb_data"
-    USB_PATH = '/media/pi/'
-    has_1_USB = False
-    has_2_USB = False
-    USB_DRIVE_1 = ''
-    USB_DRIVE_2 = ''
-    print(USB_PATH)
-    print(os.listdir(USB_PATH))
-    if len(os.listdir(USB_PATH)) == 1:
-        USB_DRIVE_1 = os.path.join(USB_PATH,os.listdir(USB_PATH)[0],dir_name)
-        has_1_USB = True
-    elif len(os.listdir(USB_PATH)) == 2:
-        USB_DRIVE_1 = os.path.join(USB_PATH,os.listdir(USB_PATH)[0],dir_name)
-        USB_DRIVE_2 = os.path.join(USB_PATH,os.listdir(USB_PATH)[1],dir_name)
-        has_1_USB = True
-        has_2_USB = True
-    print(f"path to USB_DRIVE_1: {USB_DRIVE_1}")
-    print(f"path to USB_DRIVE_2: {USB_DRIVE_2}")
-
-    print(f"Creating save dirs")
-    if not has_1_USB and not has_2_USB:
-        USB_DRIVE_0 = dir_name
-        Path(USB_DRIVE_0).mkdir(parents=True, exist_ok=True)
-    elif has_1_USB and not has_2_USB:
-        Path(USB_DRIVE_1).mkdir(parents=True, exist_ok=True)
-    elif has_1_USB and has_2_USB:
-        Path(USB_DRIVE_1).mkdir(parents=True, exist_ok=True)
-        Path(USB_DRIVE_2).mkdir(parents=True, exist_ok=True)
-
-    while True:
-        inRgb = qPreview.tryGet()  # Non-blocking call, will return a new data that has arrived or None otherwise
-        if inRgb is not None:
-            frame = inRgb.getCvFrame()
-            # 4k / 4
-            frame = cv2.pyrDown(frame)
-            frame = cv2.pyrDown(frame)
-            cv2.imshow("rgb", frame)
-
-        key = cv2.waitKey(1)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-        elif cv2.waitKey(1) & 0xFF == ord('c'):
-            # ctrl = dai.CameraControl()
-            # ctrl.setCaptureStill(True)
-            # qManipCfg.send(ctrl)
-            # print(f"Sent 'still' event to the camera!")
-            for q in [qStill]:#[qPreview, qStill]:
-                name_time = str(int(time.time() * 1000))
-
-                pkt = q.get()
-                name = q.getName()
-                shape = (3, pkt.getHeight(), pkt.getWidth())
-                save_frame = pkt.getCvFrame()
-
-                if not has_1_USB and not has_2_USB:
-                    fname0 = "".join([name_time,'.jpg'])
-                    fname0 = os.path.join(USB_DRIVE_0,fname0)
-                    print(f"Capturing image ==> {fname0}")
-                    cv2.imwrite(fname0, save_frame)
-                    print('Image saved to', fname0)
-                elif has_1_USB and not has_2_USB:
-                    fname1 = "".join([name_time,'.jpg'])
-                    fname1 = os.path.join(USB_DRIVE_1,fname1)
-                    print(f"Capturing image ==> {fname1}")
-                    cv2.imwrite(fname1, save_frame)
-                    print('Image saved to', fname1)
-                elif has_1_USB and has_2_USB:
-                    fname1 = "".join([name_time,'.jpg'])
-                    fname1 = os.path.join(USB_DRIVE_1,fname1)
-                    fname2 = "".join([name_time,'.jpg'])
-                    fname2 = os.path.join(USB_DRIVE_2,fname2)
-                    print(f"Capturing image. Saving redundant ==> {fname1}   &   {fname2}")
-                    cv2.imwrite(fname1, save_frame)
-                    print('Image saved to', fname1)  
-                    cv2.imwrite(fname2, save_frame)
-                    print('Image saved to', fname2)  
-'''                    
-        
-        
-    
-
-'''
-# Connect to device and start pipeline
-with dai.Device(pipeline) as device:
-    print(f"Pipline started")
-
-    # Output queue will be used to get the rgb frames from the output defined above
-    qRgb = device.getOutputQueue(name="rgb", maxSize=30, blocking=False)
-    qStill = device.getOutputQueue(name="still", maxSize=30, blocking=True)
-    qControl = device.getInputQueue(name="control")
-
-    # Make sure the destination path is present before starting to store the examples
-    dir_name = "rgb_data"
-    USB_PATH = '/media/pi/'
-    has_1_USB = False
-    has_2_USB = False
-    USB_DRIVE_1 = ''
-    USB_DRIVE_2 = ''
-    print(USB_PATH)
-    print(os.listdir(USB_PATH))
-    if len(os.listdir(USB_PATH)) == 1:
-        USB_DRIVE_1 = os.path.join(USB_PATH,os.listdir(USB_PATH)[0],dir_name)
-        has_1_USB = True
-    elif len(os.listdir(USB_PATH)) == 2:
-        USB_DRIVE_1 = os.path.join(USB_PATH,os.listdir(USB_PATH)[0],dir_name)
-        USB_DRIVE_2 = os.path.join(USB_PATH,os.listdir(USB_PATH)[1],dir_name)
-        has_1_USB = True
-        has_2_USB = True
-    print(f"path to USB_DRIVE_1: {USB_DRIVE_1}")
-    print(f"path to USB_DRIVE_2: {USB_DRIVE_2}")
-
-    print(f"Creating save dirs")
-    if not has_1_USB and not has_2_USB:
-        USB_DRIVE_0 = dir_name
-        Path(USB_DRIVE_0).mkdir(parents=True, exist_ok=True)
-    elif has_1_USB and not has_2_USB:
-        Path(USB_DRIVE_1).mkdir(parents=True, exist_ok=True)
-    elif has_1_USB and has_2_USB:
-        Path(USB_DRIVE_1).mkdir(parents=True, exist_ok=True)
-        Path(USB_DRIVE_2).mkdir(parents=True, exist_ok=True)
-        
-    while True:
-        inRgb = qRgb.tryGet()  # Non-blocking call, will return a new data that has arrived or None otherwise
-        if inRgb is not None:
-            frame = inRgb.getCvFrame()
-            # 4k / 4
-            frame = cv2.pyrDown(frame)
-            frame = cv2.pyrDown(frame)
-            cv2.imshow("rgb", frame)
-
-        print(qStill.has())
-        if qStill.has():
-            print(f"qStill ==> {qStill.has()}")
-            name_time = str(int(time.time() * 1000))
-            if not has_1_USB and not has_2_USB:
-                fname0 = "".join(name_time,'.jpg')
-                fname0 = os.path.join(USB_DRIVE_0,fname0)
-                print(f"fname1 ==> {fname0}")
-                with open(fname0, "wb") as f:
-                    f.write(qStill.get().getData())
-                    print('Image saved to', fname0)
-            elif has_1_USB and not has_2_USB:
-                fname1 = "".join(name_time,'.jpg')
-                fname1 = os.path.join(USB_DRIVE_1,fname1)
-                print(f"fname1 ==> {fname1}")
-                with open(fname1, "wb") as f:
-                    f.write(qStill.get().getData())
-                    print('Image saved to', fname1)
-            elif has_1_USB and has_2_USB:
-                fname1 = "".join(name_time,'.jpg')
-                fname1 = os.path.join(USB_DRIVE_1,fname1)
-                fname2 = "".join(name_time,'.jpg')
-                fname2 = os.path.join(USB_DRIVE_2,fname2)
-                print(f"fname1 ==> {fname1}")
-                print(f"fname2 ==> {fname2}")
-                with open(fname1, "wb") as f:
-                    f.write(qStill.get().getData())
-                    print('Image saved to', fname1)
-                with open(fname2, "wb") as f:
-                    f.write(qStill.get().getData())
-                    print('Image saved to', fname2)   
-        # for i in range(0,20):# IMG_COUNT < 20: 
-        #     time. sleep(2)
-        #     ctrl = dai.CameraControl()
-        #     ctrl.setCaptureStill(True)
-        #     qControl.send(ctrl)
-        #     print(f"Sent 'still' event to the camera! img = {i}")
-        key = cv2.waitKey(1)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-        elif cv2.waitKey(1) & 0xFF == ord('c'):
-            ctrl = dai.CameraControl()
-            ctrl.setCaptureStill(True)
-            qControl.send(ctrl)
-            print(f"Sent 'still' event to the camera!")
-'''
