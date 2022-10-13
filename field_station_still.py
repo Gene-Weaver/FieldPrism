@@ -117,6 +117,7 @@ def align_camera():
             
             inRgb = qRgb.get()
             cv2.imshow("rgb", cv2.rotate(inRgb.getCvFrame(), cv2.ROTATE_180))
+            time.sleep(1)
 
             # if inRgb is not None:
             #     save_frame = inRgb.getCvFrame()
