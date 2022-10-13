@@ -130,9 +130,14 @@ def align_camera():
             key = cv2.waitKey(1)
             if keyboard.is_pressed('6'):
                 break
+'''
+TODO
+    - add redo to key 4
+        * overwrite previous image
+    - add GPS
+    - see if USB hub will work 
 
-
-
+'''
 def main():
     mount_usb()
     # Create pipeline
