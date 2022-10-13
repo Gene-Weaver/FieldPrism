@@ -9,12 +9,6 @@ echo ""
 echo "***** View Mounting Points..."
 ls /media/
 echo ""
-echo "***** Clear Mounting Points..."
-rm -rfv /media/*
-echo ""
-echo "***** Verify Cleared Mounting Points..."
-ls -l /media/
-echo ""
 echo "***** Mounting USB Drives..."
 pmount /dev/sda1 USB1
 pmount /dev/sdb1 USB2
