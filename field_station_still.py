@@ -112,14 +112,18 @@ def align_camera():
     # Connect to device and start pipeline
     with dai.Device(pipeline) as device:
         qRgb = device.getOutputQueue('preview', maxSize=1, blocking=False)
+
         while True:
-            inRgb = qRgb.tryGet()
-            if inRgb is not None:
-                save_frame = inRgb.getCvFrame()
-                # 4k / 4
-                # frame = cv2.pyrDown(save_frame)
-                # frame = cv2.pyrDown(frame)
-                cv2.imshow("rgb", cv2.rotate(save_frame, cv2.ROTATE_180))
+            
+            inRgb = qRgb.get()
+            cv2.imshow("rgb", cv2.rotate(inRgb.getCvFrame(), cv2.ROTATE_180))
+
+            # if inRgb is not None:
+            #     save_frame = inRgb.getCvFrame()
+            #     # 4k / 4
+            #     # frame = cv2.pyrDown(save_frame)
+            #     # frame = cv2.pyrDown(frame)
+            #     cv2.imshow("rgb", cv2.rotate(save_frame, cv2.ROTATE_180))
 
             # cv2.imshow("rgb", inRgb.getCvFrame())
 
