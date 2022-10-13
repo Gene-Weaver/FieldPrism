@@ -153,6 +153,7 @@ def main():
                 frame = vidFrame.getCvFrame()
                 frame = cv2.pyrDown(frame)
                 frame = cv2.pyrDown(frame)
+                frame = cv2.rotate(frame, cv2.ROTATE_180)
                 cv2.imshow('video', frame)
 
             ispFrames = ispQueue.get()
