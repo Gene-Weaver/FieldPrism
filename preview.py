@@ -3,6 +3,7 @@ import depthai as dai
 import keyboard
 
 def main():
+
     # Create pipeline
     pipeline = dai.Pipeline()
 
@@ -13,9 +14,10 @@ def main():
     xoutRgb.setStreamName("rgb")
 
     # Properties
-    camRgb.setPreviewSize(504, 380)
+    camRgb.setPreviewSize(426,240) #(568, 380)
     camRgb.setInterleaved(False)
     camRgb.setColorOrder(dai.ColorCameraProperties.ColorOrder.RGB)
+    camRgb.setFps(12)
 
     # Linking
     camRgb.preview.link(xoutRgb.input)
