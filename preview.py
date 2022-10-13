@@ -13,7 +13,7 @@ def main():
     xoutRgb.setStreamName("rgb")
 
     # Properties
-    camRgb.setPreviewSize(480, 270)
+    camRgb.setPreviewSize(504, 380)
     camRgb.setInterleaved(False)
     camRgb.setColorOrder(dai.ColorCameraProperties.ColorOrder.RGB)
 

@@ -99,7 +99,7 @@ def main():
 
     # Define sources and outputs
     camRgb = pipeline.create(dai.node.ColorCamera)
-    camRgb.setPreviewSize(480, 270)
+    camRgb.setPreviewSize(426, 240)
     camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_12_MP)
     # camRgb.setIspScale(2,6) # 1080P -> 720P
     stillEncoder = pipeline.create(dai.node.VideoEncoder)
@@ -117,8 +117,8 @@ def main():
     stillMjpegOut.setStreamName('still')
 
     # Properties
-    # camRgb.setVideoSize(3140, 2160)
-    camRgb.setVideoSize(1280, 720)
+    # camRgb.setVideoSize(4032, 3040)
+    camRgb.setVideoSize(426, 240)
     stillEncoder.setDefaultProfilePreset(1, dai.VideoEncoderProperties.Profile.MJPEG)
 
     # Linking
@@ -131,6 +131,10 @@ def main():
 
     # Connect to device and start pipeline
     with dai.Device(pipeline) as device:
+        print('Connected cameras: ', device.getConnectedCameras())
+        # Print out usb speed
+        print('Usb speed: ', device.getUsbSpeed().name)
+
         # Make sure the destination path is present before starting to store the examples
         cfg = SetupFP()
 
