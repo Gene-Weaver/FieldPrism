@@ -70,8 +70,6 @@ def print_usb_error():
     print(f"{bcolors.FAIL}       Quit and mount USB device/s otherwise images will{bcolors.ENDC}")
     print(f"{bcolors.FAIL}       save to boot device (microSD card) in:{bcolors.ENDC}")
 
-
-
 def save_image(save_frame, name_time, save_dir):
     fname = "".join([name_time,'.jpg'])
     fname = os.path.join(save_dir,fname)
