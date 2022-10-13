@@ -70,9 +70,7 @@ def print_usb_error():
     print(f"{bcolors.FAIL}       Quit and mount USB device/s otherwise images will{bcolors.ENDC}")
     print(f"{bcolors.FAIL}       save to boot device (microSD card) in:{bcolors.ENDC}")
 
-def mount_usb():
-    result = subprocess.run(["sh", "./mount_usb_drives.sh"], stderr=subprocess.PIPE, text=True)
-    print(result.stderr)
+
 
 def save_image(save_frame, name_time, save_dir):
     fname = "".join([name_time,'.jpg'])
@@ -142,7 +140,6 @@ TODO
 
 '''
 def main():
-    mount_usb()
     # Create pipeline
     pipeline = dai.Pipeline()
 
