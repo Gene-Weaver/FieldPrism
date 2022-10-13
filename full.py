@@ -72,7 +72,7 @@ def print_usb_error():
 
 def mount_usb():
     result = subprocess.run(["sh", "./mount_usb_drives.sh"], stderr=subprocess.PIPE, text=True)
-    print(result.stderr)
+    # print(result.stderr)
 
 def save_image(save_frame, name_time, save_dir):
     fname = "".join([name_time,'.jpg'])
