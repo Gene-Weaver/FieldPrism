@@ -92,6 +92,35 @@ def route_save_image(Setup,save_frame):
         save_image(save_frame, name_time, Setup.usb_1)
         save_image(save_frame, name_time, Setup.usb_2)
 
+def align_camera():
+    # Create pipeline
+    pipeline = dai.Pipeline()
+
+    # Define source and output
+    camRgb = pipeline.create(dai.node.ColorCamera)
+    xoutRgb = pipeline.create(dai.node.XLinkOut)
+
+    xoutRgb.setStreamName("preview")
+    camRgb.setPreviewSize(426,240)
+    camRgb.setInterleaved(False)
+    camRgb.setColorOrder(dai.ColorCameraProperties.ColorOrder.RGB)
+    camRgb.setFps(12)
+
+    # Linking
+    camRgb.preview.link(xoutRgb.input)
+
+    # Connect to device and start pipeline
+    with dai.Device(pipeline) as device:
+        qRgb = device.getOutputQueue('preview', maxSize=1, blocking=False)
+        while True:
+            inRgb = qRgb.get()
+            cv2.imshow("rgb", inRgb.getCvFrame())
+
+            if keyboard.is_pressed('6'):
+                break
+
+
+
 def main():
     mount_usb()
     # Create pipeline
@@ -205,4 +234,16 @@ def main():
                 time.sleep(3)
 
 if __name__ == '__main__':
-    main()
+    while True:
+        print("main: 1")
+        print("align_camera: 3")
+        print("Exit: 6")
+        key = cv2.waitKey(0)
+        if keyboard.is_pressed('6'):
+            break
+        elif keyboard.is_pressed('1'):
+            print("Entering main()")
+            main()
+        elif keyboard.is_pressed('3'):
+            print("Entering align_camera()")
+            align_camera()
