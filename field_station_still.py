@@ -168,7 +168,7 @@ def main():
                 # cv2.imshow('isp', ispFrame.getCvFrame())
 
             if TAKE_PHOTO:
-                stillFrames = ispFrames#stillQueue.tryGetAll()
+                stillFrames = stillQueue.tryGetAll()
                 # if len(stillFrames) >= 1:
                 for stillFrame in stillFrames:
                     print(f"       Capturing Still")
