@@ -193,13 +193,13 @@ def main():
 
         TAKE_PHOTO = False
         while True:
-            vidFrames = videoQueue.tryGetAll()
-            for vidFrame in vidFrames:
-                vframe = vidFrame.getCvFrame()
-                vframe2 = cv2.pyrDown(vframe)
-                vframe2 = cv2.pyrDown(vframe2)
-                vframe2 = cv2.rotate(vframe2, cv2.ROTATE_180)
-                cv2.imshow('video', vframe2)
+            # vidFrames = videoQueue.tryGetAll()
+            # for vidFrame in vidFrames:
+            #     vframe = vidFrame.getCvFrame()
+            #     vframe2 = cv2.pyrDown(vframe)
+            #     vframe2 = cv2.pyrDown(vframe2)
+            #     vframe2 = cv2.rotate(vframe2, cv2.ROTATE_180)
+            #     cv2.imshow('video', vframe2)
 
             ispFrames = ispQueue.get()
             # ispFrames = ispQueue.tryGetAll()
@@ -209,30 +209,30 @@ def main():
                 # cv2.imshow('isp', ispFrame.getCvFrame())
 
             if TAKE_PHOTO:
-                stillFrames = stillQueue.tryGetAll()
+                # stillFrames = stillQueue.tryGetAll()
                 # if len(stillFrames) >= 1:
-                for stillFrame in stillFrames:
-                    print(f"       Capturing Still")
-                    # Decode JPEG
-                    save_frame = cv2.imdecode(stillFrame.getData(), cv2.IMREAD_UNCHANGED)
-                    save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
-                    # Display
-                    frame = cv2.pyrDown(save_frame)
-                    frame = cv2.pyrDown(frame)  
-                    cv2.imshow('still', frame)
-                    # Save
-                    route_save_image(cfg,save_frame)
-                    TAKE_PHOTO = False
+                #     for stillFrame in stillFrames:
+                #         print(f"       Capturing Still")
+                #         # Decode JPEG
+                #         save_frame = cv2.imdecode(stillFrame.getData(), cv2.IMREAD_UNCHANGED)
+                #         save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
+                #         # Display
+                #         frame = cv2.pyrDown(save_frame)
+                #         frame = cv2.pyrDown(frame)  
+                #         cv2.imshow('still', frame)
+                #         # Save
+                #         route_save_image(cfg,save_frame)
+                #         TAKE_PHOTO = False
                 # else:
-                #     print(f"       Capturing Image")
-                #     save_frame = ispFrames.getCvFrame()
-                #     save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
-                #     frame = cv2.pyrDown(save_frame)
-                #     frame = cv2.pyrDown(frame)  
-                #     cv2.imshow('still', frame)
-                #     # Save
-                #     route_save_image(cfg,save_frame)
-                #     TAKE_PHOTO = False
+                print(f"       Capturing Image")
+                save_frame = ispFrames.getCvFrame()
+                save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
+                frame = cv2.pyrDown(save_frame)
+                frame = cv2.pyrDown(frame)  
+                cv2.imshow('still', frame)
+                # Save
+                route_save_image(cfg,save_frame)
+                TAKE_PHOTO = False
 
             key = cv2.waitKey(1)
             if keyboard.is_pressed('6'):
