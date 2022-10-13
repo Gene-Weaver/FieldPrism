@@ -233,12 +233,12 @@ def main():
                 print(f"       Camera Activated")
                 time.sleep(3)
 
-if __name__ == '__main__':
+def route():
+    print("main: 1")
+    print("align_camera: 3")
+    print("Exit: 6")
     while True:
-        print("main: 1")
-        print("align_camera: 3")
-        print("Exit: 6")
-        key = cv2.waitKey(0)
+        key = cv2.waitKey(1)
         if keyboard.is_pressed('6'):
             break
         elif keyboard.is_pressed('1'):
@@ -247,3 +247,6 @@ if __name__ == '__main__':
         elif keyboard.is_pressed('3'):
             print("Entering align_camera()")
             align_camera()
+
+if __name__ == '__main__':
+    route()
