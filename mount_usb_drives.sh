@@ -17,8 +17,6 @@ echo "***** If below is empty, then no drives were mounted. If non-empty, succes
 ls /media/
 ls /media/USB1
 ls /media/USB1
-chown -R pi /media/USB1
-chown -R pi /media/USB2
 echo ""
 echo "***** Finished"  
 echo ""
