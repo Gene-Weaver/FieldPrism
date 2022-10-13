@@ -9,9 +9,13 @@ echo ""
 echo "***** View Mounting Points..."
 ls /media/
 echo ""
+echo "***** Un-Mounting USB Drives..."
+pumount /dev/sda1
+pumount /dev/sdb1
+echo ""
 echo "***** Mounting USB Drives..."
 pmount -w /dev/sda1 USB1
-pmount -w /dev/sda1 USB2
+pmount -w /dev/sdb1 USB2
 echo ""
 echo "***** If below is empty, then no drives were mounted. If non-empty, success."
 ls /media/
