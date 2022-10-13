@@ -2,38 +2,42 @@ import cv2
 import depthai as dai
 import keyboard
 
-# Create pipeline
-pipeline = dai.Pipeline()
+def main():
+    # Create pipeline
+    pipeline = dai.Pipeline()
 
-# Define source and output
-camRgb = pipeline.create(dai.node.ColorCamera)
-xoutRgb = pipeline.create(dai.node.XLinkOut)
+    # Define source and output
+    camRgb = pipeline.create(dai.node.ColorCamera)
+    xoutRgb = pipeline.create(dai.node.XLinkOut)
 
-xoutRgb.setStreamName("rgb")
+    xoutRgb.setStreamName("rgb")
 
-# Properties
-camRgb.setPreviewSize(480, 270)
-camRgb.setInterleaved(False)
-camRgb.setColorOrder(dai.ColorCameraProperties.ColorOrder.RGB)
+    # Properties
+    camRgb.setPreviewSize(480, 270)
+    camRgb.setInterleaved(False)
+    camRgb.setColorOrder(dai.ColorCameraProperties.ColorOrder.RGB)
 
-# Linking
-camRgb.preview.link(xoutRgb.input)
+    # Linking
+    camRgb.preview.link(xoutRgb.input)
 
-# Connect to device and start pipeline
-with dai.Device(pipeline) as device:
+    # Connect to device and start pipeline
+    with dai.Device(pipeline) as device:
 
-    print('Connected cameras: ', device.getConnectedCameras())
-    # Print out usb speed
-    print('Usb speed: ', device.getUsbSpeed().name)
+        print('Connected cameras: ', device.getConnectedCameras())
+        # Print out usb speed
+        print('Usb speed: ', device.getUsbSpeed().name)
 
-    # Output queue will be used to get the rgb frames from the output defined above
-    qRgb = device.getOutputQueue(name="rgb", maxSize=4, blocking=False)
+        # Output queue will be used to get the rgb frames from the output defined above
+        qRgb = device.getOutputQueue(name="rgb", maxSize=4, blocking=False)
 
-    while True:
-        inRgb = qRgb.get()  # blocking call, will wait until a new data has arrived
+        while True:
+            inRgb = qRgb.get()  # blocking call, will wait until a new data has arrived
 
-        # Retrieve 'bgr' (opencv format) frame
-        cv2.imshow("rgb", inRgb.getCvFrame())
+            # Retrieve 'bgr' (opencv format) frame
+            cv2.imshow("rgb", inRgb.getCvFrame())
 
-        if keyboard.is_pressed('6'):
-            break
+            if keyboard.is_pressed('6'):
+                break
+
+if __name__ == '__main__':
+    main()
