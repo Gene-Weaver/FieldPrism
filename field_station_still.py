@@ -132,6 +132,9 @@ def align_camera():
                 break
 '''
 TODO
+    - hotspot / offline
+    - starting headless
+        * restarting main() without power cycle?
     - add redo to key 4
         * overwrite previous image
     - add GPS
