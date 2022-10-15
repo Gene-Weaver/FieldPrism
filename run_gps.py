@@ -68,6 +68,7 @@ class GPSPacket:
             print(f"{bcolors.OKGREEN}     Lat error estimate: {self.lat_error_est}{bcolors.ENDC}")
             print(f"{bcolors.OKGREEN}     Lon error estimate: {self.lon_error_est}{bcolors.ENDC}")
             print(f"{bcolors.OKGREEN}     Alt error estimate: {self.alt_error_est}{bcolors.ENDC}")
+            print(f"")
         elif opt == 'Fail':
             print(f"{bcolors.FAIL}GPS Report{bcolors.ENDC}")
             print(f"")
@@ -177,8 +178,10 @@ if __name__ == '__main__':
     get_gps('fast')
     end = time.perf_counter()
     print(f"{bcolors.HEADER}GPS Fast: {end-start} sec.{bcolors.ENDC}")
+    print(f"")
 
     start = time.perf_counter()
     get_gps('cautious')
     end = time.perf_counter()
     print(f"{bcolors.HEADER}GPS Cautious: {end-start} sec.{bcolors.ENDC}")
+    print(f"")
