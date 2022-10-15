@@ -186,13 +186,13 @@ def get_gps(speed,n_times):
     # print('End')
 if __name__ == '__main__':
     start = time.perf_counter()
-    get_gps('fast')
+    get_gps('fast',10)
     end = time.perf_counter()
     print(f"{bcolors.HEADER}GPS Fast: {round(end-start,5)} sec.{bcolors.ENDC}")
     print(f"")
 
     start = time.perf_counter()
-    get_gps('cautious')
+    get_gps('cautious',10)
     end = time.perf_counter()
     print(f"{bcolors.HEADER}GPS Cautious: {round(end-start,5)} sec.{bcolors.ENDC}")
     print(f"")
