@@ -62,24 +62,24 @@ class GPSPacket:
     # def update_values_str(self) -> str:
     #     return self.unit_price * self.quantity_on_hand
     
-    def total_cost(self) -> None:
-        print(f"{bcolors.OKGREEN}GPS Report{bcolors.ENDC}")
-        print(f"")
-        print(f"{bcolors.OKGREEN}     Time: {str(self.current_time)}{bcolors.ENDC}")
-        print(f"")
-        print(f"{bcolors.OKGREEN}     Latitude: {str(self.)}{bcolors.ENDC}")
-        print(f"{bcolors.OKGREEN}     Longitude: {str(self.)}{bcolors.ENDC}")
-        print(f"")
-        print(f"{bcolors.OKGREEN}     Altitude (m): {str(self.)}{bcolors.ENDC}")
-        print(f"{bcolors.OKGREEN}     Climb: {str(self.)}{bcolors.ENDC}")
-        print(f"{bcolors.OKGREEN}     Speed: {str(self.)}{bcolors.ENDC}")
-        print(f"")
-        print(f"{bcolors.OKGREEN}     Lat error estimate: {self.}{bcolors.ENDC}")
-        print(f"{bcolors.OKGREEN}     Lon error estimate: {self.}{bcolors.ENDC}")
-        print(f"{bcolors.OKGREEN}     Alt error estimate: {self.}{bcolors.ENDC}")
-        print(f"{bcolors.OKGREEN}     Climb: {}{bcolors.ENDC}")
-        print(f"{bcolors.OKGREEN}     Climb: {}{bcolors.ENDC}")
-        print(f"{bcolors.OKGREEN}     Climb: {}{bcolors.ENDC}")
+    # def total_cost(self) -> None:
+    #     print(f"{bcolors.OKGREEN}GPS Report{bcolors.ENDC}")
+    #     print(f"")
+    #     print(f"{bcolors.OKGREEN}     Time: {str(self.current_time)}{bcolors.ENDC}")
+    #     print(f"")
+    #     print(f"{bcolors.OKGREEN}     Latitude: {str(self.)}{bcolors.ENDC}")
+    #     print(f"{bcolors.OKGREEN}     Longitude: {str(self.)}{bcolors.ENDC}")
+    #     print(f"")
+    #     print(f"{bcolors.OKGREEN}     Altitude (m): {str(self.)}{bcolors.ENDC}")
+    #     print(f"{bcolors.OKGREEN}     Climb: {str(self.)}{bcolors.ENDC}")
+    #     print(f"{bcolors.OKGREEN}     Speed: {str(self.)}{bcolors.ENDC}")
+    #     print(f"")
+    #     print(f"{bcolors.OKGREEN}     Lat error estimate: {self.}{bcolors.ENDC}")
+    #     print(f"{bcolors.OKGREEN}     Lon error estimate: {self.}{bcolors.ENDC}")
+    #     print(f"{bcolors.OKGREEN}     Alt error estimate: {self.}{bcolors.ENDC}")
+    #     print(f"{bcolors.OKGREEN}     Climb: {}{bcolors.ENDC}")
+    #     print(f"{bcolors.OKGREEN}     Climb: {}{bcolors.ENDC}")
+    #     print(f"{bcolors.OKGREEN}     Climb: {}{bcolors.ENDC}")
 
 def update_GPS_data(data_stream, item):
     if data_stream.TPV[item] is not None:
