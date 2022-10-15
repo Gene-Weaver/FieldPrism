@@ -92,19 +92,20 @@ def get_gps():
         # line #140-ff of /usr/local/lib/python3.5/dist-packages/gps3/agps.py
         time.sleep(0.1) # Sleep, or do other things for as long as you like.
         if agps_thread.data_stream.lat != 'n/a':
-            print('YES')
+            # print('YES')
             count += 1
         else:
-            print('No')
+            # print('No')
             count_fail += 1
         
         if count > 10:
-            print('SUCCESS')
+            # print('SUCCESS')
             take_data = True
             do_get_GPS = False
         if count_fail > 20 or count > 10:
-            print('ENDING')
+            # print('ENDING')
             do_get_GPS = False
+            GPS_data.print_report()
 
         if take_data:
             GPS_data.latitude = agps_thread.data_stream.lat
@@ -117,8 +118,8 @@ def get_gps():
             GPS_data.lon_error_est = agps_thread.data_stream.epx
             GPS_data.alt_error_est = agps_thread.data_stream.epv
             GPS_data.print_report()
-        else:
-            GPS_data.print_report()
+    return GPS_data
+        
 
 
     

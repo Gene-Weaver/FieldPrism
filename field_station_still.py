@@ -8,6 +8,7 @@ import keyboard
 from dataclasses import dataclass
 from utils import bcolors
 import matplotlib.pyplot as plt
+from run_gps import get_gps
 # print(f"{bcolors.OKGREEN}     {bcolors.ENDC}")
 
 @dataclass
@@ -241,6 +242,7 @@ def main():
                 cv2.imshow('still', frame)
                 # Save
                 route_save_image(cfg,save_frame)
+                GPS_data = get_gps()
                 TAKE_PHOTO = False
 
             key = cv2.waitKey(1)
