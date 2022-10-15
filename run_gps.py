@@ -118,13 +118,13 @@ def get_gps(speed):
         else:
             # print('No')
             count_fail += 1
-            time.sleep(0.05)
+            time.sleep(0.1)
         
         if count > max_count:
             # print('SUCCESS')
             take_data = True
             do_get_GPS = False
-            
+
         if count_fail > 20:
             # print('ENDING')
             do_get_GPS = False
