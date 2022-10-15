@@ -117,11 +117,8 @@ def align_camera():
         while True:
             
             inRgb = qRgb.get()
-            # 
-            try:
-                cv2.imshow("rgb", cv2.rotate(inRgb.getCvFrame(), cv2.ROTATE_180))
-            except:
-                plt.imshow(cv2.rotate(inRgb.getCvFrame(), cv2.ROTATE_180))
+            # plt.imshow(cv2.rotate(inRgb.getCvFrame(), cv2.ROTATE_180))
+            cv2.imshow("rgb", cv2.rotate(inRgb.getCvFrame(), cv2.ROTATE_180))
             # time.sleep(1)
 
             # if inRgb is not None:
@@ -242,11 +239,8 @@ def main():
                 save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
                 frame = cv2.pyrDown(save_frame)
                 frame = cv2.pyrDown(frame)  
-                # 
-                try:
-                    cv2.imshow('still', frame)
-                except:
-                    plt.imshow(frame)
+                # plt.imshow(frame)
+                cv2.imshow('still', frame)
                 # Save
                 route_save_image(cfg,save_frame)
                 GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
