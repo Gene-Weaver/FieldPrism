@@ -127,9 +127,14 @@ def get_gps(speed):
             do_get_GPS = False
 
         if count_fail > 20:
-            # print('ENDING')
-            do_get_GPS = False
-            GPS_data.print_report('Fail')
+            GPS_data = get_gps('cautious')
+            if GPS_data.latitude == -999:
+                # print('ENDING')
+                do_get_GPS = False
+                GPS_data.print_report('Fail')
+            else:
+                do_get_GPS = False
+                GPS_data.print_report('Pass')
 
         if take_data:
             GPS_data.latitude = agps_thread.data_stream.lat
