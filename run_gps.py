@@ -113,7 +113,7 @@ def get_gps(speed):
     while do_get_GPS:  
         # line #140-ff of /usr/local/lib/python3.5/dist-packages/gps3/agps.py
         # time.sleep(0.1) # Sleep, or do other things for as long as you like.
-        if agps_thread.data_stream.lat != 'n/a':
+        if (agps_thread.data_stream.lat != 'n/a') and (len(str(agps_thread.data_stream.lat).split('.')[1]) >= 3):
             # print('YES')
             count += 1
         else:
