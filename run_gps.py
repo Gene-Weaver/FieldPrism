@@ -83,6 +83,7 @@ class GPSPacket:
             print(f"{bcolors.FAIL}     Lat error estimate: {self.lat_error_est}{bcolors.ENDC}")
             print(f"{bcolors.FAIL}     Lon error estimate: {self.lon_error_est}{bcolors.ENDC}")
             print(f"{bcolors.FAIL}     Alt error estimate: {self.alt_error_est}{bcolors.ENDC}")
+            print(f"")
 
 def update_GPS_data(data_stream, item):
     if data_stream.TPV[item] is not None:
@@ -171,4 +172,12 @@ def get_gps(speed):
     #                 break
     # print('End')
 if __name__ == '__main__':
-    get_gps()
+    start = time.perf_counter()
+    get_gps('fast')
+    end = time.perf_counter()
+    print(f"{bcolors.HEADER}GPS Fast: {end-start} sec.{bcolors.ENDC}")
+
+    start = time.perf_counter()
+    get_gps('cautious')
+    end = time.perf_counter()
+    print(f"{bcolors.HEADER}GPS Cautious: {end-start} sec.{bcolors.ENDC}")
