@@ -1,3 +1,11 @@
+'''
+Reference this guide for help:
+    https://learn.adafruit.com/adafruit-ultimate-gps-on-the-raspberry-pi/setting-everything-up
+To see raw data from GPS module, in terminal:
+    sudo cat /dev/ttyUSB0
+'''
+
+
 import gps
 
 # Listen on port 2947 (gpsd) of localhost
