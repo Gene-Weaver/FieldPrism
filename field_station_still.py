@@ -242,9 +242,11 @@ def main():
                 # plt.imshow(frame)
                 cv2.imshow('still', frame)
                 # Save
+                print(f"       GPS Activated")
                 route_save_image(cfg,save_frame)
                 GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
                 TAKE_PHOTO = False
+                print(f"{bcolors.FAIL}Ready{bcolors.ENDC}")
 
             key = cv2.waitKey(1)
             if keyboard.is_pressed('6'):
@@ -255,7 +257,7 @@ def main():
                 configQueue.send(ctrl)
                 TAKE_PHOTO = True
                 print(f"       Camera Activated")
-                time.sleep(3)
+                # time.sleep(3)
 
 def route():
     print("main: 1")
