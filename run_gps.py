@@ -127,7 +127,7 @@ def get_gps(speed):
             do_get_GPS = False
 
         if count_fail > 20:
-            print('No')
+            print(f"{bcolors.WARNING}Trying GPS again...{bcolors.ENDC}")
             GPS_data = get_gps('cautious')
             if GPS_data.latitude == -999:
                 # print('ENDING')
