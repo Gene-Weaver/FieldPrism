@@ -95,8 +95,8 @@ def get_gps():
 
     
     for new_data in gps_socket:
-        for count in range(0,4):
-            if new_data:
+        if new_data:
+            for count in range(0,10):
                 print(f'Try {count}')
                 data_stream.unpack(new_data)
 
