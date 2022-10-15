@@ -52,21 +52,37 @@ class GPSPacket:
     lon_error_est: float = -999
     alt_error_est: float = -999
 
-    def print_report(self) -> None:
-        print(f"{bcolors.OKGREEN}GPS Report{bcolors.ENDC}")
-        print(f"")
-        print(f"{bcolors.OKGREEN}     Time: {str(self.current_time)}{bcolors.ENDC}")
-        print(f"")
-        print(f"{bcolors.OKGREEN}     Latitude: {str(self.latitude)}{bcolors.ENDC}")
-        print(f"{bcolors.OKGREEN}     Longitude: {str(self.longitude)}{bcolors.ENDC}")
-        print(f"")
-        print(f"{bcolors.OKGREEN}     Altitude (m): {str(self.altitude)}{bcolors.ENDC}")
-        print(f"{bcolors.OKGREEN}     Climb: {str(self.climb)}{bcolors.ENDC}")
-        print(f"{bcolors.OKGREEN}     Speed: {str(self.speed)}{bcolors.ENDC}")
-        print(f"")
-        print(f"{bcolors.OKGREEN}     Lat error estimate: {self.lat_error_est}{bcolors.ENDC}")
-        print(f"{bcolors.OKGREEN}     Lon error estimate: {self.lon_error_est}{bcolors.ENDC}")
-        print(f"{bcolors.OKGREEN}     Alt error estimate: {self.alt_error_est}{bcolors.ENDC}")
+    def print_report(self,opt) -> None:
+        if opt == 'Pass':        
+            print(f"{bcolors.OKGREEN}GPS Report{bcolors.ENDC}")
+            print(f"")
+            print(f"{bcolors.OKGREEN}     Time: {str(self.current_time)}{bcolors.ENDC}")
+            print(f"")
+            print(f"{bcolors.OKGREEN}     Latitude: {str(self.latitude)}{bcolors.ENDC}")
+            print(f"{bcolors.OKGREEN}     Longitude: {str(self.longitude)}{bcolors.ENDC}")
+            print(f"")
+            print(f"{bcolors.OKGREEN}     Altitude (m): {str(self.altitude)}{bcolors.ENDC}")
+            print(f"{bcolors.OKGREEN}     Climb: {str(self.climb)}{bcolors.ENDC}")
+            print(f"{bcolors.OKGREEN}     Speed: {str(self.speed)}{bcolors.ENDC}")
+            print(f"")
+            print(f"{bcolors.OKGREEN}     Lat error estimate: {self.lat_error_est}{bcolors.ENDC}")
+            print(f"{bcolors.OKGREEN}     Lon error estimate: {self.lon_error_est}{bcolors.ENDC}")
+            print(f"{bcolors.OKGREEN}     Alt error estimate: {self.alt_error_est}{bcolors.ENDC}")
+        elif opt == 'Fail':
+            print(f"{bcolors.FAIL}GPS Report{bcolors.ENDC}")
+            print(f"")
+            print(f"{bcolors.FAIL}     Time: {str(self.current_time)}{bcolors.ENDC}")
+            print(f"")
+            print(f"{bcolors.FAIL}     Latitude: {str(self.latitude)}{bcolors.ENDC}")
+            print(f"{bcolors.FAIL}     Longitude: {str(self.longitude)}{bcolors.ENDC}")
+            print(f"")
+            print(f"{bcolors.FAIL}     Altitude (m): {str(self.altitude)}{bcolors.ENDC}")
+            print(f"{bcolors.FAIL}     Climb: {str(self.climb)}{bcolors.ENDC}")
+            print(f"{bcolors.FAIL}     Speed: {str(self.speed)}{bcolors.ENDC}")
+            print(f"")
+            print(f"{bcolors.FAIL}     Lat error estimate: {self.lat_error_est}{bcolors.ENDC}")
+            print(f"{bcolors.FAIL}     Lon error estimate: {self.lon_error_est}{bcolors.ENDC}")
+            print(f"{bcolors.FAIL}     Alt error estimate: {self.alt_error_est}{bcolors.ENDC}")
 
 def update_GPS_data(data_stream, item):
     if data_stream.TPV[item] is not None:
@@ -102,10 +118,10 @@ def get_gps():
             # print('SUCCESS')
             take_data = True
             do_get_GPS = False
-        if count_fail > 20 or count > 10:
+        if count_fail > 20:
             # print('ENDING')
             do_get_GPS = False
-            GPS_data.print_report()
+            GPS_data.print_report('Fail')
 
         if take_data:
             GPS_data.latitude = agps_thread.data_stream.lat
@@ -117,7 +133,7 @@ def get_gps():
             GPS_data.lat_error_est = agps_thread.data_stream.epy
             GPS_data.lon_error_est = agps_thread.data_stream.epx
             GPS_data.alt_error_est = agps_thread.data_stream.epv
-            GPS_data.print_report()
+            GPS_data.print_report('Pass')
     return GPS_data
         
 
