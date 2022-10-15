@@ -156,7 +156,9 @@ def get_gps(speed,n_times):
                 get_gps(speed,n_times)
             # if speed == 'cautious':
             #     time.sleep(0.1)
-        
+    else:
+        GPS_data = GPSPacket()
+        return GPS_data        
         
 
 
