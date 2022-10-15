@@ -47,17 +47,17 @@ class SetupFP():
 
         if self.has_1_usb and not self.has_2_usb:
             self.usb_1 = os.path.join(self.usb_base_path,os.listdir(self.usb_base_path)[0],self.dir_images_unprocessed)
-            print(f"{bcolors.OKGREEN}       Path to USB 1 [USB0]: {self.usb_1}{bcolors.ENDC}")
+            print(f"{bcolors.OKGREEN}       Path to USB 1 [USB1]: {self.usb_1}{bcolors.ENDC}")
 
         elif self.has_2_usb and not self.has_1_usb:
             self.usb_2 = os.path.join(self.usb_base_path,os.listdir(self.usb_base_path)[1],self.dir_images_unprocessed)
-            print(f"{bcolors.OKGREEN}       Path to USB 1 [USB1]: {self.usb_2}{bcolors.ENDC}")
+            print(f"{bcolors.OKGREEN}       Path to USB 1 [USB2]: {self.usb_2}{bcolors.ENDC}")
 
         elif self.has_2_usb and self.has_1_usb:
             self.usb_1 = os.path.join(self.usb_base_path,os.listdir(self.usb_base_path)[0],self.dir_images_unprocessed)
             self.usb_2 = os.path.join(self.usb_base_path,os.listdir(self.usb_base_path)[1],self.dir_images_unprocessed)
-            print(f"{bcolors.OKGREEN}       Path to USB 1 [USB0]: {self.usb_1}{bcolors.ENDC}")
-            print(f"{bcolors.OKGREEN}       Path to USB 2 [USB1]: {self.usb_2}{bcolors.ENDC}")
+            print(f"{bcolors.OKGREEN}       Path to USB 1 [USB1]: {self.usb_1}{bcolors.ENDC}")
+            print(f"{bcolors.OKGREEN}       Path to USB 2 [USB2]: {self.usb_2}{bcolors.ENDC}")
 
         else:
             self.print_usb_error()
@@ -99,6 +99,9 @@ def route_save_image(Setup,save_frame):
 
     elif Setup.has_1_usb and not Setup.has_2_usb:
         save_image(save_frame, name_time, Setup.usb_1)
+    
+    elif Setup.has_2_usb and not Setup.has_1_usb:
+        save_image(save_frame, name_time, Setup.usb_2)
 
     elif Setup.has_1_usb and Setup.has_2_usb:
         save_image(save_frame, name_time, Setup.usb_1)
