@@ -115,5 +115,8 @@ def get_gps():
                 # print('Latitude error estimate = ', data_stream.TPV['epy'])
                 # print('Estimated vertical error = ', data_stream.TPV['epv'])
                 # print('speed = ', data_stream.TPV['speed'])
+                if count == 9:
+                    break
+    print('End')
 if __name__ == '__main__':
     get_gps()
