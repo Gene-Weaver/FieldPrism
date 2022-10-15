@@ -124,6 +124,7 @@ def get_gps(speed):
             # print('SUCCESS')
             take_data = True
             do_get_GPS = False
+            
         if count_fail > 20:
             # print('ENDING')
             do_get_GPS = False
