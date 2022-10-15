@@ -100,7 +100,8 @@ def get_gps():
 
     count = 0
     count_fail = 0
-    while True:  # All data is available via instantiated thread data stream attribute.
+    do_get_GPS = True
+    while do_get_GPS:  # All data is available via instantiated thread data stream attribute.
         # line #140-ff of /usr/local/lib/python3.5/dist-packages/gps3/agps.py
         print('---------------------')
         print(                   agps_thread.data_stream.time)
@@ -120,7 +121,7 @@ def get_gps():
         
         if count_fail > 20 or count_fail >= 10:
             print('ENDING')
-            break
+            do_get_GPS = False
 
     
     # for new_data in gps_socket:
