@@ -177,11 +177,11 @@ if __name__ == '__main__':
     start = time.perf_counter()
     get_gps('fast')
     end = time.perf_counter()
-    print(f"{bcolors.HEADER}GPS Fast: {end-start} sec.{bcolors.ENDC}")
+    print(f"{bcolors.HEADER}GPS Fast: {round(end-start,5)} sec.{bcolors.ENDC}")
     print(f"")
 
     start = time.perf_counter()
     get_gps('cautious')
     end = time.perf_counter()
-    print(f"{bcolors.HEADER}GPS Cautious: {end-start} sec.{bcolors.ENDC}")
+    print(f"{bcolors.HEADER}GPS Cautious: {round(end-start,5)} sec.{bcolors.ENDC}")
     print(f"")
