@@ -41,10 +41,6 @@ for more info about each parameter
 @dataclass
 class GPSPacket:
     current_time: float = -999
-    device: float = -999
-    mode: float = -999
-    mode_plain: float = -999
-
     latitude: float = -999
     longitude: float = -999    
     
@@ -56,31 +52,21 @@ class GPSPacket:
     lon_error_est: float = -999
     alt_error_est: float = -999
 
-    # def update_values(self) -> float:
-    #     if 
-    #     return self.unit_price * self.quantity_on_hand
-
-    # def update_values_str(self) -> str:
-    #     return self.unit_price * self.quantity_on_hand
-    
-    # def total_cost(self) -> None:
-    #     print(f"{bcolors.OKGREEN}GPS Report{bcolors.ENDC}")
-    #     print(f"")
-    #     print(f"{bcolors.OKGREEN}     Time: {str(self.current_time)}{bcolors.ENDC}")
-    #     print(f"")
-    #     print(f"{bcolors.OKGREEN}     Latitude: {str(self.)}{bcolors.ENDC}")
-    #     print(f"{bcolors.OKGREEN}     Longitude: {str(self.)}{bcolors.ENDC}")
-    #     print(f"")
-    #     print(f"{bcolors.OKGREEN}     Altitude (m): {str(self.)}{bcolors.ENDC}")
-    #     print(f"{bcolors.OKGREEN}     Climb: {str(self.)}{bcolors.ENDC}")
-    #     print(f"{bcolors.OKGREEN}     Speed: {str(self.)}{bcolors.ENDC}")
-    #     print(f"")
-    #     print(f"{bcolors.OKGREEN}     Lat error estimate: {self.}{bcolors.ENDC}")
-    #     print(f"{bcolors.OKGREEN}     Lon error estimate: {self.}{bcolors.ENDC}")
-    #     print(f"{bcolors.OKGREEN}     Alt error estimate: {self.}{bcolors.ENDC}")
-    #     print(f"{bcolors.OKGREEN}     Climb: {}{bcolors.ENDC}")
-    #     print(f"{bcolors.OKGREEN}     Climb: {}{bcolors.ENDC}")
-    #     print(f"{bcolors.OKGREEN}     Climb: {}{bcolors.ENDC}")
+    def print_report(self) -> None:
+        print(f"{bcolors.OKGREEN}GPS Report{bcolors.ENDC}")
+        print(f"")
+        print(f"{bcolors.OKGREEN}     Time: {str(self.current_time)}{bcolors.ENDC}")
+        print(f"")
+        print(f"{bcolors.OKGREEN}     Latitude: {str(self.latitude)}{bcolors.ENDC}")
+        print(f"{bcolors.OKGREEN}     Longitude: {str(self.longitude)}{bcolors.ENDC}")
+        print(f"")
+        print(f"{bcolors.OKGREEN}     Altitude (m): {str(self.altitude)}{bcolors.ENDC}")
+        print(f"{bcolors.OKGREEN}     Climb: {str(self.climb)}{bcolors.ENDC}")
+        print(f"{bcolors.OKGREEN}     Speed: {str(self.speed)}{bcolors.ENDC}")
+        print(f"")
+        print(f"{bcolors.OKGREEN}     Lat error estimate: {self.lat_error_est}{bcolors.ENDC}")
+        print(f"{bcolors.OKGREEN}     Lon error estimate: {self.lon_error_est}{bcolors.ENDC}")
+        print(f"{bcolors.OKGREEN}     Alt error estimate: {self.alt_error_est}{bcolors.ENDC}")
 
 def update_GPS_data(data_stream, item):
     if data_stream.TPV[item] is not None:
@@ -89,10 +75,10 @@ def update_GPS_data(data_stream, item):
 def get_gps():
     GPS_data = GPSPacket()
 
-    gps_socket = gps3.GPSDSocket()
-    data_stream = gps3.DataStream()
-    gps_socket.connect()
-    gps_socket.watch()
+    # gps_socket = gps3.GPSDSocket()
+    # data_stream = gps3.DataStream()
+    # gps_socket.connect()
+    # gps_socket.watch()
 
     agps_thread = AGPS3mechanism()  # Instantiate AGPS3 Mechanisms
     agps_thread.stream_data()  # From localhost (), or other hosts, by example, (host='gps.ddns.net')
@@ -101,16 +87,9 @@ def get_gps():
     count = 0
     count_fail = 0
     do_get_GPS = True
-    while do_get_GPS:  # All data is available via instantiated thread data stream attribute.
+    take_data = False
+    while do_get_GPS:  
         # line #140-ff of /usr/local/lib/python3.5/dist-packages/gps3/agps.py
-        print('---------------------')
-        print(                   agps_thread.data_stream.time)
-        print(f'Lat:{agps_thread.data_stream.lat}')
-        print('Lon:{}   '.format(agps_thread.data_stream.lon))
-        print('Speed:{} '.format(agps_thread.data_stream.alt))
-        print('Speed:{} '.format(agps_thread.data_stream.speed))
-        print('Course:{}'.format(agps_thread.data_stream.track))
-        print('---------------------')
         time.sleep(0.1) # Sleep, or do other things for as long as you like.
         if agps_thread.data_stream.lat != 'n/a':
             print('YES')
@@ -119,9 +98,28 @@ def get_gps():
             print('No')
             count_fail += 1
         
-        if count_fail > 20 or count >= 10:
+        if count > 10:
+            print('SUCCESS')
+            take_data = True
+            do_get_GPS = False
+        if count_fail > 20 or count > 10:
             print('ENDING')
             do_get_GPS = False
+
+        if take_data:
+            GPS_data.latitude = agps_thread.data_stream.lat
+            GPS_data.longitude = agps_thread.data_stream.lon
+            GPS_data.altitude= agps_thread.data_stream.alt
+            GPS_data.current_time = agps_thread.data_stream.time
+            GPS_data.climb = agps_thread.data_stream.climb
+            GPS_data.speed = agps_thread.data_stream.speed
+            GPS_data.lat_error_est = agps_thread.data_stream.epy
+            GPS_data.lon_error_est = agps_thread.data_stream.epx
+            GPS_data.alt_error_est = agps_thread.data_stream.epv
+            GPS_data.print_report()
+        else:
+            GPS_data.print_report()
+
 
     
     # for new_data in gps_socket:
