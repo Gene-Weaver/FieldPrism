@@ -111,7 +111,7 @@ def get_gps():
         print('Course:{}'.format(agps_thread.data_stream.track))
         print('---------------------')
         time.sleep(0.1) # Sleep, or do other things for as long as you like.
-        if agps_thread.data_stream.lat is not None:
+        if agps_thread.data_stream.lat is not 'n/a':
             print('YES')
             count += 1
         else:
