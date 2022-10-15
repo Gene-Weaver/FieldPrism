@@ -104,14 +104,14 @@ def get_gps():
         # line #140-ff of /usr/local/lib/python3.5/dist-packages/gps3/agps.py
         print('---------------------')
         print(                   agps_thread.data_stream.time)
-        print('Lat:{}   '.format(agps_thread.data_stream.lat))
+        print(f'Lat:{agps_thread.data_stream.lat}')
         print('Lon:{}   '.format(agps_thread.data_stream.lon))
         print('Speed:{} '.format(agps_thread.data_stream.alt))
         print('Speed:{} '.format(agps_thread.data_stream.speed))
         print('Course:{}'.format(agps_thread.data_stream.track))
         print('---------------------')
         time.sleep(0.1) # Sleep, or do other things for as long as you like.
-        if agps_thread.data_stream.lat is not 'n/a':
+        if agps_thread.data_stream.lat != 'n/a':
             print('YES')
             count += 1
         else:
