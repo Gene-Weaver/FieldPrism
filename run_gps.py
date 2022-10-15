@@ -119,7 +119,7 @@ def get_gps():
             print('No')
             count_fail += 1
         
-        if count_fail > 20 or count_fail >= 10:
+        if count_fail > 20 or count >= 10:
             print('ENDING')
             do_get_GPS = False
 
