@@ -152,6 +152,7 @@ def get_gps(speed,n_times):
                 GPS_data.print_report('Pass')
                 return GPS_data
             else:
+                print(n_times)
                 get_gps(speed,n_times)
             # if speed == 'cautious':
             #     time.sleep(0.1)
