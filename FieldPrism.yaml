@@ -8,5 +8,5 @@ fieldprism:
     save:
         always_save_to_boot: False
     gps:
-        speed: 'cautious' # of 'fast' ~0.3sec. or 'cautious' ~1.5sec. # cautious adds a timy delay to allow GPS lock and waits for 10 successful pings, fast waits for 3 successful pings
+        speed: 'fast' # of 'fast' ~0.3sec. or 'cautious' ~1.5sec. # cautious adds a timy delay to allow GPS lock and waits for 10 successful pings, fast waits for 3 successful pings
         

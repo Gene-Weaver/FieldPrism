@@ -148,8 +148,8 @@ def get_gps(speed):
             GPS_data.lon_error_est = agps_thread.data_stream.epx
             GPS_data.alt_error_est = agps_thread.data_stream.epv
             GPS_data.print_report('Pass')
-        if speed == 'cautious':
-            time.sleep(0.1)
+        # if speed == 'cautious':
+        #     time.sleep(0.1)
     return GPS_data
         
 
