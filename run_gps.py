@@ -47,10 +47,10 @@ def get_gps():
     for new_data in gps_socket:
         if new_data:
             data_stream.unpack(new_data)
+            print(data_stream.TPV)
             print('Altitude = ', data_stream.TPV['alt'])
             print('Latitude = ', data_stream.TPV['lat'])
             print('Longitude = ', data_stream.TPV['lon'])
-            print('class = ', data_stream.TPV['class'])
             print('device = ', data_stream.TPV['device'])
             print('mode = ', data_stream.TPV['mode'])
             print('status = ', data_stream.TPV['status'])
