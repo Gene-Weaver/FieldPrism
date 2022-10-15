@@ -6,7 +6,7 @@ import cv2
 import depthai as dai
 import keyboard
 from dataclasses import dataclass
-from utils import bcolors
+from utils import bcolors, load_cfg
 import matplotlib.pyplot as plt
 from run_gps import get_gps
 # print(f"{bcolors.OKGREEN}     {bcolors.ENDC}")
@@ -144,6 +144,7 @@ TODO
 
 '''
 def main():
+    cfg_user = load_cfg()
     # Create pipeline
     pipeline = dai.Pipeline()
 
@@ -242,7 +243,7 @@ def main():
                 cv2.imshow('still', frame)
                 # Save
                 route_save_image(cfg,save_frame)
-                GPS_data = get_gps()
+                GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
                 TAKE_PHOTO = False
 
             key = cv2.waitKey(1)

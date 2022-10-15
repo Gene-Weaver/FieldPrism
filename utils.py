@@ -1,4 +1,4 @@
-import os
+import os, yaml
 
 class bcolors:
     HEADER = '\033[95m'
@@ -14,3 +14,8 @@ class bcolors:
 def validate_dir(dir):
     if not os.path.exists(dir):
         os.makedirs(dir)
+
+def load_cfg():
+    with open("FieldPrism.yaml", "r") as ymlfile:
+        cfg = yaml.full_load(ymlfile)
+    return cfg

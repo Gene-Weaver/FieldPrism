@@ -88,7 +88,11 @@ def update_GPS_data(data_stream, item):
     if data_stream.TPV[item] is not None:
         print(data_stream.TPV[item])
 
-def get_gps():
+def get_gps(speed):
+    if speed == 'fast':
+        max_count = 3
+    elif speed == 'cautious':
+        max_count = 10
     GPS_data = GPSPacket()
 
     # gps_socket = gps3.GPSDSocket()
@@ -106,7 +110,7 @@ def get_gps():
     take_data = False
     while do_get_GPS:  
         # line #140-ff of /usr/local/lib/python3.5/dist-packages/gps3/agps.py
-        time.sleep(0.1) # Sleep, or do other things for as long as you like.
+        # time.sleep(0.1) # Sleep, or do other things for as long as you like.
         if agps_thread.data_stream.lat != 'n/a':
             # print('YES')
             count += 1
@@ -114,12 +118,13 @@ def get_gps():
             # print('No')
             count_fail += 1
         
-        if count > 10:
+        if count > max_count:
             # print('SUCCESS')
             take_data = True
             do_get_GPS = False
         if count_fail > 20:
             # print('ENDING')
+            time.sleep(0.05)
             do_get_GPS = False
             GPS_data.print_report('Fail')
 
@@ -134,6 +139,8 @@ def get_gps():
             GPS_data.lon_error_est = agps_thread.data_stream.epx
             GPS_data.alt_error_est = agps_thread.data_stream.epv
             GPS_data.print_report('Pass')
+        if speed == 'cautious':
+            time.sleep(0.1)
     return GPS_data
         
 
