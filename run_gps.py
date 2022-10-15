@@ -26,18 +26,45 @@ To see raw data from GPS module, in terminal:
 #     except StopIteration:
 #         session = None
 #         print("GPSD has terminated")
+from dataclasses import dataclass
 import time
 from gps3 import gps3
 
-gps_socket = gps3.GPSDSocket()
-data_stream = gps3.DataStream()
-gps_socket.connect()
-gps_socket.watch()
-for new_data in gps_socket:
-    if new_data:
-        data_stream.unpack(new_data)
-        print('Altitude = ', data_stream.TPV['alt'])
-        print('Altitude = ', data_stream.TPV['alt'])
-        print('Latitude = ', data_stream.TPV['lat'])
-        print('Longitude = ', data_stream.TPV['lon'])
-        time.sleep(1)
+@dataclass
+class GPSPacket:
+    altitude: float = -999
+    Latitude: float = -999
+    Longitude: float = -999
+    altitude: float = -999
+
+
+
+def get_gps():
+    gps_socket = gps3.GPSDSocket()
+    data_stream = gps3.DataStream()
+    gps_socket.connect()
+    gps_socket.watch()
+    for new_data in gps_socket:
+        if new_data:
+            data_stream.unpack(new_data)
+            print('Altitude = ', data_stream.TPV['alt'])
+            print('Latitude = ', data_stream.TPV['lat'])
+            print('Longitude = ', data_stream.TPV['lon'])
+            print('class = ', data_stream.TPV['class'])
+            print('device = ', data_stream.TPV['device'])
+            print('mode = ', data_stream.TPV['mode'])
+            print('status = ', data_stream.TPV['status'])
+            print('time = ', data_stream.TPV['time'])
+            print('altHAE = ', data_stream.TPV['altHAE'])
+            print('altMSL = ', data_stream.TPV['altMSL'])
+            print('climb = ', data_stream.TPV['climb'])
+            print('datum = ', data_stream.TPV['datum'])
+            print('depth = ', data_stream.TPV['depth'])
+            print('Longitude error estimate = ', data_stream.TPV['epx'])
+            print('Latitude error estimate = ', data_stream.TPV['epy'])
+            print('Estimated vertical error = ', data_stream.TPV['epv'])
+            print('speed = ', data_stream.TPV['speed'])
+            time.sleep(2)
+
+if __name__ == '__main__':
+    get_gps()
