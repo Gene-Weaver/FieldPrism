@@ -28,31 +28,42 @@ class SetupFP():
         self.dir_images_unprocessed = os.path.join('FieldPrism','Images_Unprocessed')
 
         print(f"{bcolors.HEADER}Base USB Path: {self.usb_base_path}{bcolors.ENDC}")
-        print(f"{bcolors.OKCYAN}       Available USB Devices: {os.listdir(self.usb_base_path)}{bcolors.ENDC}")
+        print(f"{bcolors.OKCYAN}       Available USB Devices: {os.listdir(self.usb_base_path)}{bcolors.ENDC}")            
 
-        if os.listdir(self.usb_base_path) == []:
-            print_usb_error()
+        # USB
+        usb_dir = os.listdir(self.usb_base_path)
+        for d in usb_dir:
+            if 'USB' in d:
+                try: 
+                    os.mkdir(os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder'))
+                    if '0' in d:
+                        self.has_1_usb = True
+                        os.rmdir(os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder'))
+                    elif '1' in d:
+                        self.has_2_usb = True
+                        os.rmdir(os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder'))
+                except:
+                    pass
+
+        if self.has_1_usb and not self.has_2_usb:
+            self.usb_1 = os.path.join(self.usb_base_path,os.listdir(self.usb_base_path)[0],self.dir_images_unprocessed)
+            print(f"{bcolors.OKGREEN}       Path to USB 1 [USB0]: {self.usb_1}{bcolors.ENDC}")
+
+        elif self.has_2_usb and not self.has_1_usb:
+            self.usb_2 = os.path.join(self.usb_base_path,os.listdir(self.usb_base_path)[1],self.dir_images_unprocessed)
+            print(f"{bcolors.OKGREEN}       Path to USB 1 [USB1]: {self.usb_2}{bcolors.ENDC}")
+
+        elif self.has_2_usb and self.has_1_usb:
+            self.usb_1 = os.path.join(self.usb_base_path,os.listdir(self.usb_base_path)[0],self.dir_images_unprocessed)
+            self.usb_2 = os.path.join(self.usb_base_path,os.listdir(self.usb_base_path)[1],self.dir_images_unprocessed)
+            print(f"{bcolors.OKGREEN}       Path to USB 1 [USB0]: {self.usb_1}{bcolors.ENDC}")
+            print(f"{bcolors.OKGREEN}       Path to USB 2 [USB1]: {self.usb_2}{bcolors.ENDC}")
+
+        else:
+            self.print_usb_error()
             self.usb_none = os.path.join('/home','pi','FieldPrism','Data','Images_Unprocessed')
             print(f"{bcolors.FAIL}            {self.usb_none}{bcolors.ENDC}")
             self.save_to_boot = True
-
-            '''
-                CAN'T USE PATH LENGTH HERE. DO IS ___ IN ___
-            
-            '''
-
-        elif len(os.listdir(self.usb_base_path)) == 1:
-            self.usb_1 = os.path.join(self.usb_base_path,os.listdir(self.usb_base_path)[0],self.dir_images_unprocessed)
-            self.has_1_usb = True
-            print(f"{bcolors.OKGREEN}       Path to USB 1: {self.usb_1}{bcolors.ENDC}")
-
-        elif len(os.listdir(self.usb_base_path)) == 2:
-            self.usb_1 = os.path.join(self.usb_base_path,os.listdir(self.usb_base_path)[0],self.dir_images_unprocessed)
-            self.usb_2 = os.path.join(self.usb_base_path,os.listdir(self.usb_base_path)[1],self.dir_images_unprocessed)
-            self.has_1_usb = True
-            self.has_2_usb = True 
-            print(f"{bcolors.OKGREEN}       Path to USB 1: {self.usb_1}{bcolors.ENDC}")
-            print(f"{bcolors.OKGREEN}       Path to USB 2: {self.usb_2}{bcolors.ENDC}")
         
         print(f"{bcolors.HEADER}Creating Save Directories{bcolors.ENDC}")
         if not self.has_1_usb and not self.has_2_usb and self.save_to_boot:
@@ -63,17 +74,17 @@ class SetupFP():
             Path(self.usb_1).mkdir(parents=True, exist_ok=True)
             Path(self.usb_2).mkdir(parents=True, exist_ok=True)
 
-def print_usb_error():
-    print(f"{bcolors.FAIL}ERROR: USB device/s not mounted correctly. {bcolors.ENDC}")
-    print(f"")
-    print(f"{bcolors.FAIL}       For 1 USB use command: {bcolors.ENDC}")
-    print(f"{bcolors.FAIL}              udisksctl mount -b /dev/sda1{bcolors.ENDC}")
-    print(f"{bcolors.FAIL}       For 2 USBs use commands: {bcolors.ENDC}")
-    print(f"{bcolors.FAIL}              udisksctl mount -b /dev/sda1{bcolors.ENDC}")
-    print(f"{bcolors.FAIL}              udisksctl mount -b /dev/sdb1{bcolors.ENDC}")
-    print(f"")
-    print(f"{bcolors.FAIL}       Quit and mount USB device/s otherwise images will{bcolors.ENDC}")
-    print(f"{bcolors.FAIL}       save to boot device (microSD card) in:{bcolors.ENDC}")
+    def print_usb_error(self) -> None:
+        print(f"{bcolors.FAIL}ERROR: USB device/s not mounted correctly. {bcolors.ENDC}")
+        print(f"")
+        print(f"{bcolors.FAIL}       For 1 USB use command: {bcolors.ENDC}")
+        print(f"{bcolors.FAIL}              udisksctl mount -b /dev/sda1{bcolors.ENDC}")
+        print(f"{bcolors.FAIL}       For 2 USBs use commands: {bcolors.ENDC}")
+        print(f"{bcolors.FAIL}              udisksctl mount -b /dev/sda1{bcolors.ENDC}")
+        print(f"{bcolors.FAIL}              udisksctl mount -b /dev/sdb1{bcolors.ENDC}")
+        print(f"")
+        print(f"{bcolors.FAIL}       Quit and mount USB device/s otherwise images will{bcolors.ENDC}")
+        print(f"{bcolors.FAIL}       save to boot device (microSD card) in:{bcolors.ENDC}")
 
 def save_image(save_frame, name_time, save_dir):
     fname = "".join([name_time,'.jpg'])
