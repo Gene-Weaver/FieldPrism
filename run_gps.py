@@ -144,12 +144,11 @@ def get_gps(speed):
             do_get_GPS = False
 
         if count_fail > 20:
+            do_get_GPS = False
             if GPS_data.latitude == -999:
-                # print('ENDING')
-                do_get_GPS = False
+                # print('ENDING')                
                 GPS_data.print_report('Fail')
             else:
-                do_get_GPS = False
                 GPS_data.print_report('Pass')
 
         if take_data:
@@ -195,13 +194,13 @@ def get_gps(speed):
     # print('End')
 if __name__ == '__main__':
     start = time.perf_counter()
-    get_gps('fast',10)
+    get_gps('fast')
     end = time.perf_counter()
     print(f"{bcolors.HEADER}GPS Fast: {round(end-start,5)} sec.{bcolors.ENDC}")
     print(f"")
 
     start = time.perf_counter()
-    get_gps('cautious',10)
+    get_gps('cautious')
     end = time.perf_counter()
     print(f"{bcolors.HEADER}GPS Cautious: {round(end-start,5)} sec.{bcolors.ENDC}")
     print(f"")
