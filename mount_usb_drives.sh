@@ -24,6 +24,7 @@ ls /media/USB2
 echo ""
 echo "***** Granting xhost privileges..."
 xhost +si:localuser:pi
+xhost +si:localuser:root
 echo ""
 echo "***** Finished"  
 echo ""
