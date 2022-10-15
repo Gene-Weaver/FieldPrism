@@ -1,0 +1,10 @@
+# To use default value, set to null
+fieldprism:
+    keymap:
+        photo: '1'
+        align_camera: '3'
+        redo: '4'
+        exit: '6'
+    save:
+        always_save_to_boot: False
+        

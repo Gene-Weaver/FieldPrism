@@ -35,6 +35,11 @@ class SetupFP():
             print(f"{bcolors.FAIL}            {self.usb_none}{bcolors.ENDC}")
             self.save_to_boot = True
 
+            '''
+                CAN'T USE PATH LENGTH HERE. DO IS ___ IN ___
+            
+            '''
+
         elif len(os.listdir(self.usb_base_path)) == 1:
             self.usb_1 = os.path.join(self.usb_base_path,os.listdir(self.usb_base_path)[0],self.dir_images_unprocessed)
             self.has_1_usb = True
