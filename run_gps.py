@@ -55,7 +55,6 @@ def get_gps():
             print('mode = ', data_stream.TPV['mode'])
             print('time = ', data_stream.TPV['time'])
             print('climb = ', data_stream.TPV['climb'])
-            print('datum = ', data_stream.TPV['datum'])
             print('Longitude error estimate = ', data_stream.TPV['epx'])
             print('Latitude error estimate = ', data_stream.TPV['epy'])
             print('Estimated vertical error = ', data_stream.TPV['epv'])
