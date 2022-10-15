@@ -25,6 +25,10 @@ echo ""
 echo "***** Granting xhost privileges..."
 xhost +si:localuser:pi
 xhost +si:localuser:root
+chown -R localuser:pi /media/USB1
+chown -R localuser:pi /media/USB2
+chown -R localuser:root /media/USB1
+chown -R localuser:root /media/USB2
 echo ""
 echo "***** Finished"  
 echo ""
