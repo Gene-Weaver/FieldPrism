@@ -3,6 +3,21 @@ Reference this guide for help:
     https://learn.adafruit.com/adafruit-ultimate-gps-on-the-raspberry-pi/setting-everything-up
 To see raw data from GPS module, in terminal:
     sudo cat /dev/ttyUSB0
+
+    cgps -s
+
+
+    - restart and test
+    sudo killall gpsd
+    sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock
+
+    sudo systemctl stop gpsd.socket
+    sudo systemctl disable gpsd.socket
+
+    sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock
+
+
+
 '''
 # import gps
 
@@ -90,75 +105,66 @@ def update_GPS_data(data_stream, item):
     if data_stream.TPV[item] is not None:
         print(data_stream.TPV[item])
 
-def get_gps(speed,n_times):
-    if n_times > 0:
-        n_times -= 1
-        if speed == 'fast':
-            max_count = 3
-        elif speed == 'cautious':
-            max_count = 10
-        GPS_data = GPSPacket()
+def get_gps(speed):
+    if speed == 'fast':
+        max_count = 3
+    elif speed == 'cautious':
+        max_count = 10
+    GPS_data = GPSPacket()
 
-        # gps_socket = gps3.GPSDSocket()
-        # data_stream = gps3.DataStream()
-        # gps_socket.connect()
-        # gps_socket.watch()
+    # gps_socket = gps3.GPSDSocket()
+    # data_stream = gps3.DataStream()
+    # gps_socket.connect()
+    # gps_socket.watch()
 
-        agps_thread = AGPS3mechanism()  # Instantiate AGPS3 Mechanisms
-        agps_thread.stream_data()  # From localhost (), or other hosts, by example, (host='gps.ddns.net')
-        agps_thread.run_thread()  # Throttle time to sleep after an empty lookup, default '()' 0.2 two tenths of a second
+    agps_thread = AGPS3mechanism()  # Instantiate AGPS3 Mechanisms
+    agps_thread.stream_data()  # From localhost (), or other hosts, by example, (host='gps.ddns.net')
+    agps_thread.run_thread()  # Throttle time to sleep after an empty lookup, default '()' 0.2 two tenths of a second
 
-        count = 0
-        count_fail = 0
-        do_get_GPS = True
-        take_data = False
+    count = 0
+    count_fail = 0
+    do_get_GPS = True
+    take_data = False
+    
+    while do_get_GPS:  
         
-        while do_get_GPS:  
-            
-            # line #140-ff of /usr/local/lib/python3.5/dist-packages/gps3/agps.py
-            # time.sleep(0.1) # Sleep, or do other things for as long as you like.
-            if (agps_thread.data_stream.lat != 'n/a') and (len(str(agps_thread.data_stream.lat).split('.')[1]) >= 3):
-                # print('YES')
-                count += 1
-            else:
-                # print('No')
-                count_fail += 1
-                time.sleep(0.05)
-            
-            if count > max_count:
-                # print('SUCCESS')
-                take_data = True
+        # line #140-ff of /usr/local/lib/python3.5/dist-packages/gps3/agps.py
+        # time.sleep(0.1) # Sleep, or do other things for as long as you like.
+        if (agps_thread.data_stream.lat != 'n/a') and (len(str(agps_thread.data_stream.lat).split('.')[1]) >= 3):
+            # print('YES')
+            count += 1
+        else:
+            # print('No')
+            count_fail += 1
+            time.sleep(0.05)
+        
+        if count > max_count:
+            # print('SUCCESS')
+            take_data = True
+            do_get_GPS = False
+
+        if count_fail > 20:
+            if GPS_data.latitude == -999:
+                # print('ENDING')
                 do_get_GPS = False
-
-            if count_fail > 20:
-                if GPS_data.latitude == -999:
-                    # print('ENDING')
-                    do_get_GPS = False
-                    GPS_data.print_report('Fail')
-                else:
-                    do_get_GPS = False
-                    GPS_data.print_report('Pass')
-
-            if take_data:
-                GPS_data.latitude = agps_thread.data_stream.lat
-                GPS_data.longitude = agps_thread.data_stream.lon
-                GPS_data.altitude= agps_thread.data_stream.alt
-                GPS_data.current_time = agps_thread.data_stream.time
-                GPS_data.climb = agps_thread.data_stream.climb
-                GPS_data.speed = agps_thread.data_stream.speed
-                GPS_data.lat_error_est = agps_thread.data_stream.epy
-                GPS_data.lon_error_est = agps_thread.data_stream.epx
-                GPS_data.alt_error_est = agps_thread.data_stream.epv
-                GPS_data.print_report('Pass')
-                return GPS_data
+                GPS_data.print_report('Fail')
             else:
-                print(n_times)
-                get_gps(speed,n_times)
-            # if speed == 'cautious':
-            #     time.sleep(0.1)
-    else:
-        GPS_data = GPSPacket()
-        return GPS_data        
+                do_get_GPS = False
+                GPS_data.print_report('Pass')
+
+        if take_data:
+            GPS_data.latitude = agps_thread.data_stream.lat
+            GPS_data.longitude = agps_thread.data_stream.lon
+            GPS_data.altitude= agps_thread.data_stream.alt
+            GPS_data.current_time = agps_thread.data_stream.time
+            GPS_data.climb = agps_thread.data_stream.climb
+            GPS_data.speed = agps_thread.data_stream.speed
+            GPS_data.lat_error_est = agps_thread.data_stream.epy
+            GPS_data.lon_error_est = agps_thread.data_stream.epx
+            GPS_data.alt_error_est = agps_thread.data_stream.epv
+            GPS_data.print_report('Pass')
+    return GPS_data
+    
         
 
 
