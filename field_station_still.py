@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import time, os, stat, subprocess
+import time, os, stat, subprocess, pprint
 from pathlib import Path
 import cv2
 import depthai as dai
@@ -186,20 +186,19 @@ class SetupFP():
         print(f"{bcolors.FAIL}       save to boot device (microSD card) in:{bcolors.ENDC}")
 
 def verify_mount_usb_locations():
+    print(f"{bcolors.HEADER}List of mounted devices:{bcolors.ENDC}")
     partitions = psutil.disk_partitions()
 
     for p in partitions:
         print(p.mountpoint)
-    # d = {}
 
-    # for l in file('/proc/mounts'):
-    #     if l[0] == '/':
-    #         l = l.split()
-    #         d[l[0]] = l[1]
-
-    # import pprint
-
-    # pprint.pprint(d)
+    print(f"{bcolors.HEADER}Mount Pairs: {bcolors.ENDC}")
+    d = {}
+    for l in open('/proc/mounts'):
+        if l[0] == '/':
+            l = l.split()
+            d[l[0]] = l[1]
+    pprint.pprint(d)
 
     # result = subprocess.run(["sh", "./check_mounts.sh"], stderr=subprocess.PIPE, text=True)
     # print(result.stderr) # normal to see an error if this is printed, but usually there is no concern
