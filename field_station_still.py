@@ -332,11 +332,11 @@ def main():
         cfg = SetupFP()
 
         # Get data queues
-        controlQueue = device.getInputQueue('control')
-        configQueue = device.getInputQueue('config')
+        # controlQueue = device.getInputQueue('control')
+        # configQueue = device.getInputQueue('config')
         ispQueue = device.getOutputQueue('isp', maxSize=30, blocking=False)
-        videoQueue = device.getOutputQueue('video', maxSize=1, blocking=False)
-        stillQueue = device.getOutputQueue('still', maxSize=1, blocking=True)
+        # videoQueue = device.getOutputQueue('video', maxSize=1, blocking=False)
+        # stillQueue = device.getOutputQueue('still', maxSize=1, blocking=True)
 
         # Output queue will be used to get the rgb frames from the output defined above
         # qRgb = device.getOutputQueue(name="rgb", maxSize=30, blocking=False)
