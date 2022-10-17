@@ -43,6 +43,7 @@ class SetupFP():
                         self.has_2_usb = True
                         os.rmdir(os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder'))
                 except:
+                    print('Fail try loop')
                     pass
 
         if self.has_1_usb and not self.has_2_usb:
