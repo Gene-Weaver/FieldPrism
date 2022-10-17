@@ -300,7 +300,7 @@ def main():
 
     # Create encoder to produce JPEG images
     video_enc = pipeline.createVideoEncoder()
-    video_enc.setDefaultProfilePreset(cam_rgb.getVideoSize(), cam_rgb.getFps(), dai.VideoEncoderProperties.Profile.MJPEG)
+    video_enc.setDefaultProfilePreset(cam_rgb.getFps(), dai.VideoEncoderProperties.Profile.MJPEG)
     cam_rgb.video.link(video_enc.input)
 
     # Create JPEG output
@@ -310,8 +310,6 @@ def main():
 
     # Connect to device and start pipeline
     with dai.Device(pipeline) as device:
-        # Start pipeline
-        device.startPipeline()
         # Output queue will be used to get the rgb frames from the output defined above
         q_rgb = device.getOutputQueue(name="rgb", maxSize=30, blocking=False)
         q_jpeg = device.getOutputQueue(name="jpeg", maxSize=30, blocking=True)
