@@ -32,3 +32,8 @@ xhost +si:localuser:root
 echo ""
 echo "***** Finished"  
 echo ""
+echo ""
+echo "***** Errors..."
+echo "      Expected errors if not all USB drives are presnet:"  
+echo "            $ Error: device /dev/sdb1 is not mounted"
+echo "            $ Error: device /dev/sdb1 does not exist"
