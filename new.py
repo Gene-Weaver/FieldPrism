@@ -350,16 +350,19 @@ def main():
                 cv2.imshow("rgb", frame)
             saved = 0
             for enc_frame in q_jpeg.tryGetAll():
-                if TAKE_PHOTO:
-                    saved +=1
-                    print(f'queue = {len(q_jpeg.tryGetAll())}')
-                    with open(f"06_data/{int(time.time() * 10000)}.jpeg", "wb") as f:
-                        f.write(bytearray(enc_frame.getData()))
-                    cv2.imshow("saved", np.array(bytearray(enc_frame.getData())))
-                    TAKE_PHOTO = False
-                    print(f'saved = {saved}')
-                else:
-                    pass
+                if enc_frame is not None:
+                    if TAKE_PHOTO:
+                        saved +=1
+                        print(f'queue = {len(q_jpeg.tryGetAll())}')
+                        save_frame = enc_frame.get()
+                        with open(f"06_data/{int(time.time() * 10000)}.jpeg", "wb") as f:
+                            # f.write(bytearray(enc_frame.getData()))
+                            f.write(save_frame)
+                        cv2.imshow("saved", save_frame)
+                        TAKE_PHOTO = False
+                        print(f'saved = {saved}')
+                    else:
+                        pass
 
             key = cv2.waitKey(50)
             if keyboard.is_pressed('6'):
