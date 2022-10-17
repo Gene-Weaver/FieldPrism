@@ -360,8 +360,8 @@ def main():
                 count += 1
                 print(count)
                 # time.sleep(0.1)
-                pass
-                # cv2.imshow('isp', ispFrame.getCvFrame())
+                # pass
+                cv2.imshow('isp', ispFrame.getCvFrame())
 
             # if TAKE_PHOTO:
                 # stillFrames = stillQueue.tryGetAll()
@@ -407,8 +407,8 @@ def main():
                 # for ispFrame in ispFrames:
                 save_frame_raw = ispQueue.get()
                 save_frame = save_frame_raw.getCvFrame()
-                save_frame_raw = ispQueue.get()
-                save_frame = save_frame_raw.getCvFrame()
+                # save_frame_raw = ispQueue.get()
+                # save_frame = save_frame_raw.getCvFrame()
                 save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
                 frame = cv2.pyrDown(save_frame)
                 frame = cv2.pyrDown(frame)  
