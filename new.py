@@ -352,7 +352,7 @@ def main():
             for enc_frame in q_jpeg.tryGetAll():
                 if enc_frame is not None:
                     if TAKE_PHOTO:
-                        save_frame = enc_frame.getData()
+                        save_frame = cv2.imdecode(enc_frame.getData(), cv2.IMREAD_UNCHANGED)
                         print(save_frame.size)
                         # with open(f"06_data/{int(time.time() * 10000)}.jpeg", "wb") as f:
                         #     # f.write(bytearray(enc_frame.getData()))
