@@ -18,10 +18,18 @@ class SetupFP():
     usb_none: str = ''
     usb_1: str = ''
     usb_2: str = ''
+    usb_3: str = ''
+    usb_4: str = ''
+    usb_5: str = ''
+    usb_6: str = ''
 
     has_1_usb: bool = False
     has_2_usb: bool = False
-    save_to_boot: bool = False
+    has_3_usb: bool = False
+    has_4_usb: bool = False
+    has_5_usb: bool = False
+    has_6_usb: bool = False
+    save_to_boot: bool = False ######### currrently this overrides the config file
 
     def __post_init__(self) -> None:
         self.usb_base_path = '/media/'# OR '/media/pi/' # os.path.join('media','pi')
@@ -31,12 +39,51 @@ class SetupFP():
         print(f"{bcolors.OKCYAN}       Available USB Devices: {os.listdir(self.usb_base_path)}{bcolors.ENDC}")            
 
         # USB save to all
+        device_count = 0
         for p in ["/dev/sda1", "/dev/sdb1", "/dev/sdc1", "/dev/sdd1", "/dev/sde1", "/dev/sdf1"]:
-            print("Storage Drive Exists({}): {}".format(p, isblockdevice(p)))
-
-        print(os.path.ismount('/media/pi/'))
-        print(os.path.ismount('/media/USB1/'))
-        print(os.path.ismount('/media/USB2/'))
+            if isblockdevice(p):
+                if p == "/dev/sda1":
+                    if os.path.ismount('/media/USB1/'):
+                        print(f"{bcolors.OKGREEN}Storage Drive Exists({p}): {isblockdevice(p)} and is mounted to (/media/USB1/): {os.path.ismount('/media/USB1/')}{bcolors.ENDC}")
+                        self.has_1_usb = True
+                        self.usb_1 = os.path.join(self.usb_base_path,'USB1',self.dir_images_unprocessed)
+                        print(f"{bcolors.OKGREEN}       Path to USB 1 [USB1]: {self.usb_1}{bcolors.ENDC}")
+                elif p == "/dev/sdb1":
+                    if os.path.ismount('/media/USB2/'):
+                        print(f"{bcolors.OKGREEN}Storage Drive Exists({p}): {isblockdevice(p)} and is mounted to (/media/USB2/): {os.path.ismount('/media/USB2/')}{bcolors.ENDC}")
+                        self.has_2_usb = True
+                        self.usb_2 = os.path.join(self.usb_base_path,'USB2',self.dir_images_unprocessed)
+                        print(f"{bcolors.OKGREEN}       Path to USB 2 [USB2]: {self.usb_2}{bcolors.ENDC}")
+                elif p == "/dev/sdc1":
+                    if os.path.ismount('/media/USB3/'):
+                        print(f"{bcolors.OKGREEN}Storage Drive Exists({p}): {isblockdevice(p)} and is mounted to (/media/USB3/): {os.path.ismount('/media/USB3/')}{bcolors.ENDC}")
+                        self.has_3_usb = True
+                        self.usb_3 = os.path.join(self.usb_base_path,'USB3',self.dir_images_unprocessed)
+                        print(f"{bcolors.OKGREEN}       Path to USB 3 [USB3]: {self.usb_3}{bcolors.ENDC}")
+                elif p == "/dev/sdd1":
+                    if os.path.ismount('/media/USB4/'):
+                        print(f"{bcolors.OKGREEN}Storage Drive Exists({p}): {isblockdevice(p)} and is mounted to (/media/USB4/): {os.path.ismount('/media/USB4/')}{bcolors.ENDC}")
+                        self.has_4_usb = True
+                        self.usb_4 = os.path.join(self.usb_base_path,'USB4',self.dir_images_unprocessed)
+                        print(f"{bcolors.OKGREEN}       Path to USB 4 [USB4]: {self.usb_4}{bcolors.ENDC}")
+                elif p == "/dev/sde1":
+                    if os.path.ismount('/media/USB5/'):
+                        print(f"{bcolors.OKGREEN}Storage Drive Exists({p}): {isblockdevice(p)} and is mounted to (/media/USB5/): {os.path.ismount('/media/USB5/')}{bcolors.ENDC}")
+                        self.has_5_usb = True
+                        self.usb_5 = os.path.join(self.usb_base_path,'USB5',self.dir_images_unprocessed)
+                        print(f"{bcolors.OKGREEN}       Path to USB 5 [USB5]: {self.usb_5}{bcolors.ENDC}")
+                elif p == "/dev/sdf1":
+                    if os.path.ismount('/media/USB6/'):
+                        print(f"{bcolors.OKGREEN}Storage Drive Exists({p}): {isblockdevice(p)} and is mounted to (/media/USB6/): {os.path.ismount('/media/USB6/')}{bcolors.ENDC}")
+                        self.has_6_usb = True
+                        self.usb_6 = os.path.join(self.usb_base_path,'USB6',self.dir_images_unprocessed)
+                        print(f"{bcolors.OKGREEN}       Path to USB 6 [USB6]: {self.usb_6}{bcolors.ENDC}")
+        if device_count == 0:
+            self.print_usb_error()
+            self.usb_none = os.path.join('/home','pi','FieldPrism','Data','Images_Unprocessed')
+            print(f"{bcolors.FAIL}            {self.usb_none}{bcolors.ENDC}")
+            # self.save_to_boot = True
+            
 
         # # USB
         # usb_dir = os.listdir(self.usb_base_path)
@@ -89,14 +136,29 @@ class SetupFP():
         #     print(f"{bcolors.FAIL}            {self.usb_none}{bcolors.ENDC}")
         #     self.save_to_boot = True
         
-        # print(f"{bcolors.HEADER}Creating Save Directories{bcolors.ENDC}")
-        # if not self.has_1_usb and not self.has_2_usb and self.save_to_boot:
-        #     Path(self.usb_none).mkdir(parents=True, exist_ok=True)
-        # elif self.has_1_usb and not self.has_2_usb:
-        #     Path(self.usb_1).mkdir(parents=True, exist_ok=True)
-        # elif self.has_1_usb and self.has_2_usb:
-        #     Path(self.usb_1).mkdir(parents=True, exist_ok=True)
-        #     Path(self.usb_2).mkdir(parents=True, exist_ok=True)
+        print(f"{bcolors.HEADER}Creating Save Directories{bcolors.ENDC}")
+        # Will only save to boot device
+        if not self.has_1_usb and not self.has_2_usb and not self.has_3_usb and not self.has_4_usb and not self.has_5_usb and not self.has_6_usb and self.save_to_boot:
+            Path(self.usb_none).mkdir(parents=True, exist_ok=True)
+        # No storage selected
+        elif not self.has_1_usb and not self.has_2_usb  and not self.has_3_usb  and not self.has_4_usb  and not self.has_5_usb  and not self.has_6_usb and not self.save_to_boot:
+            print(f"{bcolors.FAIL}ERROR: NO STORAGE DETECTED. DATA WILL NOT BE SAVED ANYWHERE!!!{bcolors.ENDC}")
+            print(f"{bcolors.FAIL}       Power off device, add storage, try again. Or edit FieldPrism.yaml: always_save_to_boot = True{bcolors.ENDC}")
+        if self.has_1_usb:
+            Path(self.usb_1).mkdir(parents=True, exist_ok=True)
+        if self.has_2_usb:
+            Path(self.usb_2).mkdir(parents=True, exist_ok=True)
+        if self.has_3_usb:
+            Path(self.usb_3).mkdir(parents=True, exist_ok=True)
+        if self.has_4_usb:
+            Path(self.usb_4).mkdir(parents=True, exist_ok=True)
+        if self.has_5_usb:
+            Path(self.usb_5).mkdir(parents=True, exist_ok=True)
+        if self.has_6_usb:
+            Path(self.usb_6).mkdir(parents=True, exist_ok=True)
+        
+       
+
 
     def print_usb_error(self) -> None:
         print(f"{bcolors.FAIL}ERROR: USB device/s not mounted correctly. {bcolors.ENDC}")
