@@ -413,8 +413,8 @@ def main():
                 # plt.imshow(frame)
                 cv2.imshow('still', frame)
                 # Save
-                print(f"       GPS Activated")
                 route_save_image(cfg,save_frame)
+                print(f"       GPS Activated")
                 GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
                 # TAKE_PHOTO = False
                 # time.sleep(0.1)

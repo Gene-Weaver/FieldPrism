@@ -354,11 +354,14 @@ def main():
                     if TAKE_PHOTO:
                         save_frame = cv2.imdecode(enc_frame.getData(), cv2.IMREAD_UNCHANGED)
                         save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
-                        print(save_frame.size)
+                        route_save_image(cfg,save_frame)
+                        frame = cv2.pyrDown(save_frame)
+                        frame = cv2.pyrDown(frame)
                         # with open(f"06_data/{int(time.time() * 10000)}.jpeg", "wb") as f:
                         #     # f.write(bytearray(enc_frame.getData()))
                         #     f.write(save_frame)
-                        cv2.imshow("saved", save_frame)
+                        cv2.imshow("saved", frame)
+                        frame = []
                         save_frame = []
                         TAKE_PHOTO = False
                         print(f'saved = {saved}')
