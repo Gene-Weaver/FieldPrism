@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import time, os, stat
+import time, os, stat, subprocess
 from pathlib import Path
 import cv2
 import depthai as dai
@@ -36,7 +36,18 @@ class SetupFP():
         self.dir_images_unprocessed = os.path.join('FieldPrism','Images_Unprocessed')
 
         print(f"{bcolors.HEADER}Base USB Path: {self.usb_base_path}{bcolors.ENDC}")
-        print(f"{bcolors.OKCYAN}       Available USB Devices: {os.listdir(self.usb_base_path)}{bcolors.ENDC}")            
+        print(f"{bcolors.OKCYAN}       Available USB Devices: {os.listdir(self.usb_base_path)}{bcolors.ENDC}")     
+        print(f"")
+        print(f"{bcolors.HEADER}Veryifying USB Storage Mount Points...{bcolors.ENDC}")
+        print(f"{bcolors.OKCYAN}       /dev/sda1  should pair with  /media/USB1{bcolors.ENDC}")
+        print(f"{bcolors.OKCYAN}       /dev/sdb1  should pair with  /media/USB2{bcolors.ENDC}")
+        print(f"{bcolors.OKCYAN}       /dev/sdc1  should pair with  /media/USB3{bcolors.ENDC}")
+        print(f"{bcolors.OKCYAN}       /dev/sdd1  should pair with  /media/USB4{bcolors.ENDC}")
+        print(f"{bcolors.OKCYAN}       /dev/sde1  should pair with  /media/USB5{bcolors.ENDC}")
+        print(f"{bcolors.OKCYAN}       /dev/sdf1  should pair with  /media/USB6{bcolors.ENDC}")
+        print(f"")
+        verify_mount_usb_locations()     
+        print(f"")  
 
         # USB save to all
         device_count = 0
@@ -81,7 +92,7 @@ class SetupFP():
         if device_count == 0:
             self.print_usb_error()
             self.usb_none = os.path.join('/home','pi','FieldPrism','Data','Images_Unprocessed')
-            print(f"{bcolors.FAIL}            {self.usb_none}{bcolors.ENDC}")
+            print(f"{bcolors.FAIL}       {self.usb_none}{bcolors.ENDC}")
             # self.save_to_boot = True
             
 
@@ -171,6 +182,10 @@ class SetupFP():
         print(f"")
         print(f"{bcolors.FAIL}       Quit and mount USB device/s otherwise images will{bcolors.ENDC}")
         print(f"{bcolors.FAIL}       save to boot device (microSD card) in:{bcolors.ENDC}")
+
+def verify_mount_usb_locations():
+    result = subprocess.run(["sh", "./check_mounts.sh"], stderr=subprocess.PIPE, text=True)
+    print(result.stderr) # normal to see an error if this is printed, but usually there is no concern
 
 def isblockdevice(path):
   return os.path.exists(path) and stat.S_ISBLK(os.stat(path).st_mode)
