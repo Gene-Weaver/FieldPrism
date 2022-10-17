@@ -339,30 +339,35 @@ def main():
 
         TAKE_PHOTO = False
         while True:
+            for enc_frame in q_jpeg.tryGetAll():
+                if enc_frame is not None:
+                    rgb = cv2.imdecode(enc_frame.getData(), cv2.IMREAD_UNCHANGED)
+                    rgb = cv2.rotate(rgb, cv2.ROTATE_180)
+                    rgb = cv2.pyrDown(rgb)
+                    rgb = cv2.pyrDown(rgb)
+                    cv2.imshow("rgb", rgb)
+
+            saved = 0
             in_rgb = q_rgb.tryGet() 
             if in_rgb is not None:
-                # data is originally represented as a flat 1D array, it needs to be converted into HxW form
-                shape = (in_rgb.getHeight() * 3 // 2, in_rgb.getWidth())
-                frame_rgb = cv2.cvtColor(in_rgb.getData().reshape(shape), cv2.COLOR_YUV2BGR_NV12)
-                save_frame = cv2.rotate(frame_rgb, cv2.ROTATE_180)
-                # frame is transformed and ready to be shown
-                frame = cv2.pyrDown(save_frame)
-                frame = cv2.pyrDown(frame)
-                cv2.imshow("rgb", frame)
-                saved = 0
                 if TAKE_PHOTO:
+                    # data is originally represented as a flat 1D array, it needs to be converted into HxW form
+                    shape = (in_rgb.getHeight() * 3 // 2, in_rgb.getWidth())
+                    save_frame = cv2.cvtColor(in_rgb.getData().reshape(shape), cv2.COLOR_YUV2BGR_NV12)
+                    # frame is transformed and ready to be shown
+                    frame = cv2.pyrDown(save_frame)
+                    frame = cv2.pyrDown(frame)
                     route_save_image(cfg,save_frame)
-                    # frame = cv2.pyrDown(save_frame)
-                    # frame = cv2.pyrDown(frame)
-
-                    cv2.imshow("saved", frame)
+                    saved += 1
+                    cv2.imshow("rgb", frame)
                     frame = []
                     save_frame = []
                     TAKE_PHOTO = False
                     print(f'saved = {saved}')
                 else:
                     pass
-            
+                    
+            # saved = 0
             # for enc_frame in q_jpeg.tryGetAll():
             #     if enc_frame is not None:
             #         if TAKE_PHOTO:
