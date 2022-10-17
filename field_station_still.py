@@ -35,11 +35,14 @@ class SetupFP():
         for d in usb_dir:
             if 'USB' in d:
                 try: 
+                    print('Fail try loop1')
                     os.mkdir(os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder'))
                     if '1' in d:
+                        print('Fail try loop2')
                         self.has_1_usb = True
                         os.rmdir(os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder'))
                     elif '2' in d:
+                        print('Fail try loop3')
                         self.has_2_usb = True
                         os.rmdir(os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder'))
                 except:
