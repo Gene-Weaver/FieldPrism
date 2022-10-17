@@ -334,7 +334,7 @@ def main():
         # Get data queues
         controlQueue = device.getInputQueue('control')
         configQueue = device.getInputQueue('config')
-        ispQueue = device.getOutputQueue('isp', maxSize=1, blocking=False)
+        ispQueue = device.getOutputQueue('isp', maxSize=1, blocking=True)
         videoQueue = device.getOutputQueue('video', maxSize=1, blocking=False)
         stillQueue = device.getOutputQueue('still', maxSize=1, blocking=True)
 
