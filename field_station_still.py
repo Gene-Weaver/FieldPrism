@@ -197,7 +197,7 @@ def verify_mount_usb_locations():
     for l in open('/proc/mounts'):
         if l[0] == '/':
             l = l.split()
-            print(f"{l[1]}")
+            print(f"{l[0]} --> {l[1]}")
             d[l[0]] = l[1]
     # pprint.pprint(d)
 
