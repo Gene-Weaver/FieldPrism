@@ -353,7 +353,7 @@ def main():
             #     vframe2 = cv2.rotate(vframe2, cv2.ROTATE_180)
             #     cv2.imshow('video', vframe2)
 
-            ispFrames = ispQueue.get()
+            
             # ispFrames = ispQueue.tryGetAll()
             # for ispFrame in ispFrames:
             #     # time.sleep(0.1)
@@ -398,6 +398,7 @@ def main():
                 ctrl = dai.CameraControl()
                 ctrl.setCaptureStill(True)
                 configQueue.send(ctrl)
+                ispFrames = ispQueue.get()
                 TAKE_PHOTO = True
                 print(f"       Camera Activated")
                 # time.sleep(3)
