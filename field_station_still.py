@@ -91,7 +91,7 @@ class SetupFP():
                         self.has_6_usb = True
                         self.usb_6 = os.path.join(self.usb_base_path,'USB6',self.dir_images_unprocessed)
                         print(f"{bcolors.OKGREEN}       Path to USB 6 [USB6]: {self.usb_6}{bcolors.ENDC}")
-        device_count = sum(self.save_to_boot, self.has_1_usb, self.has_2_usb, self.has_3_usb, self.has_4_usb, self.has_5_usb, self.has_6_usb)
+        device_count = sum([self.save_to_boot, self.has_1_usb, self.has_2_usb, self.has_3_usb, self.has_4_usb, self.has_5_usb, self.has_6_usb])
         if device_count == 0:
             self.print_usb_error()
             self.usb_none = os.path.join('/home','pi','FieldPrism','Data','Images_Unprocessed')
