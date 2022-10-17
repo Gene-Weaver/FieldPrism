@@ -9,6 +9,8 @@ from dataclasses import dataclass
 from utils import bcolors, load_cfg
 import matplotlib.pyplot as plt
 from run_gps import get_gps
+import psutil
+
 # print(f"{bcolors.OKGREEN}     {bcolors.ENDC}")
 
 @dataclass
@@ -184,8 +186,23 @@ class SetupFP():
         print(f"{bcolors.FAIL}       save to boot device (microSD card) in:{bcolors.ENDC}")
 
 def verify_mount_usb_locations():
-    result = subprocess.run(["sh", "./check_mounts.sh"], stderr=subprocess.PIPE, text=True)
-    print(result.stderr) # normal to see an error if this is printed, but usually there is no concern
+    partitions = psutil.disk_partitions()
+
+    for p in partitions:
+        print(p.mountpoint)
+    # d = {}
+
+    # for l in file('/proc/mounts'):
+    #     if l[0] == '/':
+    #         l = l.split()
+    #         d[l[0]] = l[1]
+
+    # import pprint
+
+    # pprint.pprint(d)
+
+    # result = subprocess.run(["sh", "./check_mounts.sh"], stderr=subprocess.PIPE, text=True)
+    # print(result.stderr) # normal to see an error if this is printed, but usually there is no concern
 
 def isblockdevice(path):
   return os.path.exists(path) and stat.S_ISBLK(os.stat(path).st_mode)
