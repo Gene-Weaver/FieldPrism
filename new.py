@@ -353,6 +353,7 @@ def main():
                 if enc_frame is not None:
                     if TAKE_PHOTO:
                         save_frame = cv2.imdecode(enc_frame.getData(), cv2.IMREAD_UNCHANGED)
+                        save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
                         print(save_frame.size)
                         # with open(f"06_data/{int(time.time() * 10000)}.jpeg", "wb") as f:
                         #     # f.write(bytearray(enc_frame.getData()))
