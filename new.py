@@ -291,29 +291,34 @@ def main():
     pipeline = dai.Pipeline()
 
     # Define a source - color camera
-    cam_rgb = pipeline.createColorCamera()
-    cam_rgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_12_MP)
+    # cam_rgb = pipeline.createColorCamera()
+    camRgb = pipeline.create(dai.node.ColorCamera)
+    camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_12_MP)
 
     # Create RGB output
     xout_rgb = pipeline.createXLinkOut()
+    ispOut = pipeline.create(dai.node.XLinkOut)
     xout_rgb.setStreamName("rgb")
-    cam_rgb.video.link(xout_rgb.input)
+    camRgb.video.link(xout_rgb.input)
 
     # Create encoder to produce JPEG images
     video_enc = pipeline.createVideoEncoder()
-    video_enc.setDefaultProfilePreset(cam_rgb.getFps(), dai.VideoEncoderProperties.Profile.MJPEG)
-    cam_rgb.video.link(video_enc.input)
+    video_enc.setDefaultProfilePreset(camRgb.getFps(), dai.VideoEncoderProperties.Profile.MJPEG)
+    camRgb.video.link(video_enc.input)
 
     # Create JPEG output
     xout_jpeg = pipeline.createXLinkOut()
+    ispOut.setStreamName('isp')
     xout_jpeg.setStreamName("jpeg")
     video_enc.bitstream.link(xout_jpeg.input)
+    camRgb.isp.link(ispOut.input)
 
     # Connect to device and start pipeline
     with dai.Device(pipeline) as device:
         # Output queue will be used to get the rgb frames from the output defined above
         q_rgb = device.getOutputQueue(name="rgb", maxSize=30, blocking=True)
         q_jpeg = device.getOutputQueue(name="jpeg", maxSize=30, blocking=False)
+        ispQueue = device.getOutputQueue('isp', maxSize=30, blocking=False)
 
         # Make sure the destination path is present before starting to store the examples
         Path('06_data').mkdir(parents=True, exist_ok=True)
@@ -354,8 +359,11 @@ def main():
             if in_rgb is not None:
                 if TAKE_PHOTO:
                     # data is originally represented as a flat 1D array, it needs to be converted into HxW form
-                    shape = (in_rgb.getHeight() * 3 // 2, in_rgb.getWidth())
-                    save_frame = cv2.cvtColor(in_rgb.getData().reshape(shape), cv2.COLOR_YUV2BGR_NV12)
+                    # shape = (in_rgb.getHeight() * 3 // 2, in_rgb.getWidth())
+                    # save_frame = cv2.cvtColor(in_rgb.getData().reshape(shape), cv2.COLOR_YUV2BGR_NV12)
+
+                    save_frame_raw = ispQueue.get()
+                    save_frame = save_frame_raw.getCvFrame()
                     save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
                     # frame is transformed and ready to be shown
                     frame = cv2.pyrDown(save_frame)
