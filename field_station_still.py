@@ -197,8 +197,9 @@ def verify_mount_usb_locations():
     for l in open('/proc/mounts'):
         if l[0] == '/':
             l = l.split()
+            print(f"{l[1]}")
             d[l[0]] = l[1]
-    pprint.pprint(d)
+    # pprint.pprint(d)
 
     # result = subprocess.run(["sh", "./check_mounts.sh"], stderr=subprocess.PIPE, text=True)
     # print(result.stderr) # normal to see an error if this is printed, but usually there is no concern
