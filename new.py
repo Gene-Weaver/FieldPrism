@@ -291,7 +291,7 @@ def main():
 
     # Define a source - color camera
     cam_rgb = pipeline.createColorCamera()
-    cam_rgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_4_K)
+    cam_rgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_12_MP)
 
     # Create RGB output
     xout_rgb = pipeline.createXLinkOut()
@@ -344,7 +344,9 @@ def main():
                 shape = (in_rgb.getHeight() * 3 // 2, in_rgb.getWidth())
                 frame_rgb = cv2.cvtColor(in_rgb.getData().reshape(shape), cv2.COLOR_YUV2BGR_NV12)
                 # frame is transformed and ready to be shown
-                cv2.imshow("rgb", frame_rgb)
+                frame = cv2.pyrDown(frame_rgb)
+                frame = cv2.pyrDown(frame)
+                cv2.imshow("rgb", frame)
             saved = 0
             for enc_frame in q_jpeg.tryGetAll():
                 if TAKE_PHOTO:
@@ -352,6 +354,7 @@ def main():
                     print(f'queue = {len(q_jpeg.tryGetAll())}')
                     with open(f"06_data/{int(time.time() * 10000)}.jpeg", "wb") as f:
                         f.write(bytearray(enc_frame.getData()))
+                    cv2.imshow("saved", bytearray(enc_frame.getData()))
                     TAKE_PHOTO = False
                     print(f'saved = {saved}')
 
