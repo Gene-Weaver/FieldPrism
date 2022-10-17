@@ -32,7 +32,9 @@ class SetupFP():
 
         # USB save to all
         for p in ["/dev/sda1", "/dev/sdb1", "/dev/sdc1", "/dev/sdd1", "/dev/sde1", "/dev/sdf1"]:
-            print("isblockdevice({}): {}".format(p, isblockdevice(p)))
+            print("Storage Drive Exists({}): {}".format(p, isblockdevice(p)))
+
+        print(os.path.ismount('/media/pi/'))
 
         # # USB
         # usb_dir = os.listdir(self.usb_base_path)
