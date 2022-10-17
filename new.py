@@ -356,12 +356,13 @@ def main():
                     # data is originally represented as a flat 1D array, it needs to be converted into HxW form
                     shape = (in_rgb.getHeight() * 3 // 2, in_rgb.getWidth())
                     save_frame = cv2.cvtColor(in_rgb.getData().reshape(shape), cv2.COLOR_YUV2BGR_NV12)
+                    save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
                     # frame is transformed and ready to be shown
                     frame = cv2.pyrDown(save_frame)
                     frame = cv2.pyrDown(frame)
                     route_save_image(cfg,save_frame)
                     saved += 1
-                    cv2.imshow("rgb", frame)
+                    cv2.imshow("saved", frame)
                     frame = []
                     save_frame = []
                     TAKE_PHOTO = False
