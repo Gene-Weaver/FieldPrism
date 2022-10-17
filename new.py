@@ -354,7 +354,7 @@ def main():
                     print(f'queue = {len(q_jpeg.tryGetAll())}')
                     with open(f"06_data/{int(time.time() * 10000)}.jpeg", "wb") as f:
                         f.write(bytearray(enc_frame.getData()))
-                    cv2.imshow("saved", bytearray(enc_frame.getData()))
+                    cv2.imshow("saved", enc_frame.getData())
                     TAKE_PHOTO = False
                     print(f'saved = {saved}')
                 else:
