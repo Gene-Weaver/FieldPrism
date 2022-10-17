@@ -36,10 +36,10 @@ class SetupFP():
             if 'USB' in d:
                 try: 
                     os.mkdir(os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder'))
-                    if '0' in d:
+                    if '1' in d:
                         self.has_1_usb = True
                         os.rmdir(os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder'))
-                    elif '1' in d:
+                    elif '2' in d:
                         self.has_2_usb = True
                         os.rmdir(os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder'))
                 except:
