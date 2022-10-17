@@ -344,29 +344,43 @@ def main():
                 # data is originally represented as a flat 1D array, it needs to be converted into HxW form
                 shape = (in_rgb.getHeight() * 3 // 2, in_rgb.getWidth())
                 frame_rgb = cv2.cvtColor(in_rgb.getData().reshape(shape), cv2.COLOR_YUV2BGR_NV12)
+                save_frame = cv2.rotate(frame_rgb, cv2.ROTATE_180)
                 # frame is transformed and ready to be shown
-                frame = cv2.pyrDown(frame_rgb)
+                frame = cv2.pyrDown(save_frame)
                 frame = cv2.pyrDown(frame)
                 cv2.imshow("rgb", frame)
-            saved = 0
-            for enc_frame in q_jpeg.tryGetAll():
-                if enc_frame is not None:
-                    if TAKE_PHOTO:
-                        save_frame = cv2.imdecode(enc_frame.getData(), cv2.IMREAD_UNCHANGED)
-                        save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
-                        route_save_image(cfg,save_frame)
-                        frame = cv2.pyrDown(save_frame)
-                        frame = cv2.pyrDown(frame)
-                        # with open(f"06_data/{int(time.time() * 10000)}.jpeg", "wb") as f:
-                        #     # f.write(bytearray(enc_frame.getData()))
-                        #     f.write(save_frame)
-                        cv2.imshow("saved", frame)
-                        frame = []
-                        save_frame = []
-                        TAKE_PHOTO = False
-                        print(f'saved = {saved}')
-                    else:
-                        pass
+                saved = 0
+                if TAKE_PHOTO:
+                    route_save_image(cfg,save_frame)
+                    # frame = cv2.pyrDown(save_frame)
+                    # frame = cv2.pyrDown(frame)
+
+                    cv2.imshow("saved", frame)
+                    frame = []
+                    save_frame = []
+                    TAKE_PHOTO = False
+                    print(f'saved = {saved}')
+                else:
+                    pass
+            
+            # for enc_frame in q_jpeg.tryGetAll():
+            #     if enc_frame is not None:
+            #         if TAKE_PHOTO:
+            #             save_frame = cv2.imdecode(enc_frame.getData(), cv2.IMREAD_UNCHANGED)
+            #             save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
+            #             route_save_image(cfg,save_frame)
+            #             frame = cv2.pyrDown(save_frame)
+            #             frame = cv2.pyrDown(frame)
+            #             # with open(f"06_data/{int(time.time() * 10000)}.jpeg", "wb") as f:
+            #             #     # f.write(bytearray(enc_frame.getData()))
+            #             #     f.write(save_frame)
+            #             cv2.imshow("saved", frame)
+            #             frame = []
+            #             save_frame = []
+            #             TAKE_PHOTO = False
+            #             print(f'saved = {saved}')
+            #         else:
+            #             pass
 
             key = cv2.waitKey(50)
             if keyboard.is_pressed('6'):
