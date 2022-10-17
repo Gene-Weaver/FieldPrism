@@ -388,6 +388,7 @@ def main():
                 route_save_image(cfg,save_frame)
                 GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
                 TAKE_PHOTO = False
+                time.sleep(0.1)
                 print(f"{bcolors.FAIL}Ready{bcolors.ENDC}")
 
             key = cv2.waitKey(50)
