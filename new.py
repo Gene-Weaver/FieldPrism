@@ -312,8 +312,8 @@ def main():
     # Connect to device and start pipeline
     with dai.Device(pipeline) as device:
         # Output queue will be used to get the rgb frames from the output defined above
-        q_rgb = device.getOutputQueue(name="rgb", maxSize=30, blocking=False)
-        q_jpeg = device.getOutputQueue(name="jpeg", maxSize=30, blocking=True)
+        q_rgb = device.getOutputQueue(name="rgb", maxSize=30, blocking=True)
+        q_jpeg = device.getOutputQueue(name="jpeg", maxSize=30, blocking=False)
 
         # Make sure the destination path is present before starting to store the examples
         Path('06_data').mkdir(parents=True, exist_ok=True)
@@ -339,7 +339,8 @@ def main():
 
         TAKE_PHOTO = False
         while True:
-            for enc_frame in q_jpeg.tryGetAll():
+            enc_frames = q_jpeg.tryGet()
+            for enc_frame in enc_frames:
                 if enc_frame is not None:
                     rgb = cv2.imdecode(enc_frame.getData(), cv2.IMREAD_UNCHANGED)
                     rgb = cv2.rotate(rgb, cv2.ROTATE_180)
