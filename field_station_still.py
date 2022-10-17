@@ -395,9 +395,9 @@ def main():
             if keyboard.is_pressed('6'):
                 break
             elif keyboard.is_pressed('1'):
-                ctrl = dai.CameraControl()
-                ctrl.setCaptureStill(True)
-                configQueue.send(ctrl)
+                # ctrl = dai.CameraControl()
+                # ctrl.setCaptureStill(True)
+                # configQueue.send(ctrl)
                 # TAKE_PHOTO = True
                 print(f"       Camera Activated")
                 print(f"       Capturing Image")
