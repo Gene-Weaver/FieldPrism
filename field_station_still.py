@@ -35,6 +35,8 @@ class SetupFP():
             print("Storage Drive Exists({}): {}".format(p, isblockdevice(p)))
 
         print(os.path.ismount('/media/pi/'))
+        print(os.path.ismount('/media/USB1/'))
+        print(os.path.ismount('/media/USB2/'))
 
         # # USB
         # usb_dir = os.listdir(self.usb_base_path)
