@@ -354,7 +354,10 @@ def main():
                     if TAKE_PHOTO:
                         saved +=1
                         print(f'queue')
-                        save_frame = enc_frame.getData()
+                        shape2 = (enc_frame.getHeight() * 3 // 2, enc_frame.getWidth())
+                        print(f'shape = {shape2}')
+                        save_frame = cv2.cvtColor(enc_frame.getData().reshape(shape2), cv2.COLOR_YUV2BGR_NV12)
+                        # save_frame = enc_frame.getData()
                         save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
                         frame = cv2.pyrDown(save_frame)
                         frame = cv2.pyrDown(frame)  
