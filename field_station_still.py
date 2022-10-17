@@ -353,7 +353,7 @@ def main():
             #     vframe2 = cv2.rotate(vframe2, cv2.ROTATE_180)
             #     cv2.imshow('video', vframe2)
 
-            ispFrames = ispQueue.tryGetAll()
+            ispFrames = ispQueue.get()
             # ispFrames = ispQueue.tryGetAll()
             # for ispFrame in ispFrames:
             #     # time.sleep(0.1)
@@ -401,9 +401,9 @@ def main():
                 # TAKE_PHOTO = True
                 print(f"       Camera Activated")
                 print(f"       Capturing Image")
-                for ispFrame in ispFrames:
-                    save_frame = ispFrame.getCvFrame()
-                    save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
+                # for ispFrame in ispFrames:
+                save_frame = ispFrames.getCvFrame()
+                save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
                 frame = cv2.pyrDown(save_frame)
                 frame = cv2.pyrDown(frame)  
                 # plt.imshow(frame)
