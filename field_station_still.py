@@ -334,7 +334,7 @@ def main():
         # Get data queues
         controlQueue = device.getInputQueue('control')
         configQueue = device.getInputQueue('config')
-        ispQueue = device.getOutputQueue('isp', maxSize=1, blocking=True)
+        ispQueue = device.getOutputQueue('isp', maxSize=1, blocking=False)
         videoQueue = device.getOutputQueue('video', maxSize=1, blocking=False)
         stillQueue = device.getOutputQueue('still', maxSize=1, blocking=True)
 
@@ -403,7 +403,7 @@ def main():
                 print(f"       Capturing Image")
                 for ispFrame in ispFrames:
                     save_frame = ispFrame.getCvFrame()
-                save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
+                    save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
                 frame = cv2.pyrDown(save_frame)
                 frame = cv2.pyrDown(frame)  
                 # plt.imshow(frame)
