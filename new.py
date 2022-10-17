@@ -342,8 +342,8 @@ def main():
             in_rgb = q_rgb.tryGet() 
             if in_rgb is not None:
                 # data is originally represented as a flat 1D array, it needs to be converted into HxW form
-                shape1 = (in_rgb.getHeight() * 3 // 2, in_rgb.getWidth())
-                frame_rgb = cv2.cvtColor(in_rgb.getData().reshape(shape1), cv2.COLOR_YUV2BGR_NV12)
+                shape = (in_rgb.getHeight() * 3 // 2, in_rgb.getWidth())
+                frame_rgb = cv2.cvtColor(in_rgb.getData().reshape(shape), cv2.COLOR_YUV2BGR_NV12)
                 # frame is transformed and ready to be shown
                 frame = cv2.pyrDown(frame_rgb)
                 frame = cv2.pyrDown(frame)
@@ -358,8 +358,7 @@ def main():
                         with open(f"06_data/{int(time.time() * 10000)}.jpeg", "wb") as f:
                             # f.write(bytearray(enc_frame.getData()))
                             f.write(save_frame)
-                        shape2 = (save_frame.getHeight() * 3 // 2, save_frame.getWidth())
-                        save_frame = cv2.cvtColor(save_frame.reshape(shape2), cv2.COLOR)
+                        save_frame = cv2.cvtColor(save_frame.reshape(shape), cv2.COLOR_YUV2BGR_NV12)
                         cv2.imshow("saved", save_frame)
                         save_frame = []
                         TAKE_PHOTO = False
