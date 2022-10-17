@@ -57,40 +57,40 @@ class SetupFP():
             if isblockdevice(p):
                 if p == "/dev/sda1":
                     if os.path.ismount('/media/USB1/'):
-                        print(f"{bcolors.OKGREEN}Storage Drive Exists({p}): [{isblockdevice(p)}] and is mounted to (/media/USB1/): [{os.path.ismount('/media/USB1/')}]{bcolors.ENDC}")
+                        print(f"{bcolors.OKGREEN}       Storage Drive Exists({p}): [{isblockdevice(p)}] and is mounted to (/media/USB1/): [{os.path.ismount('/media/USB1/')}]{bcolors.ENDC}")
                         self.has_1_usb = True
                         self.usb_1 = os.path.join(self.usb_base_path,'USB1',self.dir_images_unprocessed)
-                        print(f"{bcolors.OKGREEN}       Path to USB 1 [USB1]: {self.usb_1}{bcolors.ENDC}")
+                        print(f"{bcolors.OKGREEN}              Path to USB 1 [USB1]: {self.usb_1}{bcolors.ENDC}")
                 elif p == "/dev/sdb1":
                     if os.path.ismount('/media/USB2/'):
-                        print(f"{bcolors.OKGREEN}Storage Drive Exists({p}): [{isblockdevice(p)}] and is mounted to (/media/USB2/): [{os.path.ismount('/media/USB2/')}]{bcolors.ENDC}")
+                        print(f"{bcolors.OKGREEN}       Storage Drive Exists({p}): [{isblockdevice(p)}] and is mounted to (/media/USB2/): [{os.path.ismount('/media/USB2/')}]{bcolors.ENDC}")
                         self.has_2_usb = True
                         self.usb_2 = os.path.join(self.usb_base_path,'USB2',self.dir_images_unprocessed)
-                        print(f"{bcolors.OKGREEN}       Path to USB 2 [USB2]: {self.usb_2}{bcolors.ENDC}")
+                        print(f"{bcolors.OKGREEN}              Path to USB 2 [USB2]: {self.usb_2}{bcolors.ENDC}")
                 elif p == "/dev/sdc1":
                     if os.path.ismount('/media/USB3/'):
-                        print(f"{bcolors.OKGREEN}Storage Drive Exists({p}): [{isblockdevice(p)}] and is mounted to (/media/USB3/): [{os.path.ismount('/media/USB3/')}]{bcolors.ENDC}")
+                        print(f"{bcolors.OKGREEN}       Storage Drive Exists({p}): [{isblockdevice(p)}] and is mounted to (/media/USB3/): [{os.path.ismount('/media/USB3/')}]{bcolors.ENDC}")
                         self.has_3_usb = True
                         self.usb_3 = os.path.join(self.usb_base_path,'USB3',self.dir_images_unprocessed)
-                        print(f"{bcolors.OKGREEN}       Path to USB 3 [USB3]: {self.usb_3}{bcolors.ENDC}")
+                        print(f"{bcolors.OKGREEN}              Path to USB 3 [USB3]: {self.usb_3}{bcolors.ENDC}")
                 elif p == "/dev/sdd1":
                     if os.path.ismount('/media/USB4/'):
-                        print(f"{bcolors.OKGREEN}Storage Drive Exists({p}): [{isblockdevice(p)}] and is mounted to (/media/USB4/): [{os.path.ismount('/media/USB4/')}]{bcolors.ENDC}")
+                        print(f"{bcolors.OKGREEN}       Storage Drive Exists({p}): [{isblockdevice(p)}] and is mounted to (/media/USB4/): [{os.path.ismount('/media/USB4/')}]{bcolors.ENDC}")
                         self.has_4_usb = True
                         self.usb_4 = os.path.join(self.usb_base_path,'USB4',self.dir_images_unprocessed)
-                        print(f"{bcolors.OKGREEN}       Path to USB 4 [USB4]: {self.usb_4}{bcolors.ENDC}")
+                        print(f"{bcolors.OKGREEN}              Path to USB 4 [USB4]: {self.usb_4}{bcolors.ENDC}")
                 elif p == "/dev/sde1":
                     if os.path.ismount('/media/USB5/'):
-                        print(f"{bcolors.OKGREEN}Storage Drive Exists({p}): [{isblockdevice(p)}] and is mounted to (/media/USB5/): [{os.path.ismount('/media/USB5/')}]{bcolors.ENDC}")
+                        print(f"{bcolors.OKGREEN}       Storage Drive Exists({p}): [{isblockdevice(p)}] and is mounted to (/media/USB5/): [{os.path.ismount('/media/USB5/')}]{bcolors.ENDC}")
                         self.has_5_usb = True
                         self.usb_5 = os.path.join(self.usb_base_path,'USB5',self.dir_images_unprocessed)
-                        print(f"{bcolors.OKGREEN}       Path to USB 5 [USB5]: {self.usb_5}{bcolors.ENDC}")
+                        print(f"{bcolors.OKGREEN}              Path to USB 5 [USB5]: {self.usb_5}{bcolors.ENDC}")
                 elif p == "/dev/sdf1":
                     if os.path.ismount('/media/USB6/'):
-                        print(f"{bcolors.OKGREEN}Storage Drive Exists({p}): [{isblockdevice(p)}] and is mounted to (/media/USB6/): [{os.path.ismount('/media/USB6/')}]{bcolors.ENDC}")
+                        print(f"{bcolors.OKGREEN}       Storage Drive Exists({p}): [{isblockdevice(p)}] and is mounted to (/media/USB6/): [{os.path.ismount('/media/USB6/')}]{bcolors.ENDC}")
                         self.has_6_usb = True
                         self.usb_6 = os.path.join(self.usb_base_path,'USB6',self.dir_images_unprocessed)
-                        print(f"{bcolors.OKGREEN}       Path to USB 6 [USB6]: {self.usb_6}{bcolors.ENDC}")
+                        print(f"{bcolors.OKGREEN}              Path to USB 6 [USB6]: {self.usb_6}{bcolors.ENDC}")
         device_count = sum([self.save_to_boot, self.has_1_usb, self.has_2_usb, self.has_3_usb, self.has_4_usb, self.has_5_usb, self.has_6_usb])
         if device_count == 0:
             self.print_usb_error()
@@ -220,22 +220,20 @@ def save_image(save_frame, name_time, save_dir):
 
 def route_save_image(Setup,save_frame):
     name_time = str(int(time.time() * 1000))
-    save_image(save_frame, name_time, Setup.usb_1)
-    save_image(save_frame, name_time, Setup.usb_2)
-    save_image(save_frame, name_time, Setup.usb_3)
-    save_image(save_frame, name_time, Setup.usb_4)
-    # if not Setup.has_1_usb and not Setup.has_2_usb:
-    #     save_image(save_frame, name_time, Setup.usb_none)
-
-    # elif Setup.has_1_usb and not Setup.has_2_usb:
-    #     save_image(save_frame, name_time, Setup.usb_1)
-    
-    # elif Setup.has_2_usb and not Setup.has_1_usb:
-    #     save_image(save_frame, name_time, Setup.usb_2)
-
-    # elif Setup.has_1_usb and Setup.has_2_usb:
-    #     save_image(save_frame, name_time, Setup.usb_1)
-    #     save_image(save_frame, name_time, Setup.usb_2)
+    if Setup.save_to_boot:
+        save_image(save_frame, name_time, Setup.usb_none)
+    if Setup.has_1_usb:
+        save_image(save_frame, name_time, Setup.usb_1)
+    if Setup.has_2_usb:
+        save_image(save_frame, name_time, Setup.usb_2)
+    if Setup.has_3_usb:
+        save_image(save_frame, name_time, Setup.usb_3)
+    if Setup.has_4_usb:
+        save_image(save_frame, name_time, Setup.usb_4)
+    if Setup.has_5_usb:
+        save_image(save_frame, name_time, Setup.usb_5)
+    if Setup.has_6_usb:
+        save_image(save_frame, name_time, Setup.usb_6)
 
 def align_camera():
     # Create pipeline
