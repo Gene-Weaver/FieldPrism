@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import time, os
+import time, os, stat
 from pathlib import Path
 import cv2
 import depthai as dai
@@ -30,65 +30,69 @@ class SetupFP():
         print(f"{bcolors.HEADER}Base USB Path: {self.usb_base_path}{bcolors.ENDC}")
         print(f"{bcolors.OKCYAN}       Available USB Devices: {os.listdir(self.usb_base_path)}{bcolors.ENDC}")            
 
-        # USB
-        usb_dir = os.listdir(self.usb_base_path)
-        for d in usb_dir:
-            print(f'd = {d}')
-            if 'USB' in d:
-                try: 
-                    print(d.split('USB'))
-                    print(d.split('USB')[1])
-                    # os.mkdir(os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder'))
-                    if '1' in d:
-                        print('try loop2')
-                        new_dir1 = os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder')
-                        print(f'making dir = {new_dir1}')
-                        os.mkdir(os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder'))
-                        os.rmdir(os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder'))
-                        self.has_1_usb = True
-                        print('pass try loop2')
-                    elif '2' in d:
-                        print('try loop3')
-                        new_dir2 = os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder')
-                        print(f'making dir = {new_dir2}')
-                        os.mkdir(os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder'))
-                        os.rmdir(os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder'))
-                        self.has_2_usb = True
-                        print('pass try loop3')
-                except Exception as e:
-                    print(f'Fail try loop {e}')
-                    pass
-            else:
-                print(f'(USB) not in {d}')
+        # USB save to all
+        for p in ["/dev/sda1", "/dev/sdb1", "/dev/sdc1", "/dev/sdd1", "/dev/sde1", "/dev/sdf1"]:
+            print("isblockdevice({}): {}".format(p, isblockdevice(p)))
 
-        if self.has_1_usb and not self.has_2_usb:
-            self.usb_1 = os.path.join(self.usb_base_path,os.listdir(self.usb_base_path)[0],self.dir_images_unprocessed)
-            print(f"{bcolors.OKGREEN}       Path to USB 1 [USB1]: {self.usb_1}{bcolors.ENDC}")
+        # # USB
+        # usb_dir = os.listdir(self.usb_base_path)
+        # for d in usb_dir:
+        #     print(f'd = {d}')
+        #     if 'USB' in d:
+        #         try: 
+        #             print(d.split('USB'))
+        #             print(d.split('USB')[1])
+        #             # os.mkdir(os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder'))
+        #             if '1' in d:
+        #                 print('try loop2')
+        #                 new_dir1 = os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder')
+        #                 print(f'making dir = {new_dir1}')
+        #                 os.mkdir(os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder'))
+        #                 os.rmdir(os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder'))
+        #                 self.has_1_usb = True
+        #                 print('pass try loop2')
+        #             elif '2' in d:
+        #                 print('try loop3')
+        #                 new_dir2 = os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder')
+        #                 print(f'making dir = {new_dir2}')
+        #                 os.mkdir(os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder'))
+        #                 os.rmdir(os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder'))
+        #                 self.has_2_usb = True
+        #                 print('pass try loop3')
+        #         except Exception as e:
+        #             print(f'Fail try loop {e}')
+        #             pass
+        #     else:
+        #         print(f'(USB) not in {d}')
 
-        elif self.has_2_usb and not self.has_1_usb:
-            self.usb_2 = os.path.join(self.usb_base_path,os.listdir(self.usb_base_path)[1],self.dir_images_unprocessed)
-            print(f"{bcolors.OKGREEN}       Path to USB 1 [USB2]: {self.usb_2}{bcolors.ENDC}")
+        # if self.has_1_usb and not self.has_2_usb:
+        #     self.usb_1 = os.path.join(self.usb_base_path,os.listdir(self.usb_base_path)[0],self.dir_images_unprocessed)
+        #     print(f"{bcolors.OKGREEN}       Path to USB 1 [USB1]: {self.usb_1}{bcolors.ENDC}")
 
-        elif self.has_2_usb and self.has_1_usb:
-            self.usb_1 = os.path.join(self.usb_base_path,'USB1',self.dir_images_unprocessed)
-            self.usb_2 = os.path.join(self.usb_base_path,'USB2',self.dir_images_unprocessed)
-            print(f"{bcolors.OKGREEN}       Path to USB 1 [USB1]: {self.usb_1}{bcolors.ENDC}")
-            print(f"{bcolors.OKGREEN}       Path to USB 2 [USB2]: {self.usb_2}{bcolors.ENDC}")
+        # elif self.has_2_usb and not self.has_1_usb:
+        #     self.usb_2 = os.path.join(self.usb_base_path,os.listdir(self.usb_base_path)[1],self.dir_images_unprocessed)
+        #     print(f"{bcolors.OKGREEN}       Path to USB 1 [USB2]: {self.usb_2}{bcolors.ENDC}")
 
-        else:
-            self.print_usb_error()
-            self.usb_none = os.path.join('/home','pi','FieldPrism','Data','Images_Unprocessed')
-            print(f"{bcolors.FAIL}            {self.usb_none}{bcolors.ENDC}")
-            self.save_to_boot = True
+        # elif self.has_2_usb and self.has_1_usb:
+        #     self.usb_1 = os.path.join(self.usb_base_path,'USB1',self.dir_images_unprocessed)
+        #     self.usb_2 = os.path.join(self.usb_base_path,'USB2',self.dir_images_unprocessed)
+        #     print(f"{bcolors.OKGREEN}       Path to USB 1 [USB1]: {self.usb_1}{bcolors.ENDC}")
+        #     print(f"{bcolors.OKGREEN}       Path to USB 2 [USB2]: {self.usb_2}{bcolors.ENDC}")
+
+        # else:
+        #     self.print_usb_error()
+        #     self.usb_none = os.path.join('/home','pi','FieldPrism','Data','Images_Unprocessed')
+        #     print(f"{bcolors.FAIL}            {self.usb_none}{bcolors.ENDC}")
+        #     self.save_to_boot = True
         
-        print(f"{bcolors.HEADER}Creating Save Directories{bcolors.ENDC}")
-        if not self.has_1_usb and not self.has_2_usb and self.save_to_boot:
-            Path(self.usb_none).mkdir(parents=True, exist_ok=True)
-        elif self.has_1_usb and not self.has_2_usb:
-            Path(self.usb_1).mkdir(parents=True, exist_ok=True)
-        elif self.has_1_usb and self.has_2_usb:
-            Path(self.usb_1).mkdir(parents=True, exist_ok=True)
-            Path(self.usb_2).mkdir(parents=True, exist_ok=True)
+        # print(f"{bcolors.HEADER}Creating Save Directories{bcolors.ENDC}")
+        # if not self.has_1_usb and not self.has_2_usb and self.save_to_boot:
+        #     Path(self.usb_none).mkdir(parents=True, exist_ok=True)
+        # elif self.has_1_usb and not self.has_2_usb:
+        #     Path(self.usb_1).mkdir(parents=True, exist_ok=True)
+        # elif self.has_1_usb and self.has_2_usb:
+        #     Path(self.usb_1).mkdir(parents=True, exist_ok=True)
+        #     Path(self.usb_2).mkdir(parents=True, exist_ok=True)
 
     def print_usb_error(self) -> None:
         print(f"{bcolors.FAIL}ERROR: USB device/s not mounted correctly. {bcolors.ENDC}")
@@ -102,6 +106,9 @@ class SetupFP():
         print(f"{bcolors.FAIL}       Quit and mount USB device/s otherwise images will{bcolors.ENDC}")
         print(f"{bcolors.FAIL}       save to boot device (microSD card) in:{bcolors.ENDC}")
 
+def isblockdevice(path):
+  return os.path.exists(path) and stat.S_ISBLK(os.stat(path).st_mode)
+
 def save_image(save_frame, name_time, save_dir):
     fname = "".join([name_time,'.jpg'])
     fname = os.path.join(save_dir,fname)
@@ -110,18 +117,22 @@ def save_image(save_frame, name_time, save_dir):
 
 def route_save_image(Setup,save_frame):
     name_time = str(int(time.time() * 1000))
-    if not Setup.has_1_usb and not Setup.has_2_usb:
-        save_image(save_frame, name_time, Setup.usb_none)
+    save_image(save_frame, name_time, Setup.usb_1)
+    save_image(save_frame, name_time, Setup.usb_2)
+    save_image(save_frame, name_time, Setup.usb_3)
+    save_image(save_frame, name_time, Setup.usb_4)
+    # if not Setup.has_1_usb and not Setup.has_2_usb:
+    #     save_image(save_frame, name_time, Setup.usb_none)
 
-    elif Setup.has_1_usb and not Setup.has_2_usb:
-        save_image(save_frame, name_time, Setup.usb_1)
+    # elif Setup.has_1_usb and not Setup.has_2_usb:
+    #     save_image(save_frame, name_time, Setup.usb_1)
     
-    elif Setup.has_2_usb and not Setup.has_1_usb:
-        save_image(save_frame, name_time, Setup.usb_2)
+    # elif Setup.has_2_usb and not Setup.has_1_usb:
+    #     save_image(save_frame, name_time, Setup.usb_2)
 
-    elif Setup.has_1_usb and Setup.has_2_usb:
-        save_image(save_frame, name_time, Setup.usb_1)
-        save_image(save_frame, name_time, Setup.usb_2)
+    # elif Setup.has_1_usb and Setup.has_2_usb:
+    #     save_image(save_frame, name_time, Setup.usb_1)
+    #     save_image(save_frame, name_time, Setup.usb_2)
 
 def align_camera():
     # Create pipeline
