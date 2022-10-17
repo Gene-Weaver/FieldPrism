@@ -33,6 +33,7 @@ class SetupFP():
         # USB
         usb_dir = os.listdir(self.usb_base_path)
         for d in usb_dir:
+            print(f'd = {d}')
             if 'USB' in d:
                 try: 
                     print('Fail try loop1')
@@ -48,6 +49,8 @@ class SetupFP():
                 except:
                     print('Fail try loop')
                     pass
+            else:
+                print(f'(USB) not in {d}')
 
         if self.has_1_usb and not self.has_2_usb:
             self.usb_1 = os.path.join(self.usb_base_path,os.listdir(self.usb_base_path)[0],self.dir_images_unprocessed)
