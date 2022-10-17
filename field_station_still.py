@@ -271,7 +271,7 @@ def align_camera():
             #     cv2.imshow("rgb", cv2.rotate(save_frame, cv2.ROTATE_180))
 
             # cv2.imshow("rgb", inRgb.getCvFrame())
-            key = cv2.waitKey(1)
+            key = cv2.waitKey(50)
             if keyboard.is_pressed('6'):
                 break
 '''
@@ -390,10 +390,10 @@ def main():
                 TAKE_PHOTO = False
                 print(f"{bcolors.FAIL}Ready{bcolors.ENDC}")
 
-            key = cv2.waitKey(1)
-            if key == ord('6'):#keyboard.is_pressed('6'):
+            key = cv2.waitKey(50)
+            if keyboard.is_pressed('6'):
                 break
-            elif key == ord('1'):#keyboard.is_pressed('1'):
+            elif keyboard.is_pressed('1'):
                 ctrl = dai.CameraControl()
                 ctrl.setCaptureStill(True)
                 configQueue.send(ctrl)
@@ -407,12 +407,12 @@ def route():
     print("Exit: 6")
     while True:
         key = cv2.waitKey(1)
-        if key == ord('6'):#keyboard.is_pressed('6'):
+        if keyboard.is_pressed('6'):
             break
-        elif key == ord('1'):#keyboard.is_pressed('1'):
+        elif keyboard.is_pressed('1'):
             print("Entering main()")
             main()
-        elif key == ord('3'):#keyboard.is_pressed('3'):
+        elif keyboard.is_pressed('3'):
             print("Entering align_camera()")
             align_camera()
 
