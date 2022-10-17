@@ -357,10 +357,13 @@ def main():
                     cv2.imshow("saved", bytearray(enc_frame.getData()))
                     TAKE_PHOTO = False
                     print(f'saved = {saved}')
+                else:
+                    pass
 
-            if cv2.waitKey(1) == ord('q'):
+            key = cv2.waitKey(50)
+            if keyboard.is_pressed('6'):
                 break
-            elif cv2.waitKey(1) == ord('c'):
+            elif keyboard.is_pressed('1'):
                 TAKE_PHOTO = True
                 print("Wait for camera to finish...")
             # vidFrames = videoQueue.tryGetAll()
