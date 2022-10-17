@@ -101,22 +101,30 @@ class SetupFP():
             print(f"{bcolors.HEADER}Creating Save Directories{bcolors.ENDC}")
             # Will only save to boot device
             if not self.has_1_usb and not self.has_2_usb and not self.has_3_usb and not self.has_4_usb and not self.has_5_usb and not self.has_6_usb and self.save_to_boot:
+                print(f"{bcolors.WARNING}WARNING: Only saving to microSD card. Recommend adding USB storage and trying again!{bcolors.ENDC}")
+                print(f"{bcolors.WARNING}       Creating (or verifying): {self.usb_none}{bcolors.ENDC}")
                 Path(self.usb_none).mkdir(parents=True, exist_ok=True)
             # No storage selected
             elif not self.has_1_usb and not self.has_2_usb  and not self.has_3_usb  and not self.has_4_usb  and not self.has_5_usb  and not self.has_6_usb and not self.save_to_boot:
                 print(f"{bcolors.FAIL}ERROR: NO STORAGE DETECTED. DATA WILL NOT BE SAVED ANYWHERE!!!{bcolors.ENDC}")
                 print(f"{bcolors.FAIL}       Power off device, add storage, try again. Or edit FieldPrism.yaml: always_save_to_boot = True{bcolors.ENDC}")
             if self.has_1_usb:
+                print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.usb_1}{bcolors.ENDC}")
                 Path(self.usb_1).mkdir(parents=True, exist_ok=True)
             if self.has_2_usb:
+                print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.usb_2}{bcolors.ENDC}")
                 Path(self.usb_2).mkdir(parents=True, exist_ok=True)
             if self.has_3_usb:
+                print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.usb_3}{bcolors.ENDC}")
                 Path(self.usb_3).mkdir(parents=True, exist_ok=True)
             if self.has_4_usb:
+                print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.usb_4}{bcolors.ENDC}")
                 Path(self.usb_4).mkdir(parents=True, exist_ok=True)
             if self.has_5_usb:
+                print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.usb_5}{bcolors.ENDC}")
                 Path(self.usb_5).mkdir(parents=True, exist_ok=True)
             if self.has_6_usb:
+                print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.usb_6}{bcolors.ENDC}")
                 Path(self.usb_6).mkdir(parents=True, exist_ok=True)
 
         # # USB
