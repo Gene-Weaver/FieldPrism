@@ -354,7 +354,7 @@ def main():
                     if TAKE_PHOTO:
                         saved +=1
                         print(f'queue')
-                        save_frame = enc_frame.getCvFrame()
+                        save_frame = enc_frame.getData()
                         save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
                         frame = cv2.pyrDown(save_frame)
                         frame = cv2.pyrDown(frame)  
