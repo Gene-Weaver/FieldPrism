@@ -220,7 +220,7 @@ def save_image(save_frame, name_time, save_dir):
     print(f"{bcolors.OKGREEN}       Image Saved: {fname}{bcolors.ENDC}")
 
 def route_save_image(Setup,save_frame):
-    name_time = str(int(time.time() * 1000))
+    name_time = 'new_' + str(int(time.time() * 1000))
     if Setup.save_to_boot:
         save_image(save_frame, name_time, Setup.usb_none)
     if Setup.has_1_usb:
