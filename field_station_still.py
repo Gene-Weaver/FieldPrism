@@ -355,7 +355,10 @@ def main():
 
             ispFrames = ispQueue.tryGetAll()
             # ispFrames = ispQueue.tryGetAll()
+            count = 0
             for ispFrame in ispFrames:
+                count += 1
+                print(count)
                 # time.sleep(0.1)
                 pass
                 # cv2.imshow('isp', ispFrame.getCvFrame())
