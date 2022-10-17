@@ -339,15 +339,15 @@ def main():
 
         TAKE_PHOTO = False
         while True:
-            enc_frames = q_jpeg.tryGet()
-            if enc_frames is not None:
-                for enc_frame in enc_frames:
-                    if enc_frame is not None:
-                        rgb = cv2.imdecode(enc_frame.getData(), cv2.IMREAD_UNCHANGED)
-                        rgb = cv2.rotate(rgb, cv2.ROTATE_180)
-                        rgb = cv2.pyrDown(rgb)
-                        rgb = cv2.pyrDown(rgb)
-                        cv2.imshow("rgb", rgb)
+            enc_frame = q_jpeg.tryGet()
+            if enc_frame is not None:
+                # for enc_frame in enc_frames:
+                #     if enc_frame is not None:
+                rgb = cv2.imdecode(enc_frame.getData(), cv2.IMREAD_UNCHANGED)
+                rgb = cv2.rotate(rgb, cv2.ROTATE_180)
+                rgb = cv2.pyrDown(rgb)
+                rgb = cv2.pyrDown(rgb)
+                cv2.imshow("rgb", rgb)
 
             saved = 0
             in_rgb = q_rgb.tryGet() 
