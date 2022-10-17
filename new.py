@@ -355,11 +355,14 @@ def main():
                         saved +=1
                         print(f'queue')
                         save_frame = enc_frame.getCvFrame()
-                        with open(f"06_data/{int(time.time() * 10000)}.jpeg", "wb") as f:
-                            # f.write(bytearray(enc_frame.getData()))
-                            f.write(save_frame)
-                        save_frame = cv2.cvtColor(save_frame.reshape(shape), cv2.COLOR_YUV2BGR_NV12)
-                        cv2.imshow("saved", save_frame)
+                        save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
+                        frame = cv2.pyrDown(save_frame)
+                        frame = cv2.pyrDown(frame)  
+                        route_save_image(cfg,save_frame)
+                        # with open(f"06_data/{int(time.time() * 10000)}.jpeg", "wb") as f:
+                        #     # f.write(bytearray(enc_frame.getData()))
+                        #     f.write(save_frame)
+                        cv2.imshow("saved", frame)
                         save_frame = []
                         TAKE_PHOTO = False
                         print(f'saved = {saved}')
