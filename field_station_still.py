@@ -402,8 +402,8 @@ def main():
                 print(f"       Camera Activated")
                 print(f"       Capturing Image")
                 # for ispFrame in ispFrames:
-                ispFrames = ispQueue.get()
-                save_frame = ispFrames.getCvFrame()
+                save_frame_raw = ispQueue.get()
+                save_frame = save_frame_raw.getCvFrame()
                 save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
                 frame = cv2.pyrDown(save_frame)
                 frame = cv2.pyrDown(frame)  
