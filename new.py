@@ -318,7 +318,7 @@ def main():
         # Output queue will be used to get the rgb frames from the output defined above
         q_rgb = device.getOutputQueue(name="rgb", maxSize=30, blocking=True)
         q_jpeg = device.getOutputQueue(name="jpeg", maxSize=30, blocking=False)
-        ispQueue = device.getOutputQueue('isp', maxSize=30, blocking=False)
+        ispQueue = device.getOutputQueue('isp', maxSize=30, blocking=True)
 
         # Make sure the destination path is present before starting to store the examples
         Path('06_data').mkdir(parents=True, exist_ok=True)
