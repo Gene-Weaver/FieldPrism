@@ -391,9 +391,9 @@ def main():
                 print(f"{bcolors.FAIL}Ready{bcolors.ENDC}")
 
             key = cv2.waitKey(1)
-            if keyboard.is_pressed('6'):
+            if key == ord('6'):#keyboard.is_pressed('6'):
                 break
-            elif keyboard.is_pressed('1'):
+            elif key == ord('1'):#keyboard.is_pressed('1'):
                 ctrl = dai.CameraControl()
                 ctrl.setCaptureStill(True)
                 configQueue.send(ctrl)
@@ -407,12 +407,12 @@ def route():
     print("Exit: 6")
     while True:
         key = cv2.waitKey(1)
-        if keyboard.is_pressed('6'):
+        if key == ord('6'):#keyboard.is_pressed('6'):
             break
-        elif keyboard.is_pressed('1'):
+        elif key == ord('1'):#keyboard.is_pressed('1'):
             print("Entering main()")
             main()
-        elif keyboard.is_pressed('3'):
+        elif key == ord('3'):#keyboard.is_pressed('3'):
             print("Entering align_camera()")
             align_camera()
 
