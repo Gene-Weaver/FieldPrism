@@ -355,9 +355,9 @@ def main():
 
             ispFrames = ispQueue.tryGetAll()
             # ispFrames = ispQueue.tryGetAll()
-            # for ispFrame in ispFrames:
-            #     # time.sleep(0.1)
-            #     pass
+            for ispFrame in ispFrames:
+                # time.sleep(0.1)
+                pass
                 # cv2.imshow('isp', ispFrame.getCvFrame())
 
             # if TAKE_PHOTO:
