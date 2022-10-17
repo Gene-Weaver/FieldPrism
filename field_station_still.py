@@ -41,18 +41,22 @@ class SetupFP():
                     # os.mkdir(os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder'))
                     if '1' in d:
                         print('try loop2')
+                        new_dir1 = os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder')
+                        print(f'making dir = {new_dir1}')
                         os.mkdir(os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder'))
-                        # os.rmdir(os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder'))
+                        os.rmdir(os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder'))
                         self.has_1_usb = True
                         print('pass try loop2')
                     elif '2' in d:
                         print('try loop3')
+                        new_dir2 = os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder')
+                        print(f'making dir = {new_dir2}')
                         os.mkdir(os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder'))
-                        # os.rmdir(os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder'))
+                        os.rmdir(os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder'))
                         self.has_2_usb = True
                         print('pass try loop3')
-                except:
-                    print('Fail try loop')
+                except Exception as e:
+                    print(f'Fail try loop {e}')
                     pass
             else:
                 print(f'(USB) not in {d}')
@@ -66,8 +70,8 @@ class SetupFP():
             print(f"{bcolors.OKGREEN}       Path to USB 1 [USB2]: {self.usb_2}{bcolors.ENDC}")
 
         elif self.has_2_usb and self.has_1_usb:
-            self.usb_1 = os.path.join(self.usb_base_path,os.listdir(self.usb_base_path)[0],self.dir_images_unprocessed)
-            self.usb_2 = os.path.join(self.usb_base_path,os.listdir(self.usb_base_path)[1],self.dir_images_unprocessed)
+            self.usb_1 = os.path.join(self.usb_base_path,'USB1',self.dir_images_unprocessed)
+            self.usb_2 = os.path.join(self.usb_base_path,'USB2',self.dir_images_unprocessed)
             print(f"{bcolors.OKGREEN}       Path to USB 1 [USB1]: {self.usb_1}{bcolors.ENDC}")
             print(f"{bcolors.OKGREEN}       Path to USB 2 [USB2]: {self.usb_2}{bcolors.ENDC}")
 
