@@ -49,13 +49,11 @@ xhost +si:localuser:root
 #chown -R localuser:root /media/USB1
 #chown -R localuser:root /media/USB2
 echo ""
-echo "***** Finished"  
-echo ""
-echo ""
 echo "***** Possible Errors..."
 echo "      Expected errors if not all USB drives are present (not a problem):"  
 echo "            --> Error: device /dev/sdb1 is not mounted"
 echo "            --> Error: device /dev/sdb1 does not exist"
 echo "      Expected errors if not using a USB hub (not a problem):"  
 echo "            --> ls: cannot access '/media/USB3': No such file or directory"
+echo ""
 echo "***** Errors Thrown Below..."
