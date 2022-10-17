@@ -352,20 +352,12 @@ def main():
             for enc_frame in q_jpeg.tryGetAll():
                 if enc_frame is not None:
                     if TAKE_PHOTO:
-                        saved +=1
-                        print(f'queue')
-                        shape2 = (enc_frame.getHeight() * 3 // 2, enc_frame.getWidth())
-                        print(f'shape = {shape2}')
-                        save_frame = cv2.cvtColor(enc_frame.getData().reshape(shape2), cv2.COLOR_YUV2BGR_NV12)
-                        # save_frame = enc_frame.getData()
-                        save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
-                        frame = cv2.pyrDown(save_frame)
-                        frame = cv2.pyrDown(frame)  
-                        route_save_image(cfg,save_frame)
+                        save_frame = enc_frame.getData()
+                        print(save_frame.size)
                         # with open(f"06_data/{int(time.time() * 10000)}.jpeg", "wb") as f:
                         #     # f.write(bytearray(enc_frame.getData()))
                         #     f.write(save_frame)
-                        cv2.imshow("saved", frame)
+                        cv2.imshow("saved", save_frame)
                         save_frame = []
                         TAKE_PHOTO = False
                         print(f'saved = {saved}')
