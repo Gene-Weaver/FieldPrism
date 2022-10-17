@@ -38,7 +38,7 @@ class SetupFP():
         self.dir_images_unprocessed = os.path.join('FieldPrism','Images_Unprocessed')
 
         print(f"{bcolors.HEADER}Base USB Path: {self.usb_base_path}{bcolors.ENDC}")
-        print(f"{bcolors.OKCYAN}       Available USB Devices: {os.listdir(self.usb_base_path)}{bcolors.ENDC}")     
+        print(f"{bcolors.OKCYAN}       Possible USB Devices: {os.listdir(self.usb_base_path)}{bcolors.ENDC}")     
         print(f"")
         print(f"{bcolors.HEADER}Veryifying USB Storage Mount Points...{bcolors.ENDC}")
         print(f"{bcolors.OKCYAN}       /dev/sda1  should pair with  /media/USB1{bcolors.ENDC}")
@@ -91,12 +91,33 @@ class SetupFP():
                         self.has_6_usb = True
                         self.usb_6 = os.path.join(self.usb_base_path,'USB6',self.dir_images_unprocessed)
                         print(f"{bcolors.OKGREEN}       Path to USB 6 [USB6]: {self.usb_6}{bcolors.ENDC}")
+        device_count = sum(self.save_to_boot, self.has_1_usb, self.has_2_usb, self.has_3_usb, self.has_4_usb, self.has_5_usb, self.has_6_usb)
         if device_count == 0:
             self.print_usb_error()
             self.usb_none = os.path.join('/home','pi','FieldPrism','Data','Images_Unprocessed')
             print(f"{bcolors.FAIL}       {self.usb_none}{bcolors.ENDC}")
             # self.save_to_boot = True
-            
+        else:
+            print(f"{bcolors.HEADER}Creating Save Directories{bcolors.ENDC}")
+            # Will only save to boot device
+            if not self.has_1_usb and not self.has_2_usb and not self.has_3_usb and not self.has_4_usb and not self.has_5_usb and not self.has_6_usb and self.save_to_boot:
+                Path(self.usb_none).mkdir(parents=True, exist_ok=True)
+            # No storage selected
+            elif not self.has_1_usb and not self.has_2_usb  and not self.has_3_usb  and not self.has_4_usb  and not self.has_5_usb  and not self.has_6_usb and not self.save_to_boot:
+                print(f"{bcolors.FAIL}ERROR: NO STORAGE DETECTED. DATA WILL NOT BE SAVED ANYWHERE!!!{bcolors.ENDC}")
+                print(f"{bcolors.FAIL}       Power off device, add storage, try again. Or edit FieldPrism.yaml: always_save_to_boot = True{bcolors.ENDC}")
+            if self.has_1_usb:
+                Path(self.usb_1).mkdir(parents=True, exist_ok=True)
+            if self.has_2_usb:
+                Path(self.usb_2).mkdir(parents=True, exist_ok=True)
+            if self.has_3_usb:
+                Path(self.usb_3).mkdir(parents=True, exist_ok=True)
+            if self.has_4_usb:
+                Path(self.usb_4).mkdir(parents=True, exist_ok=True)
+            if self.has_5_usb:
+                Path(self.usb_5).mkdir(parents=True, exist_ok=True)
+            if self.has_6_usb:
+                Path(self.usb_6).mkdir(parents=True, exist_ok=True)
 
         # # USB
         # usb_dir = os.listdir(self.usb_base_path)
@@ -148,30 +169,6 @@ class SetupFP():
         #     self.usb_none = os.path.join('/home','pi','FieldPrism','Data','Images_Unprocessed')
         #     print(f"{bcolors.FAIL}            {self.usb_none}{bcolors.ENDC}")
         #     self.save_to_boot = True
-        
-        print(f"{bcolors.HEADER}Creating Save Directories{bcolors.ENDC}")
-        # Will only save to boot device
-        if not self.has_1_usb and not self.has_2_usb and not self.has_3_usb and not self.has_4_usb and not self.has_5_usb and not self.has_6_usb and self.save_to_boot:
-            Path(self.usb_none).mkdir(parents=True, exist_ok=True)
-        # No storage selected
-        elif not self.has_1_usb and not self.has_2_usb  and not self.has_3_usb  and not self.has_4_usb  and not self.has_5_usb  and not self.has_6_usb and not self.save_to_boot:
-            print(f"{bcolors.FAIL}ERROR: NO STORAGE DETECTED. DATA WILL NOT BE SAVED ANYWHERE!!!{bcolors.ENDC}")
-            print(f"{bcolors.FAIL}       Power off device, add storage, try again. Or edit FieldPrism.yaml: always_save_to_boot = True{bcolors.ENDC}")
-        if self.has_1_usb:
-            Path(self.usb_1).mkdir(parents=True, exist_ok=True)
-        if self.has_2_usb:
-            Path(self.usb_2).mkdir(parents=True, exist_ok=True)
-        if self.has_3_usb:
-            Path(self.usb_3).mkdir(parents=True, exist_ok=True)
-        if self.has_4_usb:
-            Path(self.usb_4).mkdir(parents=True, exist_ok=True)
-        if self.has_5_usb:
-            Path(self.usb_5).mkdir(parents=True, exist_ok=True)
-        if self.has_6_usb:
-            Path(self.usb_6).mkdir(parents=True, exist_ok=True)
-        
-       
-
 
     def print_usb_error(self) -> None:
         print(f"{bcolors.FAIL}ERROR: USB device/s not mounted correctly. {bcolors.ENDC}")
