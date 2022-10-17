@@ -10,6 +10,7 @@ from utils import bcolors, load_cfg
 import matplotlib.pyplot as plt
 from run_gps import get_gps
 import psutil
+import numpy as np
 
 # print(f"{bcolors.OKGREEN}     {bcolors.ENDC}")
 
@@ -354,7 +355,7 @@ def main():
                     print(f'queue = {len(q_jpeg.tryGetAll())}')
                     with open(f"06_data/{int(time.time() * 10000)}.jpeg", "wb") as f:
                         f.write(bytearray(enc_frame.getData()))
-                    cv2.imshow("saved", enc_frame.getData())
+                    cv2.imshow("saved", np.array(bytearray(enc_frame.getData())))
                     TAKE_PHOTO = False
                     print(f'saved = {saved}')
                 else:
