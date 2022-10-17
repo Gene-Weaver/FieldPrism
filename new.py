@@ -358,7 +358,7 @@ def main():
                         with open(f"06_data/{int(time.time() * 10000)}.jpeg", "wb") as f:
                             # f.write(bytearray(enc_frame.getData()))
                             f.write(save_frame)
-                        shape2 = (enc_frame.getHeight() * 3 // 2, enc_frame.getWidth())
+                        shape2 = (save_frame.getHeight() * 3 // 2, save_frame.getWidth())
                         save_frame = cv2.cvtColor(save_frame.reshape(shape2), cv2.COLOR)
                         cv2.imshow("saved", save_frame)
                         save_frame = []
