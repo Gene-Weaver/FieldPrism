@@ -353,14 +353,14 @@ def main():
             #     vframe2 = cv2.rotate(vframe2, cv2.ROTATE_180)
             #     cv2.imshow('video', vframe2)
 
-            
+            ispFrames = ispQueue.tryGetAll()
             # ispFrames = ispQueue.tryGetAll()
             # for ispFrame in ispFrames:
             #     # time.sleep(0.1)
             #     pass
                 # cv2.imshow('isp', ispFrame.getCvFrame())
 
-            if TAKE_PHOTO:
+            # if TAKE_PHOTO:
                 # stillFrames = stillQueue.tryGetAll()
                 # if len(stillFrames) >= 1:
                 #     for stillFrame in stillFrames:
@@ -376,6 +376,30 @@ def main():
                 #         route_save_image(cfg,save_frame)
                 #         TAKE_PHOTO = False
                 # else:
+                # print(f"       Capturing Image")
+                # save_frame = ispFrames.getCvFrame()
+                # save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
+                # frame = cv2.pyrDown(save_frame)
+                # frame = cv2.pyrDown(frame)  
+                # # plt.imshow(frame)
+                # cv2.imshow('still', frame)
+                # # Save
+                # print(f"       GPS Activated")
+                # route_save_image(cfg,save_frame)
+                # GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
+                # TAKE_PHOTO = False
+                # time.sleep(0.1)
+                # print(f"{bcolors.FAIL}Ready{bcolors.ENDC}")
+
+            key = cv2.waitKey(50)
+            if keyboard.is_pressed('6'):
+                break
+            elif keyboard.is_pressed('1'):
+                ctrl = dai.CameraControl()
+                ctrl.setCaptureStill(True)
+                configQueue.send(ctrl)
+                # TAKE_PHOTO = True
+                print(f"       Camera Activated")
                 print(f"       Capturing Image")
                 save_frame = ispFrames.getCvFrame()
                 save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
@@ -387,20 +411,9 @@ def main():
                 print(f"       GPS Activated")
                 route_save_image(cfg,save_frame)
                 GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
-                TAKE_PHOTO = False
-                time.sleep(0.1)
+                # TAKE_PHOTO = False
+                # time.sleep(0.1)
                 print(f"{bcolors.FAIL}Ready{bcolors.ENDC}")
-
-            key = cv2.waitKey(50)
-            if keyboard.is_pressed('6'):
-                break
-            elif keyboard.is_pressed('1'):
-                ctrl = dai.CameraControl()
-                ctrl.setCaptureStill(True)
-                configQueue.send(ctrl)
-                ispFrames = ispQueue.get()
-                TAKE_PHOTO = True
-                print(f"       Camera Activated")
                 # time.sleep(3)
 
 def route():
