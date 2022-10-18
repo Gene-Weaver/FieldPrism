@@ -296,7 +296,7 @@ def main():
     camRgb = pipeline.create(dai.node.ColorCamera)
     # camRgb.setPreviewSize(1920, 1080)
     camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_12_MP)
-    camRgb.setFps(2)
+    camRgb.setFps(1)
     # camRgb.setInterleaved(False)
     # camRgb.setColorOrder(dai.ColorCameraProperties.ColorOrder.RGB)
     # camRgb.setIspScale(2,17) # 1080P -> 720P
@@ -340,8 +340,8 @@ def main():
         # Get data queues
         # controlQueue = device.getInputQueue('control')
         # configQueue = device.getInputQueue('config')
-        ispQueue = device.getOutputQueue('isp', maxSize=30, blocking=False)
-        videoQueue = device.getOutputQueue('video', maxSize=30, blocking=False)
+        ispQueue = device.getOutputQueue('isp', maxSize=1, blocking=False)
+        videoQueue = device.getOutputQueue('video', maxSize=1, blocking=False)
         # stillQueue = device.getOutputQueue('still', maxSize=1, blocking=True)
 
         # Output queue will be used to get the rgb frames from the output defined above
