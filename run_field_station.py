@@ -213,7 +213,6 @@ class ImageData:
         self.lat_error_est,self.lon_error_est,self.alt_error_est,
         self.filename,self.filename_ext,self.path_from_fp,self.path_to_saved]], columns=self.headers)
 
-        print(f'new-data = {new_data}')
         self.save_data(new_data)
 
         print('Post init ImageData - Done')
@@ -225,12 +224,12 @@ class ImageData:
             drive_num = num + 1
             name_has = ''.join(['self.cfg.has_',str(drive_num),'_usb'])
             name_data = ''.join(['self.cfg.dir_data_',str(drive_num)])
-            # has_usb = False
-            # data_name = ''
-            has_usb = exec("%s" % (name_has))
-            data_name = exec("%s" % (name_data))
-            print(f'name_has - {name_has}')
-            print(f'name_data - {name_data}')
+            has_usb = False
+            data_name = ''
+            exec("has_usb = %s" % (name_has))
+            exec("data_name = %s" % (name_data))
+            print(f'name_has - {has_usb}')
+            print(f'name_data - {data_name}')
             if has_usb:
                 self.save_csv(data_name, new_data)
         print('save_data - done')
