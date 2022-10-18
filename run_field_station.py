@@ -400,6 +400,7 @@ def route():
     while True:
         key = cv2.waitKey(1)
         if keyboard.is_pressed('6'):
+            print(f"{bcolors.HEADER}Exiting FieldPrism{bcolors.ENDC}")
             break
         elif keyboard.is_pressed('1'):
             print("Entering main()")
