@@ -423,6 +423,8 @@ def main():
         # Make sure the destination path is present before starting to store the examples
         cfg = SetupFP()
         if cfg.storage_present == False:
+            print(f"{bcolors.HEADER}Stopping...{bcolors.ENDC}")
+            print_options()
             raise fragile.Break
         else:
             # Get data queues
@@ -457,24 +459,23 @@ def main():
                 key = cv2.waitKey(50)
                 if keyboard.is_pressed('6'):
                     print(f"{bcolors.HEADER}Stopping...{bcolors.ENDC}")
-                    print("main: 1")
-                    print("align_camera: 3")
-                    print("Exit: 6")
+                    print_options()
                     break
                 elif keyboard.is_pressed('1'):
                     TAKE_PHOTO = True
                     print(f"       Camera Activated")
 
-
+def print_options():
+    print("main: 1")
+    print("align_camera: 3")
+    print("Exit: 6")
 
 
     
 
  
 def route():
-    print("main: 1")
-    print("align_camera: 3")
-    print("Exit: 6")
+    print_options()
     while True:
         key = cv2.waitKey(1)
         if keyboard.is_pressed('6'):
