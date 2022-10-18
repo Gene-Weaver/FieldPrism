@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 
+from mimetypes import init
 import time, os, stat, subprocess, pprint
 from pathlib import Path
-import cv2
+import cv2, csv
+import pandas as pd
 import depthai as dai
 import keyboard
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from utils import bcolors, load_cfg, get_datetime
 import matplotlib.pyplot as plt
 from run_gps import get_gps
@@ -44,22 +46,15 @@ class SetupFP:
     dir_data_4: str = ''
     dir_data_5: str = ''
     dir_data_6: str = ''
-    dir_data_session_none: str = ''
-    dir_data_session_1: str = ''
-    dir_data_session_2: str = ''
-    dir_data_session_3: str = ''
-    dir_data_session_4: str = ''
-    dir_data_session_5: str = ''
-    dir_data_session_6: str = ''
 
     def __post_init__(self) -> None:
         self.usb_base_path = '/media/'# OR '/media/pi/' # os.path.join('media','pi')
         self.dir_images_unprocessed = os.path.join('FieldPrism','Images_Unprocessed')
 
         self.session_time = get_datetime()
-        self.dir_data = os.path.join('FieldPrism','Images_Unprocessed')
-        self.dir_data_session = os.path.join('FieldPrism','Images_Unprocessed')
-
+        self.dir_data = os.path.join('FieldPrism','Data')
+        self.dir_data_session = os.path.join('FieldPrism','Data')
+        self.name_session_csv = ''.join(['FieldPrism_Data__',self.session_time,'.csv'])
 
         print(f"{bcolors.HEADER}Base USB Path: {self.usb_base_path}{bcolors.ENDC}")
         print(f"{bcolors.OKCYAN}       Possible USB Devices: {os.listdir(self.usb_base_path)}{bcolors.ENDC}")     
@@ -78,7 +73,7 @@ class SetupFP:
         # USB save to all
         device_count = 0
         list_drives = ["/dev/sda1", "/dev/sdb1", "/dev/sdc1", "/dev/sdd1", "/dev/sde1", "/dev/sdf1"]
-        list_has_usb = [self.has_1_usb, self.has_2_usb, self.has_3_usb, self.has_4_usb, self.has_5_usb, self.has_6_usb]
+        list_data = [self.dir_data_1, self.dir_data_2, self.dir_data_3, self.dir_data_4, self.dir_data_5, self.dir_data_6]
         list_usb = [self.usb_1, self.usb_2, self.usb_3, self.usb_4, self.usb_5, self.usb_6]
         for num, p in enumerate(list_drives):
             if isblockdevice(p):
@@ -88,55 +83,26 @@ class SetupFP:
                 drive_name = "".join(['USB',str(drive_num)])
                 if os.path.ismount(path_to_drive):
                     print(f"{bcolors.OKGREEN}       Storage Drive Exists({p}): [{isblockdevice(p)}] and is mounted to ({path_to_drive}): [{os.path.ismount(path_to_drive)}]{bcolors.ENDC}")
-                    print(f'self.usb_1 {self.usb_1}')
-                    print(f'self.has_1_usb {self.has_1_usb}')
+                    # print(f'self.usb_1 {self.usb_1}')
+                    # print(f'self.has_1_usb {self.has_1_usb}')
                     name_has = ''.join(['self.has_',str(drive_num),'_usb'])
                     name_is = ''.join(['self.usb_',str(drive_num)])
+                    name_data = ''.join(['self.dir_data_',str(drive_num)])
                     exec("%s = %s" % (name_has, True))
                     exec("%s = %s" % (name_is, "os.path.join(self.usb_base_path, drive_name, self.dir_images_unprocessed)"))
-                    # exec("%s = %d" % (list_usb[num], os.path.join(self.usb_base_path, drive_name, self.dir_images_unprocessed)))
-                    #
-                    #  vars()[list_has_usb[num]] = True
-                    # vars()[list_usb[num]] = os.path.join(self.usb_base_path, drive_name, self.dir_images_unprocessed)
-                    print(f'self.usb_1 {self.usb_1}')
-                    print(f'self.has_1_usb {self.has_1_usb}')
-                    print(f"{bcolors.OKGREEN}              Path to USB {str(drive_num)} [{drive_name}]: {list_usb[num]}{bcolors.ENDC}")
-                # elif p == "/dev/sdb1":
-                #     if os.path.ismount('/media/USB2/'):
-                #         print(f"{bcolors.OKGREEN}       Storage Drive Exists({p}): [{isblockdevice(p)}] and is mounted to (/media/USB2/): [{os.path.ismount('/media/USB2/')}]{bcolors.ENDC}")
-                #         self.has_2_usb = True
-                #         self.usb_2 = os.path.join(self.usb_base_path,'USB2',self.dir_images_unprocessed)
-                #         print(f"{bcolors.OKGREEN}              Path to USB 2 [USB2]: {self.usb_2}{bcolors.ENDC}")
-                # elif p == "/dev/sdc1":
-                #     if os.path.ismount('/media/USB3/'):
-                #         print(f"{bcolors.OKGREEN}       Storage Drive Exists({p}): [{isblockdevice(p)}] and is mounted to (/media/USB3/): [{os.path.ismount('/media/USB3/')}]{bcolors.ENDC}")
-                #         self.has_3_usb = True
-                #         self.usb_3 = os.path.join(self.usb_base_path,'USB3',self.dir_images_unprocessed)
-                #         print(f"{bcolors.OKGREEN}              Path to USB 3 [USB3]: {self.usb_3}{bcolors.ENDC}")
-                # elif p == "/dev/sdd1":
-                #     if os.path.ismount('/media/USB4/'):
-                #         print(f"{bcolors.OKGREEN}       Storage Drive Exists({p}): [{isblockdevice(p)}] and is mounted to (/media/USB4/): [{os.path.ismount('/media/USB4/')}]{bcolors.ENDC}")
-                #         self.has_4_usb = True
-                #         self.usb_4 = os.path.join(self.usb_base_path,'USB4',self.dir_images_unprocessed)
-                #         print(f"{bcolors.OKGREEN}              Path to USB 4 [USB4]: {self.usb_4}{bcolors.ENDC}")
-                # elif p == "/dev/sde1":
-                #     if os.path.ismount('/media/USB5/'):
-                #         print(f"{bcolors.OKGREEN}       Storage Drive Exists({p}): [{isblockdevice(p)}] and is mounted to (/media/USB5/): [{os.path.ismount('/media/USB5/')}]{bcolors.ENDC}")
-                #         self.has_5_usb = True
-                #         self.usb_5 = os.path.join(self.usb_base_path,'USB5',self.dir_images_unprocessed)
-                #         print(f"{bcolors.OKGREEN}              Path to USB 5 [USB5]: {self.usb_5}{bcolors.ENDC}")
-                # elif p == "/dev/sdf1":
-                #     if os.path.ismount('/media/USB6/'):
-                #         print(f"{bcolors.OKGREEN}       Storage Drive Exists({p}): [{isblockdevice(p)}] and is mounted to (/media/USB6/): [{os.path.ismount('/media/USB6/')}]{bcolors.ENDC}")
-                #         self.has_6_usb = True
-                #         self.usb_6 = os.path.join(self.usb_base_path,'USB6',self.dir_images_unprocessed)
-                #         print(f"{bcolors.OKGREEN}              Path to USB 6 [USB6]: {self.usb_6}{bcolors.ENDC}")
+                    exec("%s = %s" % (name_data, "os.path.join(self.usb_base_path, drive_name, self.dir_data_session)"))
+                    # print(f'self.usb_1 {self.usb_1}')
+                    # print(f'self.has_1_usb {self.has_1_usb}')
+                    print(f"{bcolors.OKGREEN}              Path to USB Images{str(drive_num)} [{drive_name}]: {list_usb[num]}{bcolors.ENDC}")
+                    print(f"{bcolors.OKGREEN}              Path to USB Data{str(drive_num)} [{drive_name}]: {list_data[num]}{bcolors.ENDC}")
+
         device_count = sum([self.save_to_boot, self.has_1_usb, self.has_2_usb, self.has_3_usb, self.has_4_usb, self.has_5_usb, self.has_6_usb])
         print(f"{bcolors.HEADER}Number of storage drives: {device_count}{bcolors.ENDC}")
 
         if device_count == 0:
             self.print_usb_error()
             self.usb_none = os.path.join('/home','pi','FieldPrism','Data','Images_Unprocessed')
+            self.dir_data_none = os.path.join('/home','pi','FieldPrism','Data','Data')
             print(f"{bcolors.FAIL}       {self.usb_none}{bcolors.ENDC}")
             # self.save_to_boot = True
         else:
@@ -152,22 +118,34 @@ class SetupFP:
                 print(f"{bcolors.FAIL}       Power off device, add storage, try again. Or edit FieldPrism.yaml: always_save_to_boot = True{bcolors.ENDC}")
             if self.has_1_usb:
                 print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.usb_1}{bcolors.ENDC}")
+                print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.dir_data_1}{bcolors.ENDC}")
                 Path(self.usb_1).mkdir(parents=True, exist_ok=True)
+                Path(self.dir_data_1).mkdir(parents=True, exist_ok=True)
             if self.has_2_usb:
                 print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.usb_2}{bcolors.ENDC}")
+                print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.dir_data_2}{bcolors.ENDC}")
                 Path(self.usb_2).mkdir(parents=True, exist_ok=True)
+                Path(self.dir_data_2).mkdir(parents=True, exist_ok=True)
             if self.has_3_usb:
                 print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.usb_3}{bcolors.ENDC}")
+                print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.dir_data_3}{bcolors.ENDC}")
                 Path(self.usb_3).mkdir(parents=True, exist_ok=True)
+                Path(self.dir_data_3).mkdir(parents=True, exist_ok=True)
             if self.has_4_usb:
                 print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.usb_4}{bcolors.ENDC}")
+                print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.dir_data_4}{bcolors.ENDC}")
                 Path(self.usb_4).mkdir(parents=True, exist_ok=True)
+                Path(self.dir_data_4).mkdir(parents=True, exist_ok=True)
             if self.has_5_usb:
                 print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.usb_5}{bcolors.ENDC}")
+                print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.dir_data_5}{bcolors.ENDC}")
                 Path(self.usb_5).mkdir(parents=True, exist_ok=True)
+                Path(self.dir_data_5).mkdir(parents=True, exist_ok=True)
             if self.has_6_usb:
                 print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.usb_6}{bcolors.ENDC}")
+                print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.dir_data_6}{bcolors.ENDC}")
                 Path(self.usb_6).mkdir(parents=True, exist_ok=True)
+                Path(self.dir_data_6).mkdir(parents=True, exist_ok=True)
 
     def print_usb_error(self) -> None:
         print(f"{bcolors.FAIL}ERROR: USB device/s not mounted correctly. {bcolors.ENDC}")
@@ -186,7 +164,7 @@ class ImageData:
     path_to_saved: str = ''
     path_from_fp: str = ''
     path: str = ''
-    filename_all: str = ''
+    filename: str = ''
     filename_short: str = ''
     filename_ext: str = ''
 
@@ -203,7 +181,13 @@ class ImageData:
     lon_error_est: float = -888
     alt_error_est: float = -888
 
-    def __init__(self, path_to_saved: str, GPS_data: object):
+    cfg: object = field(init=False)
+
+    headers = ['session_time','name_session_csv','name_total_csv','filename_short', 'time_of_collection','latitude','longitude','altitude','climb','speed','lat_error_est','lon_error_est','alt_error_est',
+                    'filename','filename_ext','path_from_fp','path_to_saved']
+
+    def __init__(self, cfg, path_to_saved: str, GPS_data: object):
+        self.cfg = cfg
         self.path_to_saved = path_to_saved
         self.current_time = GPS_data.current_time
         self.latitude = GPS_data.latitude
@@ -216,11 +200,54 @@ class ImageData:
         self.alt_error_est = GPS_data.alt_error_est
 
     def __post_init__(self) -> None:
-        self.path, self.filename_all = os.path.split(self.path_to_saved)
-        self.filename_short = self.filename_all.split('.')[0]
-        self.filename_ext = self.filename_all.split('.')[1]
+        self.path, self.filename = os.path.split(self.path_to_saved)
+        self.filename_short = self.filename.split('.')[0]
+        self.filename_ext = self.filename.split('.')[1]
         self.path_from_fp = self.path_to_saved.split(os.path.sep)[3:]
         print(f'self.path_from_fp = {self.path_from_fp}')
+
+        new_data = pd.DataFrame([[self.cfg.session_time,self.cfg.name_session_csv,self.cfg.name_total_csv,
+        self.filename_short,self.time_of_collection,self.latitude,self.longitude,self.altitude,self.climb,self.speed,
+        self.lat_error_est,self.lon_error_est,self.alt_error_est,
+        self.filename,self.filename_ext,self.path_from_fp,self.path_to_saved]], columns=self.headers)
+
+        self.save_data(new_data)
+
+    def save_data(self, new_data) -> None:
+        list_has_usb = [self.has_1_usb, self.has_2_usb, self.has_3_usb, self.has_4_usb, self.has_5_usb, self.has_6_usb]
+        for num, p in enumerate(list_has_usb):
+            drive_num = num + 1
+            name_has = ''.join(['self.cfg.has_',str(drive_num),'_usb'])
+            name_data = ''.join(['self.dir_data_',str(drive_num)])
+            has_usb = exec("%s" % (name_has))
+            data_name = exec("%s" % (name_data))
+            if has_usb:
+                self.save_csv(data_name, new_data)
+
+    def save_csv(self, data_name, new_data) -> None:
+        ### Session
+        try:
+            csv_session = pd.read_csv(os.path.join(data_name, self.cfg.name_session_csv),dtype=str)
+        except:
+            # Create empty csv
+            with open(os.path.join(data_name, self.cfg.name_session_csv), 'w', newline='') as csvfile:
+                csvwriter = csv.writer(csvfile)
+                csvwriter.writerow(self.headers)
+            # csv_session = pd.read_csv(os.path.join(data_name, self.cfg.name_session_csv),dtype=str)
+        ### Total
+        try: 
+            # Try read csv 
+            csv_total = pd.read_csv(os.path.join(data_name, self.cfg.name_total_csv),dtype=str)
+        except:
+            # Create empty csv
+            with open(os.path.join(data_name, self.cfg.name_total_csv), 'w', newline='') as csvfile:
+                csvwriter = csv.writer(csvfile)
+                csvwriter.writerow(self.headers)
+            # csv_total = pd.read_csv(os.path.join(data_name, self.cfg.name_total_csv),dtype=str)
+        
+        new_data.to_csv(os.path.join(data_name, self.cfg.name_session_csv), mode='a', header=False)
+        new_data.to_csv(os.path.join(data_name, self.cfg.name_total_csv), mode='a', header=False)
+        
 
 def verify_mount_usb_locations():
     print(f"{bcolors.HEADER}List of mounted devices:{bcolors.ENDC}")
@@ -359,7 +386,7 @@ def main():
                 cv2.imshow('Saved Image', cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
                 print(f"       GPS Activated")
                 GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
-                ImageData(path_to_saved,GPS_data)
+                Image = ImageData(cfg, path_to_saved, GPS_data)
                 TAKE_PHOTO = False
                 print(f"{bcolors.OKGREEN}Ready{bcolors.ENDC}")
 
