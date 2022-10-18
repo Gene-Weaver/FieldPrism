@@ -217,23 +217,26 @@ def save_image(save_frame, name_time, save_dir):
     fname = os.path.join(save_dir,fname)
     cv2.imwrite(fname, save_frame)
     print(f"{bcolors.OKGREEN}       Image Saved: {fname}{bcolors.ENDC}")
+    path_to_saved = fname
+    return path_to_saved
 
 def route_save_image(Setup,save_frame):
     name_time = str(int(time.time() * 1000))
     if Setup.save_to_boot:
-        save_image(save_frame, name_time, Setup.usb_none)
+        path_to_saved = save_image(save_frame, name_time, Setup.usb_none)
     if Setup.has_1_usb:
-        save_image(save_frame, name_time, Setup.usb_1)
+        path_to_saved = save_image(save_frame, name_time, Setup.usb_1)
     if Setup.has_2_usb:
-        save_image(save_frame, name_time, Setup.usb_2)
+        path_to_saved = save_image(save_frame, name_time, Setup.usb_2)
     if Setup.has_3_usb:
-        save_image(save_frame, name_time, Setup.usb_3)
+        path_to_saved = save_image(save_frame, name_time, Setup.usb_3)
     if Setup.has_4_usb:
-        save_image(save_frame, name_time, Setup.usb_4)
+        path_to_saved = save_image(save_frame, name_time, Setup.usb_4)
     if Setup.has_5_usb:
-        save_image(save_frame, name_time, Setup.usb_5)
+        path_to_saved = save_image(save_frame, name_time, Setup.usb_5)
     if Setup.has_6_usb:
-        save_image(save_frame, name_time, Setup.usb_6)
+        path_to_saved = save_image(save_frame, name_time, Setup.usb_6)
+    return path_to_saved
 
 def align_camera():
     # Create pipeline
@@ -390,14 +393,13 @@ def main():
                 save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
                 frame = cv2.pyrDown(save_frame)
                 frame = cv2.pyrDown(frame)  
-                # plt.imshow(frame)
-                cv2.imshow('still', frame)
                 # Save
+                path_to_saved = route_save_image(cfg,save_frame)
+                cv2.imshow('Saved Image', cv2.imread(path_to_saved))
                 print(f"       GPS Activated")
-                route_save_image(cfg,save_frame)
                 GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
                 TAKE_PHOTO = False
-                print(f"{bcolors.FAIL}Ready{bcolors.ENDC}")
+                print(f"{bcolors.OKGREEN}Ready{bcolors.ENDC}")
 
             key = cv2.waitKey(50)
             if keyboard.is_pressed('6'):
