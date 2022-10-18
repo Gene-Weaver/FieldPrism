@@ -294,6 +294,8 @@ def main():
     camRgb = pipeline.create(dai.node.ColorCamera)
     # camRgb.setPreviewSize(1920, 1080)
     camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_12_MP)
+    camRgb.setInterleaved(False)
+    camRgb.setColorOrder(dai.ColorCameraProperties.ColorOrder.RGB)
     # camRgb.setIspScale(2,6) # 1080P -> 720P
     stillEncoder = pipeline.create(dai.node.VideoEncoder)
 
@@ -310,8 +312,9 @@ def main():
     stillMjpegOut.setStreamName('still')
 
     # Properties
-    camRgb.setVideoSize(1920, 1080)
-    # camRgb.setVideoSize(852, 480)
+    # camRgb.setVideoSize(4032, 3040)
+    camRgb.setVideoSize(852, 480)
+    # camRgb.setVideoSize(426, 240)
     stillEncoder.setDefaultProfilePreset(1, dai.VideoEncoderProperties.Profile.MJPEG)
 
     # Linking
@@ -348,8 +351,8 @@ def main():
             vidFrames = videoQueue.tryGetAll()
             for vidFrame in vidFrames:
                 vframe = vidFrame.getCvFrame()
-                vframe = cv2.pyrDown(vframe)
-                vframe = cv2.pyrDown(vframe)
+                # vframe = cv2.pyrDown(vframe)
+                # vframe = cv2.pyrDown(vframe)
                 vframe = cv2.rotate(vframe, cv2.ROTATE_180)
                 cv2.imshow('preview', vframe)
 
