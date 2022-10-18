@@ -296,7 +296,7 @@ def main():
     camRgb = pipeline.create(dai.node.ColorCamera)
     # camRgb.setPreviewSize(1920, 1080)
     camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_12_MP)
-    camRgb.setFps(1)
+    # camRgb.setFps(1)
     # camRgb.setInterleaved(False)
     # camRgb.setColorOrder(dai.ColorCameraProperties.ColorOrder.RGB)
     # camRgb.setIspScale(2,17) # 1080P -> 720P
@@ -385,6 +385,7 @@ def main():
                 #         TAKE_PHOTO = False
                 # else:
                 print(f"       Capturing Image")
+                ispFrames = ispQueue.get()
                 save_frame = ispFrames.getCvFrame()
                 save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
                 frame = cv2.pyrDown(save_frame)
