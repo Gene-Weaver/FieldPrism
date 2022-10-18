@@ -93,8 +93,8 @@ class SetupFP:
                     exec("%s = %s" % (name_data, "os.path.join(self.usb_base_path, drive_name, self.dir_data_session)"))
                     # print(f'self.usb_1 {self.usb_1}')
                     # print(f'self.has_1_usb {self.has_1_usb}')
-                    print(f"{bcolors.OKGREEN}              Path to USB Images{str(drive_num)} [{drive_name}]: {list_usb[num]}{bcolors.ENDC}")
-                    print(f"{bcolors.OKGREEN}              Path to USB Data{str(drive_num)} [{drive_name}]: {list_data[num]}{bcolors.ENDC}")
+                    print(f"{bcolors.OKGREEN}              Path to USB Images {str(drive_num)} [{drive_name}]: {name_is}{bcolors.ENDC}")
+                    print(f"{bcolors.OKGREEN}              Path to USB Data {str(drive_num)} [{drive_name}]: {name_data}{bcolors.ENDC}")
 
         device_count = sum([self.save_to_boot, self.has_1_usb, self.has_2_usb, self.has_3_usb, self.has_4_usb, self.has_5_usb, self.has_6_usb])
         print(f"{bcolors.HEADER}Number of storage drives: {device_count}{bcolors.ENDC}")
@@ -187,6 +187,7 @@ class ImageData:
                     'filename','filename_ext','path_from_fp','path_to_saved']
 
     def __init__(self, cfg, path_to_saved: str, GPS_data: object):
+        print('Init ImageData')
         self.cfg = cfg
         self.path_to_saved = path_to_saved
         self.current_time = GPS_data.current_time
@@ -198,8 +199,10 @@ class ImageData:
         self.lat_error_est = GPS_data.lat_error_est
         self.lon_error_est = GPS_data.lon_error_est
         self.alt_error_est = GPS_data.alt_error_est
+        print('Init ImageData - Done')
 
     def __post_init__(self) -> None:
+        print('Post init ImageData')
         self.path, self.filename = os.path.split(self.path_to_saved)
         self.filename_short = self.filename.split('.')[0]
         self.filename_ext = self.filename.split('.')[1]
@@ -211,9 +214,13 @@ class ImageData:
         self.lat_error_est,self.lon_error_est,self.alt_error_est,
         self.filename,self.filename_ext,self.path_from_fp,self.path_to_saved]], columns=self.headers)
 
+        print(f'new-data = {new_data}')
         self.save_data(new_data)
 
+        print('Post init ImageData - Done')
+
     def save_data(self, new_data) -> None:
+        print('save_data')
         list_has_usb = [self.has_1_usb, self.has_2_usb, self.has_3_usb, self.has_4_usb, self.has_5_usb, self.has_6_usb]
         for num, p in enumerate(list_has_usb):
             drive_num = num + 1
@@ -223,12 +230,17 @@ class ImageData:
             data_name = exec("%s" % (name_data))
             if has_usb:
                 self.save_csv(data_name, new_data)
+        print('save_data - done')
 
     def save_csv(self, data_name, new_data) -> None:
+        print('save_csv')
+        print(f'session path - {os.path.join(data_name, self.cfg.name_session_csv)}')
+        print(f'total path - {os.path.join(data_name, self.cfg.name_total_csv)}')
         ### Session
         try:
             csv_session = pd.read_csv(os.path.join(data_name, self.cfg.name_session_csv),dtype=str)
-        except:
+        except Exception as e:
+            print(e)
             # Create empty csv
             with open(os.path.join(data_name, self.cfg.name_session_csv), 'w', newline='') as csvfile:
                 csvwriter = csv.writer(csvfile)
@@ -238,7 +250,8 @@ class ImageData:
         try: 
             # Try read csv 
             csv_total = pd.read_csv(os.path.join(data_name, self.cfg.name_total_csv),dtype=str)
-        except:
+        except Exception as e:
+            print(e)
             # Create empty csv
             with open(os.path.join(data_name, self.cfg.name_total_csv), 'w', newline='') as csvfile:
                 csvwriter = csv.writer(csvfile)
@@ -247,6 +260,7 @@ class ImageData:
         
         new_data.to_csv(os.path.join(data_name, self.cfg.name_session_csv), mode='a', header=False)
         new_data.to_csv(os.path.join(data_name, self.cfg.name_total_csv), mode='a', header=False)
+        print('save_csv - done')
         
 
 def verify_mount_usb_locations():
