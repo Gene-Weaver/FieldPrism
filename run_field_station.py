@@ -220,11 +220,11 @@ class ImageData:
 
     def save_data(self, new_data) -> None:
         print('save_data')
-        list_has_usb = [self.has_1_usb, self.has_2_usb, self.has_3_usb, self.has_4_usb, self.has_5_usb, self.has_6_usb]
+        list_has_usb = [self.cfg.has_1_usb, self.cfg.has_2_usb, self.cfg.has_3_usb, self.cfg.has_4_usb, self.cfg.has_5_usb, self.cfg.has_6_usb]
         for num, p in enumerate(list_has_usb):
             drive_num = num + 1
             name_has = ''.join(['self.cfg.has_',str(drive_num),'_usb'])
-            name_data = ''.join(['self.dir_data_',str(drive_num)])
+            name_data = ''.join(['self.cfg.dir_data_',str(drive_num)])
             has_usb = exec("%s" % (name_has))
             data_name = exec("%s" % (name_data))
             if has_usb:
