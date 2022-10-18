@@ -367,6 +367,22 @@ TODO
     - see if USB hub will work 
 
 '''
+class fragile(object):
+    class Break(Exception):
+      """Break out of the with statement"""
+
+    def __init__(self, value):
+        self.value = value
+
+    def __enter__(self):
+        return self.value.__enter__()
+
+    def __exit__(self, etype, value, traceback):
+        error = self.value.__exit__(etype, value, traceback)
+        if etype == self.Break:
+            return True
+        return error
+
 def main():
     cfg_user = load_cfg()
     # Create pipeline
@@ -391,7 +407,8 @@ def main():
     camRgb.video.link(videoOut.input)
 
     # Connect to device and start pipeline
-    with dai.Device(pipeline) as device:
+    # with dai.Device(pipeline) as device:
+    with fragile(dai.Device(pipeline)) as device:
         print('Connected cameras: ', device.getConnectedCameras())
         # Print out usb speed
         print('Usb speed: ', device.getUsbSpeed().name)
@@ -399,7 +416,7 @@ def main():
         # Make sure the destination path is present before starting to store the examples
         cfg = SetupFP()
         if cfg.storage_present == False:
-            pass
+            raise fragile.Break
         else:
             # Get data queues
             ispQueue = device.getOutputQueue('isp', maxSize=1, blocking=False)
