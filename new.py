@@ -287,7 +287,6 @@ TODO
 def main():
     cfg_user = load_cfg()
     # Create pipeline
-    # Start defining a pipeline
     pipeline = dai.Pipeline()
 
     # Define a source - color camera
