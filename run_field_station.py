@@ -391,11 +391,10 @@ def main():
                 ispFrames = ispQueue.get()
                 save_frame = ispFrames.getCvFrame()
                 save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
-                frame = cv2.pyrDown(save_frame)
-                frame = cv2.pyrDown(frame)  
+                
                 # Save
                 path_to_saved = route_save_image(cfg,save_frame)
-                cv2.imshow('Saved Image', cv2.imread(path_to_saved))
+                cv2.imshow('Saved Image', cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved))))
                 print(f"       GPS Activated")
                 GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
                 TAKE_PHOTO = False
