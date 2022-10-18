@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from mimetypes import init
+from operator import index
 import time, os, stat, subprocess, pprint
 from pathlib import Path
 import cv2, csv
@@ -262,26 +263,24 @@ class ImageData:
         try:
             csv_session = pd.read_csv(os.path.join(data_name, self.cfg.name_session_csv),dtype=str)
         except Exception as e:
-            print(e)
+            print(f"{bcolors.WARNING}       Initializing new session .csv file: {os.path.join(data_name, self.cfg.name_session_csv)}{bcolors.ENDC}")
             # Create empty csv
             with open(os.path.join(data_name, self.cfg.name_session_csv), 'w', newline='') as csvfile:
                 csvwriter = csv.writer(csvfile)
                 csvwriter.writerow(self.headers)
-            # csv_session = pd.read_csv(os.path.join(data_name, self.cfg.name_session_csv),dtype=str)
         ### Total
         try: 
             # Try read csv 
             csv_total = pd.read_csv(os.path.join(data_name, self.cfg.name_total_csv),dtype=str)
         except Exception as e:
-            print(e)
+            print(f"{bcolors.WARNING}       Initializing new FieldPrism_Data.csv file: {os.path.join(data_name, self.cfg.name_total_csv)}{bcolors.ENDC}")
             # Create empty csv
             with open(os.path.join(data_name, self.cfg.name_total_csv), 'w', newline='') as csvfile:
                 csvwriter = csv.writer(csvfile)
                 csvwriter.writerow(self.headers)
-            # csv_total = pd.read_csv(os.path.join(data_name, self.cfg.name_total_csv),dtype=str)
         
-        new_data.to_csv(os.path.join(data_name, self.cfg.name_session_csv), mode='a', header=False)
-        new_data.to_csv(os.path.join(data_name, self.cfg.name_total_csv), mode='a', header=False)
+        new_data.to_csv(os.path.join(data_name, self.cfg.name_session_csv), mode='a', header=False, index=False)
+        new_data.to_csv(os.path.join(data_name, self.cfg.name_total_csv), mode='a', header=False, index=False)
         print('save_csv - done')
         
 
@@ -313,7 +312,7 @@ def save_image(save_frame, name_time, save_dir):
     return path_to_saved
 
 def route_save_image(Setup,save_frame):
-    name_time = str(int(time.time() * 1000))
+    name_time = '_'.join(['img',str(int(time.time() * 1000))])
     if Setup.save_to_boot:
         path_to_saved = save_image(save_frame, name_time, Setup.usb_none)
     if Setup.has_1_usb:
