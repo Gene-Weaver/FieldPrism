@@ -297,33 +297,33 @@ def main():
     camRgb.setInterleaved(False)
     camRgb.setColorOrder(dai.ColorCameraProperties.ColorOrder.RGB)
     # camRgb.setIspScale(2,6) # 1080P -> 720P
-    stillEncoder = pipeline.create(dai.node.VideoEncoder)
+    # stillEncoder = pipeline.create(dai.node.VideoEncoder)
 
-    controlIn = pipeline.create(dai.node.XLinkIn)
-    configIn = pipeline.create(dai.node.XLinkIn)
+    # controlIn = pipeline.create(dai.node.XLinkIn)
+    # configIn = pipeline.create(dai.node.XLinkIn)
     ispOut = pipeline.create(dai.node.XLinkOut)
     videoOut = pipeline.create(dai.node.XLinkOut)
-    stillMjpegOut = pipeline.create(dai.node.XLinkOut)
+    # stillMjpegOut = pipeline.create(dai.node.XLinkOut)
 
-    controlIn.setStreamName('control')
-    configIn.setStreamName('config')
+    # controlIn.setStreamName('control')
+    # configIn.setStreamName('config')
     ispOut.setStreamName('isp')
     videoOut.setStreamName('video')
-    stillMjpegOut.setStreamName('still')
+    # stillMjpegOut.setStreamName('still')
 
     # Properties
     # camRgb.setVideoSize(4032, 3040)
     # camRgb.setVideoSize(852, 480)
     camRgb.setVideoSize(426, 240)
-    stillEncoder.setDefaultProfilePreset(1, dai.VideoEncoderProperties.Profile.MJPEG)
+    # stillEncoder.setDefaultProfilePreset(1, dai.VideoEncoderProperties.Profile.MJPEG)
 
     # Linking
     camRgb.isp.link(ispOut.input)
-    camRgb.still.link(stillEncoder.input)
+    # camRgb.still.link(stillEncoder.input)
     camRgb.video.link(videoOut.input)
-    controlIn.out.link(camRgb.inputControl)
-    configIn.out.link(camRgb.inputConfig)
-    stillEncoder.bitstream.link(stillMjpegOut.input)
+    # controlIn.out.link(camRgb.inputControl)
+    # configIn.out.link(camRgb.inputConfig)
+    # stillEncoder.bitstream.link(stillMjpegOut.input)
 
     # Connect to device and start pipeline
     with dai.Device(pipeline) as device:
@@ -335,11 +335,11 @@ def main():
         cfg = SetupFP()
 
         # Get data queues
-        controlQueue = device.getInputQueue('control')
+        # controlQueue = device.getInputQueue('control')
         configQueue = device.getInputQueue('config')
-        ispQueue = device.getOutputQueue('isp', maxSize=1, blocking=False)
-        videoQueue = device.getOutputQueue('video', maxSize=1, blocking=False)
-        stillQueue = device.getOutputQueue('still', maxSize=1, blocking=True)
+        ispQueue = device.getOutputQueue('isp', maxSize=30, blocking=False)
+        videoQueue = device.getOutputQueue('video', maxSize=30, blocking=False)
+        # stillQueue = device.getOutputQueue('still', maxSize=1, blocking=True)
 
         # Output queue will be used to get the rgb frames from the output defined above
         # qRgb = device.getOutputQueue(name="rgb", maxSize=30, blocking=False)
