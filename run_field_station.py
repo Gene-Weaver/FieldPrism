@@ -215,7 +215,6 @@ class ImageData:
                     'filename','filename_ext','path_from_fp','path_to_saved']
 
     def __init__(self, cfg, path_to_saved: str, GPS_data: object):
-        print('Init ImageData')
         self.cfg = cfg
         self.path_to_saved = path_to_saved
         self.current_time = GPS_data.current_time
@@ -227,14 +226,12 @@ class ImageData:
         self.lat_error_est = GPS_data.lat_error_est
         self.lon_error_est = GPS_data.lon_error_est
         self.alt_error_est = GPS_data.alt_error_est
-        print('Init ImageData - Done')
 
-        print('Post init ImageData')
         self.path, self.filename = os.path.split(self.path_to_saved)
         self.filename_short = self.filename.split('.')[0]
         self.filename_ext = self.filename.split('.')[1]
         self.path_from_fp = os.path.join(*self.path_to_saved.split(os.path.sep)[3:])
-        print(f'self.path_from_fp = {self.path_from_fp}')
+        # print(f'self.path_from_fp = {self.path_from_fp}')
 
         new_data = pd.DataFrame([[self.cfg.session_time,self.cfg.name_session_csv,self.cfg.name_total_csv,
         self.filename_short,self.current_time,self.latitude,self.longitude,self.altitude,self.climb,self.speed,
@@ -243,11 +240,7 @@ class ImageData:
 
         self.save_data(new_data)
 
-        print('Post init ImageData - Done')
-
     def save_data(self, new_data) -> None:
-        print('save_data')
-        
         if self.cfg.save_to_boot:
             self.save_csv(self.cfg.dir_data_none, new_data)
         if self.cfg.has_1_usb:
@@ -263,28 +256,7 @@ class ImageData:
         if self.cfg.has_6_usb:
             self.save_csv(self.cfg.dir_data_6, new_data)
 
-        print('save_data - done')
-
-
-        # list_has_usb = [self.cfg.has_1_usb, self.cfg.has_2_usb, self.cfg.has_3_usb, self.cfg.has_4_usb, self.cfg.has_5_usb, self.cfg.has_6_usb]
-        # for num, p in enumerate(list_has_usb):
-        #     drive_num = num + 1
-        #     name_has = ''.join(['self.cfg.has_',str(drive_num),'_usb'])
-        #     name_data = ''.join(['self.cfg.dir_data_',str(drive_num)])
-        #     # has_usb = False
-        #     # data_name = ''
-        #     exec("has_usb = %s" % (name_has))
-        #     exec("data_name = %s" % (name_data))
-        #     print(f'name_has - {has_usb}')
-        #     print(f'name_data - {data_name}')
-        #     if has_usb:
-        #         self.save_csv(data_name, new_data)
-        # print('save_data - done')
-
     def save_csv(self, data_name, new_data) -> None:
-        print('save_csv')
-        print(f'session path - {os.path.join(data_name, self.cfg.name_session_csv)}')
-        print(f'total path - {os.path.join(data_name, self.cfg.name_total_csv)}')
         ### Session
         try:
             csv_session = pd.read_csv(os.path.join(data_name, self.cfg.name_session_csv),dtype=str)
@@ -307,7 +279,8 @@ class ImageData:
         
         new_data.to_csv(os.path.join(data_name, self.cfg.name_session_csv), mode='a', header=False, index=False)
         new_data.to_csv(os.path.join(data_name, self.cfg.name_total_csv), mode='a', header=False, index=False)
-        print('save_csv - done')
+        print(f'{bcolors.OKGREEN}\n       Added 1 row to session CSV: {os.path.join(data_name, self.cfg.name_session_csv)}{bcolors.ENDC}')
+        print(f'{bcolors.OKGREEN}       Added 1 row to total CSV: {os.path.join(data_name, self.cfg.name_total_csv)}{bcolors.ENDC}\n')
         
 
 def verify_mount_usb_locations():
