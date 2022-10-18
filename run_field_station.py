@@ -18,7 +18,7 @@ import psutil
 
 @dataclass
 class SetupFP:
-    storage_present = True
+    storage_present = False
 
     usb_base_path: str = ''
     dir_images_unprocessed: str = ''
@@ -116,6 +116,7 @@ class SetupFP:
                 print(f"{bcolors.WARNING}WARNING: Only saving to microSD card. Recommend adding USB storage and trying again!{bcolors.ENDC}")
                 print(f"{bcolors.WARNING}       Creating (or verifying): {self.usb_none}{bcolors.ENDC}")
                 Path(self.usb_none).mkdir(parents=True, exist_ok=True)
+                self.storage_present = True
             # ---------- No storage selected ------------ #
             elif not self.has_1_usb and not self.has_2_usb  and not self.has_3_usb  and not self.has_4_usb  and not self.has_5_usb  and not self.has_6_usb and not self.save_to_boot:
                 print(f"{bcolors.FAIL}ERROR: NO STORAGE DETECTED. DATA WILL NOT BE SAVED ANYWHERE!!!{bcolors.ENDC}")
@@ -126,31 +127,37 @@ class SetupFP:
                 print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.dir_data_1}{bcolors.ENDC}")
                 Path(self.usb_1).mkdir(parents=True, exist_ok=True)
                 Path(self.dir_data_1).mkdir(parents=True, exist_ok=True)
+                self.storage_present = True
             if self.has_2_usb:
                 print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.usb_2}{bcolors.ENDC}")
                 print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.dir_data_2}{bcolors.ENDC}")
                 Path(self.usb_2).mkdir(parents=True, exist_ok=True)
                 Path(self.dir_data_2).mkdir(parents=True, exist_ok=True)
+                self.storage_present = True
             if self.has_3_usb:
                 print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.usb_3}{bcolors.ENDC}")
                 print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.dir_data_3}{bcolors.ENDC}")
                 Path(self.usb_3).mkdir(parents=True, exist_ok=True)
                 Path(self.dir_data_3).mkdir(parents=True, exist_ok=True)
+                self.storage_present = True
             if self.has_4_usb:
                 print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.usb_4}{bcolors.ENDC}")
                 print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.dir_data_4}{bcolors.ENDC}")
                 Path(self.usb_4).mkdir(parents=True, exist_ok=True)
                 Path(self.dir_data_4).mkdir(parents=True, exist_ok=True)
+                self.storage_present = True
             if self.has_5_usb:
                 print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.usb_5}{bcolors.ENDC}")
                 print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.dir_data_5}{bcolors.ENDC}")
                 Path(self.usb_5).mkdir(parents=True, exist_ok=True)
                 Path(self.dir_data_5).mkdir(parents=True, exist_ok=True)
+                self.storage_present = True
             if self.has_6_usb:
                 print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.usb_6}{bcolors.ENDC}")
                 print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.dir_data_6}{bcolors.ENDC}")
                 Path(self.usb_6).mkdir(parents=True, exist_ok=True)
                 Path(self.dir_data_6).mkdir(parents=True, exist_ok=True)
+                self.storage_present = True
 
     def print_usb_error(self) -> None:
         print(f"{bcolors.FAIL}ERROR: USB device/s not mounted correctly. {bcolors.ENDC}")
