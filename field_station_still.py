@@ -313,8 +313,8 @@ def main():
 
     # Properties
     # camRgb.setVideoSize(4032, 3040)
-    camRgb.setVideoSize(852, 480)
-    # camRgb.setVideoSize(426, 240)
+    # camRgb.setVideoSize(852, 480)
+    camRgb.setVideoSize(426, 240)
     stillEncoder.setDefaultProfilePreset(1, dai.VideoEncoderProperties.Profile.MJPEG)
 
     # Linking
