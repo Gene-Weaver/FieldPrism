@@ -224,8 +224,8 @@ class ImageData:
             drive_num = num + 1
             name_has = ''.join(['self.cfg.has_',str(drive_num),'_usb'])
             name_data = ''.join(['self.cfg.dir_data_',str(drive_num)])
-            has_usb = False
-            data_name = ''
+            # has_usb = False
+            # data_name = ''
             exec("has_usb = %s" % (name_has))
             exec("data_name = %s" % (name_data))
             print(f'name_has - {has_usb}')
