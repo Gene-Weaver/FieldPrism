@@ -104,6 +104,7 @@ class SetupFP:
             self.usb_none = os.path.join('/home','pi','FieldPrism','Data','Images_Unprocessed')
             self.dir_data_none = os.path.join('/home','pi','FieldPrism','Data','Data')
             print(f"{bcolors.FAIL}       {self.usb_none}{bcolors.ENDC}")
+            print(f"{bcolors.FAIL}       {self.dir_data_none}{bcolors.ENDC}")
             # self.save_to_boot = True
         else:
             print(f"{bcolors.HEADER}Creating Save Directories{bcolors.ENDC}")
@@ -219,20 +220,39 @@ class ImageData:
 
     def save_data(self, new_data) -> None:
         print('save_data')
-        list_has_usb = [self.cfg.has_1_usb, self.cfg.has_2_usb, self.cfg.has_3_usb, self.cfg.has_4_usb, self.cfg.has_5_usb, self.cfg.has_6_usb]
-        for num, p in enumerate(list_has_usb):
-            drive_num = num + 1
-            name_has = ''.join(['self.cfg.has_',str(drive_num),'_usb'])
-            name_data = ''.join(['self.cfg.dir_data_',str(drive_num)])
-            # has_usb = False
-            # data_name = ''
-            exec("has_usb = %s" % (name_has))
-            exec("data_name = %s" % (name_data))
-            print(f'name_has - {has_usb}')
-            print(f'name_data - {data_name}')
-            if has_usb:
-                self.save_csv(data_name, new_data)
+        
+        if self.cfg.save_to_boot:
+            self.save_csv(self.cfg.dir_data_none, new_data)
+        if self.cfg.has_1_usb:
+            self.save_csv(self.cfg.dir_data_1, new_data)
+        if self.cfg.has_2_usb:
+            self.save_csv(self.cfg.dir_data_2, new_data)
+        if self.cfg.has_3_usb:
+            self.save_csv(self.cfg.dir_data_3, new_data)
+        if self.cfg.has_4_usb:
+            self.save_csv(self.cfg.dir_data_4, new_data)
+        if self.cfg.has_5_usb:
+            self.save_csv(self.cfg.dir_data_5, new_data)
+        if self.cfg.has_6_usb:
+            self.save_csv(self.cfg.dir_data_6, new_data)
+
         print('save_data - done')
+
+
+        # list_has_usb = [self.cfg.has_1_usb, self.cfg.has_2_usb, self.cfg.has_3_usb, self.cfg.has_4_usb, self.cfg.has_5_usb, self.cfg.has_6_usb]
+        # for num, p in enumerate(list_has_usb):
+        #     drive_num = num + 1
+        #     name_has = ''.join(['self.cfg.has_',str(drive_num),'_usb'])
+        #     name_data = ''.join(['self.cfg.dir_data_',str(drive_num)])
+        #     # has_usb = False
+        #     # data_name = ''
+        #     exec("has_usb = %s" % (name_has))
+        #     exec("data_name = %s" % (name_data))
+        #     print(f'name_has - {has_usb}')
+        #     print(f'name_data - {data_name}')
+        #     if has_usb:
+        #         self.save_csv(data_name, new_data)
+        # print('save_data - done')
 
     def save_csv(self, data_name, new_data) -> None:
         print('save_csv')
