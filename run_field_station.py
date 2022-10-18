@@ -80,7 +80,7 @@ class SetupFP:
         list_drives = ["/dev/sda1", "/dev/sdb1", "/dev/sdc1", "/dev/sdd1", "/dev/sde1", "/dev/sdf1"]
         list_has_usb = [self.has_1_usb, self.has_2_usb, self.has_3_usb, self.has_4_usb, self.has_5_usb, self.has_6_usb]
         list_usb = [self.usb_1, self.usb_2, self.usb_3, self.usb_4, self.usb_5, self.usb_6]
-        for num, p in list_drives:
+        for num, p in enumerate(list_drives):
             if isblockdevice(p):
                 # if p == "/dev/sda1":
                 drive_num = num+1
