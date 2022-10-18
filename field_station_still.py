@@ -345,19 +345,20 @@ def main():
 
         TAKE_PHOTO = False
         while True:
-            # vidFrames = videoQueue.tryGetAll()
-            # for vidFrame in vidFrames:
-            #     vframe = vidFrame.getCvFrame()
-            #     vframe2 = cv2.pyrDown(vframe)
-            #     vframe2 = cv2.pyrDown(vframe2)
-            #     vframe2 = cv2.rotate(vframe2, cv2.ROTATE_180)
-            #     cv2.imshow('video', vframe2)
+            vidFrames = videoQueue.tryGetAll()
+            for vidFrame in vidFrames:
+                vframe = vidFrame.getCvFrame()
+                vframe2 = cv2.pyrDown(vframe)
+                vframe2 = cv2.pyrDown(vframe2)
+                vframe2 = cv2.rotate(vframe2, cv2.ROTATE_180)
+                cv2.imshow('preview', vframe2)
 
-            ispFrames = ispQueue.get()
-            # ispFrames = ispQueue.tryGetAll()
-            # for ispFrame in ispFrames:
+            # ispFrames = ispQueue.get()
+            ispFrames = ispQueue.tryGetAll()
+            for ispFrame in ispFrames:
             #     # time.sleep(0.1)
-            #     pass
+                # continue
+                isp = ispFrame.getCvFrame()
                 # cv2.imshow('isp', ispFrame.getCvFrame())
 
             if TAKE_PHOTO:
