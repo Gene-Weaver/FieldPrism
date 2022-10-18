@@ -311,18 +311,6 @@ class FieldStation():
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
         # cap = cv2.VideoCapture(0)
         # preview_window = PreviewWindow(frame_preview,cap)
         # save_window = PreviewWindow(frame_preview,image)
@@ -363,7 +351,7 @@ class FieldStation():
 class PreviewWindow():
     def __init__(self, window, image):
         self.window = window
-        self.cap = image
+        self.image = image
         self.width = 426
         self.height = 240
         self.interval = 20 # Interval in ms to get the latest frame
