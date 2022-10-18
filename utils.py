@@ -1,4 +1,4 @@
-import os, yaml
+import os, yaml, datetime
 
 class bcolors:
     HEADER = '\033[95m'
@@ -19,3 +19,9 @@ def load_cfg():
     with open("FieldPrism.yaml", "r") as ymlfile:
         cfg = yaml.full_load(ymlfile)
     return cfg
+
+def get_datetime():
+    day = "_".join([str(datetime.datetime.now().strftime("%Y")),str(datetime.datetime.now().strftime("%m")),str(datetime.datetime.now().strftime("%d"))])
+    time = "-".join([str(datetime.datetime.now().strftime("%H")),str(datetime.datetime.now().strftime("%M")),str(datetime.datetime.now().strftime("%S"))])
+    new_time = "__".join([day,time])
+    return new_time

@@ -6,7 +6,7 @@ import cv2
 import depthai as dai
 import keyboard
 from dataclasses import dataclass
-from utils import bcolors, load_cfg
+from utils import bcolors, load_cfg, get_datetime
 import matplotlib.pyplot as plt
 from run_gps import get_gps
 import psutil
@@ -14,7 +14,7 @@ import psutil
 # print(f"{bcolors.OKGREEN}     {bcolors.ENDC}")
 
 @dataclass
-class SetupFP():
+class SetupFP:
     usb_base_path: str = ''
     dir_images_unprocessed: str = ''
     usb_none: str = ''
@@ -33,9 +33,33 @@ class SetupFP():
     has_6_usb: bool = False
     save_to_boot: bool = False ######### currrently this overrides the config file
 
+    session_time: str = ''
+    name_session_csv: str = ''
+    name_total_csv: str = 'FieldPrism_Data.csv'
+
+    dir_data_none: str = ''
+    dir_data_1: str = ''
+    dir_data_2: str = ''
+    dir_data_3: str = ''
+    dir_data_4: str = ''
+    dir_data_5: str = ''
+    dir_data_6: str = ''
+    dir_data_session_none: str = ''
+    dir_data_session_1: str = ''
+    dir_data_session_2: str = ''
+    dir_data_session_3: str = ''
+    dir_data_session_4: str = ''
+    dir_data_session_5: str = ''
+    dir_data_session_6: str = ''
+
     def __post_init__(self) -> None:
         self.usb_base_path = '/media/'# OR '/media/pi/' # os.path.join('media','pi')
         self.dir_images_unprocessed = os.path.join('FieldPrism','Images_Unprocessed')
+
+        self.session_time = get_datetime()
+        self.dir_data = os.path.join('FieldPrism','Images_Unprocessed')
+        self.dir_data_session = os.path.join('FieldPrism','Images_Unprocessed')
+
 
         print(f"{bcolors.HEADER}Base USB Path: {self.usb_base_path}{bcolors.ENDC}")
         print(f"{bcolors.OKCYAN}       Possible USB Devices: {os.listdir(self.usb_base_path)}{bcolors.ENDC}")     
@@ -53,45 +77,53 @@ class SetupFP():
 
         # USB save to all
         device_count = 0
-        for p in ["/dev/sda1", "/dev/sdb1", "/dev/sdc1", "/dev/sdd1", "/dev/sde1", "/dev/sdf1"]:
+        list_drives = ["/dev/sda1", "/dev/sdb1", "/dev/sdc1", "/dev/sdd1", "/dev/sde1", "/dev/sdf1"]
+        list_has_usb = [self.has_1_usb, self.has_2_usb, self.has_3_usb, self.has_4_usb, self.has_5_usb, self.has_6_usb]
+        list_usb = [self.usb_1, self.usb_2, self.usb_3, self.usb_4, self.usb_5, self.usb_6]
+        for num, p in list_drives:
             if isblockdevice(p):
-                if p == "/dev/sda1":
-                    if os.path.ismount('/media/USB1/'):
-                        print(f"{bcolors.OKGREEN}       Storage Drive Exists({p}): [{isblockdevice(p)}] and is mounted to (/media/USB1/): [{os.path.ismount('/media/USB1/')}]{bcolors.ENDC}")
-                        self.has_1_usb = True
-                        self.usb_1 = os.path.join(self.usb_base_path,'USB1',self.dir_images_unprocessed)
-                        print(f"{bcolors.OKGREEN}              Path to USB 1 [USB1]: {self.usb_1}{bcolors.ENDC}")
-                elif p == "/dev/sdb1":
-                    if os.path.ismount('/media/USB2/'):
-                        print(f"{bcolors.OKGREEN}       Storage Drive Exists({p}): [{isblockdevice(p)}] and is mounted to (/media/USB2/): [{os.path.ismount('/media/USB2/')}]{bcolors.ENDC}")
-                        self.has_2_usb = True
-                        self.usb_2 = os.path.join(self.usb_base_path,'USB2',self.dir_images_unprocessed)
-                        print(f"{bcolors.OKGREEN}              Path to USB 2 [USB2]: {self.usb_2}{bcolors.ENDC}")
-                elif p == "/dev/sdc1":
-                    if os.path.ismount('/media/USB3/'):
-                        print(f"{bcolors.OKGREEN}       Storage Drive Exists({p}): [{isblockdevice(p)}] and is mounted to (/media/USB3/): [{os.path.ismount('/media/USB3/')}]{bcolors.ENDC}")
-                        self.has_3_usb = True
-                        self.usb_3 = os.path.join(self.usb_base_path,'USB3',self.dir_images_unprocessed)
-                        print(f"{bcolors.OKGREEN}              Path to USB 3 [USB3]: {self.usb_3}{bcolors.ENDC}")
-                elif p == "/dev/sdd1":
-                    if os.path.ismount('/media/USB4/'):
-                        print(f"{bcolors.OKGREEN}       Storage Drive Exists({p}): [{isblockdevice(p)}] and is mounted to (/media/USB4/): [{os.path.ismount('/media/USB4/')}]{bcolors.ENDC}")
-                        self.has_4_usb = True
-                        self.usb_4 = os.path.join(self.usb_base_path,'USB4',self.dir_images_unprocessed)
-                        print(f"{bcolors.OKGREEN}              Path to USB 4 [USB4]: {self.usb_4}{bcolors.ENDC}")
-                elif p == "/dev/sde1":
-                    if os.path.ismount('/media/USB5/'):
-                        print(f"{bcolors.OKGREEN}       Storage Drive Exists({p}): [{isblockdevice(p)}] and is mounted to (/media/USB5/): [{os.path.ismount('/media/USB5/')}]{bcolors.ENDC}")
-                        self.has_5_usb = True
-                        self.usb_5 = os.path.join(self.usb_base_path,'USB5',self.dir_images_unprocessed)
-                        print(f"{bcolors.OKGREEN}              Path to USB 5 [USB5]: {self.usb_5}{bcolors.ENDC}")
-                elif p == "/dev/sdf1":
-                    if os.path.ismount('/media/USB6/'):
-                        print(f"{bcolors.OKGREEN}       Storage Drive Exists({p}): [{isblockdevice(p)}] and is mounted to (/media/USB6/): [{os.path.ismount('/media/USB6/')}]{bcolors.ENDC}")
-                        self.has_6_usb = True
-                        self.usb_6 = os.path.join(self.usb_base_path,'USB6',self.dir_images_unprocessed)
-                        print(f"{bcolors.OKGREEN}              Path to USB 6 [USB6]: {self.usb_6}{bcolors.ENDC}")
+                # if p == "/dev/sda1":
+                drive_num = num+1
+                path_to_drive = "".join(['/media/USB',str(drive_num),'/'])
+                drive_name = "".join(['USB',drive_num])
+                if os.path.ismount(path_to_drive):
+                    print(f"{bcolors.OKGREEN}       Storage Drive Exists({p}): [{isblockdevice(p)}] and is mounted to ({path_to_drive}): [{os.path.ismount(path_to_drive)}]{bcolors.ENDC}")
+                    list_has_usb[num] = True
+                    list_usb[num] = os.path.join(self.usb_base_path, drive_name, self.dir_images_unprocessed)
+                    print(f"{bcolors.OKGREEN}              Path to USB {drive_num} [{drive_name}]: {list_usb[num]}{bcolors.ENDC}")
+                # elif p == "/dev/sdb1":
+                #     if os.path.ismount('/media/USB2/'):
+                #         print(f"{bcolors.OKGREEN}       Storage Drive Exists({p}): [{isblockdevice(p)}] and is mounted to (/media/USB2/): [{os.path.ismount('/media/USB2/')}]{bcolors.ENDC}")
+                #         self.has_2_usb = True
+                #         self.usb_2 = os.path.join(self.usb_base_path,'USB2',self.dir_images_unprocessed)
+                #         print(f"{bcolors.OKGREEN}              Path to USB 2 [USB2]: {self.usb_2}{bcolors.ENDC}")
+                # elif p == "/dev/sdc1":
+                #     if os.path.ismount('/media/USB3/'):
+                #         print(f"{bcolors.OKGREEN}       Storage Drive Exists({p}): [{isblockdevice(p)}] and is mounted to (/media/USB3/): [{os.path.ismount('/media/USB3/')}]{bcolors.ENDC}")
+                #         self.has_3_usb = True
+                #         self.usb_3 = os.path.join(self.usb_base_path,'USB3',self.dir_images_unprocessed)
+                #         print(f"{bcolors.OKGREEN}              Path to USB 3 [USB3]: {self.usb_3}{bcolors.ENDC}")
+                # elif p == "/dev/sdd1":
+                #     if os.path.ismount('/media/USB4/'):
+                #         print(f"{bcolors.OKGREEN}       Storage Drive Exists({p}): [{isblockdevice(p)}] and is mounted to (/media/USB4/): [{os.path.ismount('/media/USB4/')}]{bcolors.ENDC}")
+                #         self.has_4_usb = True
+                #         self.usb_4 = os.path.join(self.usb_base_path,'USB4',self.dir_images_unprocessed)
+                #         print(f"{bcolors.OKGREEN}              Path to USB 4 [USB4]: {self.usb_4}{bcolors.ENDC}")
+                # elif p == "/dev/sde1":
+                #     if os.path.ismount('/media/USB5/'):
+                #         print(f"{bcolors.OKGREEN}       Storage Drive Exists({p}): [{isblockdevice(p)}] and is mounted to (/media/USB5/): [{os.path.ismount('/media/USB5/')}]{bcolors.ENDC}")
+                #         self.has_5_usb = True
+                #         self.usb_5 = os.path.join(self.usb_base_path,'USB5',self.dir_images_unprocessed)
+                #         print(f"{bcolors.OKGREEN}              Path to USB 5 [USB5]: {self.usb_5}{bcolors.ENDC}")
+                # elif p == "/dev/sdf1":
+                #     if os.path.ismount('/media/USB6/'):
+                #         print(f"{bcolors.OKGREEN}       Storage Drive Exists({p}): [{isblockdevice(p)}] and is mounted to (/media/USB6/): [{os.path.ismount('/media/USB6/')}]{bcolors.ENDC}")
+                #         self.has_6_usb = True
+                #         self.usb_6 = os.path.join(self.usb_base_path,'USB6',self.dir_images_unprocessed)
+                #         print(f"{bcolors.OKGREEN}              Path to USB 6 [USB6]: {self.usb_6}{bcolors.ENDC}")
         device_count = sum([self.save_to_boot, self.has_1_usb, self.has_2_usb, self.has_3_usb, self.has_4_usb, self.has_5_usb, self.has_6_usb])
+        print(f"{bcolors.HEADER}Number of storage drives: {device_count}{bcolors.ENDC}")
+
         if device_count == 0:
             self.print_usb_error()
             self.usb_none = os.path.join('/home','pi','FieldPrism','Data','Images_Unprocessed')
@@ -138,6 +170,47 @@ class SetupFP():
         print(f"")
         print(f"{bcolors.FAIL}       Quit and mount USB device/s otherwise images will{bcolors.ENDC}")
         print(f"{bcolors.FAIL}       save to boot device (microSD card) in:{bcolors.ENDC}")
+
+class ImageData:
+    # Path data
+    path_to_saved: str = ''
+    path_from_fp: str = ''
+    path: str = ''
+    filename_all: str = ''
+    filename_short: str = ''
+    filename_ext: str = ''
+
+    # GPS data
+    current_time: float = -888
+    latitude: float = -888
+    longitude: float = -888    
+    
+    altitude: float = -888
+    climb: float = -888
+    speed: float = -888
+
+    lat_error_est: float = -888
+    lon_error_est: float = -888
+    alt_error_est: float = -888
+
+    def __init__(self, path_to_saved: str, GPS_data: object):
+        self.path_to_saved = path_to_saved
+        self.current_time = GPS_data.current_time
+        self.latitude = GPS_data.latitude
+        self.longitude = GPS_data.longitude
+        self.altitude = GPS_data.altitude
+        self.climb = GPS_data.climb
+        self.speed = GPS_data.speed
+        self.lat_error_est = GPS_data.lat_error_est
+        self.lon_error_est = GPS_data.lon_error_est
+        self.alt_error_est = GPS_data.alt_error_est
+
+    def __post_init__(self) -> None:
+        self.path, self.filename_all = os.path.split(self.path_to_saved)
+        self.filename_short = self.filename_all.split('.')[0]
+        self.filename_ext = self.filename_all.split('.')[1]
+        self.path_from_fp = self.path_to_saved.split(os.path.sep)[3:]
+        print(f'self.path_from_fp = {self.path_from_fp}')
 
 def verify_mount_usb_locations():
     print(f"{bcolors.HEADER}List of mounted devices:{bcolors.ENDC}")
@@ -212,12 +285,10 @@ def align_camera():
                 break
 '''
 TODO
-    - hotspot / offline
     - starting headless
         * restarting main() without power cycle?
     - add redo to key 4
         * overwrite previous image
-    - add GPS
     - see if USB hub will work 
 
 '''
@@ -278,6 +349,7 @@ def main():
                 cv2.imshow('Saved Image', cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
                 print(f"       GPS Activated")
                 GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
+                ImageData(path_to_saved,GPS_data)
                 TAKE_PHOTO = False
                 print(f"{bcolors.OKGREEN}Ready{bcolors.ENDC}")
 
@@ -291,7 +363,12 @@ def main():
             elif keyboard.is_pressed('1'):
                 TAKE_PHOTO = True
                 print(f"       Camera Activated")
-                
+
+
+
+
+    
+
  
 def route():
     print("main: 1")
