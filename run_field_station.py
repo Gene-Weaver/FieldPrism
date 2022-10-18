@@ -76,8 +76,8 @@ class SetupFP:
         # USB save to all
         device_count = 0
         list_drives = ["/dev/sda1", "/dev/sdb1", "/dev/sdc1", "/dev/sdd1", "/dev/sde1", "/dev/sdf1"]
-        list_data = [self.dir_data_1, self.dir_data_2, self.dir_data_3, self.dir_data_4, self.dir_data_5, self.dir_data_6]
-        list_usb = [self.usb_1, self.usb_2, self.usb_3, self.usb_4, self.usb_5, self.usb_6]
+        # list_data = [self.dir_data_1, self.dir_data_2, self.dir_data_3, self.dir_data_4, self.dir_data_5, self.dir_data_6]
+        # list_usb = [self.usb_1, self.usb_2, self.usb_3, self.usb_4, self.usb_5, self.usb_6]
         for num, p in enumerate(list_drives):
             if isblockdevice(p):
                 # if p == "/dev/sda1":
@@ -96,8 +96,24 @@ class SetupFP:
                     exec("%s = %s" % (name_data, "os.path.join(self.usb_base_path, drive_name, self.dir_data_session)"))
                     # print(f'self.usb_1 {self.usb_1}')
                     # print(f'self.has_1_usb {self.has_1_usb}')
-                    print(f"{bcolors.OKGREEN}              Path to USB Images {str(drive_num)} [{drive_name}]: {name_is}{bcolors.ENDC}")
-                    print(f"{bcolors.OKGREEN}              Path to USB Data {str(drive_num)} [{drive_name}]: {name_data}{bcolors.ENDC}")
+        if self.usb_1 != '':             
+            print(f"{bcolors.OKGREEN}              Path to USB Images {str(drive_num)} [{drive_name}]: {self.usb_1}{bcolors.ENDC}")
+            print(f"{bcolors.OKGREEN}              Path to USB Data {str(drive_num)} [{drive_name}]: {self.dir_data_1}{bcolors.ENDC}")
+        if self.usb_2 != '':             
+            print(f"{bcolors.OKGREEN}              Path to USB Images {str(drive_num)} [{drive_name}]: {self.usb_2}{bcolors.ENDC}")
+            print(f"{bcolors.OKGREEN}              Path to USB Data {str(drive_num)} [{drive_name}]: {self.dir_data_2}{bcolors.ENDC}")
+        if self.usb_3 != '':             
+            print(f"{bcolors.OKGREEN}              Path to USB Images {str(drive_num)} [{drive_name}]: {self.usb_3}{bcolors.ENDC}")
+            print(f"{bcolors.OKGREEN}              Path to USB Data {str(drive_num)} [{drive_name}]: {self.dir_data_3}{bcolors.ENDC}")
+        if self.usb_4 != '':             
+            print(f"{bcolors.OKGREEN}              Path to USB Images {str(drive_num)} [{drive_name}]: {self.usb_4}{bcolors.ENDC}")
+            print(f"{bcolors.OKGREEN}              Path to USB Data {str(drive_num)} [{drive_name}]: {self.dir_data_4}{bcolors.ENDC}")
+        if self.usb_5 != '':             
+            print(f"{bcolors.OKGREEN}              Path to USB Images {str(drive_num)} [{drive_name}]: {self.usb_5}{bcolors.ENDC}")
+            print(f"{bcolors.OKGREEN}              Path to USB Data {str(drive_num)} [{drive_name}]: {self.dir_data_5}{bcolors.ENDC}")
+        if self.usb_6 != '':             
+            print(f"{bcolors.OKGREEN}              Path to USB Images {str(drive_num)} [{drive_name}]: {self.usb_6}{bcolors.ENDC}")
+            print(f"{bcolors.OKGREEN}              Path to USB Data {str(drive_num)} [{drive_name}]: {self.dir_data_6}{bcolors.ENDC}")
 
         device_count = sum([self.save_to_boot, self.has_1_usb, self.has_2_usb, self.has_3_usb, self.has_4_usb, self.has_5_usb, self.has_6_usb])
         print(f"{bcolors.HEADER}Number of storage drives: {device_count}{bcolors.ENDC}")
