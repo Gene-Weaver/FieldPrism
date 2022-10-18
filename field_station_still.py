@@ -336,7 +336,7 @@ def main():
 
         # Get data queues
         # controlQueue = device.getInputQueue('control')
-        configQueue = device.getInputQueue('config')
+        # configQueue = device.getInputQueue('config')
         ispQueue = device.getOutputQueue('isp', maxSize=30, blocking=False)
         videoQueue = device.getOutputQueue('video', maxSize=30, blocking=False)
         # stillQueue = device.getOutputQueue('still', maxSize=1, blocking=True)
@@ -399,9 +399,9 @@ def main():
             if keyboard.is_pressed('6'):
                 break
             elif keyboard.is_pressed('1'):
-                ctrl = dai.CameraControl()
-                ctrl.setCaptureStill(True)
-                configQueue.send(ctrl)
+                # ctrl = dai.CameraControl()
+                # ctrl.setCaptureStill(True)
+                # configQueue.send(ctrl)
                 TAKE_PHOTO = True
                 print(f"       Camera Activated")
                 # time.sleep(3)
