@@ -205,11 +205,11 @@ class ImageData:
         self.path, self.filename = os.path.split(self.path_to_saved)
         self.filename_short = self.filename.split('.')[0]
         self.filename_ext = self.filename.split('.')[1]
-        self.path_from_fp = self.path_to_saved.split(os.path.sep)[3:]
+        self.path_from_fp = ''.join(self.path_to_saved.split(os.path.sep)[3:])
         print(f'self.path_from_fp = {self.path_from_fp}')
 
         new_data = pd.DataFrame([[self.cfg.session_time,self.cfg.name_session_csv,self.cfg.name_total_csv,
-        self.filename_short,self.time_of_collection,self.latitude,self.longitude,self.altitude,self.climb,self.speed,
+        self.filename_short,self.current_time,self.latitude,self.longitude,self.altitude,self.climb,self.speed,
         self.lat_error_est,self.lon_error_est,self.alt_error_est,
         self.filename,self.filename_ext,self.path_from_fp,self.path_to_saved]], columns=self.headers)
 
