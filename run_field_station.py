@@ -360,13 +360,11 @@ def main():
             vidFrames = videoQueue.tryGetAll()
             for vidFrame in vidFrames:
                 vframe = vidFrame.getCvFrame()
-                # vframe = cv2.pyrDown(vframe)
-                # vframe = cv2.pyrDown(vframe)
                 vframe = cv2.rotate(vframe, cv2.ROTATE_180)
                 cv2.imshow('preview', vframe)
 
-            # ispFrames = ispQueue.get()
-            # isp = ispFrames.getCvFrame()
+            ispFrames = ispQueue.get()
+            isp = ispFrames.getCvFrame()
 
             if TAKE_PHOTO:
                 print(f"       Capturing Image")
@@ -375,7 +373,7 @@ def main():
                 save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
                 # Save
                 path_to_saved = route_save_image(cfg,save_frame)
-                cv2.imshow('Saved Image', cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved))))
+                cv2.imshow('Saved Image', cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
                 print(f"       GPS Activated")
                 GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
                 TAKE_PHOTO = False
