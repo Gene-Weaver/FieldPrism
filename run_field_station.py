@@ -201,7 +201,6 @@ class ImageData:
         self.alt_error_est = GPS_data.alt_error_est
         print('Init ImageData - Done')
 
-    def __post_init__(self) -> None:
         print('Post init ImageData')
         self.path, self.filename = os.path.split(self.path_to_saved)
         self.filename_short = self.filename.split('.')[0]
