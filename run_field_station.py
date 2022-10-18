@@ -362,31 +362,10 @@ def main():
                 vframe = cv2.rotate(vframe, cv2.ROTATE_180)
                 cv2.imshow('preview', vframe)
 
-            ispFrames = ispQueue.get()
-            # ispFrames = ispQueue.tryGetAll()
-            # for ispFrame in ispFrames:
-                # if ispFrame is not None:
-            #     # time.sleep(0.1)
-                # continue
-            isp = ispFrames.getCvFrame()
-                # cv2.imshow('isp', ispFrame.getCvFrame())
+            # ispFrames = ispQueue.get()
+            # isp = ispFrames.getCvFrame()
 
             if TAKE_PHOTO:
-                # stillFrames = stillQueue.tryGetAll()
-                # if len(stillFrames) >= 1:
-                #     for stillFrame in stillFrames:
-                #         print(f"       Capturing Still")
-                #         # Decode JPEG
-                #         save_frame = cv2.imdecode(stillFrame.getData(), cv2.IMREAD_UNCHANGED)
-                #         save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
-                #         # Display
-                #         frame = cv2.pyrDown(save_frame)
-                #         frame = cv2.pyrDown(frame)  
-                #         cv2.imshow('still', frame)
-                #         # Save
-                #         route_save_image(cfg,save_frame)
-                #         TAKE_PHOTO = False
-                # else:
                 print(f"       Capturing Image")
                 ispFrames = ispQueue.get()
                 save_frame = ispFrames.getCvFrame()
@@ -404,13 +383,10 @@ def main():
                 print(f"{bcolors.HEADER}Stopping Image Collection{bcolors.ENDC}")
                 break
             elif keyboard.is_pressed('1'):
-                # ctrl = dai.CameraControl()
-                # ctrl.setCaptureStill(True)
-                # configQueue.send(ctrl)
                 TAKE_PHOTO = True
                 print(f"       Camera Activated")
-                # time.sleep(3)
-
+                
+ 
 def route():
     print("main: 1")
     print("align_camera: 3")
