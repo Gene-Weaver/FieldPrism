@@ -225,10 +225,12 @@ class ImageData:
             drive_num = num + 1
             name_has = ''.join(['self.cfg.has_',str(drive_num),'_usb'])
             name_data = ''.join(['self.cfg.dir_data_',str(drive_num)])
-            has_usb = exec("%s" % (name_has))
-            data_name = exec("%s" % (name_data))
-            if has_usb:
-                self.save_csv(data_name, new_data)
+            exec("%s = %s" % (name_has, name_has))
+            exec("%s = %s" % (name_data, name_data))
+            print(f'name_has - {name_has}')
+            print(f'name_data - {name_data}')
+            if name_has:
+                self.save_csv(name_data, new_data)
         print('save_data - done')
 
     def save_csv(self, data_name, new_data) -> None:
