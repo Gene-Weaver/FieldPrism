@@ -90,8 +90,9 @@ class SetupFP:
                     print(f"{bcolors.OKGREEN}       Storage Drive Exists({p}): [{isblockdevice(p)}] and is mounted to ({path_to_drive}): [{os.path.ismount(path_to_drive)}]{bcolors.ENDC}")
                     print(f'self.usb_1 {self.usb_1}')
                     print(f'self.has_1_usb {self.has_1_usb}')
-                    exec("%s = %d" % (list_has_usb[num], True))
-                    exec("%s = %d" % (list_usb[num], os.path.join(self.usb_base_path, drive_name, self.dir_images_unprocessed)))
+                    name_has = ''.join(['self.has_',drive_num,'_usb'])
+                    exec("%s = %d" % (name_has, True))
+                    # exec("%s = %d" % (list_usb[num], os.path.join(self.usb_base_path, drive_name, self.dir_images_unprocessed)))
                     #
                     #  vars()[list_has_usb[num]] = True
                     # vars()[list_usb[num]] = os.path.join(self.usb_base_path, drive_name, self.dir_images_unprocessed)
