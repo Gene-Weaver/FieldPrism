@@ -292,9 +292,9 @@ def main():
 
     # Define sources and outputs
     camRgb = pipeline.create(dai.node.ColorCamera)
-    camRgb.setPreviewSize(426, 240)
+    # camRgb.setPreviewSize(426, 240)
     camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_12_MP)
-    # camRgb.setIspScale(2,6) # 1080P -> 720P
+    camRgb.setIspScale(2,6) # 1080P -> 720P
     stillEncoder = pipeline.create(dai.node.VideoEncoder)
 
     controlIn = pipeline.create(dai.node.XLinkIn)
@@ -353,8 +353,8 @@ def main():
                 vframe = cv2.rotate(vframe, cv2.ROTATE_180)
                 cv2.imshow('preview', vframe)
 
-            # ispFrames = ispQueue.get()
-            ispFrames = ispQueue.tryGetAll()
+            ispFrames = ispQueue.get()
+            # ispFrames = ispQueue.tryGetAll()
             for ispFrame in ispFrames:
                 if ispFrame is not None:
             #     # time.sleep(0.1)
