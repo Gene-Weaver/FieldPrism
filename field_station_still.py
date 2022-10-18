@@ -241,13 +241,15 @@ def align_camera():
 
     # Define source and output
     camRgb = pipeline.create(dai.node.ColorCamera)
+    camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_4_K)
     xoutRgb = pipeline.create(dai.node.XLinkOut)
+    camRgb.setIspScale(2,17)
 
     xoutRgb.setStreamName("preview")
     camRgb.setPreviewSize(426,240)
     camRgb.setInterleaved(False)
     camRgb.setColorOrder(dai.ColorCameraProperties.ColorOrder.RGB)
-    camRgb.setFps(12)
+    # camRgb.setFps(12)
 
     # Linking
     camRgb.preview.link(xoutRgb.input)
@@ -296,7 +298,7 @@ def main():
     camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_12_MP)
     # camRgb.setInterleaved(False)
     # camRgb.setColorOrder(dai.ColorCameraProperties.ColorOrder.RGB)
-    camRgb.setIspScale(2,17) # 1080P -> 720P
+    # camRgb.setIspScale(2,17) # 1080P -> 720P
     # stillEncoder = pipeline.create(dai.node.VideoEncoder)
 
     # controlIn = pipeline.create(dai.node.XLinkIn)
