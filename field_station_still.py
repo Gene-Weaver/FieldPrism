@@ -348,17 +348,18 @@ def main():
             vidFrames = videoQueue.tryGetAll()
             for vidFrame in vidFrames:
                 vframe = vidFrame.getCvFrame()
-                vframe2 = cv2.pyrDown(vframe)
-                vframe2 = cv2.pyrDown(vframe2)
-                vframe2 = cv2.rotate(vframe2, cv2.ROTATE_180)
-                cv2.imshow('preview', vframe2)
+                # vframe = cv2.pyrDown(vframe)
+                # vframe = cv2.pyrDown(vframe)
+                vframe = cv2.rotate(vframe, cv2.ROTATE_180)
+                cv2.imshow('preview', vframe)
 
             # ispFrames = ispQueue.get()
             ispFrames = ispQueue.tryGetAll()
             for ispFrame in ispFrames:
+                if ispFrame is not None:
             #     # time.sleep(0.1)
                 # continue
-                isp = ispFrame.getCvFrame()
+                    isp = ispFrame.getCvFrame()
                 # cv2.imshow('isp', ispFrame.getCvFrame())
 
             if TAKE_PHOTO:
