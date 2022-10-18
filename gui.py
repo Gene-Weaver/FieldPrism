@@ -377,7 +377,6 @@ class PreviewWindow():
 
     def update_image(self):
         # Get the latest frame and convert image format
-        self.image = cv2.cvtColor(self.cap.read()[1], cv2.COLOR_BGR2RGB) # to RGB
         self.image = Image.fromarray(self.image) # to PIL format
         self.image = ImageTk.PhotoImage(self.image) # to ImageTk format
 
@@ -404,7 +403,6 @@ class SaveWindow():
 
     def update_image(self):
         # Get the latest frame and convert image format
-        self.image = cv2.cvtColor(self.cap.read()[1], cv2.COLOR_BGR2RGB) # to RGB
         self.image = Image.fromarray(self.image) # to PIL format
         self.image = ImageTk.PhotoImage(self.image) # to ImageTk format
 
