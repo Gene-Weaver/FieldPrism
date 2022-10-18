@@ -205,7 +205,7 @@ class ImageData:
         self.path, self.filename = os.path.split(self.path_to_saved)
         self.filename_short = self.filename.split('.')[0]
         self.filename_ext = self.filename.split('.')[1]
-        self.path_from_fp = os.path.join(self.path_to_saved.split(os.path.sep)[3:])
+        self.path_from_fp = os.path.join(*self.path_to_saved.split(os.path.sep)[3:])
         print(f'self.path_from_fp = {self.path_from_fp}')
 
         new_data = pd.DataFrame([[self.cfg.session_time,self.cfg.name_session_csv,self.cfg.name_total_csv,
