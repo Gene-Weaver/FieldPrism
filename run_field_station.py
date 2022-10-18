@@ -278,6 +278,9 @@ def align_camera():
             # cv2.imshow("rgb", inRgb.getCvFrame())
             key = cv2.waitKey(50)
             if keyboard.is_pressed('6'):
+                print("main: 1")
+                print("align_camera: 3")
+                print("Exit: 6")
                 break
 '''
 TODO
@@ -380,7 +383,10 @@ def main():
 
             key = cv2.waitKey(50)
             if keyboard.is_pressed('6'):
-                print(f"{bcolors.HEADER}Stopping Image Collection{bcolors.ENDC}")
+                print(f"{bcolors.HEADER}Stopping...{bcolors.ENDC}")
+                print("main: 1")
+                print("align_camera: 3")
+                print("Exit: 6")
                 break
             elif keyboard.is_pressed('1'):
                 TAKE_PHOTO = True
