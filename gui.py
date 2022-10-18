@@ -361,9 +361,9 @@ class FieldStation():
         # root.bind("<Return>", self.calculate) 
 
 class PreviewWindow():
-    def __init__(self, window, cap):
+    def __init__(self, window, image):
         self.window = window
-        self.cap = cap
+        self.cap = image
         self.width = 426
         self.height = 240
         self.interval = 20 # Interval in ms to get the latest frame
@@ -387,9 +387,9 @@ class PreviewWindow():
         self.window.after(self.interval, self.update_image)
 
 class SaveWindow():
-    def __init__(self, window, cap):
+    def __init__(self, window, image):
         self.window = window
-        self.cap = cap
+        self.image = image
         self.width = 426
         self.height = 240
         self.interval = 20 # Interval in ms to get the latest frame
