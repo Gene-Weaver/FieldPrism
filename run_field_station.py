@@ -296,7 +296,7 @@ def main():
     camRgb = pipeline.create(dai.node.ColorCamera)
     # camRgb.setPreviewSize(1920, 1080)
     camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_12_MP)
-    camRgb.setFps(2)
+    camRgb.setFps(30)
     # camRgb.setInterleaved(False)
     # camRgb.setColorOrder(dai.ColorCameraProperties.ColorOrder.RGB)
     # camRgb.setIspScale(2,17) # 1080P -> 720P
