@@ -398,6 +398,7 @@ def main():
                 print(f"       GPS Activated")
                 GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
                 TAKE_PHOTO = False
+                ispFrames = ispQueue.tryGetAll()
                 print(f"{bcolors.OKGREEN}Ready{bcolors.ENDC}")
 
             key = cv2.waitKey(50)
