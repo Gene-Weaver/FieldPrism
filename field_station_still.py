@@ -296,7 +296,7 @@ def main():
     camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_12_MP)
     # camRgb.setInterleaved(False)
     # camRgb.setColorOrder(dai.ColorCameraProperties.ColorOrder.RGB)
-    # camRgb.setIspScale(2,6) # 1080P -> 720P
+    camRgb.setIspScale(1,30) # 1080P -> 720P
     # stillEncoder = pipeline.create(dai.node.VideoEncoder)
 
     # controlIn = pipeline.create(dai.node.XLinkIn)
