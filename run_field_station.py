@@ -18,6 +18,8 @@ import psutil
 
 @dataclass
 class SetupFP:
+    storage_present = True
+
     usb_base_path: str = ''
     dir_images_unprocessed: str = ''
     usb_none: str = ''
@@ -114,10 +116,11 @@ class SetupFP:
                 print(f"{bcolors.WARNING}WARNING: Only saving to microSD card. Recommend adding USB storage and trying again!{bcolors.ENDC}")
                 print(f"{bcolors.WARNING}       Creating (or verifying): {self.usb_none}{bcolors.ENDC}")
                 Path(self.usb_none).mkdir(parents=True, exist_ok=True)
-            # No storage selected
+            # ---------- No storage selected ------------ #
             elif not self.has_1_usb and not self.has_2_usb  and not self.has_3_usb  and not self.has_4_usb  and not self.has_5_usb  and not self.has_6_usb and not self.save_to_boot:
                 print(f"{bcolors.FAIL}ERROR: NO STORAGE DETECTED. DATA WILL NOT BE SAVED ANYWHERE!!!{bcolors.ENDC}")
                 print(f"{bcolors.FAIL}       Power off device, add storage, try again. Or edit FieldPrism.yaml: always_save_to_boot = True{bcolors.ENDC}")
+                self.storage_present = False
             if self.has_1_usb:
                 print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.usb_1}{bcolors.ENDC}")
                 print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.dir_data_1}{bcolors.ENDC}")
@@ -395,46 +398,48 @@ def main():
 
         # Make sure the destination path is present before starting to store the examples
         cfg = SetupFP()
+        if cfg.storage_present == False:
+            pass
+        else:
+            # Get data queues
+            ispQueue = device.getOutputQueue('isp', maxSize=1, blocking=False)
+            videoQueue = device.getOutputQueue('video', maxSize=1, blocking=False)
 
-        # Get data queues
-        ispQueue = device.getOutputQueue('isp', maxSize=1, blocking=False)
-        videoQueue = device.getOutputQueue('video', maxSize=1, blocking=False)
+            TAKE_PHOTO = False
+            while True:
+                vidFrames = videoQueue.tryGetAll()
+                for vidFrame in vidFrames:
+                    vframe = vidFrame.getCvFrame()
+                    vframe = cv2.rotate(vframe, cv2.ROTATE_180)
+                    cv2.imshow('preview', vframe)
 
-        TAKE_PHOTO = False
-        while True:
-            vidFrames = videoQueue.tryGetAll()
-            for vidFrame in vidFrames:
-                vframe = vidFrame.getCvFrame()
-                vframe = cv2.rotate(vframe, cv2.ROTATE_180)
-                cv2.imshow('preview', vframe)
-
-            ispFrames = ispQueue.get()
-            isp = ispFrames.getCvFrame()
-
-            if TAKE_PHOTO:
-                print(f"       Capturing Image")
                 ispFrames = ispQueue.get()
-                save_frame = ispFrames.getCvFrame()
-                save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
-                # Save
-                path_to_saved = route_save_image(cfg,save_frame)
-                cv2.imshow('Saved Image', cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
-                print(f"       GPS Activated")
-                GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
-                Image = ImageData(cfg, path_to_saved, GPS_data)
-                TAKE_PHOTO = False
-                print(f"{bcolors.OKGREEN}Ready{bcolors.ENDC}")
+                isp = ispFrames.getCvFrame()
 
-            key = cv2.waitKey(50)
-            if keyboard.is_pressed('6'):
-                print(f"{bcolors.HEADER}Stopping...{bcolors.ENDC}")
-                print("main: 1")
-                print("align_camera: 3")
-                print("Exit: 6")
-                break
-            elif keyboard.is_pressed('1'):
-                TAKE_PHOTO = True
-                print(f"       Camera Activated")
+                if TAKE_PHOTO:
+                    print(f"       Capturing Image")
+                    ispFrames = ispQueue.get()
+                    save_frame = ispFrames.getCvFrame()
+                    save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
+                    # Save
+                    path_to_saved = route_save_image(cfg,save_frame)
+                    cv2.imshow('Saved Image', cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
+                    print(f"       GPS Activated")
+                    GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
+                    Image = ImageData(cfg, path_to_saved, GPS_data)
+                    TAKE_PHOTO = False
+                    print(f"{bcolors.OKGREEN}Ready{bcolors.ENDC}")
+
+                key = cv2.waitKey(50)
+                if keyboard.is_pressed('6'):
+                    print(f"{bcolors.HEADER}Stopping...{bcolors.ENDC}")
+                    print("main: 1")
+                    print("align_camera: 3")
+                    print("Exit: 6")
+                    break
+                elif keyboard.is_pressed('1'):
+                    TAKE_PHOTO = True
+                    print(f"       Camera Activated")
 
 
 
