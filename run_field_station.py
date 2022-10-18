@@ -85,12 +85,12 @@ class SetupFP:
                 # if p == "/dev/sda1":
                 drive_num = num+1
                 path_to_drive = "".join(['/media/USB',str(drive_num),'/'])
-                drive_name = "".join(['USB',drive_num])
+                drive_name = "".join(['USB',str(drive_num)])
                 if os.path.ismount(path_to_drive):
                     print(f"{bcolors.OKGREEN}       Storage Drive Exists({p}): [{isblockdevice(p)}] and is mounted to ({path_to_drive}): [{os.path.ismount(path_to_drive)}]{bcolors.ENDC}")
                     list_has_usb[num] = True
                     list_usb[num] = os.path.join(self.usb_base_path, drive_name, self.dir_images_unprocessed)
-                    print(f"{bcolors.OKGREEN}              Path to USB {drive_num} [{drive_name}]: {list_usb[num]}{bcolors.ENDC}")
+                    print(f"{bcolors.OKGREEN}              Path to USB {str(drive_num)} [{drive_name}]: {list_usb[num]}{bcolors.ENDC}")
                 # elif p == "/dev/sdb1":
                 #     if os.path.ismount('/media/USB2/'):
                 #         print(f"{bcolors.OKGREEN}       Storage Drive Exists({p}): [{isblockdevice(p)}] and is mounted to (/media/USB2/): [{os.path.ismount('/media/USB2/')}]{bcolors.ENDC}")
