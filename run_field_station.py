@@ -92,7 +92,7 @@ class SetupFP:
                     print(f'self.has_1_usb {self.has_1_usb}')
                     name_has = ''.join(['self.has_',str(drive_num),'_usb'])
                     name_is = ''.join(['self.usb_',str(drive_num)])
-                    exec("%s = %b" % (name_has, True))
+                    exec("%s = %s" % (name_has, True))
                     exec("%s = %s" % (name_is, os.path.join(self.usb_base_path, drive_name, self.dir_images_unprocessed)))
                     # exec("%s = %d" % (list_usb[num], os.path.join(self.usb_base_path, drive_name, self.dir_images_unprocessed)))
                     #
