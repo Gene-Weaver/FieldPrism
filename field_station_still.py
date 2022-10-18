@@ -355,11 +355,11 @@ def main():
 
             ispFrames = ispQueue.get()
             # ispFrames = ispQueue.tryGetAll()
-            for ispFrame in ispFrames:
-                if ispFrame is not None:
+            # for ispFrame in ispFrames:
+                # if ispFrame is not None:
             #     # time.sleep(0.1)
                 # continue
-                    isp = ispFrame.getCvFrame()
+            isp = ispFrames.getCvFrame()
                 # cv2.imshow('isp', ispFrame.getCvFrame())
 
             if TAKE_PHOTO:
