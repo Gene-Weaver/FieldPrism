@@ -170,6 +170,8 @@ def route_save_image(Setup,save_frame):
     name_time = str(int(time.time() * 1000))
     if Setup.save_to_boot:
         path_to_saved = save_image(save_frame, name_time, Setup.usb_none)
+    else:
+        path_to_saved = save_image(save_frame, name_time, Setup.usb_none)
     if Setup.has_1_usb:
         path_to_saved = save_image(save_frame, name_time, Setup.usb_1)
     if Setup.has_2_usb:
