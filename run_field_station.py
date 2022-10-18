@@ -127,57 +127,6 @@ class SetupFP():
                 print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.usb_6}{bcolors.ENDC}")
                 Path(self.usb_6).mkdir(parents=True, exist_ok=True)
 
-        # # USB
-        # usb_dir = os.listdir(self.usb_base_path)
-        # for d in usb_dir:
-        #     print(f'd = {d}')
-        #     if 'USB' in d:
-        #         try: 
-        #             print(d.split('USB'))
-        #             print(d.split('USB')[1])
-        #             # os.mkdir(os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder'))
-        #             if '1' in d:
-        #                 print('try loop2')
-        #                 new_dir1 = os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder')
-        #                 print(f'making dir = {new_dir1}')
-        #                 os.mkdir(os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder'))
-        #                 os.rmdir(os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder'))
-        #                 self.has_1_usb = True
-        #                 print('pass try loop2')
-        #             elif '2' in d:
-        #                 print('try loop3')
-        #                 new_dir2 = os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder')
-        #                 print(f'making dir = {new_dir2}')
-        #                 os.mkdir(os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder'))
-        #                 os.rmdir(os.path.join(self.usb_base_path, d, self.dir_images_unprocessed, 'EmptyFolder'))
-        #                 self.has_2_usb = True
-        #                 print('pass try loop3')
-        #         except Exception as e:
-        #             print(f'Fail try loop {e}')
-        #             pass
-        #     else:
-        #         print(f'(USB) not in {d}')
-
-        # if self.has_1_usb and not self.has_2_usb:
-        #     self.usb_1 = os.path.join(self.usb_base_path,os.listdir(self.usb_base_path)[0],self.dir_images_unprocessed)
-        #     print(f"{bcolors.OKGREEN}       Path to USB 1 [USB1]: {self.usb_1}{bcolors.ENDC}")
-
-        # elif self.has_2_usb and not self.has_1_usb:
-        #     self.usb_2 = os.path.join(self.usb_base_path,os.listdir(self.usb_base_path)[1],self.dir_images_unprocessed)
-        #     print(f"{bcolors.OKGREEN}       Path to USB 1 [USB2]: {self.usb_2}{bcolors.ENDC}")
-
-        # elif self.has_2_usb and self.has_1_usb:
-        #     self.usb_1 = os.path.join(self.usb_base_path,'USB1',self.dir_images_unprocessed)
-        #     self.usb_2 = os.path.join(self.usb_base_path,'USB2',self.dir_images_unprocessed)
-        #     print(f"{bcolors.OKGREEN}       Path to USB 1 [USB1]: {self.usb_1}{bcolors.ENDC}")
-        #     print(f"{bcolors.OKGREEN}       Path to USB 2 [USB2]: {self.usb_2}{bcolors.ENDC}")
-
-        # else:
-        #     self.print_usb_error()
-        #     self.usb_none = os.path.join('/home','pi','FieldPrism','Data','Images_Unprocessed')
-        #     print(f"{bcolors.FAIL}            {self.usb_none}{bcolors.ENDC}")
-        #     self.save_to_boot = True
-
     def print_usb_error(self) -> None:
         print(f"{bcolors.FAIL}ERROR: USB device/s not mounted correctly. {bcolors.ENDC}")
         print(f"")
@@ -204,10 +153,7 @@ def verify_mount_usb_locations():
             l = l.split()
             print(f"{l[0]} --> {l[1]}")
             d[l[0]] = l[1]
-    # pprint.pprint(d)
 
-    # result = subprocess.run(["sh", "./check_mounts.sh"], stderr=subprocess.PIPE, text=True)
-    # print(result.stderr) # normal to see an error if this is printed, but usually there is no concern
 
 def isblockdevice(path):
   return os.path.exists(path) and stat.S_ISBLK(os.stat(path).st_mode)
@@ -241,41 +187,23 @@ def route_save_image(Setup,save_frame):
 def align_camera():
     # Create pipeline
     pipeline = dai.Pipeline()
-
     # Define source and output
     camRgb = pipeline.create(dai.node.ColorCamera)
     camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_4_K)
     xoutRgb = pipeline.create(dai.node.XLinkOut)
     camRgb.setIspScale(2,17)
-
     xoutRgb.setStreamName("preview")
     camRgb.setPreviewSize(426,240)
     camRgb.setInterleaved(False)
     camRgb.setColorOrder(dai.ColorCameraProperties.ColorOrder.RGB)
-    # camRgb.setFps(12)
-
     # Linking
     camRgb.preview.link(xoutRgb.input)
-
     # Connect to device and start pipeline
     with dai.Device(pipeline) as device:
         qRgb = device.getOutputQueue('preview', maxSize=1, blocking=False)
-
-        while True:
-            
+        while True: 
             inRgb = qRgb.get()
-            # plt.imshow(cv2.rotate(inRgb.getCvFrame(), cv2.ROTATE_180))
             cv2.imshow("rgb", cv2.rotate(inRgb.getCvFrame(), cv2.ROTATE_180))
-            # time.sleep(1)
-
-            # if inRgb is not None:
-            #     save_frame = inRgb.getCvFrame()
-            #     # 4k / 4
-            #     # frame = cv2.pyrDown(save_frame)
-            #     # frame = cv2.pyrDown(frame)
-            #     cv2.imshow("rgb", cv2.rotate(save_frame, cv2.ROTATE_180))
-
-            # cv2.imshow("rgb", inRgb.getCvFrame())
             key = cv2.waitKey(50)
             if keyboard.is_pressed('6'):
                 print("main: 1")
@@ -300,39 +228,21 @@ def main():
 
     # Define sources and outputs
     camRgb = pipeline.create(dai.node.ColorCamera)
-    # camRgb.setPreviewSize(1920, 1080)
     camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_12_MP)
     camRgb.setFps(30)
-    # camRgb.setInterleaved(False)
-    # camRgb.setColorOrder(dai.ColorCameraProperties.ColorOrder.RGB)
-    # camRgb.setIspScale(2,17) # 1080P -> 720P
-    # stillEncoder = pipeline.create(dai.node.VideoEncoder)
 
-    # controlIn = pipeline.create(dai.node.XLinkIn)
-    # configIn = pipeline.create(dai.node.XLinkIn)
     ispOut = pipeline.create(dai.node.XLinkOut)
     videoOut = pipeline.create(dai.node.XLinkOut)
-    # stillMjpegOut = pipeline.create(dai.node.XLinkOut)
 
-    # controlIn.setStreamName('control')
-    # configIn.setStreamName('config')
     ispOut.setStreamName('isp')
     videoOut.setStreamName('video')
-    # stillMjpegOut.setStreamName('still')
 
     # Properties
-    # camRgb.setVideoSize(4032, 3040)
-    # camRgb.setVideoSize(852, 480)
     camRgb.setVideoSize(426, 240)
-    # stillEncoder.setDefaultProfilePreset(1, dai.VideoEncoderProperties.Profile.MJPEG)
 
     # Linking
     camRgb.isp.link(ispOut.input)
-    # camRgb.still.link(stillEncoder.input)
     camRgb.video.link(videoOut.input)
-    # controlIn.out.link(camRgb.inputControl)
-    # configIn.out.link(camRgb.inputConfig)
-    # stillEncoder.bitstream.link(stillMjpegOut.input)
 
     # Connect to device and start pipeline
     with dai.Device(pipeline) as device:
@@ -344,16 +254,8 @@ def main():
         cfg = SetupFP()
 
         # Get data queues
-        # controlQueue = device.getInputQueue('control')
-        # configQueue = device.getInputQueue('config')
         ispQueue = device.getOutputQueue('isp', maxSize=1, blocking=False)
         videoQueue = device.getOutputQueue('video', maxSize=1, blocking=False)
-        # stillQueue = device.getOutputQueue('still', maxSize=1, blocking=True)
-
-        # Output queue will be used to get the rgb frames from the output defined above
-        # qRgb = device.getOutputQueue(name="rgb", maxSize=30, blocking=False)
-        # qStill = device.getOutputQueue(name="still", maxSize=30, blocking=True)
-        # qControl = device.getInputQueue(name="control")
 
         TAKE_PHOTO = False
         while True:
