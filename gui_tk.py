@@ -528,32 +528,32 @@ def run(pipeline):
                     print(f"       Camera Activated")
 
 class FieldStation():
-    cfg_user: object = field(init=False)
+    # cfg_user: object = field(init=False)
 
     def __init__(self, root, pipeline):
         self.cfg_user = load_cfg()
-        img_preview = cv2.imread('img/preview_window.jpg')
-        img_saved = cv2.imread('img/saved_image_window.jpg')
+        self.img_preview = cv2.imread('img/preview_window.jpg')
+        self.img_saved = cv2.imread('img/saved_image_window.jpg')
 
-        root.title("FieldPrism - Field Station")
-        root.minsize(width=550, height=450)
+        self.root.title("FieldPrism - Field Station")
+        self.root.minsize(width=550, height=450)
 
         # mainframe = ttk.Frame(root, padding="3 3 12 12")
         # mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
         # root.columnconfigure(0, weight=1)
         # root.rowconfigure(0, weight=1)
-        frame_preview = tk.Frame(master=root, height=240, bg="white")
-        frame_preview.pack(fill=tk.X)
+        self.frame_preview = tk.Frame(master=root, height=240, bg="white")
+        self.frame_preview.pack(fill=tk.X)
 
-        frame_saved = tk.Frame(master=root, height=380, bg="black")
-        frame_saved.pack(fill=tk.X)
+        self.frame_saved = tk.Frame(master=root, height=380, bg="black")
+        self.frame_saved.pack(fill=tk.X)
 
-        frame_controls = tk.Frame(master=root, height=200, bg="gray")
-        frame_controls.pack(fill=tk.X)
+        self.frame_controls = tk.Frame(master=root, height=200, bg="gray")
+        self.frame_controls.pack(fill=tk.X)
 
         # cap = cv2.VideoCapture(0)
-        preview_window = PreviewWindow(frame_preview,img_preview)
-        save_window = SaveWindow(frame_saved,img_saved)
+        self.preview_window = PreviewWindow(self.frame_preview,self.img_preview)
+        self.save_window = SaveWindow(self.frame_saved,self.img_saved)
 
 if __name__ == "__main__":
     pipeline = createPipeline()
