@@ -490,10 +490,30 @@ def run(pipeline, root):
 
         
 
+        
         cfg_user = load_cfg()
-        FS = FieldStation(root,pipeline)
-        Window_Preview = PreviewWindow(FS.frame_preview,img_preview)
-        Window_Saved = SaveWindow(FS.frame_saved,img_saved)
+        # self.img_preview = cv2.imread('img/preview_window.jpg')
+        # self.img_saved = cv2.imread('img/saved_image_window.jpg')
+
+        # mainframe = ttk.Frame(root, padding="3 3 12 12")
+        # mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
+        # root.columnconfigure(0, weight=1)
+        # root.rowconfigure(0, weight=1)
+        frame_preview = tk.Frame(master=root, height=240, bg="white")
+        frame_preview.pack(fill=tk.X)
+
+        frame_saved = tk.Frame(master=root, height=380, bg="black")
+        frame_saved.pack(fill=tk.X)
+
+        frame_controls = tk.Frame(master=root, height=200, bg="gray")
+        frame_controls.pack(fill=tk.X)
+
+
+
+        cfg_user = load_cfg()
+        # FS = FieldStation(root,pipeline)
+        Window_Preview = PreviewWindow(frame_preview,img_preview)
+        Window_Saved = SaveWindow(frame_saved,img_saved)
 
         cfg = SetupFP()
         if cfg.storage_present == False:
