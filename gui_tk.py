@@ -472,8 +472,6 @@ def createPipeline():
 
 
 def run(pipeline):
-    cfg_user = load_cfg()
-    FS = FieldStation(root,pipeline)
     # Connect to device and start pipeline
     with fragile(dai.Device(pipeline)) as device:
         print('Connected cameras: ', device.getConnectedCameras())
@@ -481,6 +479,8 @@ def run(pipeline):
         print('Usb speed: ', device.getUsbSpeed().name)
 
         # Make sure the destination path is present before starting to store the examples
+        cfg_user = load_cfg()
+        FS = FieldStation(root,pipeline)
         cfg = SetupFP()
         if cfg.storage_present == False:
             print(f"{bcolors.HEADER}Stopping...{bcolors.ENDC}")
