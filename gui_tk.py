@@ -382,7 +382,7 @@ class PreviewWindow():
         self.image = image
         self.width = 426
         self.height = 240
-        self.interval = 200 # Interval in ms to get the latest frame
+        self.interval = 20 # Interval in ms to get the latest frame
 
         # Create canvas for image
         self.canvas = Canvas(self.window, width=self.width, height=self.height)
@@ -416,7 +416,7 @@ class SaveWindow():
         self.image = image
         self.width = 507
         self.height = 380
-        self.interval = 200 # Interval in ms to get the latest frame
+        self.interval = 20 # Interval in ms to get the latest frame
 
         # Create canvas for image
         self.canvas = Canvas(self.window, width=self.width, height=self.height)
