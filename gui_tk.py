@@ -471,7 +471,7 @@ def createPipeline():
     return pipeline
 
 
-def run(pipeline):
+def run(pipeline, root):
     # Connect to device and start pipeline
     with fragile(dai.Device(pipeline)) as device:
         print('Connected cameras: ', device.getConnectedCameras())
@@ -569,7 +569,7 @@ if __name__ == "__main__":
     #     cv2.destroyAllWindows()
 
 
-    thread = Thread(target=run, args=(pipeline,))
+    thread = Thread(target=run, args=(pipeline,root,))
     thread.setDaemon(True)
     thread.start()
 
