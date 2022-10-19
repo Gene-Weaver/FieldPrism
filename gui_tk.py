@@ -391,6 +391,9 @@ class PreviewWindow():
         # Update image on canvas
         self.update_image()
 
+    def change_image(self,image):
+        self.image = image
+
     def update_image(self):
         # Get the latest frame and convert image format
         # try:
@@ -424,6 +427,9 @@ class SaveWindow():
 
         # Update image on canvas
         self.update_image()
+
+    def change_image(self,image):
+        self.image = image
 
     def update_image(self):
         # Get the latest frame and convert image format
@@ -479,8 +485,16 @@ def run(pipeline, root):
         print('Usb speed: ', device.getUsbSpeed().name)
 
         # Make sure the destination path is present before starting to store the examples
+        img_preview = cv2.imread('img/preview_window.jpg')
+        img_saved = cv2.imread('img/saved_image_window.jpg')
+
+        
+
         cfg_user = load_cfg()
         FS = FieldStation(root,pipeline)
+        Window_Preview = PreviewWindow(FS.frame_preview,img_preview)
+        Window_Saved = SaveWindow(FS.frame_saved,img_saved)
+
         cfg = SetupFP()
         if cfg.storage_present == False:
             print(f"{bcolors.HEADER}Stopping...{bcolors.ENDC}")
@@ -499,8 +513,8 @@ def run(pipeline, root):
                     vframe = cv2.rotate(vframe, cv2.ROTATE_180)
                     # cv2.imshow('preview', vframe)
                     # PreviewWindow(FS.frame_preview,vframe)
-                    FS.preview_window.image = vframe
-                    FS.preview_window.update_image()
+                    Window_Preview.change_image(vframe)
+                    Window_Preview.update_image()
 
                 ispFrames = ispQueue.get()
                 isp = ispFrames.getCvFrame()
@@ -516,8 +530,8 @@ def run(pipeline, root):
                     # FS.saved_window = PreviewWindow(FS.saved_window,cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
                     # saved_window = SaveWindow(FS.frame_saved, cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
                     # SaveWindow(FS.frame_saved, cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
-                    FS.saved_window.image = cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved))))
-                    FS.saved_window.update_image()
+                    Window_Saved.change_image(cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
+                    Window_Saved.update_image()
 
                     print(f"       GPS Activated")
                     GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
@@ -539,8 +553,8 @@ class FieldStation():
 
     def __init__(self, root, pipeline):
         self.cfg_user = load_cfg()
-        self.img_preview = cv2.imread('img/preview_window.jpg')
-        self.img_saved = cv2.imread('img/saved_image_window.jpg')
+        # self.img_preview = cv2.imread('img/preview_window.jpg')
+        # self.img_saved = cv2.imread('img/saved_image_window.jpg')
 
         # mainframe = ttk.Frame(root, padding="3 3 12 12")
         # mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
@@ -556,8 +570,8 @@ class FieldStation():
         self.frame_controls.pack(fill=tk.X)
 
         # cap = cv2.VideoCapture(0)
-        self.preview_window = PreviewWindow(self.frame_preview,self.img_preview)
-        self.saved_window = SaveWindow(self.frame_saved,self.img_saved)
+        # self.preview_window = PreviewWindow(self.frame_preview,self.img_preview)
+        # self.saved_window = SaveWindow(self.frame_saved,self.img_saved)
 
 if __name__ == "__main__":
     pipeline = createPipeline()
