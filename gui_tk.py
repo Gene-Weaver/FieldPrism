@@ -483,12 +483,16 @@ def createPipeline():
 
 
 def run(pipeline, root):
+    # Make sure the destination path is present before starting to store the examples
+    img_preview = cv2.imread('img/preview_window.jpg')
+    img_saved = cv2.imread('img/saved_image_window.jpg')
+
     frame_preview = tk.Frame(master=root, height=240, bg="white")
     frame_preview.pack(fill=tk.X)
 
     frame_saved = tk.Frame(master=root, height=380, bg="black")
     frame_saved.pack(fill=tk.X)
-    
+
     Window_Preview = PreviewWindow(frame_preview,img_preview)
     Window_Saved = SaveWindow(frame_saved,img_saved)
     # Connect to device and start pipeline
@@ -497,9 +501,7 @@ def run(pipeline, root):
         # Print out usb speed
         print('Usb speed: ', device.getUsbSpeed().name)
 
-        # Make sure the destination path is present before starting to store the examples
-        img_preview = cv2.imread('img/preview_window.jpg')
-        img_saved = cv2.imread('img/saved_image_window.jpg')
+        
         
         cfg_user = load_cfg()
 
