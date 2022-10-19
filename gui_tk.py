@@ -423,7 +423,14 @@ class SaveWindow():
 
         # Create canvas for image
         self.canvas = Canvas(self.window, width=self.width, height=self.height)
-        self.canvas.grid(row=0, column=0)
+        self.canvas.grid(row=1, column=0)
+
+        # First image
+        blue,green,red = cv2.split(self.image)
+        image = cv2.merge((red,green,blue))
+        img = Image.fromarray(image)
+        imgtk = ImageTk.PhotoImage(image=img)
+        self.image_on_canvas = self.canvas.create_image(0, 0, anchor=tk.NW, image=imgtk)
 
         # Update image on canvas
         self.update_image()
@@ -445,7 +452,8 @@ class SaveWindow():
         # self.image = ImageTk.PhotoImage(self.image) # to ImageTk format
 
         # Update image
-        self.canvas.create_image(0, 0, anchor=tk.NW, image=imgtk)
+        self.canvas.itemconfig(self.image_on_canvas, image=imgtk)
+        # self.canvas.create_image(0, 0, anchor=tk.NW, image=imgtk)
 
         # Repeat every 'interval' ms
         # self.window.after(self.interval, self.update_image)
@@ -550,8 +558,8 @@ def run(pipeline, root):
                     # FS.saved_window = PreviewWindow(FS.saved_window,cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
                     # saved_window = SaveWindow(FS.frame_saved, cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
                     # SaveWindow(FS.frame_saved, cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
-                    Window_Saved.change_image(cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
-                    Window_Saved.update_image()
+                    # Window_Saved.change_image(cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
+                    Window_Saved.update_image(cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
 
                     print(f"       GPS Activated")
                     GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
