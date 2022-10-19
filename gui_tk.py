@@ -498,7 +498,7 @@ def run(pipeline, root):
                     vframe = vidFrame.getCvFrame()
                     vframe = cv2.rotate(vframe, cv2.ROTATE_180)
                     # cv2.imshow('preview', vframe)
-                    PreviewWindow(FS.preview_window,vframe)
+                    PreviewWindow(FS.frame_preview,vframe)
 
                 ispFrames = ispQueue.get()
                 isp = ispFrames.getCvFrame()
@@ -513,7 +513,7 @@ def run(pipeline, root):
                     # cv2.imshow('Saved Image', cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
                     # FS.saved_window = PreviewWindow(FS.saved_window,cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
                     # saved_window = SaveWindow(FS.frame_saved, cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
-                    SaveWindow(FS.saved_window, cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
+                    SaveWindow(FS.frame_saved, cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
 
                     print(f"       GPS Activated")
                     GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
