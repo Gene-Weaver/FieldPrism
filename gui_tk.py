@@ -382,7 +382,7 @@ class PreviewWindow():
         self.image = image
         self.width = 426
         self.height = 240
-        self.interval = 20 # Interval in ms to get the latest frame
+        # self.interval = 20 # Interval in ms to get the latest frame
 
         # Create canvas for image
         self.canvas = Canvas(self.window, width=self.width, height=self.height)
@@ -411,7 +411,7 @@ class PreviewWindow():
         self.canvas.create_image(0, 0, anchor=tk.NW, image=imgtk)
 
         # Repeat every 'interval' ms
-        self.window.after(self.interval, self.update_image)
+        # self.window.after(self.interval, self.update_image)
 
 class SaveWindow():
     def __init__(self, window, image):
@@ -419,7 +419,7 @@ class SaveWindow():
         self.image = image
         self.width = 507
         self.height = 380
-        self.interval = 20 # Interval in ms to get the latest frame
+        # self.interval = 20 # Interval in ms to get the latest frame
 
         # Create canvas for image
         self.canvas = Canvas(self.window, width=self.width, height=self.height)
@@ -448,7 +448,7 @@ class SaveWindow():
         self.canvas.create_image(0, 0, anchor=tk.NW, image=imgtk)
 
         # Repeat every 'interval' ms
-        self.window.after(self.interval, self.update_image)
+        # self.window.after(self.interval, self.update_image)
 
 def createPipeline():
     # cfg_user = load_cfg()
