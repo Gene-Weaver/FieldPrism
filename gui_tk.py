@@ -382,7 +382,7 @@ class PreviewWindow():
         self.image = image
         self.width = 426
         self.height = 240
-        # self.interval = 20 # Interval in ms to get the latest frame
+        self.interval = 200 # Interval in ms to get the latest frame
 
         # Create canvas for image
         self.canvas = Canvas(self.window, width=self.width, height=self.height)
@@ -416,7 +416,7 @@ class SaveWindow():
         self.image = image
         self.width = 507
         self.height = 380
-        # self.interval = 20 # Interval in ms to get the latest frame
+        self.interval = 200 # Interval in ms to get the latest frame
 
         # Create canvas for image
         self.canvas = Canvas(self.window, width=self.width, height=self.height)
@@ -499,6 +499,7 @@ def run(pipeline, root):
                     vframe = cv2.rotate(vframe, cv2.ROTATE_180)
                     # cv2.imshow('preview', vframe)
                     # PreviewWindow(FS.frame_preview,vframe)
+                    FS.preview_window.image = vframe
 
                 ispFrames = ispQueue.get()
                 isp = ispFrames.getCvFrame()
@@ -514,6 +515,7 @@ def run(pipeline, root):
                     # FS.saved_window = PreviewWindow(FS.saved_window,cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
                     # saved_window = SaveWindow(FS.frame_saved, cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
                     # SaveWindow(FS.frame_saved, cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
+                    FS.saved_window.image = cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved))))
 
                     print(f"       GPS Activated")
                     GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
