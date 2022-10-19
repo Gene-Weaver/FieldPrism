@@ -261,7 +261,7 @@ class ImageData:
         try:
             csv_session = pd.read_csv(os.path.join(data_name, self.cfg.name_session_csv),dtype=str)
         except Exception as e:
-            print(f"{bcolors.WARNING}       Initializing new session .csv file: {os.path.join(data_name, self.cfg.name_session_csv)}{bcolors.ENDC}")
+            print(f"{bcolors.WARNING}       Initializing new session CSV file: {os.path.join(data_name, self.cfg.name_session_csv)}{bcolors.ENDC}")
             # Create empty csv
             with open(os.path.join(data_name, self.cfg.name_session_csv), 'w', newline='') as csvfile:
                 csvwriter = csv.writer(csvfile)
@@ -280,7 +280,7 @@ class ImageData:
         new_data.to_csv(os.path.join(data_name, self.cfg.name_session_csv), mode='a', header=False, index=False)
         new_data.to_csv(os.path.join(data_name, self.cfg.name_total_csv), mode='a', header=False, index=False)
         print(f'{bcolors.OKGREEN}\n       Added 1 row to session CSV: {os.path.join(data_name, self.cfg.name_session_csv)}{bcolors.ENDC}')
-        print(f'{bcolors.OKGREEN}       Added 1 row to total CSV: {os.path.join(data_name, self.cfg.name_total_csv)}{bcolors.ENDC}\n')
+        print(f'{bcolors.OKGREEN}       Added 1 row to total CSV:   {os.path.join(data_name, self.cfg.name_total_csv)}{bcolors.ENDC}\n')
         
 
 def verify_mount_usb_locations():
@@ -458,10 +458,6 @@ def print_options():
     print("main: 1")
     print("align_camera: 3")
     print("Exit: 6")
-
-
-    
-
  
 def route():
     print_options()
