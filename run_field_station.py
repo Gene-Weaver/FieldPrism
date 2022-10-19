@@ -187,6 +187,7 @@ class SetupFP:
         print(f"{bcolors.FAIL}       Quit and mount USB device/s otherwise images will{bcolors.ENDC}")
         print(f"{bcolors.FAIL}       save to boot device (microSD card) in:{bcolors.ENDC}")
 
+@dataclass
 class ImageData:
     # Path data
     path_to_saved: str = ''
@@ -211,10 +212,12 @@ class ImageData:
 
     cfg: object = field(init=False)
 
-    headers = ['session_time','name_session_csv','name_total_csv','filename_short', 'time_of_collection','latitude','longitude','altitude','climb','speed','lat_error_est','lon_error_est','alt_error_est',
-                    'filename','filename_ext','path_from_fp','path_to_saved']
+    headers: list = field(init=False,default_factory=None)
+
 
     def __init__(self, cfg, path_to_saved: str, GPS_data: object):
+        self.headers = ['session_time','name_session_csv','name_total_csv','filename_short', 'time_of_collection','latitude','longitude','altitude','climb','speed','lat_error_est','lon_error_est','alt_error_est',
+                    'filename','filename_ext','path_from_fp','path_to_saved']
         self.cfg = cfg
         self.path_to_saved = path_to_saved
         self.current_time = GPS_data.current_time
