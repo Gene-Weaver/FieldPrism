@@ -498,7 +498,8 @@ def run(pipeline, root):
                     vframe = vidFrame.getCvFrame()
                     vframe = cv2.rotate(vframe, cv2.ROTATE_180)
                     # cv2.imshow('preview', vframe)
-                    preview_window = PreviewWindow(FS.frame_preview,vframe)
+
+                    FS.preview_window(vframe)
 
                 ispFrames = ispQueue.get()
                 isp = ispFrames.getCvFrame()
