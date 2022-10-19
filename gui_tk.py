@@ -438,13 +438,13 @@ class SaveWindow():
     def change_image(self,image):
         self.image = image
 
-    def update_image(self):
+    def update_image(self,image):
         # Get the latest frame and convert image format
         # try:
         #     self.image = cv2.cvtColor(self.image.read()[1], cv2.COLOR_BGR2RGB) # to RGB
         # except:
         #     pass
-        blue,green,red = cv2.split(self.image)
+        blue,green,red = cv2.split(image)
         image = cv2.merge((red,green,blue))
         img = Image.fromarray(image)
         imgtk = ImageTk.PhotoImage(image=img)
