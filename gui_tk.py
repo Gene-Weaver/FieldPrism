@@ -538,9 +538,6 @@ class FieldStation():
         self.img_preview = cv2.imread('img/preview_window.jpg')
         self.img_saved = cv2.imread('img/saved_image_window.jpg')
 
-        root.title("FieldPrism - Field Station")
-        root.minsize(width=550, height=450)
-
         # mainframe = ttk.Frame(root, padding="3 3 12 12")
         # mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
         # root.columnconfigure(0, weight=1)
@@ -561,6 +558,9 @@ class FieldStation():
 if __name__ == "__main__":
     pipeline = createPipeline()
     root = Tk()
+    root.title("FieldPrism - Field Station")
+    root.minsize(width=550, height=450)
+
     # FieldStation(root)
 
     
