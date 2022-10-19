@@ -514,7 +514,7 @@ def run(pipeline, root):
                     # FS.saved_window = PreviewWindow(FS.saved_window,cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
                     # saved_window = SaveWindow(FS.frame_saved, cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
                     SaveWindow(FS.saved_window, cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
-                    
+
                     print(f"       GPS Activated")
                     GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
                     Image = ImageData(cfg, path_to_saved, GPS_data)
