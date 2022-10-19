@@ -433,7 +433,7 @@ class SaveWindow():
         self.image_on_canvas = self.canvas.create_image(0, 0, anchor=tk.NW, image=imgtk)
 
         # Update image on canvas
-        self.update_image()
+        # self.update_image()
 
     def change_image(self,image):
         self.image = image
