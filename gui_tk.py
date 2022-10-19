@@ -510,8 +510,8 @@ def run(pipeline, root):
         frame_saved = tk.Frame(master=root, height=380, bg="black")
         frame_saved.pack(fill=tk.X)
 
-        frame_controls = tk.Frame(master=root, height=200, bg="gray")
-        frame_controls.pack(fill=tk.X)
+        # frame_controls = tk.Frame(master=root, height=200, bg="gray")
+        # frame_controls.pack(fill=tk.X)
 
 
 
@@ -521,57 +521,57 @@ def run(pipeline, root):
         Window_Saved = SaveWindow(frame_saved,img_saved)
 
         cfg = SetupFP()
-        # if cfg.storage_present == False:
-        #     print(f"{bcolors.HEADER}Stopping...{bcolors.ENDC}")
-        #     print_options()
-        #     raise fragile.Break
-        # else:
-        #     # Get data queues
-        #     ispQueue = device.getOutputQueue('isp', maxSize=1, blocking=False)
-        #     videoQueue = device.getOutputQueue('video', maxSize=1, blocking=False)
+        if cfg.storage_present == False:
+            print(f"{bcolors.HEADER}Stopping...{bcolors.ENDC}")
+            print_options()
+            raise fragile.Break
+        else:
+            # Get data queues
+            ispQueue = device.getOutputQueue('isp', maxSize=1, blocking=False)
+            videoQueue = device.getOutputQueue('video', maxSize=1, blocking=False)
 
-        #     TAKE_PHOTO = False
-        #     while True:
-        #         vidFrames = videoQueue.tryGetAll()
-        #         for vidFrame in vidFrames:
-        #             vframe = vidFrame.getCvFrame()
-        #             vframe = cv2.rotate(vframe, cv2.ROTATE_180)
-        #             # cv2.imshow('preview', vframe)
-        #             # PreviewWindow(FS.frame_preview,vframe)
-        #             Window_Preview.change_image(vframe)
-        #             Window_Preview.update_image()
+            TAKE_PHOTO = False
+            while True:
+                vidFrames = videoQueue.tryGetAll()
+                for vidFrame in vidFrames:
+                    vframe = vidFrame.getCvFrame()
+                    vframe = cv2.rotate(vframe, cv2.ROTATE_180)
+                    # cv2.imshow('preview', vframe)
+                    # PreviewWindow(FS.frame_preview,vframe)
+                    Window_Preview.change_image(vframe)
+                    Window_Preview.update_image()
 
-        #         ispFrames = ispQueue.get()
-        #         isp = ispFrames.getCvFrame()
+                ispFrames = ispQueue.get()
+                isp = ispFrames.getCvFrame()
 
-        #         if TAKE_PHOTO:
-        #             print(f"       Capturing Image")
-        #             ispFrames = ispQueue.get()
-        #             save_frame = ispFrames.getCvFrame()
-        #             save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
-        #             # Save
-        #             path_to_saved = route_save_image(cfg,save_frame)
-        #             # cv2.imshow('Saved Image', cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
-        #             # FS.saved_window = PreviewWindow(FS.saved_window,cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
-        #             # saved_window = SaveWindow(FS.frame_saved, cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
-        #             # SaveWindow(FS.frame_saved, cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
-        #             # Window_Saved.change_image(cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
-        #             Window_Saved.update_image(cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
+                if TAKE_PHOTO:
+                    print(f"       Capturing Image")
+                    ispFrames = ispQueue.get()
+                    save_frame = ispFrames.getCvFrame()
+                    save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
+                    # Save
+                    path_to_saved = route_save_image(cfg,save_frame)
+                    # cv2.imshow('Saved Image', cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
+                    # FS.saved_window = PreviewWindow(FS.saved_window,cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
+                    # saved_window = SaveWindow(FS.frame_saved, cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
+                    # SaveWindow(FS.frame_saved, cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
+                    # Window_Saved.change_image(cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
+                    Window_Saved.update_image(cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
 
-        #             print(f"       GPS Activated")
-        #             GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
-        #             Image = ImageData(cfg, path_to_saved, GPS_data)
-        #             TAKE_PHOTO = False
-        #             print(f"{bcolors.OKGREEN}Ready{bcolors.ENDC}")
+                    print(f"       GPS Activated")
+                    GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
+                    Image = ImageData(cfg, path_to_saved, GPS_data)
+                    TAKE_PHOTO = False
+                    print(f"{bcolors.OKGREEN}Ready{bcolors.ENDC}")
 
-        #         key = cv2.waitKey(50)
-        #         if keyboard.is_pressed('6'):
-        #             print(f"{bcolors.HEADER}Stopping...{bcolors.ENDC}")
-        #             print_options()
-        #             break
-        #         elif keyboard.is_pressed('1'):
-        #             TAKE_PHOTO = True
-        #             print(f"       Camera Activated")
+                key = cv2.waitKey(50)
+                if keyboard.is_pressed('6'):
+                    print(f"{bcolors.HEADER}Stopping...{bcolors.ENDC}")
+                    print_options()
+                    break
+                elif keyboard.is_pressed('1'):
+                    TAKE_PHOTO = True
+                    print(f"       Camera Activated")
 
 class FieldStation():
     # cfg_user: object = field(init=False)
@@ -598,26 +598,6 @@ class FieldStation():
         # self.preview_window = PreviewWindow(self.frame_preview,self.img_preview)
         # self.saved_window = SaveWindow(self.frame_saved,self.img_saved)
 
-
-class App(tk.Tk):
-    def __init__(self):
-        super().__init__()
-
-    
-        root = Tk()
-        root.title("FieldPrism - Field Station")
-        root.minsize(width=550, height=450)
-
-        pipeline = createPipeline()
-
-        thread = Thread(target=run, args=(pipeline,root,))
-        thread.setDaemon(True)
-        thread.start()
-
-if __name__ == '__main__':
-    app = App()
-    app.mainloop
-'''
 if __name__ == "__main__":
     pipeline = createPipeline()
     root = Tk()
@@ -640,4 +620,3 @@ if __name__ == "__main__":
     thread.start()
 
     root.mainloop()
-'''
