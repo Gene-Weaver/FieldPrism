@@ -498,7 +498,7 @@ class FieldStation():
 
         # cap = cv2.VideoCapture(0)
         preview_window = PreviewWindow(frame_preview,img_preview)
-        save_window = PreviewWindow(frame_preview,img_saved)
+        save_window = SaveWindow(frame_saved,img_saved)
 
 if __name__ == "__main__":
     pipeline = createPipeline()
