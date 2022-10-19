@@ -386,7 +386,14 @@ class PreviewWindow():
 
         # Create canvas for image
         self.canvas = Canvas(self.window, width=self.width, height=self.height)
-        self.canvas.grid(row=0, column=0)
+        self.canvas.grid(row=1, column=0)
+
+        # First image
+        blue,green,red = cv2.split(self.image)
+        image = cv2.merge((red,green,blue))
+        img = Image.fromarray(image)
+        imgtk = ImageTk.PhotoImage(image=img)
+        self.image_on_canvas = self.canvas.create_image(0, 0, anchor=tk.NW, image=imgtk)
         print('init preview')
 
         # Update image on canvas
