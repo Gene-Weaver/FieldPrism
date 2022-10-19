@@ -7,7 +7,7 @@ import cv2
 import depthai as dai
 import keyboard
 from dataclasses import dataclass, field
-from utils import bcolors, load_cfg
+from utils import bcolors, load_cfg, get_datetime
 import matplotlib.pyplot as plt
 from run_gps import get_gps
 import psutil
@@ -397,8 +397,8 @@ class PreviewWindow():
         #     self.image = cv2.cvtColor(self.image.read()[1], cv2.COLOR_BGR2RGB) # to RGB
         # except:
         #     pass
-        self.image = Image.fromarray(self.image) # to PIL format
-        self.image = ImageTk.PhotoImage(self.image) # to ImageTk format
+        # self.image = Image.fromarray(self.image) # to PIL format
+        # self.image = ImageTk.PhotoImage(self.image) # to ImageTk format
 
         # Update image
         self.canvas.create_image(0, 0, anchor=tk.NW, image=self.image)
@@ -427,8 +427,8 @@ class SaveWindow():
         #     self.image = cv2.cvtColor(self.image.read()[1], cv2.COLOR_BGR2RGB) # to RGB
         # except:
         #     pass
-        self.image = Image.fromarray(self.image) # to PIL format
-        self.image = ImageTk.PhotoImage(self.image) # to ImageTk format
+        # self.image = Image.fromarray(self.image) # to PIL format
+        # self.image = ImageTk.PhotoImage(self.image) # to ImageTk format
 
         # Update image
         self.canvas.create_image(0, 0, anchor=tk.NW, image=self.image)
