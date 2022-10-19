@@ -435,9 +435,6 @@ class SaveWindow():
         # Update image on canvas
         # self.update_image()
 
-    def change_image(self,image):
-        self.image = image
-
     def update_image(self,image):
         # Get the latest frame and convert image format
         # try:
@@ -446,8 +443,8 @@ class SaveWindow():
         #     pass
         blue,green,red = cv2.split(image)
         image = cv2.merge((red,green,blue))
-        img = Image.fromarray(image)
-        imgtk = ImageTk.PhotoImage(image=img)
+        image = Image.fromarray(image)
+        imgtk = ImageTk.PhotoImage(image=image)
         # self.image = Image.fromarray(self.image) # to PIL format
         # self.image = ImageTk.PhotoImage(self.image) # to ImageTk format
 
