@@ -397,11 +397,15 @@ class PreviewWindow():
         #     self.image = cv2.cvtColor(self.image.read()[1], cv2.COLOR_BGR2RGB) # to RGB
         # except:
         #     pass
+        blue,green,red = cv2.split(self.image)
+        image = cv2.merge((red,green,blue))
+        img = Image.fromarray(image)
+        imgtk = ImageTk.PhotoImage(image=img)
         # self.image = Image.fromarray(self.image) # to PIL format
-        self.image = ImageTk.PhotoImage(self.image) # to ImageTk format
+        # self.image = ImageTk.PhotoImage(self.image) # to ImageTk format
 
         # Update image
-        self.canvas.create_image(0, 0, anchor=tk.NW, image=self.image)
+        self.canvas.create_image(0, 0, anchor=tk.NW, image=imgtk)
 
         # Repeat every 'interval' ms
         self.window.after(self.interval, self.update_image)
@@ -427,11 +431,15 @@ class SaveWindow():
         #     self.image = cv2.cvtColor(self.image.read()[1], cv2.COLOR_BGR2RGB) # to RGB
         # except:
         #     pass
+        blue,green,red = cv2.split(self.image)
+        image = cv2.merge((red,green,blue))
+        img = Image.fromarray(image)
+        imgtk = ImageTk.PhotoImage(image=img)
         # self.image = Image.fromarray(self.image) # to PIL format
-        self.image = ImageTk.PhotoImage(self.image) # to ImageTk format
+        # self.image = ImageTk.PhotoImage(self.image) # to ImageTk format
 
         # Update image
-        self.canvas.create_image(0, 0, anchor=tk.NW, image=self.image)
+        self.canvas.create_image(0, 0, anchor=tk.NW, image=imgtk)
 
         # Repeat every 'interval' ms
         self.window.after(self.interval, self.update_image)
