@@ -397,6 +397,7 @@ def main():
 
     # Properties
     camRgb.setVideoSize(426, 240)
+    # Dim of save window = 507 x 380
 
     # Linking
     camRgb.isp.link(ispOut.input)

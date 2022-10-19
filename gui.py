@@ -223,7 +223,7 @@ class FieldStation():
         # mainframe = ttk.Frame(root, padding="3 3 12 12")
         # mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
         # root.columnconfigure(0, weight=1)
-        # root.rowconfigure(0, weight=1)
+        # root.rowconfigure(0, weight=1)1
         frame_preview = tk.Frame(master=root, height=240, bg="white")
         frame_preview.pack(fill=tk.X)
 
@@ -233,7 +233,7 @@ class FieldStation():
         frame_controls = tk.Frame(master=root, height=200, bg="gray")
         frame_controls.pack(fill=tk.X)
 
-        cap = cv2.VideoCapture(0)
+        # cap = cv2.VideoCapture(0)
         preview_window = PreviewWindow(frame_preview,cap)
         # save_window = PreviewWindow(frame_preview,image)
 

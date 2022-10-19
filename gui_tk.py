@@ -6,7 +6,7 @@ from pathlib import Path
 import cv2
 import depthai as dai
 import keyboard
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from utils import bcolors, load_cfg
 import matplotlib.pyplot as plt
 from run_gps import get_gps
@@ -229,10 +229,10 @@ class PreviewWindow():
 
     def update_image(self):
         # Get the latest frame and convert image format
-        try:
-            self.image = cv2.cvtColor(self.image.read()[1], cv2.COLOR_BGR2RGB) # to RGB
-        except:
-            pass
+        # try:
+        #     self.image = cv2.cvtColor(self.image.read()[1], cv2.COLOR_BGR2RGB) # to RGB
+        # except:
+        #     pass
         self.image = Image.fromarray(self.image) # to PIL format
         self.image = ImageTk.PhotoImage(self.image) # to ImageTk format
 
@@ -243,7 +243,8 @@ class PreviewWindow():
         self.window.after(self.interval, self.update_image)
 
 def createPipeline():
-    cfg_user = load_cfg()
+    # cfg_user = load_cfg()
+
     # Create pipeline
     pipeline = dai.Pipeline()
 
@@ -268,8 +269,8 @@ def createPipeline():
     return pipeline
 
 
-def run(pipeline,frame_preview,cfg_user):
-    FieldStation(root,pipeline)
+def run(pipeline):
+    FS = FieldStation(root,pipeline)
     # Connect to device and start pipeline
     with dai.Device(pipeline) as device:
         print('Connected cameras: ', device.getConnectedCameras())
@@ -290,7 +291,7 @@ def run(pipeline,frame_preview,cfg_user):
                 vframe = vidFrame.getCvFrame()
                 vframe = cv2.rotate(vframe, cv2.ROTATE_180)
                 # cv2.imshow('preview', vframe)
-                preview_window = PreviewWindow(frame_preview,vframe)
+                preview_window = PreviewWindow(FS.frame_preview,vframe)
 
             ispFrames = ispQueue.get()
             isp = ispFrames.getCvFrame()
@@ -304,7 +305,7 @@ def run(pipeline,frame_preview,cfg_user):
                 path_to_saved = route_save_image(cfg,save_frame)
                 cv2.imshow('Saved Image', cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
                 print(f"       GPS Activated")
-                GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
+                GPS_data = get_gps(FS.cfg_user['fieldprism']['gps']['speed'])
                 TAKE_PHOTO = False
                 print(f"{bcolors.OKGREEN}Ready{bcolors.ENDC}")
 
@@ -320,8 +321,12 @@ def run(pipeline,frame_preview,cfg_user):
                 print(f"       Camera Activated")
 
 class FieldStation():
+    cfg_user: object = field(init=False)
 
     def __init__(self, root, pipeline):
+        self.cfg_user = load_cfg()
+        img_preview = cv2.imread('img/preview_window.jpg')
+        img_saved = cv2.imread('img/saved_image_window.jpg')
 
         root.title("FieldPrism - Field Station")
         root.minsize(width=550, height=450)
@@ -340,12 +345,11 @@ class FieldStation():
         frame_controls.pack(fill=tk.X)
 
         # cap = cv2.VideoCapture(0)
-        preview_window = PreviewWindow(frame_preview,pipeline)
+        preview_window = PreviewWindow(frame_preview,img_preview)
         # save_window = PreviewWindow(frame_preview,image)
 
 if __name__ == "__main__":
     pipeline = createPipeline()
-    cfg_user = load_cfg()
     root = Tk()
     # FieldStation(root)
 
@@ -358,7 +362,7 @@ if __name__ == "__main__":
     #     cv2.destroyAllWindows()
 
 
-    thread = Thread(target=run, args=(pipeline,cfg_user,))
+    thread = Thread(target=run, args=(pipeline,))
     thread.setDaemon(True)
     thread.start()
 
