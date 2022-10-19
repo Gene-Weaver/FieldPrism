@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import *
 from tkinter import ttk, Canvas
-import time, os, stat
+import time, os, stat, csv
 from pathlib import Path
 import cv2
 import depthai as dai
@@ -13,6 +13,7 @@ from run_gps import get_gps
 import psutil
 from PIL import Image, ImageTk
 from threading import Thread
+import pandas as pd
 
 @dataclass
 class SetupFP():
@@ -140,6 +141,123 @@ class SetupFP():
         print(f"{bcolors.FAIL}       Quit and mount USB device/s otherwise images will{bcolors.ENDC}")
         print(f"{bcolors.FAIL}       save to boot device (microSD card) in:{bcolors.ENDC}")
 
+@dataclass
+class ImageData:
+    # Path data
+    path_to_saved: str = ''
+    path_from_fp: str = ''
+    path: str = ''
+    filename: str = ''
+    filename_short: str = ''
+    filename_ext: str = ''
+
+    # GPS data
+    current_time: float = -888
+    latitude: float = -888
+    longitude: float = -888    
+    
+    altitude: float = -888
+    climb: float = -888
+    speed: float = -888
+
+    lat_error_est: float = -888
+    lon_error_est: float = -888
+    alt_error_est: float = -888
+
+    cfg: object = field(init=False)
+
+    headers = ['session_time','name_session_csv','name_total_csv','filename_short', 'time_of_collection','latitude','longitude','altitude','climb','speed','lat_error_est','lon_error_est','alt_error_est',
+                    'filename','filename_ext','path_from_fp','path_to_saved']
+
+    def __init__(self, cfg, path_to_saved: str, GPS_data: object):
+        self.cfg = cfg
+        self.path_to_saved = path_to_saved
+        self.current_time = GPS_data.current_time
+        self.latitude = GPS_data.latitude
+        self.longitude = GPS_data.longitude
+        self.altitude = GPS_data.altitude
+        self.climb = GPS_data.climb
+        self.speed = GPS_data.speed
+        self.lat_error_est = GPS_data.lat_error_est
+        self.lon_error_est = GPS_data.lon_error_est
+        self.alt_error_est = GPS_data.alt_error_est
+
+        self.path, self.filename = os.path.split(self.path_to_saved)
+        self.filename_short = self.filename.split('.')[0]
+        self.filename_ext = self.filename.split('.')[1]
+        self.path_from_fp = os.path.join(*self.path_to_saved.split(os.path.sep)[3:])
+        # print(f'self.path_from_fp = {self.path_from_fp}')
+
+        new_data = pd.DataFrame([[self.cfg.session_time,self.cfg.name_session_csv,self.cfg.name_total_csv,
+        self.filename_short,self.current_time,self.latitude,self.longitude,self.altitude,self.climb,self.speed,
+        self.lat_error_est,self.lon_error_est,self.alt_error_est,
+        self.filename,self.filename_ext,self.path_from_fp,self.path_to_saved]], columns=self.headers)
+
+        self.save_data(new_data)
+
+    def save_data(self, new_data) -> None:
+        if self.cfg.save_to_boot:
+            self.save_csv(self.cfg.dir_data_none, new_data)
+        if self.cfg.has_1_usb:
+            self.save_csv(self.cfg.dir_data_1, new_data)
+        if self.cfg.has_2_usb:
+            self.save_csv(self.cfg.dir_data_2, new_data)
+        if self.cfg.has_3_usb:
+            self.save_csv(self.cfg.dir_data_3, new_data)
+        if self.cfg.has_4_usb:
+            self.save_csv(self.cfg.dir_data_4, new_data)
+        if self.cfg.has_5_usb:
+            self.save_csv(self.cfg.dir_data_5, new_data)
+        if self.cfg.has_6_usb:
+            self.save_csv(self.cfg.dir_data_6, new_data)
+
+    def save_csv(self, data_name, new_data) -> None:
+        ### Session
+        try:
+            csv_session = pd.read_csv(os.path.join(data_name, self.cfg.name_session_csv),dtype=str)
+        except Exception as e:
+            print(f"{bcolors.WARNING}       Initializing new session CSV file: {os.path.join(data_name, self.cfg.name_session_csv)}{bcolors.ENDC}")
+            # Create empty csv
+            with open(os.path.join(data_name, self.cfg.name_session_csv), 'w', newline='') as csvfile:
+                csvwriter = csv.writer(csvfile)
+                csvwriter.writerow(self.headers)
+        ### Total
+        try: 
+            # Try read csv 
+            csv_total = pd.read_csv(os.path.join(data_name, self.cfg.name_total_csv),dtype=str)
+        except Exception as e:
+            print(f"{bcolors.WARNING}       Initializing new FieldPrism_Data.csv file: {os.path.join(data_name, self.cfg.name_total_csv)}{bcolors.ENDC}")
+            # Create empty csv
+            with open(os.path.join(data_name, self.cfg.name_total_csv), 'w', newline='') as csvfile:
+                csvwriter = csv.writer(csvfile)
+                csvwriter.writerow(self.headers)
+        
+        new_data.to_csv(os.path.join(data_name, self.cfg.name_session_csv), mode='a', header=False, index=False)
+        new_data.to_csv(os.path.join(data_name, self.cfg.name_total_csv), mode='a', header=False, index=False)
+        print(f'{bcolors.OKGREEN}\n       Added 1 row to session CSV: {os.path.join(data_name, self.cfg.name_session_csv)}{bcolors.ENDC}')
+        print(f'{bcolors.OKGREEN}       Added 1 row to total CSV:   {os.path.join(data_name, self.cfg.name_total_csv)}{bcolors.ENDC}\n')
+
+class fragile(object):
+    class Break(Exception):
+      """Break out of the with statement"""
+
+    def __init__(self, value):
+        self.value = value
+
+    def __enter__(self):
+        return self.value.__enter__()
+
+    def __exit__(self, etype, value, traceback):
+        error = self.value.__exit__(etype, value, traceback)
+        if etype == self.Break:
+            return True
+        return error
+
+def print_options():
+    print("main: 1")
+    print("align_camera: 3")
+    print("Exit: 6")
+
 def verify_mount_usb_locations():
     print(f"{bcolors.HEADER}List of mounted devices:{bcolors.ENDC}")
     partitions = psutil.disk_partitions()
@@ -154,7 +272,6 @@ def verify_mount_usb_locations():
             l = l.split()
             print(f"{l[0]} --> {l[1]}")
             d[l[0]] = l[1]
-
 
 def isblockdevice(path):
   return os.path.exists(path) and stat.S_ISBLK(os.stat(path).st_mode)
@@ -242,6 +359,36 @@ class PreviewWindow():
         # Repeat every 'interval' ms
         self.window.after(self.interval, self.update_image)
 
+class SaveWindow():
+    def __init__(self, window, image):
+        self.window = window
+        self.image = image
+        self.width = 507
+        self.height = 380
+        self.interval = 20 # Interval in ms to get the latest frame
+
+        # Create canvas for image
+        self.canvas = Canvas(self.window, width=self.width, height=self.height)
+        self.canvas.grid(row=0, column=0)
+
+        # Update image on canvas
+        self.update_image()
+
+    def update_image(self):
+        # Get the latest frame and convert image format
+        # try:
+        #     self.image = cv2.cvtColor(self.image.read()[1], cv2.COLOR_BGR2RGB) # to RGB
+        # except:
+        #     pass
+        self.image = Image.fromarray(self.image) # to PIL format
+        self.image = ImageTk.PhotoImage(self.image) # to ImageTk format
+
+        # Update image
+        self.canvas.create_image(0, 0, anchor=tk.NW, image=self.image)
+
+        # Repeat every 'interval' ms
+        self.window.after(self.interval, self.update_image)
+
 def createPipeline():
     # cfg_user = load_cfg()
 
@@ -270,55 +417,60 @@ def createPipeline():
 
 
 def run(pipeline):
+    cfg_user = load_cfg()
     FS = FieldStation(root,pipeline)
     # Connect to device and start pipeline
-    with dai.Device(pipeline) as device:
+    with fragile(dai.Device(pipeline)) as device:
         print('Connected cameras: ', device.getConnectedCameras())
         # Print out usb speed
         print('Usb speed: ', device.getUsbSpeed().name)
 
         # Make sure the destination path is present before starting to store the examples
         cfg = SetupFP()
+        if cfg.storage_present == False:
+            print(f"{bcolors.HEADER}Stopping...{bcolors.ENDC}")
+            print_options()
+            raise fragile.Break
+        else:
+            # Get data queues
+            ispQueue = device.getOutputQueue('isp', maxSize=1, blocking=False)
+            videoQueue = device.getOutputQueue('video', maxSize=1, blocking=False)
 
-        # Get data queues
-        ispQueue = device.getOutputQueue('isp', maxSize=1, blocking=False)
-        videoQueue = device.getOutputQueue('video', maxSize=1, blocking=False)
+            TAKE_PHOTO = False
+            while True:
+                vidFrames = videoQueue.tryGetAll()
+                for vidFrame in vidFrames:
+                    vframe = vidFrame.getCvFrame()
+                    vframe = cv2.rotate(vframe, cv2.ROTATE_180)
+                    # cv2.imshow('preview', vframe)
+                    preview_window = PreviewWindow(FS.frame_preview,vframe)
 
-        TAKE_PHOTO = False
-        while True:
-            vidFrames = videoQueue.tryGetAll()
-            for vidFrame in vidFrames:
-                vframe = vidFrame.getCvFrame()
-                vframe = cv2.rotate(vframe, cv2.ROTATE_180)
-                # cv2.imshow('preview', vframe)
-                preview_window = PreviewWindow(FS.frame_preview,vframe)
-
-            ispFrames = ispQueue.get()
-            isp = ispFrames.getCvFrame()
-
-            if TAKE_PHOTO:
-                print(f"       Capturing Image")
                 ispFrames = ispQueue.get()
-                save_frame = ispFrames.getCvFrame()
-                save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
-                # Save
-                path_to_saved = route_save_image(cfg,save_frame)
-                cv2.imshow('Saved Image', cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
-                print(f"       GPS Activated")
-                GPS_data = get_gps(FS.cfg_user['fieldprism']['gps']['speed'])
-                TAKE_PHOTO = False
-                print(f"{bcolors.OKGREEN}Ready{bcolors.ENDC}")
+                isp = ispFrames.getCvFrame()
 
-            key = cv2.waitKey(50)
-            if keyboard.is_pressed('6'):
-                print(f"{bcolors.HEADER}Stopping...{bcolors.ENDC}")
-                print("main: 1")
-                print("align_camera: 3")
-                print("Exit: 6")
-                break
-            elif keyboard.is_pressed('1'):
-                TAKE_PHOTO = True
-                print(f"       Camera Activated")
+                if TAKE_PHOTO:
+                    print(f"       Capturing Image")
+                    ispFrames = ispQueue.get()
+                    save_frame = ispFrames.getCvFrame()
+                    save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
+                    # Save
+                    path_to_saved = route_save_image(cfg,save_frame)
+                    # cv2.imshow('Saved Image', cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
+                    saved_window = SaveWindow(FS.frame_saved,cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
+                    print(f"       GPS Activated")
+                    GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
+                    Image = ImageData(cfg, path_to_saved, GPS_data)
+                    TAKE_PHOTO = False
+                    print(f"{bcolors.OKGREEN}Ready{bcolors.ENDC}")
+
+                key = cv2.waitKey(50)
+                if keyboard.is_pressed('6'):
+                    print(f"{bcolors.HEADER}Stopping...{bcolors.ENDC}")
+                    print_options()
+                    break
+                elif keyboard.is_pressed('1'):
+                    TAKE_PHOTO = True
+                    print(f"       Camera Activated")
 
 class FieldStation():
     cfg_user: object = field(init=False)
@@ -346,7 +498,7 @@ class FieldStation():
 
         # cap = cv2.VideoCapture(0)
         preview_window = PreviewWindow(frame_preview,img_preview)
-        # save_window = PreviewWindow(frame_preview,image)
+        save_window = PreviewWindow(frame_preview,img_saved)
 
 if __name__ == "__main__":
     pipeline = createPipeline()
