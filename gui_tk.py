@@ -386,7 +386,7 @@ class PreviewWindow():
 
         # Create canvas for image
         self.canvas = Canvas(self.window, width=self.width, height=self.height)
-        self.canvas.grid(row=1, column=0)
+        self.canvas.grid(row=0, column=0)
 
         # First image
         blue,green,red = cv2.split(self.image)
