@@ -398,7 +398,7 @@ class PreviewWindow():
         # except:
         #     pass
         # self.image = Image.fromarray(self.image) # to PIL format
-        # self.image = ImageTk.PhotoImage(self.image) # to ImageTk format
+        self.image = ImageTk.PhotoImage(self.image) # to ImageTk format
 
         # Update image
         self.canvas.create_image(0, 0, anchor=tk.NW, image=self.image)
@@ -428,7 +428,7 @@ class SaveWindow():
         # except:
         #     pass
         # self.image = Image.fromarray(self.image) # to PIL format
-        # self.image = ImageTk.PhotoImage(self.image) # to ImageTk format
+        self.image = ImageTk.PhotoImage(self.image) # to ImageTk format
 
         # Update image
         self.canvas.create_image(0, 0, anchor=tk.NW, image=self.image)
