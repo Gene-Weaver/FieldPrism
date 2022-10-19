@@ -598,6 +598,26 @@ class FieldStation():
         # self.preview_window = PreviewWindow(self.frame_preview,self.img_preview)
         # self.saved_window = SaveWindow(self.frame_saved,self.img_saved)
 
+
+class App(tk.Tk):
+    def __init__(self):
+        super().__init__()
+
+    
+        root = Tk()
+        root.title("FieldPrism - Field Station")
+        root.minsize(width=550, height=450)
+
+        pipeline = createPipeline()
+
+        thread = Thread(target=run, args=(pipeline,root,))
+        thread.setDaemon(True)
+        thread.start()
+
+if __name__ == '__main__':
+    app = App()
+    app.mainloop
+'''
 if __name__ == "__main__":
     pipeline = createPipeline()
     root = Tk()
@@ -620,3 +640,4 @@ if __name__ == "__main__":
     thread.start()
 
     root.mainloop()
+'''
