@@ -377,10 +377,9 @@ def align_camera():
                 break
 
 class PreviewWindow():
-    def __init__(self, window):#, image):
-        img_preview = cv2.imread('img/preview_window.jpg')
+    def __init__(self, window, image):
         self.window = window
-        self.image = img_preview
+        self.image = image
         self.width = 426
         self.height = 240
         # self.interval = 20 # Interval in ms to get the latest frame
@@ -388,6 +387,7 @@ class PreviewWindow():
         # Create canvas for image
         self.canvas = Canvas(self.window, width=self.width, height=self.height)
         self.canvas.grid(row=0, column=0)
+        print('init preview')
 
         # Update image on canvas
         # self.update_image()
@@ -410,6 +410,7 @@ class PreviewWindow():
 
         # Update image
         self.canvas.itemconfig(self.image_on_canvas, image=imgtk)
+        print('update preview')
 
         # Repeat every 'interval' ms
         # self.window.after(self.interval, self.update_image)
@@ -432,6 +433,7 @@ class SaveWindow():
         img = Image.fromarray(image)
         imgtk = ImageTk.PhotoImage(image=img)
         self.image_on_canvas = self.canvas.create_image(0, 0, anchor=tk.NW, image=imgtk)
+        print('init save')
 
         # Update image on canvas
         # self.update_image()
@@ -455,6 +457,7 @@ class SaveWindow():
 
         # Repeat every 'interval' ms
         # self.window.after(self.interval, self.update_image)
+        print('update save')
 
 def createPipeline():
     # cfg_user = load_cfg()
@@ -485,7 +488,7 @@ def createPipeline():
 
 def run(pipeline, root):
     # Make sure the destination path is present before starting to store the examples
-    # img_preview = cv2.imread('img/preview_window.jpg')
+    img_preview = cv2.imread('img/preview_window.jpg')
     img_saved = cv2.imread('img/saved_image_window.jpg')
 
     frame_preview = tk.Frame(master=root, height=240, bg="white")
@@ -494,7 +497,7 @@ def run(pipeline, root):
     frame_saved = tk.Frame(master=root, height=380, bg="black")
     frame_saved.pack(fill=tk.X)
 
-    Window_Preview = PreviewWindow(frame_preview)#,img_preview)
+    Window_Preview = PreviewWindow(frame_preview,img_preview)
     Window_Saved = SaveWindow(frame_saved,img_saved)
     # Connect to device and start pipeline
     with fragile(dai.Device(pipeline)) as device:
