@@ -506,10 +506,12 @@ def run(pipeline, root):
     img_preview = cv2.imread('img/preview_window.jpg')
     img_saved = cv2.imread('img/saved_image_window.jpg')
 
-    frame_preview = tk.Frame(master=root, height=240, bg="white")
+    label_preview = tk.Label(master=root, text="Preview (Check Camera Focus)", bg="black")
+    frame_preview = tk.Frame(master=root, height=240, bg="black")
     frame_preview.pack(fill=tk.X)
     # frame_preview.grid(row=0, column=0)
 
+    label_saved = tk.Label(master=root, text="Saved Image", bg="black")
     frame_saved = tk.Frame(master=root, height=380, bg="black")
     frame_saved.pack(fill=tk.X)
     # frame_saved.grid(row=1, column=0)
@@ -595,7 +597,7 @@ def run(pipeline, root):
                     TAKE_PHOTO = True
                     print(f"       Camera Activated")
 
-class FieldStation():
+'''class FieldStation():
     # cfg_user: object = field(init=False)
 
     def __init__(self, root, pipeline):
@@ -618,7 +620,7 @@ class FieldStation():
 
         # cap = cv2.VideoCapture(0)
         # self.preview_window = PreviewWindow(self.frame_preview,self.img_preview)
-        # self.saved_window = SaveWindow(self.frame_saved,self.img_saved)
+        # self.saved_window = SaveWindow(self.frame_saved,self.img_saved)'''
 
 if __name__ == "__main__":
     pipeline = createPipeline()
