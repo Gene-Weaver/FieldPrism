@@ -563,7 +563,7 @@ def run(pipeline, root):
 
     label_fname = tk.Label(master=frame_info_fname, text="Image File Name: ", bg="black", fg="White", font=("Calibri ", 16))
     label_fname.grid(row=0, column=0, sticky="e")
-    label_fname_status = tk.Label(master=frame_info_fname, text="Ready!", bg="black", fg="green", font=("Calibri ", 16))
+    label_fname_status = tk.Label(master=frame_info_fname, text="", bg="black", fg="green", font=("Calibri ", 16))
     label_fname_status.grid(row=0, column=1, sticky="w")
 
     # -------------- GPS Status
@@ -688,17 +688,19 @@ def run(pipeline, root):
                     # Window_Saved.change_image(cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
                     Window_Saved.update_image(cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
 
-                    print(f"       GPS Activated")
-                    label_gps.config(text = 'GPS Activated...', fg='white')
-                    GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
-                    if GPS_data.latitude == -999:
-                        label_gps.config(text = 'No GPS Signal!', fg='red')
-                        label_gps_lat_status.config(text = 'Fail', fg='red')
-                        label_gps_lon_status.config(text = 'Fail', fg='red')
-                    else:
-                        label_gps_status.config(text = 'Good Signal', fg='green')
-                        label_gps_lat_status.config(text = str(GPS_data.latitude), fg='green')
-                        label_gps_lon_status.config(text = str(GPS_data.longitude), fg='green')
+                    GPS_data = gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, cfg_user)
+
+                    # print(f"       GPS Activated")
+                    # label_gps_status.config(text = 'GPS Activated...', fg='orange')
+                    # GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
+                    # if GPS_data.latitude == -999:
+                    #     label_gps_status.config(text = 'No GPS Signal!', fg='red')
+                    #     label_gps_lat_status.config(text = 'Fail', fg='red')
+                    #     label_gps_lon_status.config(text = 'Fail', fg='red')
+                    # else:
+                    #     label_gps_status.config(text = 'Good Signal', fg='green')
+                    #     label_gps_lat_status.config(text = str(GPS_data.latitude), fg='green')
+                    #     label_gps_lon_status.config(text = str(GPS_data.longitude), fg='green')
                         
 
                     Image = ImageData(cfg, path_to_saved, GPS_data)
@@ -744,6 +746,21 @@ def run(pipeline, root):
         # cap = cv2.VideoCapture(0)
         # self.preview_window = PreviewWindow(self.frame_preview,self.img_preview)
         # self.saved_window = SaveWindow(self.frame_saved,self.img_saved)'''
+
+def gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, cfg_user):
+    print(f"       GPS Activated")
+    label_gps_status.config(text = 'GPS Activated...', fg='orange')
+    GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
+    if GPS_data.latitude == -999:
+        label_gps_status.config(text = 'No GPS Signal!', fg='red')
+        label_gps_lat_status.config(text = 'Fail', fg='red')
+        label_gps_lon_status.config(text = 'Fail', fg='red')
+    else:
+        label_gps_status.config(text = 'Good Signal', fg='green')
+        label_gps_lat_status.config(text = str(GPS_data.latitude), fg='green')
+        label_gps_lon_status.config(text = str(GPS_data.longitude), fg='green')
+    return GPS_data
+    
 
 def main():
     pipeline = createPipeline()
