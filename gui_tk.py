@@ -543,7 +543,7 @@ def run(pipeline, root):
     frame_info = tk.Frame(master=root, width = 250, bg="black")
     frame_info.grid(row=1, column=1, rowspan=3, sticky="nsew")
 
-    frame_info.rowconfigure([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], minsize=30)
+    frame_info.rowconfigure([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], minsize=30)
     frame_info.columnconfigure(0, minsize=250)
 
     # -------------- Camera status
@@ -603,7 +603,7 @@ def run(pipeline, root):
 
     # -------------- Number of storage devices
     frame_info_ndevice = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
-    frame_info_ndevice.grid(row=9, column=0, sticky="nsew")
+    frame_info_ndevice.grid(row=14, column=0, sticky="nsew")
     frame_info_ndevice.rowconfigure(0, minsize=30)
     frame_info_ndevice.columnconfigure([0, 1], minsize=250)
 
@@ -611,6 +611,8 @@ def run(pipeline, root):
     label_ndevice.grid(row=0, column=0, sticky="e")
     label_ndevice_status = tk.Label(master=frame_info_ndevice, text="", bg="black", fg="white", font=("Calibri ", 16))
     label_ndevice_status.grid(row=0, column=1, sticky="w")
+
+
 
 
 
