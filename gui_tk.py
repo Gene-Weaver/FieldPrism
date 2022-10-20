@@ -515,20 +515,6 @@ class Redirect():
 
     #def flush(self):
     #    pass
-def terminal():
-    Thread(target=test).start()
-
-def test():
-    print("Thread: start")
-
-    p = subprocess.Popen("ping -c 4 stackoverflow.com".split(), stdout=subprocess.PIPE, bufsize=1, text=True)
-    while p.poll() is None:
-        msg = p.stdout.readline().strip() # read a line from the process output
-        if msg:
-            print(msg)
-
-    print("Thread: end")
-
 
 def run(pipeline, root):
     # Make sure the destination path is present before starting to store the examples
@@ -557,10 +543,10 @@ def run(pipeline, root):
     empty1 = tk.Label(master=root, text="Terminal Output", bg="black", fg="white")
     empty1.grid(row=2, column=1, sticky="nsew")
     
-    frame_terminal = tk.Frame(root, height=380, width=400, bg="black")
+    frame_terminal = tk.Frame(root, height=350, width=400, bg="black")
     frame_terminal.grid(row=3, column= 1, sticky="nsew")
 
-    text_terminal = tk.Text(frame_terminal)
+    text_terminal = tk.Text(frame_terminal, bg="black", fg="white")
     text_terminal.pack(side='left', fill='both')
 
     scrollbar = tk.Scrollbar(frame_terminal)
