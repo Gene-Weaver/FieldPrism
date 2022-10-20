@@ -556,11 +556,49 @@ def run(pipeline, root):
     label_camera_status.grid(row=0, column=1, sticky="w")
 
     # -------------- File name
-    label_fname = tk.Label(master=frame_info, text="filename", bg="black", fg="white", font=("Calibri ", 16))
-    label_fname.grid(row=1, column=0, sticky="nsew")
+    frame_info_fname = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
+    frame_info_fname.grid(row=1, column=0, sticky="nsew")
+    frame_info_fname.rowconfigure(0, minsize=30)
+    frame_info_fname.columnconfigure([0, 1], minsize=250)
 
-    label_gps = tk.Label(master=frame_info, text="GPS: no signal --> -999", bg="black", fg="white", font=("Calibri ", 16))
-    label_gps.grid(row=2, column=0, sticky="nsew")
+    label_fname = tk.Label(master=frame_info_fname, text="Image File Name: ", bg="black", fg="White", font=("Calibri ", 16))
+    label_fname.grid(row=0, column=0, sticky="e")
+    label_fname_status = tk.Label(master=frame_info_fname, text="Ready!", bg="black", fg="green", font=("Calibri ", 16))
+    label_fname_status.grid(row=0, column=1, sticky="w")
+
+    # -------------- GPS Status
+    frame_info_gps = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
+    frame_info_gps.grid(row=3, column=0, sticky="nsew")
+    frame_info_gps.rowconfigure(0, minsize=30)
+    frame_info_gps.columnconfigure([0, 1], minsize=250)
+
+    label_gps = tk.Label(master=frame_info_gps, text="GPS Status: ", bg="black", fg="White", font=("Calibri ", 16))
+    label_gps.grid(row=0, column=0, sticky="e")
+    label_gps_status = tk.Label(master=frame_info_gps, text="", bg="black", fg="green", font=("Calibri ", 16))
+    label_gps_status.grid(row=0, column=1, sticky="w")
+
+    # -------------- GPS Lat
+    frame_info_gps_lat = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
+    frame_info_gps_lat.grid(row=4, column=0, sticky="nsew")
+    frame_info_gps_lat.rowconfigure(0, minsize=30)
+    frame_info_gps_lat.columnconfigure([0, 1], minsize=250)
+
+    label_gps_lat = tk.Label(master=frame_info_gps_lat, text="Latitude: ", bg="black", fg="White", font=("Calibri ", 16))
+    label_gps_lat.grid(row=0, column=0, sticky="e")
+    label_gps_lat_status = tk.Label(master=frame_info_gps_lat, text="", bg="black", fg="green", font=("Calibri ", 16))
+    label_gps_lat_status.grid(row=0, column=1, sticky="w")
+
+    # -------------- GPS Long
+    frame_info_gps_lon = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
+    frame_info_gps_lon.grid(row=5, column=0, sticky="nsew")
+    frame_info_gps_lon.rowconfigure(0, minsize=30)
+    frame_info_gps_lon.columnconfigure([0, 1], minsize=250)
+
+    label_gps_lon = tk.Label(master=frame_info_gps_lon, text="Longitude: ", bg="black", fg="White", font=("Calibri ", 16))
+    label_gps_lon.grid(row=0, column=0, sticky="e")
+    label_gps_lon_status = tk.Label(master=frame_info_gps_lon, text="", bg="black", fg="green", font=("Calibri ", 16))
+    label_gps_lon_status.grid(row=0, column=1, sticky="w")
+
 
 
     '''
@@ -655,9 +693,13 @@ def run(pipeline, root):
                     GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
                     if GPS_data.latitude == -999:
                         label_gps.config(text = 'No GPS Signal!', fg='red')
+                        label_gps_lat_status.config(text = 'Fail', fg='red')
+                        label_gps_lon_status.config(text = 'Fail', fg='red')
                     else:
-                        print_gps = ''.join(['Latitude: ',str(GPS_data.latitude),' Longitude: ',str(GPS_data.longitude)])
-                        label_gps.config(text = print_gps, fg='green')
+                        label_gps_status.config(text = 'Good Signal', fg='green')
+                        label_gps_lat_status.config(text = str(GPS_data.latitude), fg='green')
+                        label_gps_lon_status.config(text = str(GPS_data.longitude), fg='green')
+                        
 
                     Image = ImageData(cfg, path_to_saved, GPS_data)
 
@@ -665,7 +707,7 @@ def run(pipeline, root):
 
                     print(f"{bcolors.OKGREEN}Ready{bcolors.ENDC}")
                     label_camera_status.config(text = 'Ready!', fg='green')
-                    label_fname.config(text = Image.filename)
+                    label_fname_status.config(text = Image.filename)
 
                 key = cv2.waitKey(50)
                 if keyboard.is_pressed('6'):
