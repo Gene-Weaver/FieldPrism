@@ -396,7 +396,7 @@ class PreviewWindow():
         # imgtk = ImageTk.PhotoImage(image=img)
         self.canvas.image = ImageTk.PhotoImage(image=img)
         self.canvas.create_image(0, 0, anchor=tk.NW, image=self.canvas.image)
-        print('init preview')
+        # print('init preview')
 
         # Update image on canvas
         # self.update_image()
@@ -422,7 +422,7 @@ class PreviewWindow():
         self.canvas.image = imgtk
         # self.canvas.itemconfig(self.canvas.image, image=imgtk)
         self.canvas.create_image(0, 0, anchor=tk.NW, image=imgtk)
-        print('update preview')
+        # print('update preview')
 
         # Repeat every 'interval' ms
         # self.window.after(self.interval, self.update_image)
@@ -446,7 +446,7 @@ class SaveWindow():
         img = Image.fromarray(image)
         self.canvas.image = ImageTk.PhotoImage(image=img)
         self.canvas.create_image(0, 0, anchor=tk.NW, image=self.canvas.image)
-        print('init save')
+        # print('init save')
 
         # Update image on canvas
         # self.update_image()
@@ -472,7 +472,7 @@ class SaveWindow():
 
         # Repeat every 'interval' ms
         # self.window.after(self.interval, self.update_image)
-        print('update save')
+        # print('update save')
 
 def createPipeline():
     # cfg_user = load_cfg()
@@ -624,7 +624,7 @@ def run(pipeline, root):
         # self.preview_window = PreviewWindow(self.frame_preview,self.img_preview)
         # self.saved_window = SaveWindow(self.frame_saved,self.img_saved)'''
 
-if __name__ == "__main__":
+def main():
     pipeline = createPipeline()
     root = Tk()
     root.title("FieldPrism - Field Station")
@@ -646,3 +646,20 @@ if __name__ == "__main__":
     thread.start()
 
     root.mainloop()
+
+def route():
+    print_options()
+    while True:
+        key = cv2.waitKey(1)
+        if keyboard.is_pressed('6'):
+            print(f"{bcolors.HEADER}Exiting FieldPrism{bcolors.ENDC}")
+            break
+        elif keyboard.is_pressed('1'):
+            print("Entering main()")
+            main()
+        elif keyboard.is_pressed('3'):
+            print("Entering align_camera()")
+            align_camera()
+
+if __name__ == "__main__":
+    route()
