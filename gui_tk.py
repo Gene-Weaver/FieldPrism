@@ -710,7 +710,9 @@ def run(pipeline, root):
         # Update Session ID
         label_session_status.config(text = str(cfg.name_session_csv), fg='white')
         # Test GPS
-        GPS_data_test = gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, cfg_user)
+        for i in range(0,10):
+            print(i)
+            GPS_data_test = gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, cfg_user,False)
 
         if cfg.storage_present == False:
             print(f"{bcolors.HEADER}Stopping...{bcolors.ENDC}")
@@ -756,7 +758,7 @@ def run(pipeline, root):
                     # Window_Saved.change_image(cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
                     Window_Saved.update_image(cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
 
-                    GPS_data = gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, cfg_user)
+                    GPS_data = gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, cfg_user,True)
 
                     # print(f"       GPS Activated")
                     # label_gps_status.config(text = 'GPS Activated...', fg='orange')
@@ -842,18 +844,28 @@ def change_ready_ind(n,direction):
         # self.preview_window = PreviewWindow(self.frame_preview,self.img_preview)
         # self.saved_window = SaveWindow(self.frame_saved,self.img_saved)'''
 
-def gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, cfg_user):
+def gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, cfg_user,use_data):
     print(f"       GPS Activated")
     label_gps_status.config(text = 'GPS Activated...', fg='orange')
     GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
-    if GPS_data.latitude == -999:
-        label_gps_status.config(text = 'No GPS Signal!', fg='red')
-        label_gps_lat_status.config(text = 'Fail', fg='red')
-        label_gps_lon_status.config(text = 'Fail', fg='red')
+    if use_data:
+        if GPS_data.latitude == -999:
+            label_gps_status.config(text = 'No GPS Signal!', fg='red')
+            label_gps_lat_status.config(text = 'Fail', fg='red')
+            label_gps_lon_status.config(text = 'Fail', fg='red')
+        else:
+            label_gps_status.config(text = 'Good Signal', fg='green')
+            label_gps_lat_status.config(text = str(GPS_data.latitude), fg='green')
+            label_gps_lon_status.config(text = str(GPS_data.longitude), fg='green')
     else:
-        label_gps_status.config(text = 'Good Signal', fg='green')
-        label_gps_lat_status.config(text = str(GPS_data.latitude), fg='green')
-        label_gps_lon_status.config(text = str(GPS_data.longitude), fg='green')
+        if GPS_data.latitude == -999:
+            label_gps_status.config(text = 'Currently No GPS Signal!', fg='red')
+            label_gps_lat_status.config(text = 'Fail', fg='red')
+            label_gps_lon_status.config(text = 'Fail', fg='red')
+        else:
+            label_gps_status.config(text = 'Tested: Good Signal', fg='green')
+            label_gps_lat_status.config(text = str(GPS_data.latitude), fg='green')
+            label_gps_lon_status.config(text = str(GPS_data.longitude), fg='green')
     return GPS_data
     
 
