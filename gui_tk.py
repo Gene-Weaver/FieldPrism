@@ -554,8 +554,8 @@ def run(pipeline, root):
 
     label_camera = tk.Label(master=frame_info_camera, text="Camera Status: ", bg="black", fg="White", font=("Calibri ", 16))
     label_camera.grid(row=0, column=0, sticky="e")
-    label_camera_status = tk.Label(master=frame_info_camera, text="Ready!", bg="black", fg="green", font=("Calibri ", 16))
-    label_camera_status.grid(row=0, column=1, sticky="w")
+    label_camera_status = tk.Label(master=frame_info_camera, text="Ready", bg="black", fg="green", font=("Calibri ", 16))
+    label_camera_status.grid(row=0, column=1, sticky="nsew")
 
     # -------------- File name
     frame_info_fname = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
@@ -710,8 +710,8 @@ def run(pipeline, root):
             direction ='up'
             TAKE_PHOTO = False
             while True:
-                add_text,add_text2,ind_ready,direction = change_ready_ind(ind_ready,direction)
-                text_ready = ''.join([add_text2,add_text,'Ready ',add_text,add_text2])
+                right,left,ind_ready,direction = change_ready_ind(ind_ready,direction)
+                text_ready = ''.join([left,' Ready ',right])
                 label_camera_status.config(text = text_ready, fg='green')
 
                 vidFrames = videoQueue.tryGetAll()
@@ -780,27 +780,31 @@ def run(pipeline, root):
                     print(f"       Camera Activated")
 
 def change_ready_ind(n,direction):
-    em = ' '
-    s = '>'
+    left_side = '<'
+    right_side = '>'
     if n == 10:
         direction='down'
-        s = '<'
+        right_side = '<'
+        left_side = '>'
         n -= 1
     elif n == 0:
         direction='up'
-        s = '>'
+        right_side = '>'
+        left_side = '<'
         n += 1
     else:
         if direction == 'up':
             n += 1
-            s = '>'
+            right_side = '>'
+            left_side = '<'
         else:
             n -= 1
-            s = '<'
+            right_side = '<'
+            left_side = '>'
     m= 11-n
-    out = ''.join([char*n for char in s])
-    out2 = ''.join([char*m for char in em])
-    return out, out2, n, direction
+    right = ''.join([char*n for char in right_side])
+    left = ''.join([char*m for char in left_side])
+    return right, left, n, direction
 
 '''class FieldStation():
     # cfg_user: object = field(init=False)
