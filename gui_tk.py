@@ -554,7 +554,7 @@ def run(pipeline, root):
 
     label_camera = tk.Label(master=frame_info_camera, text="Camera Status: ", bg="black", fg="White", font=("Calibri ", 16))
     label_camera.grid(row=0, column=0, sticky="e")
-    label_camera_status = tk.Label(master=frame_info_camera, text="Ready", bg="black", fg="green", font=("Calibri ", 16))
+    label_camera_status = tk.Label(master=frame_info_camera, text=" Ready ", bg="black", fg="green", font=("Lucida Console", 16))
     label_camera_status.grid(row=0, column=1, sticky="nsew")
 
     # -------------- File name
@@ -710,8 +710,8 @@ def run(pipeline, root):
             direction ='up'
             TAKE_PHOTO = False
             while True:
-                right,left,ind_ready,direction = change_ready_ind(ind_ready,direction)
-                text_ready = ''.join([left,' Ready ',right])
+                right,left,spacing,ind_ready,direction = change_ready_ind(ind_ready,direction)
+                text_ready = ''.join([spacing,left,' Ready ',right,spacing])
                 label_camera_status.config(text = text_ready, fg='green')
 
                 vidFrames = videoQueue.tryGetAll()
@@ -780,31 +780,34 @@ def run(pipeline, root):
                     print(f"       Camera Activated")
 
 def change_ready_ind(n,direction):
-    left_side = '>'
-    right_side = '>'
+    sp = '  '
+    to_out = '>'
+    to_in = '<'
+    pick = to_out
     if n == 10:
         direction='down'
-        right_side = '<'
-        left_side = '<'
+        pick = to_in
         n -= 1
     elif n == 0:
         direction='up'
-        right_side = '>'
-        left_side = '>'
+        pick = to_out
         n += 1
     else:
         if direction == 'up':
             n += 1
-            right_side = '>'
-            left_side = '>'
+            pick = to_out
         else:
             n -= 1
-            right_side = '<'
-            left_side = '<'
+            pick = to_in
     m = 10-n
-    right = ''.join([char*n for char in right_side])
-    left = ''.join([char*m for char in left_side])
-    return right, left, n, direction
+    if direction == 'up':
+        right = ''.join([char*n for char in to_out])
+        left = ''.join([char*n for char in to_in])
+    else:
+        right = ''.join([char*n for char in to_in])
+        left = ''.join([char*n for char in to_out])
+    spacing = ''.join([char*m for char in sp])
+    return right, left, spacing, n, direction
 
 '''class FieldStation():
     # cfg_user: object = field(init=False)
