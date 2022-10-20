@@ -551,9 +551,9 @@ def run(pipeline, root):
     frame_info_camera.columnconfigure([0, 1], minsize=250)
 
     label_camera = tk.Label(master=frame_info_camera, text="Camera Status: ", bg="black", fg="White", font=("Calibri ", 16))
-    label_camera.grid(row=0, column=0, sticky="nsew")
+    label_camera.grid(row=0, column=0, sticky="e")
     label_camera_status = tk.Label(master=frame_info_camera, text="Ready!", bg="black", fg="green", font=("Calibri ", 16))
-    label_camera_status.grid(row=0, column=1, sticky="nsew")
+    label_camera_status.grid(row=0, column=1, sticky="w")
 
     # -------------- File name
     label_fname = tk.Label(master=frame_info, text="filename", bg="black", fg="white", font=("Calibri ", 16))
