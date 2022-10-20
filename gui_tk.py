@@ -557,7 +557,7 @@ def run(pipeline, root):
                 for vidFrame in vidFrames:
                     vframe = vidFrame.getCvFrame()
                     vframe = cv2.rotate(vframe, cv2.ROTATE_180)
-                    # cv2.imshow('preview', vframe)
+                    cv2.imshow('preview', vframe)
                     # PreviewWindow(FS.frame_preview,vframe)
                     # Window_Preview.change_image(vframe)
                     Window_Preview.update_image(vframe)
