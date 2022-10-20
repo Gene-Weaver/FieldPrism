@@ -711,6 +711,7 @@ def run(pipeline, root):
             TAKE_PHOTO = False
             while True:
                 add_text,ind_ready,direction = change_ready_ind(ind_ready,direction)
+                print(add_text)
                 text_ready = ''.join(['Ready ',add_text])
                 label_camera_status.config(text = text_ready, fg='green')
 
@@ -778,6 +779,7 @@ def run(pipeline, root):
                     TAKE_PHOTO = True
                     label_camera_status.config(text = 'Camera Activated...', fg='orange')
                     print(f"       Camera Activated")
+
 def change_ready_ind(n,direction):
     s = '>'
     if n <= 10:
