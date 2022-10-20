@@ -614,7 +614,7 @@ def run(pipeline, root):
     
     # -------------- CSV Session
     frame_info_session = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
-    frame_info_session.grid(row=9, column=0, sticky="nsew")
+    frame_info_session.grid(row=10, column=0, sticky="nsew")
     frame_info_session.rowconfigure(0, minsize=30)
     frame_info_session.columnconfigure([0, 1], minsize=250)
 
@@ -625,7 +625,7 @@ def run(pipeline, root):
 
     # -------------- CSV
     frame_info_csv = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
-    frame_info_csv.grid(row=10, column=0, sticky="nsew")
+    frame_info_csv.grid(row=11, column=0, sticky="nsew")
     frame_info_csv.rowconfigure(0, minsize=30)
     frame_info_csv.columnconfigure([0, 1], minsize=250)
 
@@ -709,6 +709,8 @@ def run(pipeline, root):
         label_total_status.config(text = str(cfg.name_total_csv), fg='white')
         # Update Session ID
         label_session_status.config(text = str(cfg.name_session_csv), fg='white')
+        # Test GPS
+        GPS_data_test = gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, cfg_user)
 
         if cfg.storage_present == False:
             print(f"{bcolors.HEADER}Stopping...{bcolors.ENDC}")
