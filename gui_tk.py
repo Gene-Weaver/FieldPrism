@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import *
 from tkinter import ttk, Canvas
-import time, os, stat, csv
+import time, os, stat, csv, sys
 from pathlib import Path
 import cv2
 import depthai as dai
@@ -14,6 +14,7 @@ import psutil
 from PIL import Image, ImageTk
 from threading import Thread
 import pandas as pd
+import subprocess
 
 @dataclass
 class SetupFP:
@@ -501,14 +502,41 @@ def createPipeline():
 
     return pipeline
 
+class Redirect():
+
+    def __init__(self, widget, autoscroll=True):
+        self.widget = widget
+        self.autoscroll = autoscroll
+
+    def write(self, text):
+        self.widget.insert('end', text)
+        if self.autoscroll:
+            self.widget.see("end")  # autoscroll
+
+    #def flush(self):
+    #    pass
+def terminal():
+    Thread(target=test).start()
+
+def test():
+    print("Thread: start")
+
+    p = subprocess.Popen("ping -c 4 stackoverflow.com".split(), stdout=subprocess.PIPE, bufsize=1, text=True)
+    while p.poll() is None:
+        msg = p.stdout.readline().strip() # read a line from the process output
+        if msg:
+            print(msg)
+
+    print("Thread: end")
+
 
 def run(pipeline, root):
     # Make sure the destination path is present before starting to store the examples
     img_preview = cv2.imread('img/preview_window.jpg')
     img_saved = cv2.imread('img/saved_image_window.jpg')
 
-    root.rowconfigure([0, 1, 2, 3, 4], minsize=50)
-    root.columnconfigure(0, minsize=50)
+    root.rowconfigure([0, 1, 2, 3, 4], minsize=30)
+    root.columnconfigure([0, 1])
 
     label_preview = tk.Label(master=root, text="Preview (Check Camera Focus)", bg="black", fg="white")
     label_preview.grid(row=0, column=0, sticky="nsew")
@@ -522,6 +550,21 @@ def run(pipeline, root):
     frame_saved.grid(row=3, column=0, sticky="nsew")
     # frame_saved.pack(fill=tk.X)
     # frame_saved.grid(row=1, column=0)
+    
+    frame_terminal = tk.Frame(root)
+    frame_terminal.grid(row=3, col= 1, expand=True, fill='both', minsize=100)
+
+    text_terminal = tk.Text(frame_terminal)
+    text_terminal.pack(side='left', fill='both', expand=True)
+
+    scrollbar = tk.Scrollbar(frame_terminal)
+    scrollbar.pack(side='right', fill='y')
+
+    text_terminal['yscrollcommand'] = scrollbar.set
+    scrollbar['command'] = text_terminal.yview
+
+    old_stdout = sys.stdout    
+    sys.stdout = Redirect(text_terminal)
 
     Window_Preview = PreviewWindow(frame_preview,img_preview)
     Window_Saved = SaveWindow(frame_saved,img_saved)
@@ -599,6 +642,7 @@ def run(pipeline, root):
                 if keyboard.is_pressed('6'):
                     print(f"{bcolors.HEADER}Stopping...{bcolors.ENDC}")
                     print_options()
+                    sys.stdout = old_stdout
                     cv2.destroyAllWindows()
                     root.destroy()
                     break
