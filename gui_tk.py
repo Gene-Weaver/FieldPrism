@@ -862,6 +862,7 @@ def gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, c
             label_gps_lon_status.config(text = str(GPS_data.longitude), fg='green')
     else:
         if GPS_data.latitude == -999:
+            print('************************************************************')
             label_gps_status.config(text = 'Testing GPS Signal - Failing', fg='orange')
             label_gps_lat_status.config(text = 'Failing', fg='orange')
             label_gps_lon_status.config(text = 'Failing', fg='orange')
