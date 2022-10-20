@@ -793,8 +793,10 @@ def change_ready_ind(n,direction):
     else:
         if direction == 'up':
             n += 1
+            s = '>'
         else:
             n -= 1
+            s = '<'
     out = ''.join([char*n for char in s])
     return out,n,direction
 
