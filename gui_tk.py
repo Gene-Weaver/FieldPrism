@@ -595,6 +595,8 @@ def run(pipeline, root):
                 if keyboard.is_pressed('6'):
                     print(f"{bcolors.HEADER}Stopping...{bcolors.ENDC}")
                     print_options()
+                    cv2.destroyAllWindows()
+                    root.destroy()
                     break
                 elif keyboard.is_pressed('1'):
                     TAKE_PHOTO = True
