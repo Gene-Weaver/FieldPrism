@@ -410,6 +410,7 @@ class PreviewWindow():
         #     self.image = cv2.cvtColor(self.image.read()[1], cv2.COLOR_BGR2RGB) # to RGB
         # except:
         #     pass
+        self.image = image
         blue,green,red = cv2.split(image)
         image = cv2.merge((red,green,blue))
         image = Image.fromarray(image)
@@ -418,6 +419,7 @@ class PreviewWindow():
         # self.image = ImageTk.PhotoImage(self.image) # to ImageTk format
 
         # Update image
+        self.canvas.image = imgtk
         self.canvas.itemconfig(self.canvas.image, image=imgtk)
         print('update preview')
 
@@ -454,7 +456,8 @@ class SaveWindow():
         #     self.image = cv2.cvtColor(self.image.read()[1], cv2.COLOR_BGR2RGB) # to RGB
         # except:
         #     pass
-        blue,green,red = cv2.split(image)
+        self.image = image
+        blue,green,red = cv2.split(self.image)
         image = cv2.merge((red,green,blue))
         image = Image.fromarray(image)
         imgtk = ImageTk.PhotoImage(image=image)
@@ -462,6 +465,7 @@ class SaveWindow():
         # self.image = ImageTk.PhotoImage(self.image) # to ImageTk format
 
         # Update image
+        self.canvas.image = imgtk
         self.canvas.itemconfig(self.canvas.image, image=imgtk)
         # self.canvas.create_image(0, 0, anchor=tk.NW, image=imgtk)
 
