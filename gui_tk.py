@@ -603,7 +603,7 @@ def run(pipeline, root):
 
     # -------------- Number of storage devices
     frame_info_ndevice = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
-    frame_info_ndevice.grid(row=5, column=0, sticky="nsew")
+    frame_info_ndevice.grid(row=9, column=0, sticky="nsew")
     frame_info_ndevice.rowconfigure(0, minsize=30)
     frame_info_ndevice.columnconfigure([0, 1], minsize=250)
 
