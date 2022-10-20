@@ -780,8 +780,8 @@ def run(pipeline, root):
                     print(f"       Camera Activated")
 
 def change_ready_ind(n,direction):
-    to_in = '>'
-    to_out = '<'
+    to_out = '>'
+    to_in = '<'
     if n == 10:
         direction='down'
         pick = to_in
