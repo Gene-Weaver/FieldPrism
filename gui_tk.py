@@ -706,8 +706,14 @@ def run(pipeline, root):
             ispQueue = device.getOutputQueue('isp', maxSize=1, blocking=False)
             videoQueue = device.getOutputQueue('video', maxSize=1, blocking=False)
 
+            ind_ready = 1
+            direction ='up'
             TAKE_PHOTO = False
             while True:
+                add_text,ind_ready,direction = change_ready_ind(ind_ready,direction)
+                text_ready = ''.join(['Ready ',add_text])
+                label_camera_status.config(text = text_ready, fg='green')
+
                 vidFrames = videoQueue.tryGetAll()
                 for vidFrame in vidFrames:
                     vframe = vidFrame.getCvFrame()
@@ -770,7 +776,25 @@ def run(pipeline, root):
                     break
                 elif keyboard.is_pressed('1'):
                     TAKE_PHOTO = True
+                    label_camera_status.config(text = 'Camera Activated...', fg='orange')
                     print(f"       Camera Activated")
+def change_ready_ind(n,direction):
+    s = '>'
+    if n <= 10:
+        direction='down'
+        s = '<'
+        n -= 1
+    elif n <= 0:
+        direction='up'
+        s = '>'
+        n += 1
+    else:
+        if direction == 'up':
+            n += 1
+        else:
+            n -= 1
+    out = ''.join([char*n for char in s])
+    return out,n,direction
 
 '''class FieldStation():
     # cfg_user: object = field(init=False)
