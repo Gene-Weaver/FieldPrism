@@ -510,10 +510,16 @@ class Redirect():
         self.widget.config(state=tk.NORMAL)
         self.widget.bind('<Key>',lambda e: 'break')
 
-    def write(self, text):
-        self.widget.insert('end', text)
-        if self.autoscroll:
-            self.widget.see("end")  # autoscroll
+    def write(self, text, is_stderr=False):
+        self.write_lock.acquire()
+
+        self.insert('end',text,'STDERR' if is_stderr else 'STDOUT')
+        self.see('end')
+
+        self.write_lock.release()
+        # self.widget.insert('end', text)
+        # if self.autoscroll:
+        #     self.widget.see("end")  # autoscroll
 
     def flush(self):
        pass
