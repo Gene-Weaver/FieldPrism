@@ -524,33 +524,33 @@ def run(pipeline, root):
     root.rowconfigure([0, 1, 2, 3], minsize=30)
     root.columnconfigure([0, 1], minsize=100)
 
-    label_preview = tk.Label(master=root, text="Preview (Check Camera Focus)", bg="black", fg="white")
+    label_preview = tk.Label(master=root, text="Preview (Check Camera Focus)", bg="black", fg="white", font=("Arial", 20))
     label_preview.grid(row=0, column=0, sticky="nsew")
     frame_preview = tk.Frame(master=root, height=240, bg="black")
     frame_preview.grid(row=1, column=0, sticky="nsew")
     # frame_preview.pack(fill=tk.X)
 
-    label_saved = tk.Label(master=root, text="Saved Image", bg="black", fg="white")
+    label_saved = tk.Label(master=root, text="Saved Image", bg="black", fg="white", font=("Arial", 20))
     label_saved.grid(row=2, column=0, sticky="nsew")
     frame_saved = tk.Frame(master=root, height=380, bg="black")
     frame_saved.grid(row=3, column=0, sticky="nsew")
 
-    label_top_info = tk.Label(master=root, text="Info", bg="black", fg="white", font=("Arial", 16))
+    label_top_info = tk.Label(master=root, text="Info", bg="black", fg="white", font=("Arial", 20))
     label_top_info.grid(row=0, column=1, sticky="nsew")
 
     frame_info = tk.Frame(master=root, height=240, width = 200, bg="black")
     frame_info.grid(row=1, column=1, rowspan=3, sticky="nsew")
 
-    frame_info.rowconfigure([0, 1, 2, 3], minsize=100)
-    frame_info.columnconfigure(0, minsize=100)
+    frame_info.rowconfigure([0, 1, 2, 3], minsize=250)
+    frame_info.columnconfigure(0, minsize=50)
 
-    label_info = tk.Label(master=frame_info, text="Ready!", bg="black", fg="green")
+    label_info = tk.Label(master=frame_info, text="Ready!", bg="black", fg="green", font=("Cambria", 16))
     label_info.grid(row=0, column=0, sticky="nsew")
 
-    label_fname = tk.Label(master=frame_info, text="filename", bg="black", fg="white")
+    label_fname = tk.Label(master=frame_info, text="filename", bg="black", fg="white", font=("Cambria", 16))
     label_fname.grid(row=1, column=0, sticky="nsew")
 
-    label_gps = tk.Label(master=frame_info, text="GPS: no signal --> -999", bg="black", fg="white")
+    label_gps = tk.Label(master=frame_info, text="GPS: no signal --> -999", bg="black", fg="white", font=("Cambria", 16))
     label_gps.grid(row=2, column=0, sticky="nsew")
 
 
