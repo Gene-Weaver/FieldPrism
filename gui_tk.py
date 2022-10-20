@@ -540,7 +540,7 @@ def run(pipeline, root):
     label_top_info = tk.Label(master=root, text="Info", bg="black", fg="white", font=("Arial", 20))
     label_top_info.grid(row=0, column=1, sticky="nsew")
 
-    frame_info = tk.Frame(master=root, height=240, width = 250, bg="black")
+    frame_info = tk.Frame(master=root, width = 250, bg="black")
     frame_info.grid(row=1, column=1, rowspan=3, sticky="nsew")
 
     frame_info.rowconfigure([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], minsize=30)
@@ -607,7 +607,7 @@ def run(pipeline, root):
     frame_info_ndevice.rowconfigure(0, minsize=30)
     frame_info_ndevice.columnconfigure([0, 1], minsize=250)
 
-    label_ndevice = tk.Label(master=frame_info_ndevice, text="Number of Storage Devices: ", bg="black", fg="White", font=("Calibri ", 16))
+    label_ndevice = tk.Label(master=frame_info_ndevice, text="Storage Devices: ", bg="black", fg="White", font=("Calibri ", 16))
     label_ndevice.grid(row=0, column=0, sticky="e")
     label_ndevice_status = tk.Label(master=frame_info_ndevice, text="", bg="black", fg="white", font=("Calibri ", 16))
     label_ndevice_status.grid(row=0, column=1, sticky="w")
