@@ -541,7 +541,7 @@ def run(pipeline, root):
     frame_info = tk.Frame(master=root, height=240, width = 200, bg="black")
     frame_info.grid(row=1, column=1, rowspan=3, sticky="nsew")
 
-    frame_info.rowconfigure([0, 1, 2, 3])
+    frame_info.rowconfigure([0, 1, 2, 3], minsize=100)
     frame_info.columnconfigure(0, minsize=100)
 
     label_info = tk.Label(master=frame_info, text="Ready!", bg="black", fg="green")
