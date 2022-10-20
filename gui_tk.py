@@ -538,15 +538,24 @@ def run(pipeline, root):
     label_top_info = tk.Label(master=root, text="Info", bg="black", fg="white", font=("Arial", 20))
     label_top_info.grid(row=0, column=1, sticky="nsew")
 
-    frame_info = tk.Frame(master=root, height=240, width = 200, bg="black")
+    frame_info = tk.Frame(master=root, height=240, width = 250, bg="black")
     frame_info.grid(row=1, column=1, rowspan=3, sticky="nsew")
 
-    frame_info.rowconfigure([0, 1, 2, 3], minsize=50)
+    frame_info.rowconfigure([0, 1, 2, 3, 4, 5, 6, 7], minsize=30)
     frame_info.columnconfigure(0, minsize=250)
 
-    label_info = tk.Label(master=frame_info, text="Ready!", bg="black", fg="green", font=("Calibri ", 16))
-    label_info.grid(row=0, column=0, sticky="nsew")
+    # -------------- Camera status
+    frame_info_camera = tk.Frame(master=frame_info, height=50, width = 250, bg="black")
+    frame_info_camera.grid(row=0, column=0, sticky="nsew")
+    frame_info_camera.rowconfigure(0, minsize=30)
+    frame_info_camera.columnconfigure([0, 1], minsize=250)
 
+    label_camera = tk.Label(master=frame_info_camera, text="Camera Status: ", bg="black", fg="White", font=("Calibri ", 16))
+    label_camera.grid(row=0, column=0, sticky="nsew")
+    label_camera_status = tk.Label(master=frame_info, text="Ready!", bg="black", fg="green", font=("Calibri ", 16))
+    label_camera_status.grid(row=0, column=1, sticky="nsew")
+
+    # -------------- File name
     label_fname = tk.Label(master=frame_info, text="filename", bg="black", fg="white", font=("Calibri ", 16))
     label_fname.grid(row=1, column=0, sticky="nsew")
 
@@ -628,7 +637,7 @@ def run(pipeline, root):
 
                 if TAKE_PHOTO:
                     print(f"       Capturing Image")
-                    label_info.config(text = 'Capturing Image...', fg='orange')
+                    label_camera_status.config(text = 'Capturing Image...', fg='orange')
                     ispFrames = ispQueue.get()
                     save_frame = ispFrames.getCvFrame()
                     save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
@@ -655,7 +664,7 @@ def run(pipeline, root):
                     TAKE_PHOTO = False
 
                     print(f"{bcolors.OKGREEN}Ready{bcolors.ENDC}")
-                    label_info.config(text = 'Ready!', fg='green')
+                    label_camera_status.config(text = 'Ready!', fg='green')
                     label_fname.config(text = Image.filename)
 
                 key = cv2.waitKey(50)
