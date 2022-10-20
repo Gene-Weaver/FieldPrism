@@ -782,11 +782,11 @@ def run(pipeline, root):
 
 def change_ready_ind(n,direction):
     s = '>'
-    if n <= 10:
+    if n == 10:
         direction='down'
         s = '<'
         n -= 1
-    elif n <= 0:
+    elif n == 0:
         direction='up'
         s = '>'
         n += 1
