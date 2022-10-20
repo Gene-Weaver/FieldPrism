@@ -554,7 +554,7 @@ def run(pipeline, root):
 
     label_camera = tk.Label(master=frame_info_camera, text="Camera Status: ", bg="black", fg="White", font=("Calibri ", 16))
     label_camera.grid(row=0, column=0, sticky="e")
-    label_camera_status = tk.Label(master=frame_info_camera, text=" Ready ", bg="black", fg="green", font=("Lucida Console", 16))
+    label_camera_status = tk.Label(master=frame_info_camera, text=" Ready ", bg="black", fg="green", font=("Monotype Corsiva", 16))
     label_camera_status.grid(row=0, column=1, sticky="nsew")
 
     # -------------- File name
@@ -783,22 +783,17 @@ def change_ready_ind(n,direction):
     sp = ' '
     to_out = '>'
     to_in = '<'
-    pick = to_out
     if n == 10:
         direction='down'
-        pick = to_in
         n -= 1
     elif n == 0:
         direction='up'
-        pick = to_out
         n += 1
     else:
         if direction == 'up':
             n += 1
-            pick = to_out
         else:
             n -= 1
-            pick = to_in
     m = 10-n
     if direction == 'up':
         right = ''.join([char*n for char in to_out])
