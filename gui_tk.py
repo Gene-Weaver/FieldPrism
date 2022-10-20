@@ -710,9 +710,12 @@ def run(pipeline, root):
         # Update Session ID
         label_session_status.config(text = str(cfg.name_session_csv), fg='white')
         # Test GPS
-        for i in range(0,10):
+        for i in range(0,5):
             print(i)
             GPS_data_test = gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, cfg_user,False)
+            if GPS_data_test.latitude != -999:
+                GPS_data_test = gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, cfg_user,True)
+                break
 
         if cfg.storage_present == False:
             print(f"{bcolors.HEADER}Stopping...{bcolors.ENDC}")
@@ -846,7 +849,7 @@ def change_ready_ind(n,direction):
 
 def gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, cfg_user,use_data):
     print(f"       GPS Activated")
-    label_gps_status.config(text = 'GPS Activated...', fg='orange')
+    label_gps_status.config(text = 'Testing GPS Signal', fg='orange')
     GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
     if use_data:
         if GPS_data.latitude == -999:
@@ -859,11 +862,11 @@ def gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, c
             label_gps_lon_status.config(text = str(GPS_data.longitude), fg='green')
     else:
         if GPS_data.latitude == -999:
-            label_gps_status.config(text = 'Currently No GPS Signal!', fg='red')
-            label_gps_lat_status.config(text = 'Fail', fg='red')
-            label_gps_lon_status.config(text = 'Fail', fg='red')
+            label_gps_status.config(text = 'Testing GPS Signal - Failing', fg='orange')
+            label_gps_lat_status.config(text = 'Fail', fg='orange')
+            label_gps_lon_status.config(text = 'Fail', fg='orange')
         else:
-            label_gps_status.config(text = 'Tested: Good Signal', fg='green')
+            label_gps_status.config(text = 'Testing GPS Signal - Pass', fg='green')
             label_gps_lat_status.config(text = str(GPS_data.latitude), fg='green')
             label_gps_lon_status.config(text = str(GPS_data.longitude), fg='green')
     return GPS_data
