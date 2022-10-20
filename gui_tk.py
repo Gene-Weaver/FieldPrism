@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 from run_gps import get_gps
 import psutil
 from PIL import Image, ImageTk
+import threading
 from threading import Thread
 import pandas as pd
 import subprocess
@@ -505,18 +506,28 @@ def createPipeline():
 class Redirect():
 
     def __init__(self, widget, autoscroll=True):
+        self.started = False
+        self.write_lock = threading.Lock()
+
+        self.tag_configure('STDOUT',background='white',foreground='black')
+        self.tag_configure('STDERR',background='white',foreground='red')
+
+        self.config(state=tk.NORMAL)
+        self.bind('<Key>',lambda e: 'break') #ignore all key presses
+
         self.widget = widget
         self.autoscroll = autoscroll
-        self.widget.config(state=tk.NORMAL)
-        self.widget.bind('<Key>',lambda e: 'break')
 
-    def write(self, text, is_stderr=False):
-        self.widget.write_lock.acquire()
+    def write(self,val,is_stderr=False):
 
-        self.widget.insert('end',text,'STDERR' if is_stderr else 'STDOUT')
-        self.widget.see('end')
+        self.write_lock.acquire()
 
-        self.widget.write_lock.release()
+        self.insert('end',val,'STDERR' if is_stderr else 'STDOUT')
+        self.see('end')
+
+        self.write_lock.release()
+
+    # def write(self, text, is_stderr=False):
         # self.widget.insert('end', text)
         # if self.autoscroll:
         #     self.widget.see("end")  # autoscroll
