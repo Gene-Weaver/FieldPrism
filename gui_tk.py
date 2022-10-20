@@ -509,8 +509,8 @@ def run(pipeline, root):
     frame_saved.pack(fill=tk.X)
     # frame_saved.grid(row=1, column=0)
 
-    # Window_Preview = PreviewWindow(frame_preview,img_preview)
-    # Window_Saved = SaveWindow(frame_saved,img_saved)
+    Window_Preview = PreviewWindow(frame_preview,img_preview)
+    Window_Saved = SaveWindow(frame_saved,img_saved)
     # # Connect to device and start pipeline
     # with fragile(dai.Device(pipeline)) as device:
     #     print('Connected cameras: ', device.getConnectedCameras())
