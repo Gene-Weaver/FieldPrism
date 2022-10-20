@@ -507,11 +507,13 @@ def run(pipeline, root):
     img_saved = cv2.imread('img/saved_image_window.jpg')
 
     label_preview = tk.Label(master=root, text="Preview (Check Camera Focus)", bg="black")
+    label_preview.pack()
     frame_preview = tk.Frame(master=root, height=240, bg="black")
     frame_preview.pack(fill=tk.X)
     # frame_preview.grid(row=0, column=0)
 
     label_saved = tk.Label(master=root, text="Saved Image", bg="black")
+    label_saved.pack()
     frame_saved = tk.Frame(master=root, height=380, bg="black")
     frame_saved.pack(fill=tk.X)
     # frame_saved.grid(row=1, column=0)
