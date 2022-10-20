@@ -534,13 +534,26 @@ def run(pipeline, root):
     label_saved.grid(row=2, column=0, sticky="nsew")
     frame_saved = tk.Frame(master=root, height=380, bg="black")
     frame_saved.grid(row=3, column=0, sticky="nsew")
-    # frame_saved.pack(fill=tk.X)
-    # frame_saved.grid(row=1, column=0)
-    # empty1 = tk.Label(master=root, text="", bg="black", fg="white")
-    # empty1.grid(row=0, column=1, sticky="nsew")
-    # empty1 = tk.Label(master=root, text="", bg="black", fg="white")
-    # empty1.grid(row=1, column=1, sticky="nsew")
-    empty1 = tk.Label(master=root, text="Terminal Output", bg="black", fg="white")
+
+    label_top_info = tk.Label(master=frame_info, text="Info", bg="black", fg="white")
+    label_top_info.pack(row=0, column=1, sticky="nsew", side='left')
+
+    frame_info = tk.Frame(master=root, height=240, width = 200, bg="black")
+    frame_info.grid(row=1, column=1, rowspan=3, sticky="nsew")
+
+    label_info = tk.Label(master=frame_info, text="Ready!", bg="black", fg="white")
+    label_info.pack(side='left', sticky="nsew")
+
+    label_fname = tk.Label(master=frame_info, text="filename", bg="black", fg="white")
+    label_fname.grid(side='left', sticky="nsew")
+
+    label_gps = tk.Label(master=frame_info, text="GPS: no data --> -999", bg="black", fg="green")
+    label_gps.grid(side='left', sticky="nsew")
+
+
+    '''
+    # Terminal out, but causes error
+    # empty1 = tk.Label(master=root, text="Terminal Output", bg="black", fg="white")
     empty1.grid(row=0, column=1, sticky="nsew")
     
     frame_terminal = tk.Frame(root, height=350, width=400, bg="black")
@@ -556,7 +569,7 @@ def run(pipeline, root):
     scrollbar['command'] = text_terminal.yview
 
     old_stdout = sys.stdout    
-    sys.stdout = Redirect(text_terminal)
+    sys.stdout = Redirect(text_terminal)'''
 
     Window_Preview = PreviewWindow(frame_preview,img_preview)
     Window_Saved = SaveWindow(frame_saved,img_saved)
