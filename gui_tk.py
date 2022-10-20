@@ -706,7 +706,7 @@ def run(pipeline, root):
             ispQueue = device.getOutputQueue('isp', maxSize=1, blocking=False)
             videoQueue = device.getOutputQueue('video', maxSize=1, blocking=False)
 
-            ind_ready = 1
+            ind_ready = 0
             direction ='up'
             TAKE_PHOTO = False
             while True:
@@ -784,21 +784,23 @@ def change_ready_ind(n,direction):
     to_in = '<'
     if n == 10:
         direction='down'
+        pick = to_in
         n -= 1
     elif n == 0:
         direction='up'
+        pick = to_out
         n += 1
     else:
         if direction == 'up':
+            pick = to_out
             n += 1
         else:
+            pick = to_in
             n -= 1
-    if direction == 'up':
-        right = ''.join([char*n for char in to_out])
-        left = ''.join([char*n for char in to_in])
-    else:
-        right = ''.join([char*n for char in to_in])
-        left = ''.join([char*n for char in to_out])
+    m = 10-n
+    right = ''.join([char*n for char in pick])
+    left = ''.join([char*m for char in pick])
+
     return right, left, n, direction
 
 '''class FieldStation():
