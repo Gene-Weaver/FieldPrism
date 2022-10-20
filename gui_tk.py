@@ -411,16 +411,16 @@ class PreviewWindow():
         # except:
         #     pass
         self.image = image
-        blue,green,red = cv2.split(image)
-        image = cv2.merge((red,green,blue))
-        image = Image.fromarray(image)
-        imgtk = ImageTk.PhotoImage(image=image)
+        blue,green,red = cv2.split(self.image)
+        imgtk = cv2.merge((red,green,blue))
+        imgtk = Image.fromarray(imgtk)
+        imgtk = ImageTk.PhotoImage(image=imgtk)
         # self.image = Image.fromarray(self.image) # to PIL format
         # self.image = ImageTk.PhotoImage(self.image) # to ImageTk format
 
         # Update image
         self.canvas.image = imgtk
-        self.canvas.itemconfig(self.canvas.image, image=imgtk)
+        self.canvas.itemconfig(self.canvas.image, image=image)
         print('update preview')
 
         # Repeat every 'interval' ms
@@ -458,15 +458,15 @@ class SaveWindow():
         #     pass
         self.image = image
         blue,green,red = cv2.split(self.image)
-        image = cv2.merge((red,green,blue))
-        image = Image.fromarray(image)
-        imgtk = ImageTk.PhotoImage(image=image)
+        imgtk = cv2.merge((red,green,blue))
+        imgtk = Image.fromarray(imgtk)
+        imgtk = ImageTk.PhotoImage(image=imgtk)
         # self.image = Image.fromarray(self.image) # to PIL format
         # self.image = ImageTk.PhotoImage(self.image) # to ImageTk format
 
         # Update image
         self.canvas.image = imgtk
-        self.canvas.itemconfig(self.canvas.image, image=imgtk)
+        self.canvas.itemconfig(self.canvas.image, image=image)
         # self.canvas.create_image(0, 0, anchor=tk.NW, image=imgtk)
 
         # Repeat every 'interval' ms
@@ -557,7 +557,7 @@ def run(pipeline, root):
                 for vidFrame in vidFrames:
                     vframe = vidFrame.getCvFrame()
                     vframe = cv2.rotate(vframe, cv2.ROTATE_180)
-                    cv2.imshow('preview', vframe)
+                    # cv2.imshow('preview', vframe)
                     # PreviewWindow(FS.frame_preview,vframe)
                     # Window_Preview.change_image(vframe)
                     Window_Preview.update_image(vframe)
