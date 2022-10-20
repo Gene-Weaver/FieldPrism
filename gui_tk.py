@@ -780,27 +780,27 @@ def run(pipeline, root):
                     print(f"       Camera Activated")
 
 def change_ready_ind(n,direction):
-    left_side = '<'
+    left_side = '>'
     right_side = '>'
     if n == 10:
         direction='down'
         right_side = '<'
-        left_side = '>'
+        left_side = '<'
         n -= 1
     elif n == 0:
         direction='up'
         right_side = '>'
-        left_side = '<'
+        left_side = '>'
         n += 1
     else:
         if direction == 'up':
             n += 1
             right_side = '>'
-            left_side = '<'
+            left_side = '>'
         else:
             n -= 1
             right_side = '<'
-            left_side = '>'
+            left_side = '<'
     m = 10-n
     right = ''.join([char*n for char in right_side])
     left = ''.join([char*m for char in left_side])
