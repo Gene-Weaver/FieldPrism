@@ -50,6 +50,8 @@ class SetupFP:
     dir_data_5: str = ''
     dir_data_6: str = ''
 
+    device_count: int = 0
+
     def __post_init__(self) -> None:
         self.usb_base_path = '/media/'# OR '/media/pi/' # os.path.join('media','pi')
         self.dir_images_unprocessed = os.path.join('FieldPrism','Images_Unprocessed')
@@ -74,7 +76,7 @@ class SetupFP:
         print(f"")  
 
         # USB save to all
-        device_count = 0
+        self.device_count = 0
         list_drives = ["/dev/sda1", "/dev/sdb1", "/dev/sdc1", "/dev/sdd1", "/dev/sde1", "/dev/sdf1"]
         # list_data = [self.dir_data_1, self.dir_data_2, self.dir_data_3, self.dir_data_4, self.dir_data_5, self.dir_data_6]
         # list_usb = [self.usb_1, self.usb_2, self.usb_3, self.usb_4, self.usb_5, self.usb_6]
@@ -115,10 +117,10 @@ class SetupFP:
             print(f"{bcolors.OKGREEN}              Path to USB Images {str(drive_num)} [{drive_name}]: {self.usb_6}{bcolors.ENDC}")
             print(f"{bcolors.OKGREEN}              Path to USB Data {str(drive_num)} [{drive_name}]: {self.dir_data_6}{bcolors.ENDC}")
 
-        device_count = sum([self.save_to_boot, self.has_1_usb, self.has_2_usb, self.has_3_usb, self.has_4_usb, self.has_5_usb, self.has_6_usb])
-        print(f"{bcolors.HEADER}Number of storage drives: {device_count}{bcolors.ENDC}")
+        self.device_count = sum([self.save_to_boot, self.has_1_usb, self.has_2_usb, self.has_3_usb, self.has_4_usb, self.has_5_usb, self.has_6_usb])
+        print(f"{bcolors.HEADER}Number of storage drives: {self.device_count}{bcolors.ENDC}")
 
-        if device_count == 0:
+        if self.device_count == 0:
             self.print_usb_error()
             self.usb_none = os.path.join('/home','pi','FieldPrism','Data','Images_Unprocessed')
             self.dir_data_none = os.path.join('/home','pi','FieldPrism','Data','Data')
@@ -541,7 +543,7 @@ def run(pipeline, root):
     frame_info = tk.Frame(master=root, height=240, width = 250, bg="black")
     frame_info.grid(row=1, column=1, rowspan=3, sticky="nsew")
 
-    frame_info.rowconfigure([0, 1, 2, 3, 4, 5, 6, 7], minsize=30)
+    frame_info.rowconfigure([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], minsize=30)
     frame_info.columnconfigure(0, minsize=250)
 
     # -------------- Camera status
@@ -599,6 +601,17 @@ def run(pipeline, root):
     label_gps_lon_status = tk.Label(master=frame_info_gps_lon, text="", bg="black", fg="green", font=("Calibri ", 16))
     label_gps_lon_status.grid(row=0, column=1, sticky="w")
 
+    # -------------- Number of storage devices
+    frame_info_ndevice = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
+    frame_info_ndevice.grid(row=5, column=0, sticky="nsew")
+    frame_info_ndevice.rowconfigure(0, minsize=30)
+    frame_info_ndevice.columnconfigure([0, 1], minsize=250)
+
+    label_ndevice = tk.Label(master=frame_info_ndevice, text="Number of Storage Devices: ", bg="black", fg="White", font=("Calibri ", 16))
+    label_ndevice.grid(row=0, column=0, sticky="e")
+    label_ndevice_status = tk.Label(master=frame_info_ndevice, text="", bg="black", fg="white", font=("Calibri ", 16))
+    label_ndevice_status.grid(row=0, column=1, sticky="w")
+
 
 
     '''
@@ -650,6 +663,13 @@ def run(pipeline, root):
         # Window_Saved = SaveWindow(frame_saved,img_saved)
 
         cfg = SetupFP()
+
+        # Update device count 
+        if cfg.device_count > 0:
+            label_ndevice_status.config(text = str(cfg.device_count), fg='green')
+        else:
+            label_ndevice_status.config(text = str(cfg.device_count), fg='red')
+
         if cfg.storage_present == False:
             print(f"{bcolors.HEADER}Stopping...{bcolors.ENDC}")
             print_options()
