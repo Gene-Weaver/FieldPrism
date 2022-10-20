@@ -714,8 +714,8 @@ def run(pipeline, root):
             print(i)
             GPS_data_test = gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, cfg_user,False)
             if GPS_data_test.latitude != -999:
-                GPS_data_test = gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, cfg_user,True)
                 break
+        GPS_data_test = gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, cfg_user,True)
 
         if cfg.storage_present == False:
             print(f"{bcolors.HEADER}Stopping...{bcolors.ENDC}")
@@ -863,8 +863,8 @@ def gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, c
     else:
         if GPS_data.latitude == -999:
             label_gps_status.config(text = 'Testing GPS Signal - Failing', fg='orange')
-            label_gps_lat_status.config(text = 'Fail', fg='orange')
-            label_gps_lon_status.config(text = 'Fail', fg='orange')
+            label_gps_lat_status.config(text = 'Failing', fg='orange')
+            label_gps_lon_status.config(text = 'Failing', fg='orange')
         else:
             label_gps_status.config(text = 'Testing GPS Signal - Pass', fg='green')
             label_gps_lat_status.config(text = str(GPS_data.latitude), fg='green')
