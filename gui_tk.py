@@ -801,7 +801,7 @@ def change_ready_ind(n,direction):
             n -= 1
             right_side = '<'
             left_side = '>'
-    m= 11-n
+    m = 10-n
     right = ''.join([char*n for char in right_side])
     left = ''.join([char*m for char in left_side])
     return right, left, n, direction
