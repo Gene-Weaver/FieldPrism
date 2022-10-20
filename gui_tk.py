@@ -542,13 +542,13 @@ def run(pipeline, root):
     frame_info.grid(row=1, column=1, rowspan=3, sticky="nsew")
 
     label_info = tk.Label(master=frame_info, text="Ready!", bg="black", fg="white")
-    label_info.pack(side='left', sticky="nsew")
+    label_info.pack(sticky="w")
 
     label_fname = tk.Label(master=frame_info, text="filename", bg="black", fg="white")
-    label_fname.pack(side='left', sticky="nsew")
+    label_fname.pack(sticky="w")
 
     label_gps = tk.Label(master=frame_info, text="GPS: no data --> -999", bg="black", fg="green")
-    label_gps.pack(side='left', sticky="nsew")
+    label_gps.pack(sticky="w")
 
 
     '''
