@@ -601,6 +601,17 @@ def run(pipeline, root):
     label_gps_lon_status = tk.Label(master=frame_info_gps_lon, text="", bg="black", fg="green", font=("Calibri ", 16))
     label_gps_lon_status.grid(row=0, column=1, sticky="w")
 
+    # -------------- CSV
+    frame_info_csv = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
+    frame_info_csv.grid(row=9, column=0, sticky="nsew")
+    frame_info_csv.rowconfigure(0, minsize=30)
+    frame_info_csv.columnconfigure([0, 1], minsize=250)
+
+    label_csv = tk.Label(master=frame_info_csv, text="CSV Data: ", bg="black", fg="White", font=("Calibri ", 16))
+    label_csv.grid(row=0, column=0, sticky="e")
+    label_csv_status = tk.Label(master=frame_info_csv, text="Waiting", bg="black", fg="white", font=("Calibri ", 16))
+    label_csv_status.grid(row=0, column=1, sticky="w")
+
     # -------------- Number of storage devices
     frame_info_ndevice = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
     frame_info_ndevice.grid(row=14, column=0, sticky="nsew")
@@ -724,8 +735,11 @@ def run(pipeline, root):
                     #     label_gps_lat_status.config(text = str(GPS_data.latitude), fg='green')
                     #     label_gps_lon_status.config(text = str(GPS_data.longitude), fg='green')
                         
+                    label_csv_status.config(text = 'Collecting Data', fg='orange')
 
                     Image = ImageData(cfg, path_to_saved, GPS_data)
+
+                    label_csv_status.config(text = 'Added 1 Row to CSV', fg='green')
 
                     TAKE_PHOTO = False
 
