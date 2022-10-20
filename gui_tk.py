@@ -849,9 +849,9 @@ def change_ready_ind(n,direction):
 
 def gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, cfg_user,use_data):
     print(f"       GPS Activated")
-    label_gps_status.config(text = 'Testing GPS Signal', fg='orange')
-    GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
     if use_data:
+        label_gps_status.config(text = 'GPS Activated', fg='orange')
+        GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
         if GPS_data.latitude == -999:
             label_gps_status.config(text = 'No GPS Signal!', fg='red')
             label_gps_lat_status.config(text = 'Fail', fg='red')
@@ -861,6 +861,8 @@ def gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, c
             label_gps_lat_status.config(text = str(GPS_data.latitude), fg='green')
             label_gps_lon_status.config(text = str(GPS_data.longitude), fg='green')
     else:
+        label_gps_status.config(text = 'Testing GPS Signal - Failing', fg='orange')
+        GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
         if GPS_data.latitude == -999:
             print('************************************************************')
             label_gps_status.config(text = 'Testing GPS Signal - Failing', fg='orange')
