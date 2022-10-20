@@ -385,16 +385,17 @@ class PreviewWindow():
         # self.interval = 20 # Interval in ms to get the latest frame
 
         # Create canvas for image
-        self.canvas = Canvas(self.window, width=self.width, height=self.height)
+        self.canvas = Canvas(window, width=self.width, height=self.height)
         # self.canvas.grid(row=0, column=0)
-        self.canvas.pack()
+        self.canvas.pack(sticky='nesw')
 
         # First image
         blue,green,red = cv2.split(self.image)
         image = cv2.merge((red,green,blue))
         img = Image.fromarray(image)
-        imgtk = ImageTk.PhotoImage(image=img)
-        self.image_on_canvas = self.canvas.create_image(0, 0, anchor=tk.NW, image=imgtk)
+        # imgtk = ImageTk.PhotoImage(image=img)
+        self.canvas.image = ImageTk.PhotoImage(image=img)
+        self.canvas.create_image(0, 0, anchor=tk.NW, image=self.canvas.image)
         print('init preview')
 
         # Update image on canvas
@@ -432,16 +433,16 @@ class SaveWindow():
         # self.interval = 20 # Interval in ms to get the latest frame
 
         # Create canvas for image
-        self.canvas = Canvas(self.window, width=self.width, height=self.height)
+        self.canvas = Canvas(window, width=self.width, height=self.height)
         # self.canvas.grid(row=1, column=0)
-        self.canvas.pack()
+        self.canvas.pack(sticky='nesw')
 
         # First image
         blue,green,red = cv2.split(self.image)
         image = cv2.merge((red,green,blue))
         img = Image.fromarray(image)
-        imgtk = ImageTk.PhotoImage(image=img)
-        self.image_on_canvas = self.canvas.create_image(0, 0, anchor=tk.NW, image=imgtk)
+        self.canvas.image = ImageTk.PhotoImage(image=img)
+        self.canvas.create_image(0, 0, anchor=tk.NW, image=self.canvas.image)
         print('init save')
 
         # Update image on canvas
