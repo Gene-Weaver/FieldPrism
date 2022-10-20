@@ -536,7 +536,7 @@ def run(pipeline, root):
     frame_saved.grid(row=3, column=0, sticky="nsew")
 
     label_top_info = tk.Label(master=root, text="Info", bg="black", fg="white")
-    label_top_info.grid(row=0, column=1, sticky="nsew", side='left')
+    label_top_info.grid(row=0, column=1, sticky="nsew")
 
     frame_info = tk.Frame(master=root, height=240, width = 200, bg="black")
     frame_info.grid(row=1, column=1, rowspan=3, sticky="nsew")
