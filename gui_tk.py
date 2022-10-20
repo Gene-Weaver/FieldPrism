@@ -535,7 +535,7 @@ def run(pipeline, root):
     frame_saved = tk.Frame(master=root, height=380, bg="black")
     frame_saved.grid(row=3, column=0, sticky="nsew")
 
-    label_top_info = tk.Label(master=root, text="Info", bg="black", fg="white")
+    label_top_info = tk.Label(master=root, text="Info", bg="black", fg="white", font=("Arial", 16))
     label_top_info.grid(row=0, column=1, sticky="nsew")
 
     frame_info = tk.Frame(master=root, height=240, width = 200, bg="black")
@@ -544,13 +544,13 @@ def run(pipeline, root):
     frame_info.rowconfigure([0, 1, 2, 3])
     frame_info.columnconfigure(0, minsize=100)
 
-    label_info = tk.Label(master=frame_info, text="Ready!", bg="black", fg="white")
+    label_info = tk.Label(master=frame_info, text="Ready!", bg="black", fg="green")
     label_info.grid(row=0, column=0, sticky="nsew")
 
     label_fname = tk.Label(master=frame_info, text="filename", bg="black", fg="white")
     label_fname.grid(row=1, column=0, sticky="nsew")
 
-    label_gps = tk.Label(master=frame_info, text="GPS: no data --> -999", bg="black", fg="green")
+    label_gps = tk.Label(master=frame_info, text="GPS: no signal --> -999", bg="black", fg="white")
     label_gps.grid(row=2, column=0, sticky="nsew")
 
 
