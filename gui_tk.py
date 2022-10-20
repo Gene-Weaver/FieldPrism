@@ -509,11 +509,11 @@ class Redirect():
         self.started = False
         self.write_lock = threading.Lock()
 
-        self.tag_configure('STDOUT',background='white',foreground='black')
-        self.tag_configure('STDERR',background='white',foreground='red')
+        self.widget.tag_configure('STDOUT',background='white',foreground='black')
+        self.widget.tag_configure('STDERR',background='white',foreground='red')
 
-        self.config(state=tk.NORMAL)
-        self.bind('<Key>',lambda e: 'break') #ignore all key presses
+        self.widget.config(state=tk.NORMAL)
+        self.widget.bind('<Key>',lambda e: 'break') #ignore all key presses
 
         self.widget = widget
         self.autoscroll = autoscroll
@@ -522,8 +522,8 @@ class Redirect():
 
         self.write_lock.acquire()
 
-        self.insert('end',val,'STDERR' if is_stderr else 'STDOUT')
-        self.see('end')
+        self.widget.insert('end',val,'STDERR' if is_stderr else 'STDOUT')
+        self.widget.see('end')
 
         self.write_lock.release()
 
