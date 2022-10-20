@@ -418,7 +418,7 @@ class PreviewWindow():
         # self.image = ImageTk.PhotoImage(self.image) # to ImageTk format
 
         # Update image
-        self.canvas.itemconfig(self.image_on_canvas, image=imgtk)
+        self.canvas.itemconfig(self.canvas.image, image=imgtk)
         print('update preview')
 
         # Repeat every 'interval' ms
@@ -462,7 +462,7 @@ class SaveWindow():
         # self.image = ImageTk.PhotoImage(self.image) # to ImageTk format
 
         # Update image
-        self.canvas.itemconfig(self.image_on_canvas, image=imgtk)
+        self.canvas.itemconfig(self.canvas.image, image=imgtk)
         # self.canvas.create_image(0, 0, anchor=tk.NW, image=imgtk)
 
         # Repeat every 'interval' ms
