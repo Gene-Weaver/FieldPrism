@@ -501,12 +501,12 @@ def run(pipeline, root):
     img_saved = cv2.imread('img/saved_image_window.jpg')
 
     frame_preview = tk.Frame(master=root, height=240, bg="white")
-    # frame_preview.pack(fill=tk.X)
-    frame_preview.grid(row=0, column=0)
+    frame_preview.pack(fill=tk.X)
+    # frame_preview.grid(row=0, column=0)
 
     frame_saved = tk.Frame(master=root, height=380, bg="black")
-    # frame_saved.pack(fill=tk.X)
-    frame_saved.grid(row=1, column=0)
+    frame_saved.pack(fill=tk.X)
+    # frame_saved.grid(row=1, column=0)
 
     # Window_Preview = PreviewWindow(frame_preview,img_preview)
     # Window_Saved = SaveWindow(frame_saved,img_saved)
