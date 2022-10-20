@@ -509,6 +509,7 @@ class Redirect():
         self.autoscroll = autoscroll
 
     def write(self, text):
+        print(f'******************{text}')
         self.widget.insert('end', text)
         if self.autoscroll:
             self.widget.see("end")  # autoscroll
