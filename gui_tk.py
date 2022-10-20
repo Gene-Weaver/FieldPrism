@@ -628,6 +628,7 @@ def run(pipeline, root):
 
                 if TAKE_PHOTO:
                     print(f"       Capturing Image")
+                    label_info.config(text = 'Capturing Image...', fg='orange')
                     ispFrames = ispQueue.get()
                     save_frame = ispFrames.getCvFrame()
                     save_frame = cv2.rotate(save_frame, cv2.ROTATE_180)
@@ -641,16 +642,26 @@ def run(pipeline, root):
                     Window_Saved.update_image(cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
 
                     print(f"       GPS Activated")
+                    label_gps.config(text = 'GPS Activated...', fg='white')
                     GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
+                    if GPS_data.latitude == -999:
+                        label_gps.config(text = 'No GPS Signal!', fg='red')
+                    else:
+                        print_gps = ''.join(['Latitude: ',str(GPS_data.latitude),' Longitude: ',str(GPS_data.longitude)])
+                        label_gps.config(text = print_gps, fg='green')
+
                     Image = ImageData(cfg, path_to_saved, GPS_data)
+
                     TAKE_PHOTO = False
+
                     print(f"{bcolors.OKGREEN}Ready{bcolors.ENDC}")
+                    label_info.config(text = 'Ready!', fg='green')
+                    label_fname.config(text = Image.filename)
 
                 key = cv2.waitKey(50)
                 if keyboard.is_pressed('6'):
                     print(f"{bcolors.HEADER}Stopping...{bcolors.ENDC}")
                     print_options()
-                    sys.stdout = old_stdout
                     cv2.destroyAllWindows()
                     root.destroy()
                     break
