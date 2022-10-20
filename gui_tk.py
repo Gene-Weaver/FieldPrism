@@ -507,8 +507,8 @@ class Redirect():
     def __init__(self, widget, autoscroll=True):
         self.widget = widget
         self.autoscroll = autoscroll
-        self.config(state=tk.NORMAL)
-        self.bind('<Key>',lambda e: 'break')
+        self.widget.config(state=tk.NORMAL)
+        self.widget.bind('<Key>',lambda e: 'break')
 
     def write(self, text):
         self.widget.insert('end', text)
