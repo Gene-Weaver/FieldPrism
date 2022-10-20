@@ -513,8 +513,8 @@ class Redirect():
         if self.autoscroll:
             self.widget.see("end")  # autoscroll
 
-    #def flush(self):
-    #    pass
+    def flush(self):
+       pass
 
 def run(pipeline, root):
     # Make sure the destination path is present before starting to store the examples
@@ -673,9 +673,7 @@ def main():
     root.title("FieldPrism - Field Station")
     root.minsize(width=507, height=450)
 
-    thread = Thread(target=run, args=(pipeline,root,))
-    thread.setDaemon(True)
-    thread.start()
+    Thread(target=run, args=(pipeline,root,), daemon=True).start()
 
     root.mainloop()
 
