@@ -545,14 +545,14 @@ def run(pipeline, root):
     frame_info.columnconfigure(0, minsize=250)
 
     # -------------- Camera status
-    frame_info_camera = tk.Frame(master=frame_info, height=50, width = 250, bg="black")
+    frame_info_camera = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
     frame_info_camera.grid(row=0, column=0, sticky="nsew")
-    frame_info_camera.rowconfigure(0, minsize=30)
+    frame_info_camera.rowconfigure(0, minsize=60)
     frame_info_camera.columnconfigure([0, 1], minsize=250)
 
     label_camera = tk.Label(master=frame_info_camera, text="Camera Status: ", bg="black", fg="White", font=("Calibri ", 16))
     label_camera.grid(row=0, column=0, sticky="nsew")
-    label_camera_status = tk.Label(master=frame_info, text="Ready!", bg="black", fg="green", font=("Calibri ", 16))
+    label_camera_status = tk.Label(master=frame_info_camera, text="Ready!", bg="black", fg="green", font=("Calibri ", 16))
     label_camera_status.grid(row=0, column=1, sticky="nsew")
 
     # -------------- File name
