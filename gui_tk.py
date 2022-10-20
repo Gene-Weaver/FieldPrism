@@ -601,7 +601,18 @@ def run(pipeline, root):
     label_gps_lon_status = tk.Label(master=frame_info_gps_lon, text="", bg="black", fg="green", font=("Calibri ", 16))
     label_gps_lon_status.grid(row=0, column=1, sticky="w")
 
-    # -------------- CSV
+    # -------------- CSV Total
+    frame_info_total = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
+    frame_info_total.grid(row=9, column=0, sticky="nsew")
+    frame_info_total.rowconfigure(0, minsize=30)
+    frame_info_total.columnconfigure([0, 1], minsize=250)
+
+    label_total = tk.Label(master=frame_info_total, text="CSV Total: ", bg="black", fg="White", font=("Calibri ", 16))
+    label_total.grid(row=0, column=0, sticky="e")
+    label_total_status = tk.Label(master=frame_info_total, text="", bg="black", fg="white", font=("Calibri ", 16))
+    label_total_status.grid(row=0, column=1, sticky="w")
+    
+    # -------------- CSV Session
     frame_info_session = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
     frame_info_session.grid(row=9, column=0, sticky="nsew")
     frame_info_session.rowconfigure(0, minsize=30)
@@ -694,6 +705,8 @@ def run(pipeline, root):
         else:
             label_ndevice_status.config(text = str(cfg.device_count), fg='red')
 
+        # Update Total CSV
+        label_total_status.config(text = str(cfg.name_total_csv), fg='white')
         # Update Session ID
         label_session_status.config(text = str(cfg.name_session_csv), fg='white')
 
@@ -754,8 +767,6 @@ def run(pipeline, root):
                     #     label_gps_status.config(text = 'Good Signal', fg='green')
                     #     label_gps_lat_status.config(text = str(GPS_data.latitude), fg='green')
                     #     label_gps_lon_status.config(text = str(GPS_data.longitude), fg='green')
-                        
-                    label_csv_status.config(text = 'Collecting Data', fg='orange')
 
                     Image = ImageData(cfg, path_to_saved, GPS_data)
 
@@ -777,6 +788,7 @@ def run(pipeline, root):
                 elif keyboard.is_pressed('1'):
                     TAKE_PHOTO = True
                     label_camera_status.config(text = 'Camera Activated...', fg='orange')
+                    label_csv_status.config(text = 'Collecting Data', fg='orange')
                     print(f"       Camera Activated")
 
 def change_ready_ind(n,direction):
