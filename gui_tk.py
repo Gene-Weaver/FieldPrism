@@ -522,7 +522,7 @@ def run(pipeline, root):
     img_saved = cv2.imread('img/saved_image_window.jpg')
 
     root.rowconfigure([0, 1, 2, 3], minsize=30)
-    root.columnconfigure([0, 1], minsize=30)
+    root.columnconfigure([0, 1], minsize=100)
 
     label_preview = tk.Label(master=root, text="Preview (Check Camera Focus)", bg="black", fg="white")
     label_preview.grid(row=0, column=0, sticky="nsew")
@@ -541,8 +541,8 @@ def run(pipeline, root):
     frame_info = tk.Frame(master=root, height=240, width = 200, bg="black")
     frame_info.grid(row=1, column=1, rowspan=3, sticky="nsew")
 
-    frame_info.rowconfigure([0, 1, 2, 3], minsize=30)
-    frame_info.columnconfigure(0, minsize=30)
+    frame_info.rowconfigure([0, 1, 2, 3])
+    frame_info.columnconfigure(0, minsize=100)
 
     label_info = tk.Label(master=frame_info, text="Ready!", bg="black", fg="white")
     label_info.grid(row=0, column=0, sticky="nsew")
