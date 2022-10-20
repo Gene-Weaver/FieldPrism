@@ -551,8 +551,8 @@ def run(pipeline, root):
     # frame_saved.pack(fill=tk.X)
     # frame_saved.grid(row=1, column=0)
     
-    frame_terminal = tk.Frame(root, width=100, bg="black")
-    frame_terminal.grid(row=3, column= 1, sticky="nsew", fill='both')
+    frame_terminal = tk.Frame(root, height=380, width=400, bg="black")
+    frame_terminal.grid(row=3, column= 1, sticky="nsew")
 
     text_terminal = tk.Text(frame_terminal)
     text_terminal.pack(side='left', fill='both', sticky="nsew", bg="black", fg="white")
