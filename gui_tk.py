@@ -374,6 +374,7 @@ def align_camera():
                 print("main: 1")
                 print("align_camera: 3")
                 print("Exit: 6")
+                cv2.destroyAllWindows()
                 break
 
 class PreviewWindow():
@@ -630,22 +631,12 @@ def main():
     root.title("FieldPrism - Field Station")
     root.minsize(width=507, height=450)
 
-    # FieldStation(root)
-
-    
-
-
-    # def callback(*args):
-    #     global currentStream
-    #     currentStream = root.getvar(args[0])
-    #     cv2.destroyAllWindows()
-
-
     thread = Thread(target=run, args=(pipeline,root,))
     thread.setDaemon(True)
     thread.start()
 
     root.mainloop()
+
 
 def route():
     print_options()
@@ -653,6 +644,7 @@ def route():
         key = cv2.waitKey(1)
         if keyboard.is_pressed('6'):
             print(f"{bcolors.HEADER}Exiting FieldPrism{bcolors.ENDC}")
+            cv2.destroyAllWindows()
             break
         elif keyboard.is_pressed('1'):
             print("Entering main()")
