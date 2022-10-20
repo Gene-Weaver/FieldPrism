@@ -511,12 +511,12 @@ class Redirect():
         self.widget.bind('<Key>',lambda e: 'break')
 
     def write(self, text, is_stderr=False):
-        self.write_lock.acquire()
+        self.widget.write_lock.acquire()
 
-        self.insert('end',text,'STDERR' if is_stderr else 'STDOUT')
-        self.see('end')
+        self.widget.insert('end',text,'STDERR' if is_stderr else 'STDOUT')
+        self.widget.see('end')
 
-        self.write_lock.release()
+        self.widget.write_lock.release()
         # self.widget.insert('end', text)
         # if self.autoscroll:
         #     self.widget.see("end")  # autoscroll
