@@ -551,11 +551,11 @@ def run(pipeline, root):
     # frame_saved.pack(fill=tk.X)
     # frame_saved.grid(row=1, column=0)
     
-    frame_terminal = tk.Frame(root, width=100)
+    frame_terminal = tk.Frame(root, width=100, bg="black")
     frame_terminal.grid(row=3, column= 1, sticky="nsew", fill='both')
 
     text_terminal = tk.Text(frame_terminal)
-    text_terminal.pack(side='left', fill='both', sticky="nsew")
+    text_terminal.pack(side='left', fill='both', sticky="nsew", bg="black", fg="white")
 
     scrollbar = tk.Scrollbar(frame_terminal)
     scrollbar.pack(side='right', fill='y')
