@@ -710,8 +710,8 @@ def run(pipeline, root):
             direction ='up'
             TAKE_PHOTO = False
             while True:
-                right,left,spacing,ind_ready,direction = change_ready_ind(ind_ready,direction)
-                text_ready = ''.join([spacing,left,' Ready ',right,spacing])
+                right,left,ind_ready,direction = change_ready_ind(ind_ready,direction)
+                text_ready = ''.join([left,' Ready ',right])
                 label_camera_status.config(text = text_ready, fg='green')
 
                 vidFrames = videoQueue.tryGetAll()
@@ -780,7 +780,6 @@ def run(pipeline, root):
                     print(f"       Camera Activated")
 
 def change_ready_ind(n,direction):
-    sp = ' '
     to_out = '>'
     to_in = '<'
     if n == 10:
@@ -794,15 +793,13 @@ def change_ready_ind(n,direction):
             n += 1
         else:
             n -= 1
-    m = 10-n
     if direction == 'up':
         right = ''.join([char*n for char in to_out])
         left = ''.join([char*n for char in to_in])
     else:
         right = ''.join([char*n for char in to_in])
         left = ''.join([char*n for char in to_out])
-    spacing = ''.join([char*m for char in sp])
-    return right, left, spacing, n, direction
+    return right, left, n, direction
 
 '''class FieldStation():
     # cfg_user: object = field(init=False)
