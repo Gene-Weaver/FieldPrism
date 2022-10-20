@@ -544,7 +544,7 @@ def run(pipeline, root):
     empty1.grid(row=0, column=1, sticky="nsew")
     
     frame_terminal = tk.Frame(root, height=350, width=400, bg="black")
-    frame_terminal.grid(row=1, column= 1, rowspan=2, sticky="nsew")
+    frame_terminal.grid(row=1, column= 1, rowspan=3, sticky="nsew")
 
     text_terminal = tk.Text(frame_terminal, bg="black", fg="white")
     text_terminal.pack(side='left', fill='both')
