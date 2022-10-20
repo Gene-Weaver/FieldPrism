@@ -555,7 +555,7 @@ def run(pipeline, root):
     frame_terminal.grid(row=3, column= 1, sticky="nsew")
 
     text_terminal = tk.Text(frame_terminal)
-    text_terminal.pack(side='left', fill='both', sticky="nsew", bg="black", fg="white")
+    text_terminal.pack(side='left', fill='both', bg="black", fg="white")
 
     scrollbar = tk.Scrollbar(frame_terminal)
     scrollbar.pack(side='right', fill='y')
