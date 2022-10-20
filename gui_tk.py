@@ -797,8 +797,9 @@ def change_ready_ind(n,direction):
         else:
             n -= 1
             s = '<'
+    m= 11-n
     out = ''.join([char*n for char in s])
-    out2 = ''.join([char*11-n for char in em])
+    out2 = ''.join([char*m for char in em])
     return out, out2, n, direction
 
 '''class FieldStation():
