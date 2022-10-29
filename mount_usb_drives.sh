@@ -31,7 +31,7 @@ echo ""
 echo "***** Mounting USB Drives..."
 ######### USB 1 ############
 if [ -e /dev/sda1 ] ; then
-echo ""USB1 mounted"
+echo "USB1 mounted"
 pmount -w /dev/sda1 USB1
 else
 echo "USB1 not connected"
