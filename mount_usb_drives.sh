@@ -41,35 +41,35 @@ if [ -e /dev/sdb1 ] ; then
 echo "USB2 mounted"
 pmount -w /dev/sda1 USB2
 else
-echo USB2 not connected"
+echo "USB2 not connected"
 fi
 ######### USB 3 ############
 if [ -e /dev/sdc1 ] ; then
 echo "USB3 mounted"
 pmount -w /dev/sda1 USB3
 else
-echo USB3 not connected"
+echo "USB3 not connected"
 fi
 ######### USB 4 ############
 if [ -e /dev/sdd1 ] ; then
 echo "USB4 mounted"
 pmount -w /dev/sda1 USB4
 else
-echo USB4 not connected"
+echo "USB4 not connected"
 fi
 ######### USB 5 ############
 if [ -e /dev/sde1 ] ; then
 echo "USB5 mounted"
 pmount -w /dev/sda1 USB5
 else
-echo USB5 not connected"
+echo "USB5 not connected"
 fi
 ######### USB 6 ############
 if [ -e /dev/sdf1 ] ; then
 echo "USB6 mounted"
 pmount -w /dev/sda1 USB6
 else
-echo USB6 not connected"
+echo "USB6 not connected"
 fi
 #pmount -w /dev/sda1 USB1
 #pmount -w /dev/sdb1 USB2
