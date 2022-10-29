@@ -17,6 +17,14 @@ pumount /dev/sdd1
 pumount /dev/sde1
 pumount /dev/sdf1
 echo ""
+echo "***** Removing Prior Mount Locations..."
+rm -rf /media/USB1
+rm -rf /media/USB2
+rm -rf /media/USB3
+rm -rf /media/USB4
+rm -rf /media/USB5
+rm -rf /media/USB6
+echo ""
 echo "***** Mounting USB Drives..."
 pmount -w /dev/sda1 USB1
 pmount -w /dev/sdb1 USB2
