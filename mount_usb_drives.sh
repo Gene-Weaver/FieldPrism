@@ -18,6 +18,7 @@ pumount /dev/sde1
 pumount /dev/sdf1
 echo ""
 echo "***** Removing Prior Mount Locations..."
+rm -rf /media/pi
 rm -rf /media/USB1
 rm -rf /media/USB2
 rm -rf /media/USB3
