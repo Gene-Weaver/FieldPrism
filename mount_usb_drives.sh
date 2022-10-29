@@ -8,8 +8,16 @@ lsusb
 echo ""
 echo "***** View Mounting Points from Previous Use..."
 ls /media/
+
+
 echo ""
 echo "***** Un-Mounting USB Drives..."
+#pumount /dev/sda1
+#pumount /dev/sdb1
+#pumount /dev/sdc1
+#pumount /dev/sdd1
+#pumount /dev/sde1
+#pumount /dev/sdf1
 ######### USB 1 ############
 if [ -e /dev/sda1 ] ; then
 echo "USB1 UN-mounted"
@@ -52,12 +60,8 @@ pumount /dev/sdf1
 else
 echo "USB6 not connected"
 fi
-#pumount /dev/sda1
-#pumount /dev/sdb1
-#pumount /dev/sdc1
-#pumount /dev/sdd1
-#pumount /dev/sde1
-#pumount /dev/sdf1
+
+
 echo ""
 echo "***** Removing Prior Mount Locations..."
 rm -rf /media/USB1
@@ -66,11 +70,19 @@ rm -rf /media/USB3
 rm -rf /media/USB4
 rm -rf /media/USB5
 rm -rf /media/USB6
+
+
 echo ""
 echo "***** View CURRENT Mounting Points..."
 ls /media/
 echo ""
 echo "***** Mounting USB Drives..."
+#pmount -w /dev/sda1 USB1
+#pmount -w /dev/sdb1 USB2
+#pmount -w /dev/sdc1 USB3
+#pmount -w /dev/sdd1 USB4
+#pmount -w /dev/sde1 USB5
+#pmount -w /dev/sdf1 USB6
 ######### USB 1 ############
 if [ -e /dev/sda1 ] ; then
 echo "USB1 mounted"
@@ -113,35 +125,62 @@ pmount -w /dev/sdf1 USB6
 else
 echo "USB6 not connected"
 fi
-#pmount -w /dev/sda1 USB1
-#pmount -w /dev/sdb1 USB2
-#pmount -w /dev/sdc1 USB3
-#pmount -w /dev/sdd1 USB4
-#pmount -w /dev/sde1 USB5
-#pmount -w /dev/sdf1 USB6
+
+
 echo ""
-echo "***** If below is empty, then no drives were mounted. If non-empty, success."
+echo "***** If below is empty, then no drives were mounted. If non-empty, success!"
 echo " ls /media/"
 ls /media/
+######### USB 1 ############
+if [ -d /media/USB1 ] ; then
 echo " ls /media/USB1..."
 ls /media/USB1
+else
+echo "USB1 not connected"
+fi
+######### USB 2 ############
+if [ -d /media/USB2 ] ; then
 echo " ls /media/USB2..."
 ls /media/USB2
+else
+echo "USB2 not connected"
+fi
+######### USB 3 ############
+if [ -d /media/USB3 ] ; then
 echo " ls /media/USB3..."
 ls /media/USB3
+else
+echo "USB3 not connected"
+fi
+######### USB 4 ############
+if [ -d /media/USB4 ] ; then
 echo " ls /media/USB4..."
 ls /media/USB4
+else
+echo "USB4 not connected"
+fi
+######### USB 5 ############
+if [ -d /media/USB5 ] ; then
 echo " ls /media/USB5..."
 ls /media/USB5
+else
+echo "USB5 not connected"
+fi
+######### USB 6 ############
+if [ -d /media/USB6 ] ; then
 echo " ls /media/USB6..."
 ls /media/USB6
+else
+echo "USB6 not connected"
+fi
+
+
 echo ""
 echo "***** Granting xhost privileges..."
 xhost +si:localuser:pi
 xhost +si:localuser:root
-echo ""
-echo "***** View Mounting Points..."
-ls /media/
+
+
 echo ""
 echo "***** Possible Errors..."
 echo "      Expected errors if not all USB drives are present (not a problem):"  
@@ -151,3 +190,4 @@ echo "      Expected errors if not using a USB hub (not a problem):"
 echo "            --> ls: cannot access '/media/USB3': No such file or directory"
 echo ""
 echo "***** Errors Thrown Below..."
+echo ""
