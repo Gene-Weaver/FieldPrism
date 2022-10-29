@@ -52,10 +52,9 @@ echo ""
 echo "***** Granting xhost privileges..."
 xhost +si:localuser:pi
 xhost +si:localuser:root
-#chown -R localuser:pi /media/USB1
-#chown -R localuser:pi /media/USB2
-#chown -R localuser:root /media/USB1
-#chown -R localuser:root /media/USB2
+echo ""
+echo "***** View Mounting Points..."
+ls /media/
 echo ""
 echo "***** Possible Errors..."
 echo "      Expected errors if not all USB drives are present (not a problem):"  
