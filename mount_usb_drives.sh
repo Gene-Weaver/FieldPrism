@@ -10,15 +10,56 @@ echo "***** View Mounting Points from Previous Use..."
 ls /media/
 echo ""
 echo "***** Un-Mounting USB Drives..."
+######### USB 1 ############
+if [ -e /dev/sda1 ] ; then
+echo "USB1 UN-mounted"
 pumount /dev/sda1
+else
+echo "USB1 not connected"
+fi
+######### USB 2 ############
+if [ -e /dev/sdb1 ]; then
+echo "USB2 UN-mounted"
 pumount /dev/sdb1
+else
+echo "USB2 not connected"
+fi
+######### USB 3 ############
+if [ -e /dev/sdc1 ]; then
+echo "USB3 UN-mounted"
 pumount /dev/sdc1
+else
+echo "USB3 not connected"
+fi
+######### USB 4 ############
+if [ -e /dev/sdd1 ]; then
+echo "USB4 UN-mounted"
 pumount /dev/sdd1
+else
+echo "USB4 not connected"
+fi
+######### USB 5 ############
+if [ -e /dev/sde1 ]; then
+echo "USB5 UN-mounted"
 pumount /dev/sde1
+else
+echo "USB5 not connected"
+fi
+######### USB 6 ############
+if [ -e /dev/sdf1 ]; then
+echo "USB6 UN-mounted"
 pumount /dev/sdf1
+else
+echo "USB6 not connected"
+fi
+#pumount /dev/sda1
+#pumount /dev/sdb1
+#pumount /dev/sdc1
+#pumount /dev/sdd1
+#pumount /dev/sde1
+#pumount /dev/sdf1
 echo ""
 echo "***** Removing Prior Mount Locations..."
-rm -rf /media/pi
 rm -rf /media/USB1
 rm -rf /media/USB2
 rm -rf /media/USB3
