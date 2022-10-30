@@ -2,6 +2,7 @@
 fieldprism:
     keymap:
         photo: '1'
+        test_gps: '2'
         align_camera: '3'
         redo: '4'
         exit: '6'

@@ -1,7 +1,7 @@
-import os, yaml, datetime
+#!/usr/bin/env python3
+import os, yaml, datetime, cv2
 
 # https://stackoverflow.com/questions/287871/how-do-i-print-colored-text-to-the-terminal
-
 '''
 CEND      = '\33[0m'
 CBOLD     = '\33[1m'
@@ -75,3 +75,19 @@ def get_datetime():
     time = "-".join([str(datetime.datetime.now().strftime("%H")),str(datetime.datetime.now().strftime("%M")),str(datetime.datetime.now().strftime("%S"))])
     new_time = "__".join([day,time])
     return new_time
+
+def print_options():
+    print("Run FieldPrism: 1")
+    print("Test/Wake GPS: 2")
+    print("Align Camera: 3")
+    print("Redo Previous Image: 4")
+    print("Exit: 6")
+
+def rotate_image_options(image,cfg_user):
+    # Rotate Camera
+    # Can rotate 270 by setting both to True
+    if cfg_user['fieldprism']['rotate_camera_180']:
+        image = cv2.rotate(image, cv2.ROTATE_180)
+    if cfg_user['fieldprism']['rotate_camera_90_clockwise']:
+        image = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
+    return image
