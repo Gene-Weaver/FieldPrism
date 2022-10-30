@@ -922,4 +922,5 @@ def route():
             align_camera()
 
 if __name__ == "__main__":
-    route()
+    # route()
+    main()
