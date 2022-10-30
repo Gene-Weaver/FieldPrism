@@ -1,16 +1,10 @@
 # Files
 f.py
-field_station_ALT.py
-full.py
-k.py
-k2.py
-kb.py
-video.py
-
 
 
 # Dirs
 data/
+archive/
 
 
 # Byte-compiled / optimized / DLL files
