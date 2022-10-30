@@ -646,6 +646,17 @@ def run(pipeline, root):
     label_ndevice_status = tk.Label(master=frame_info_ndevice, text="", bg="black", fg="white", font=("Calibri ", 16))
     label_ndevice_status.grid(row=0, column=1, sticky="w")
 
+    # -------------- USB Speed
+    frame_info_usbspeed = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
+    frame_info_usbspeed.grid(row=15, column=0, sticky="nsew")
+    frame_info_usbspeed.rowconfigure(0, minsize=30)
+    frame_info_usbspeed.columnconfigure([0, 1], minsize=250)
+
+    label_usbspeed = tk.Label(master=frame_info_usbspeed, text="Camera USB Speed: ", bg="black", fg="White", font=("Calibri ", 16))
+    label_usbspeed.grid(row=0, column=0, sticky="e")
+    label_usbspeed_status = tk.Label(master=frame_info_usbspeed, text="", bg="black", fg="white", font=("Calibri ", 16))
+    label_usbspeed_status.grid(row=0, column=1, sticky="w")
+
 
 
 
@@ -677,7 +688,11 @@ def run(pipeline, root):
         print('Connected cameras: ', device.getConnectedCameras())
         # Print out usb speed
         print('Usb speed: ', device.getUsbSpeed().name)
-
+        # Update device count 
+        if device.getUsbSpeed().name == 'HIGH':
+            label_usbspeed_status.config(text = str(device.getUsbSpeed().name), fg='green')
+        else:
+            label_usbspeed_status.config(text = str(device.getUsbSpeed().name), fg='red')
         
         
         cfg_user = load_cfg()
