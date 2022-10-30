@@ -6,6 +6,9 @@ fieldprism:
         align_camera: '3'
         redo: '4'
         exit: '6'
+    # Set both rotates to true to rotate camera 270 degrees clockwise
+    rotate_camera_180: True
+    rotate_camera_90_clockwise: False
     save:
         always_save_to_boot: False
     gps:
