@@ -4,5 +4,5 @@ Version=v0.0.1
 Icon=icon_usb
 X-Icon-Path=/home/pi/FieldPrism/img/
 Exec=sh /home/pi/FieldPrism/mount_usb_drives.sh
-Terminal=true
+Terminal=false
 Type=Application
