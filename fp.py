@@ -813,6 +813,10 @@ def run(pipeline, root):
                     label_camera_status.config(text = 'Camera Activated...', fg='orange')
                     label_csv_status.config(text = 'Collecting Data', fg='orange')
                     print(f"       Camera Activated")
+                elif keyboard.is_pressed('2'):
+                    print(f"       Testing GPS")
+                    GPS_data_test = gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, cfg_user,True)
+                    
 
 def change_ready_ind(n,direction):
     to_out = '>'
