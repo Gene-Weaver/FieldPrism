@@ -42,45 +42,46 @@ class GPSPacket:
     lon_error_est: float = -999
     alt_error_est: float = -999
 
-    def print_report(self,opt) -> None:
-        if opt == 'Pass':        
-            print(f"{bcolors.GREENBG}       GPS REPORT{bcolors.ENDC}")
-            print(f"")
-            print(f"{bcolors.OKGREEN}       Time: {str(self.current_time)}{bcolors.ENDC}")
-            print(f"")
-            print(f"{bcolors.OKGREEN}       Latitude: {str(self.latitude)}{bcolors.ENDC}")
-            print(f"{bcolors.OKGREEN}       Longitude: {str(self.longitude)}{bcolors.ENDC}")
-            print(f"")
-            print(f"{bcolors.OKGREEN}       Altitude (m): {str(self.altitude)}{bcolors.ENDC}")
-            print(f"{bcolors.OKGREEN}       Climb: {str(self.climb)}{bcolors.ENDC}")
-            print(f"{bcolors.OKGREEN}       Speed: {str(self.speed)}{bcolors.ENDC}")
-            print(f"")
-            print(f"{bcolors.OKGREEN}       Lat error estimate: {self.lat_error_est}{bcolors.ENDC}")
-            print(f"{bcolors.OKGREEN}       Lon error estimate: {self.lon_error_est}{bcolors.ENDC}")
-            print(f"{bcolors.OKGREEN}       Alt error estimate: {self.alt_error_est}{bcolors.ENDC}")
-            print(f"")
-        elif opt == 'Fail':
-            print(f"{bcolors.REDBG}       GPS REPORT -- GPS UNAVAILABLE{bcolors.ENDC}")
-            print(f"")
-            print(f"{bcolors.FAIL}       Time: {str(self.current_time)}{bcolors.ENDC}")
-            print(f"")
-            print(f"{bcolors.FAIL}       Latitude: {str(self.latitude)}{bcolors.ENDC}")
-            print(f"{bcolors.FAIL}       Longitude: {str(self.longitude)}{bcolors.ENDC}")
-            print(f"")
-            print(f"{bcolors.FAIL}       Altitude (m): {str(self.altitude)}{bcolors.ENDC}")
-            print(f"{bcolors.FAIL}       Climb: {str(self.climb)}{bcolors.ENDC}")
-            print(f"{bcolors.FAIL}       Speed: {str(self.speed)}{bcolors.ENDC}")
-            print(f"")
-            print(f"{bcolors.FAIL}       Lat error estimate: {self.lat_error_est}{bcolors.ENDC}")
-            print(f"{bcolors.FAIL}       Lon error estimate: {self.lon_error_est}{bcolors.ENDC}")
-            print(f"{bcolors.FAIL}       Alt error estimate: {self.alt_error_est}{bcolors.ENDC}")
-            print(f"")
+    def print_report(self,opt,do_print) -> None:
+        if do_print:
+            if opt == 'Pass':        
+                print(f"{bcolors.GREENBG}       GPS REPORT{bcolors.ENDC}")
+                print(f"")
+                print(f"{bcolors.OKGREEN}       Time: {str(self.current_time)}{bcolors.ENDC}")
+                print(f"")
+                print(f"{bcolors.OKGREEN}       Latitude: {str(self.latitude)}{bcolors.ENDC}")
+                print(f"{bcolors.OKGREEN}       Longitude: {str(self.longitude)}{bcolors.ENDC}")
+                print(f"")
+                print(f"{bcolors.OKGREEN}       Altitude (m): {str(self.altitude)}{bcolors.ENDC}")
+                print(f"{bcolors.OKGREEN}       Climb: {str(self.climb)}{bcolors.ENDC}")
+                print(f"{bcolors.OKGREEN}       Speed: {str(self.speed)}{bcolors.ENDC}")
+                print(f"")
+                print(f"{bcolors.OKGREEN}       Lat error estimate: {self.lat_error_est}{bcolors.ENDC}")
+                print(f"{bcolors.OKGREEN}       Lon error estimate: {self.lon_error_est}{bcolors.ENDC}")
+                print(f"{bcolors.OKGREEN}       Alt error estimate: {self.alt_error_est}{bcolors.ENDC}")
+                print(f"")
+            elif opt == 'Fail':
+                print(f"{bcolors.REDBG}       GPS REPORT -- GPS UNAVAILABLE{bcolors.ENDC}")
+                print(f"")
+                print(f"{bcolors.FAIL}       Time: {str(self.current_time)}{bcolors.ENDC}")
+                print(f"")
+                print(f"{bcolors.FAIL}       Latitude: {str(self.latitude)}{bcolors.ENDC}")
+                print(f"{bcolors.FAIL}       Longitude: {str(self.longitude)}{bcolors.ENDC}")
+                print(f"")
+                print(f"{bcolors.FAIL}       Altitude (m): {str(self.altitude)}{bcolors.ENDC}")
+                print(f"{bcolors.FAIL}       Climb: {str(self.climb)}{bcolors.ENDC}")
+                print(f"{bcolors.FAIL}       Speed: {str(self.speed)}{bcolors.ENDC}")
+                print(f"")
+                print(f"{bcolors.FAIL}       Lat error estimate: {self.lat_error_est}{bcolors.ENDC}")
+                print(f"{bcolors.FAIL}       Lon error estimate: {self.lon_error_est}{bcolors.ENDC}")
+                print(f"{bcolors.FAIL}       Alt error estimate: {self.alt_error_est}{bcolors.ENDC}")
+                print(f"")
 
-def gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,use_data):
+def gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,use_data,do_print):
     print(f"       GPS Activated")
     if use_data:
         label_gps_status.config(text = 'GPS Activated', fg='orange')
-        GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
+        GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'],do_print)
         if GPS_data.latitude == -999:
             label_gps_status.config(text = 'No GPS Signal!', fg='red')
             label_gps_lat_status.config(text = 'Fail', fg='red')
@@ -95,7 +96,7 @@ def gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, l
             label_local_time_status.config(text = get_datetime(), fg='white') 
     else:
         label_gps_status.config(text = 'Testing GPS Signal - Failing', fg='orange')
-        GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
+        GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'],do_print)
         if GPS_data.latitude == -999:
             print('************************************************************')
             label_gps_status.config(text = 'Testing GPS Signal - Failing', fg='orange')
@@ -115,7 +116,7 @@ def update_GPS_data(data_stream, item):
     if data_stream.TPV[item] is not None:
         print(data_stream.TPV[item])
 
-def get_gps(speed):
+def get_gps(speed,do_print):
     if speed == 'fast':
         max_count = 3
     elif speed == 'cautious':
@@ -151,9 +152,9 @@ def get_gps(speed):
         if count_fail > 20:
             do_get_GPS = False
             if GPS_data.latitude == -999:
-                GPS_data.print_report('Fail')
+                GPS_data.print_report('Fail',do_print)
             else:
-                GPS_data.print_report('Pass')
+                GPS_data.print_report('Pass',do_print)
 
         if take_data:
             GPS_data.latitude = agps_thread.data_stream.lat
@@ -165,7 +166,7 @@ def get_gps(speed):
             GPS_data.lat_error_est = agps_thread.data_stream.epy
             GPS_data.lon_error_est = agps_thread.data_stream.epx
             GPS_data.alt_error_est = agps_thread.data_stream.epv
-            GPS_data.print_report('Pass')
+            GPS_data.print_report('Pass',do_print)
         else:
             # Set the time to the R Pi's local time
             GPS_data.current_time = get_datetime()
@@ -174,13 +175,13 @@ def get_gps(speed):
 
 if __name__ == '__main__':
     start = time.perf_counter()
-    get_gps('fast')
+    get_gps('fast',do_print=True)
     end = time.perf_counter()
     print(f"{bcolors.HEADER}GPS Fast: {round(end-start,5)} sec.{bcolors.ENDC}")
     print(f"")
 
     start = time.perf_counter()
-    get_gps('cautious')
+    get_gps('cautious',do_print=True)
     end = time.perf_counter()
     print(f"{bcolors.HEADER}GPS Cautious: {round(end-start,5)} sec.{bcolors.ENDC}")
     print(f"")

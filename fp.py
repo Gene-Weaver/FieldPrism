@@ -354,12 +354,12 @@ def run(pipeline, root):
         # Test GPS, takes 34 seconds to wake, try to get signal 
         label_camera_status.config(text = 'Allow ~30 seconds for GPS fix', fg='cyan')
         for i in range(0,5):
-            print(i)
-            GPS_data_test = gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,False)
+            print(f"{bcolors.WARNING}       Attempt #{i} to get GPS fix{bcolors.ENDC}")
+            GPS_data_test = gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,False,False)
             if GPS_data_test.latitude != -999:
                 break
             time.sleep(4)
-        GPS_data_test = gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True)
+        GPS_data_test = gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
         label_camera_status.config(text = ' Please Wait ', fg='green')
 
         if cfg.storage_present == False:
@@ -422,7 +422,7 @@ def run(pipeline, root):
                     Window_Saved.update_image(cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
 
                     # Activate GPS, update GUI, and return GPS data
-                    GPS_data = gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True)
+                    GPS_data = gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
 
                     # Write data to CSV file
                     Image = ImageData(cfg, path_to_saved, GPS_data, height, width)
@@ -456,7 +456,7 @@ def run(pipeline, root):
 
                 elif keyboard.is_pressed(cfg_user['fieldprism']['keymap']['test_gps']):
                     print(f"       Testing GPS")
-                    GPS_data_test = gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True)
+                    GPS_data_test = gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
                     
 '''
 Initialize the tkinter GUI
