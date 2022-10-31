@@ -13,3 +13,6 @@ else
 	git pull
 	echo "FieldPrism is freshly installed and to date!"
 fi
+echo ""
+echo "This window will automatically close in 10 seconds..."
+sleep 10
