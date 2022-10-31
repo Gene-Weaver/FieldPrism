@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 from PIL import Image, ImageTk
 import pandas as pd
 import tkinter as tk
-from tkinter import *
 from tkinter import ttk, Canvas
 from utils import bcolors,  get_datetime
 
@@ -334,50 +333,28 @@ class PreviewWindow():
         self.image = image
         self.width = 426
         self.height = 240
-        # self.interval = 20 # Interval in ms to get the latest frame
 
         # Create canvas for image
         self.canvas = Canvas(window, width=self.width, height=self.height)
-        # self.canvas.grid(row=0, column=0)
         self.canvas.pack()
 
         # First image
         blue,green,red = cv2.split(self.image)
         image = cv2.merge((red,green,blue))
         img = Image.fromarray(image)
-        # imgtk = ImageTk.PhotoImage(image=img)
         self.canvas.image = ImageTk.PhotoImage(image=img)
         self.canvas.create_image(0, 0, anchor=tk.NW, image=self.canvas.image)
-        # print('init preview')
-
-        # Update image on canvas
-        # self.update_image()
-
-    # def change_image(self,image):
-    #     self.image = image
 
     def update_image(self,image):
-        # Get the latest frame and convert image format
-        # try:
-        #     self.image = cv2.cvtColor(self.image.read()[1], cv2.COLOR_BGR2RGB) # to RGB
-        # except:
-        #     pass
         self.image = image
         blue,green,red = cv2.split(self.image)
         imgtk = cv2.merge((red,green,blue))
         imgtk = Image.fromarray(imgtk)
         imgtk = ImageTk.PhotoImage(image=imgtk)
-        # self.image = Image.fromarray(self.image) # to PIL format
-        # self.image = ImageTk.PhotoImage(self.image) # to ImageTk format
 
         # Update image
         self.canvas.image = imgtk
-        # self.canvas.itemconfig(self.canvas.image, image=imgtk)
         self.canvas.create_image(0, 0, anchor=tk.NW, image=imgtk)
-        # print('update preview')
-
-        # Repeat every 'interval' ms
-        # self.window.after(self.interval, self.update_image)
 
 class SaveWindow():
     def __init__(self, window, image):
