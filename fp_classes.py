@@ -174,10 +174,10 @@ class SetupFP:
                 Path(self.dir_data_6).mkdir(parents=True, exist_ok=True)
                 self.storage_present = True
 
-    def isblockdevice(path):
+    def isblockdevice(self,path) -> None:
         return os.path.exists(path) and stat.S_ISBLK(os.stat(path).st_mode)
 
-    def verify_mount_usb_locations():
+    def verify_mount_usb_locations(self) -> None:
         print(f"{bcolors.HEADER}List of mounted devices:{bcolors.ENDC}")
         partitions = psutil.disk_partitions()
 
