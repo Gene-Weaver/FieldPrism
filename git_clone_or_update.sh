@@ -3,6 +3,7 @@ if [ -d "/home/pi/FieldPrism" ]
 then
 	echo "FieldPrism main directory /home/pi/FieldPrism exists. Updating FieldPrism, pulling from GitHub Repo..."
 	cd /home/pi/FieldPrism/
+	cp git_clone_or_update.sh /home/pi
 	git pull
 	echo "FieldPrism is up to date!"
 else
