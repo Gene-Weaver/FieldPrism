@@ -314,7 +314,6 @@ def run(pipeline, root):
     old_stdout = sys.stdout    
     sys.stdout = Redirect(text_terminal)'''
 
-
     '''
     Initialize the two camera windows in the GUI
     '''
