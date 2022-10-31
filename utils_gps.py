@@ -12,7 +12,7 @@ To see raw data from GPS module, in terminal:
 
     cgps -s
 
-    - restart and test
+    - restart and test (read above url FIRST!)
     sudo killall gpsd
     sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock
 
