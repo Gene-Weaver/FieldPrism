@@ -2,7 +2,7 @@
 import time
 from gps3.agps3threaded import AGPS3mechanism
 from dataclasses import dataclass
-from utils import bcolors
+from utils import bcolors, get_datetime
 
 '''
 Reference this guide for help:
@@ -76,7 +76,7 @@ class GPSPacket:
             print(f"{bcolors.FAIL}       Alt error estimate: {self.alt_error_est}{bcolors.ENDC}")
             print(f"")
 
-def gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, cfg_user,use_data):
+def gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,use_data):
     print(f"       GPS Activated")
     if use_data:
         label_gps_status.config(text = 'GPS Activated', fg='orange')
@@ -85,10 +85,14 @@ def gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, c
             label_gps_status.config(text = 'No GPS Signal!', fg='red')
             label_gps_lat_status.config(text = 'Fail', fg='red')
             label_gps_lon_status.config(text = 'Fail', fg='red')
+            label_gps_time_status.config(text = 'Not Available', fg='red')
+            label_local_time_status.config(text = get_datetime(), fg='white') 
         else:
             label_gps_status.config(text = 'Good Signal', fg='green')
             label_gps_lat_status.config(text = str(GPS_data.latitude), fg='green')
             label_gps_lon_status.config(text = str(GPS_data.longitude), fg='green')
+            label_gps_time_status.config(text = str(GPS_data.current_time), fg='green')
+            label_local_time_status.config(text = get_datetime(), fg='white') 
     else:
         label_gps_status.config(text = 'Testing GPS Signal - Failing', fg='orange')
         GPS_data = get_gps(cfg_user['fieldprism']['gps']['speed'])
@@ -97,10 +101,14 @@ def gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, c
             label_gps_status.config(text = 'Testing GPS Signal - Failing', fg='orange')
             label_gps_lat_status.config(text = 'Failing', fg='orange')
             label_gps_lon_status.config(text = 'Failing', fg='orange')
+            label_gps_time_status.config(text = 'Not Available', fg='red')
+            label_local_time_status.config(text = get_datetime(), fg='white') 
         else:
             label_gps_status.config(text = 'Testing GPS Signal - Pass', fg='green')
             label_gps_lat_status.config(text = str(GPS_data.latitude), fg='green')
             label_gps_lon_status.config(text = str(GPS_data.longitude), fg='green')
+            label_gps_time_status.config(text = str(GPS_data.current_time), fg='green')
+            label_local_time_status.config(text = get_datetime(), fg='white') 
     return GPS_data
 
 def update_GPS_data(data_stream, item):
@@ -158,6 +166,10 @@ def get_gps(speed):
             GPS_data.lon_error_est = agps_thread.data_stream.epx
             GPS_data.alt_error_est = agps_thread.data_stream.epv
             GPS_data.print_report('Pass')
+        else:
+            # Set the time to the R Pi's local time
+            GPS_data.current_time = get_datetime()
+
     return GPS_data
 
 if __name__ == '__main__':

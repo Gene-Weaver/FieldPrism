@@ -170,7 +170,7 @@ def run(pipeline, root):
 
     label_camera = tk.Label(master=frame_info_camera, text="Camera Status: ", bg="black", fg="White", font=("Calibri ", 16))
     label_camera.grid(row=0, column=0, sticky="e")
-    label_camera_status = tk.Label(master=frame_info_camera, text=" Ready ", bg="black", fg="green", font=("Calibri", 16))
+    label_camera_status = tk.Label(master=frame_info_camera, text=" Please Wait ", bg="black", fg="green", font=("Calibri", 16))
     label_camera_status.grid(row=0, column=1, sticky="w")
 
     # -------------- File name
@@ -217,9 +217,31 @@ def run(pipeline, root):
     label_gps_lon_status = tk.Label(master=frame_info_gps_lon, text="", bg="black", fg="green", font=("Calibri ", 16))
     label_gps_lon_status.grid(row=0, column=1, sticky="w")
 
+    # -------------- GPS Time (UTC)
+    frame_info_gps_time = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
+    frame_info_gps_time.grid(row=6, column=0, sticky="nsew")
+    frame_info_gps_time.rowconfigure(0, minsize=30)
+    frame_info_gps_time.columnconfigure([0, 1], minsize=250)
+
+    label_gps_time = tk.Label(master=frame_info_gps_time, text="GPS Time (UTC): ", bg="black", fg="White", font=("Calibri ", 16))
+    label_gps_time.grid(row=0, column=0, sticky="e")
+    label_gps_time_status = tk.Label(master=frame_info_gps_time, text="", bg="black", fg="white", font=("Calibri ", 16))
+    label_gps_time_status.grid(row=0, column=1, sticky="w")
+
+    # -------------- R Pi Local Time
+    frame_info_local_time = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
+    frame_info_local_time.grid(row=7, column=0, sticky="nsew")
+    frame_info_local_time.rowconfigure(0, minsize=30)
+    frame_info_local_time.columnconfigure([0, 1], minsize=250)
+
+    label_local_time = tk.Label(master=frame_info_local_time, text="Local Time (R Pi): ", bg="black", fg="White", font=("Calibri ", 16))
+    label_local_time.grid(row=0, column=0, sticky="e")
+    label_local_time_status = tk.Label(master=frame_info_local_time, text="", bg="black", fg="white", font=("Calibri ", 16))
+    label_local_time_status.grid(row=0, column=1, sticky="w")
+
     # -------------- CSV Total
     frame_info_total = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
-    frame_info_total.grid(row=9, column=0, sticky="nsew")
+    frame_info_total.grid(row=10, column=0, sticky="nsew")
     frame_info_total.rowconfigure(0, minsize=30)
     frame_info_total.columnconfigure([0, 1], minsize=250)
 
@@ -230,7 +252,7 @@ def run(pipeline, root):
     
     # -------------- CSV Session
     frame_info_session = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
-    frame_info_session.grid(row=10, column=0, sticky="nsew")
+    frame_info_session.grid(row=11, column=0, sticky="nsew")
     frame_info_session.rowconfigure(0, minsize=30)
     frame_info_session.columnconfigure([0, 1], minsize=250)
 
@@ -241,7 +263,7 @@ def run(pipeline, root):
 
     # -------------- CSV
     frame_info_csv = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
-    frame_info_csv.grid(row=11, column=0, sticky="nsew")
+    frame_info_csv.grid(row=12, column=0, sticky="nsew")
     frame_info_csv.rowconfigure(0, minsize=30)
     frame_info_csv.columnconfigure([0, 1], minsize=250)
 
@@ -252,7 +274,7 @@ def run(pipeline, root):
 
     # -------------- Number of storage devices
     frame_info_ndevice = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
-    frame_info_ndevice.grid(row=14, column=0, sticky="nsew")
+    frame_info_ndevice.grid(row=15, column=0, sticky="nsew")
     frame_info_ndevice.rowconfigure(0, minsize=30)
     frame_info_ndevice.columnconfigure([0, 1], minsize=250)
 
@@ -263,7 +285,7 @@ def run(pipeline, root):
 
     # -------------- USB Speed
     frame_info_usbspeed = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
-    frame_info_usbspeed.grid(row=15, column=0, sticky="nsew")
+    frame_info_usbspeed.grid(row=16, column=0, sticky="nsew")
     frame_info_usbspeed.rowconfigure(0, minsize=30)
     frame_info_usbspeed.columnconfigure([0, 1], minsize=250)
 
@@ -333,12 +355,12 @@ def run(pipeline, root):
         label_camera_status.config(text = 'Allow ~30 seconds for GPS fix', fg='cyan')
         for i in range(0,5):
             print(i)
-            GPS_data_test = gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, cfg_user,False)
+            GPS_data_test = gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,False)
             if GPS_data_test.latitude != -999:
                 break
             time.sleep(4)
-        GPS_data_test = gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, cfg_user,True)
-        label_camera_status.config(text = ' Ready ', fg='green')
+        GPS_data_test = gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True)
+        label_camera_status.config(text = ' Please Wait ', fg='green')
 
         if cfg.storage_present == False:
             print(f"{bcolors.HEADER}Stopping...{bcolors.ENDC}")
@@ -400,7 +422,7 @@ def run(pipeline, root):
                     Window_Saved.update_image(cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
 
                     # Activate GPS, update GUI, and return GPS data
-                    GPS_data = gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, cfg_user,True)
+                    GPS_data = gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True)
 
                     # Write data to CSV file
                     Image = ImageData(cfg, path_to_saved, GPS_data, height, width)
@@ -434,7 +456,7 @@ def run(pipeline, root):
 
                 elif keyboard.is_pressed(cfg_user['fieldprism']['keymap']['test_gps']):
                     print(f"       Testing GPS")
-                    GPS_data_test = gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, cfg_user,True)
+                    GPS_data_test = gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True)
                     
 '''
 Initialize the tkinter GUI
