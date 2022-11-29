@@ -126,11 +126,12 @@ def createPipeline():
 Main code that runs the GUI, is called from start_gui()
 '''
 def run(pipeline, root):
+    dir_root = os.path.dirname(os.path.dirname(__file__))
     '''
     Make sure the destination path is present before starting to store the examples
     '''
-    img_preview = cv2.imread('img/preview_window.jpg')
-    img_saved = cv2.imread('img/saved_image_window.jpg')
+    img_preview = cv2.imread(os.path.join(dir_root,'img/preview_window.jpg'))
+    img_saved = cv2.imread(os.path.join(dir_root,'img/saved_image_window.jpg'))
 
     '''
     Setup the GUI
