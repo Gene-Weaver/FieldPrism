@@ -185,3 +185,5 @@ if __name__ == '__main__':
     end = time.perf_counter()
     print(f"{bcolors.HEADER}GPS Cautious: {round(end-start,5)} sec.{bcolors.ENDC}")
     print(f"")
+    print("This window will automatically close in 5 seconds...")
+    time.sleep(5)
