@@ -1,5 +1,5 @@
 # To use default value, set to null
-fieldprism:
+fieldstation:
     keymap:
         photo: '1'
         test_gps: '2'
@@ -13,4 +13,95 @@ fieldprism:
         always_save_to_boot: False
     gps:
         speed: 'fast' # of 'fast' ~0.3sec. or 'cautious' ~1.5sec. # cautious adds a timy delay to allow GPS lock and waits for 10 successful pings, fast waits for 3 successful pings
+fieldprism:
+    ### Processing Images with FieldPrism ###
+    skip_make_images_vertical: False # Warning! Images must be vertical. Only set to True if you are re-running on images that are already vertical!
+    
+    strict_distortion_correction: False # True: requires all 4 boxes within all 4 markers to correct dist. False: will use center of detected bbox otherwise
+    use_template_for_pixel_to_metric_conversion: True
+    
+    insert_clean_QR_codes: True # Use False if QR codes are close together, or frequently at 45degrees
+    
+    dir_images_unprocessed: '/home/brlab/Dropbox/LM2_Env/Image_Datasets/FieldPrism_Training_Images/FieldPrism_Training_Outside' #'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/QR_Codes_Demo'
+    dir_home: '/home/brlab/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/TESTING_OUTPUT'
+    folder_images_processed: 'Images_Processed'
+    current_project: 'FieldPrism_Training_Outside'
+    current_run: 'PREP_final_best' # nested inside of current_project
+    # folder_distortion_correction: 'Distortion_Corrected'
+    # folder_overlay: 'Overlay'
+    detector:
+        model_size: 'nightly' # 'small' or 'large' or 'nightly'
+        min_confidence_threshold: 0.70 # float 0 > x < 1 default = 0.70 
+        show_predicted_text: False # bool 
+    scale:
+        use_predefined: True # True for predefined size, False for custom placement of markers
+        scale_size: 'A4' # 'A5' or 'A4' or 'A3' or 'legal' or 'custom'
+        custom_ratio: null #0.61111 # 0.65 # float between 0 and 1. Assume that the page is vertical, be precise
+        custom_short_distance: null # integer, mm short distance between markers
+    QR_codes:
+        n_QR_codes: 1 # int > 0
+        do_rename_images: True
+
+    ### Creating QR Codes and Field Sheet for use in FieldPrism Projects ###
+    setup:
+        # Which documents do you want to create? 
+        create_field_sheet: False # bool True # Either True OR False
+        create_QR_codes: True # bool True # Either True OR False
+        create_size_check: False # bool True # Either True OR False
+
+        # Input / Output
+        new_file_stem: 'QQQDemo_6_Levels_N24_H_7' # str 'name_of_project' base name of created documents 'Demo_Levels_A4_QR-H-1_A3A4'
+        dir_containing_CSV_files: 'D:\Dropbox\FieldPrism\QR_code_builder\CSV_Files'
+        name_CSV_file: 'Demo_Long_Names_Max' # CSV file containing the naming hierarchy
+    
+    ### Set the size of the  field sheet ###
+    field_sheet_builder:
+        page_size: 'A4' # From small to large, either 'A5' OR 'A4' OR 'Legal' OR 'A3' OR 'Custom'
+        QR_location: 'solo' # Print QR codes onto the field sheet. NOT recommended 
+    
+    ### Set parameters for constructing the QR code sheet ###
+    QR_code_builder:
+        #########################################################
+        ### Using default will override all following options ###
+        #########################################################
+        ues_default_setup: True # bool True
+        default_config: 'A4_Long_Names' # 'A4_Levels' OR 'A4_Long_Names'
+
+        # QR Code density
+        # Default = 1. Results in larger 'pixels', best for low-res cameras
+        # Can be 1 - 10 if using hi-res camera (30 MP+). Heigher n = more redundancy / error correction
+        QR_density: 5 # int 1 # should stay 1 unless you QC your exact setup
+        #########################################################
+        #########################################################
+
+        # Page size
+        page_size: 'A4' # str 'A4' # recommend 'A4' but can be either 'A5' OR 'A4' OR 'Legal' OR 'A3'
         
+        # Font size of QR code text labels
+        QR_label_font_size: 12 # int 12 # default int 12
+        
+        # How many QR codes to fit onto one page
+        QR_wide: 5 # int 6 # number of codes in x-axis
+        QR_tall: 8 # int 10 # number of codes in y-axis
+        
+        # Text position relative to the QR code
+        QR_text_x: 28 # int 20 #
+        QR_text_y: 7 # int 6 # 
+        
+        # Dimension of QR codes
+        QR_dim_x: 30 # int 20 #
+        QR_dim_y: 30 # int 20 #
+
+        # Spacing between QR codes
+        QR_buffer_x: 5 # int 4 # buffer around the QR code x-axis. 4 for 6X10, 20 for 3x10
+        QR_buffer_y: 5 # int 5 # buffer around the QR code y-axis
+
+        # Set page margin, where QR codes begin to print
+        page_margin_left: 15
+        page_margin_top: 10
+        
+        # QR Codes are printed either row-wise or column-wise
+        print_order: 'row' # str # 'row' OR 'col'
+
+    
+

@@ -5,7 +5,14 @@ f.py
 # Dirs
 data/
 archive/
-
+venv_old/
+venv_fp/
+venv_fp_linux/
+fieldprism/yolov5/weights/
+QR_code_builder/bin_PDF/
+QR_code_builder/bin_QR/
+fieldprism/yolov5/runs/
+fieldprism/yolov5/weights/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -1,0 +1,9 @@
+Level_1,Level_2,Level_3,Level_4
+Android,Small,species_a,center
+Lumix,A4,species_b,skew
+Canon_Wide,A3,species_c,x-skew
+Canon_Mid,Poster,species_d,1-covered
+Canon_Std,Legal,species_e,2-covered
+Nikon_Wide,,,3-covered
+Nikon_Mid,,,4-covered
+Nikon_Std,,,
