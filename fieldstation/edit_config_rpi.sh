@@ -1,0 +1,1 @@
+geany /home/pi/FieldPrism/FieldPrism.yaml
