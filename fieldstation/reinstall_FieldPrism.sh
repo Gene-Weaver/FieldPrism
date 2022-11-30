@@ -11,7 +11,7 @@ echo "and"
 echo "     /home/pi/reinstall_FieldPrism.sh"
 echo "are not removed, so there is a fallback if something goes wrong."
 echo ""
-echo "Type <DELETE> to continue... (without the < >)""
+echo "Type <DELETE> to continue... (without the < >)"
 read ANSWER
 if [ "$ANSWER" = "DELETE" ]; 
 then
