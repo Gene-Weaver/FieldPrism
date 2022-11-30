@@ -435,7 +435,7 @@ def run(pipeline, root):
 
                     # Reset TAKE_PHOTO
                     TAKE_PHOTO = False
-                    time.sleep(5)
+                    time.sleep(17)
 
                 # Key Press Options
                 _key = cv2.waitKey(50)

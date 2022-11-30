@@ -17,15 +17,15 @@ fieldprism:
     ### Processing Images with FieldPrism ###
     skip_make_images_vertical: False # Warning! Images must be vertical. Only set to True if you are re-running on images that are already vertical!
     
-    strict_distortion_correction: True # True: requires all 4 boxes within all 4 markers to correct dist. False: will use center of detected bbox otherwise
-    use_template_for_pixel_to_metric_conversion: False # Uses center of bbox to undistort. results in ~2% error for pixel-metric conversion
+    strict_distortion_correction: False # True: requires all 4 boxes within all 4 markers to correct dist. False: will use center of detected bbox otherwise
+    use_template_for_pixel_to_metric_conversion: True # Uses center of bbox to undistort. results in ~2% error for pixel-metric conversion
     overlap_priority: 'barcode' # 'barcode' OR 'ruler' # if bboxe predictions overlap, keep the priority 
     insert_clean_QR_codes: False # Use False if QR codes are very close together, or frequently at 45degrees. The insertion can obscure unread QR codes
     
-    dir_images_unprocessed: 'D:/Dropbox/LM2_Env/Image_Datasets/FieldPrism_Training_Images/FieldPrism_Training_FS_Renaming' #'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/QR_Codes_Demo'
+    dir_images_unprocessed: 'D:/Dropbox/LM2_Env/Image_Datasets/FieldPrism_Training_Images/REU_Field_QR-Code-Images' #'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/QR_Codes_Demo'
     dir_home: 'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/TESTING_OUTPUT'
     folder_images_processed: 'Images_Processed'
-    current_project: 'FieldPrism_Training_FS_Renaming'
+    current_project: 'REU_Field_QR-Code-Images'
     current_run: 'PREP_final_best' # nested inside of current_project
     # folder_distortion_correction: 'Distortion_Corrected'
     # folder_overlay: 'Overlay'

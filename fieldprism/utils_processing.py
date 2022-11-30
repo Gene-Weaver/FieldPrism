@@ -638,11 +638,13 @@ class QRcode:
         if self.expanded:
             min_dim = min_dim - np.multiply(self.expanded_n, 2)
 
-        start_x = self.bbox[0]
-        start_y = self.bbox[1]
+        
 
         new_dim = int(np.multiply(min_dim, 0.8))
         new_dim_offset = int(np.multiply(min_dim, 0.1))
+
+        start_x = self.bbox[0] + new_dim_offset
+        start_y = self.bbox[1] + new_dim_offset
 
         # Build new QR code
         # use_default, image_QR_level = self.get_QR_level()
@@ -696,8 +698,8 @@ class QRcode:
             #     new_QR_code = cv2.resize(new_QR_code, (min_dim, min_dim), interpolation = cv2.INTER_CUBIC)
             # ret, new_QR_code = cv2.threshold(new_QR_code,60,255,cv2.THRESH_BINARY)
 
-            stop_x = start_x + min_dim
-            stop_y = start_y + min_dim
+            stop_x = start_x + new_dim - new_dim_offset
+            stop_y = start_y + new_dim - new_dim_offset
 
             if stop_y >= max_y:
                 start_y = start_y - (stop_y - max_y)

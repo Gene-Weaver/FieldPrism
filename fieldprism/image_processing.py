@@ -143,7 +143,10 @@ def process_rulers(cfg, image_name_jpg, all_rulers, option, ratio, image, image_
                         Marker_Bottom_Left.one_cm_pixels = average_one_cm_distance
                         Marker_Bottom_Right.one_cm_pixels = average_one_cm_distance
                 else: # This is the goal, it's the exact conversion factor
-                    average_one_cm_distance = np.nanmean([Marker_Top_Left.one_cm_pixels,Marker_Top_Right.one_cm_pixels,Marker_Bottom_Left.one_cm_pixels,Marker_Bottom_Right.one_cm_pixels])
+                    if ((Marker_Top_Left.one_cm_pixels is np.nan) and (Marker_Top_Right.one_cm_pixels is np.nan) and (Marker_Bottom_Left.one_cm_pixels is np.nan) and (Marker_Bottom_Right.one_cm_pixels is np.nan)):
+                        average_one_cm_distance = np.nan
+                    else:
+                        average_one_cm_distance = np.nanmean([Marker_Top_Left.one_cm_pixels,Marker_Top_Right.one_cm_pixels,Marker_Bottom_Left.one_cm_pixels,Marker_Bottom_Right.one_cm_pixels])
             else:
                 if not cfg['fieldprism']['strict_distortion_correction']:
                     conv_success, marker_dist = get_approx_conv_factor(cfg)
@@ -241,7 +244,9 @@ def process_rulers(cfg, image_name_jpg, all_rulers, option, ratio, image, image_
                     # image_bboxes_show.save(os.path.join(Dirs.path_overlay, image_name_jpg))
                     Overlay_Out = ImageOverlay(os.path.join(Dirs.path_overlay, image_name_jpg), image_bboxes_show, location='path_overlay')
 
+
                 average_one_cm_distance = np.nanmean(distances_list)
+
 
                 print(f"{bcolors.OKGREEN}      Pixel to Metric Conversion: {average_one_cm_distance} pixels = 1 cm.{bcolors.ENDC}")
             
