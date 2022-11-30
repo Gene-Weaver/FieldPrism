@@ -23,8 +23,8 @@ then
 	git clone https://github.com/Gene-Weaver/FieldPrism.git
 	cd /home/pi/FieldPrism/
 	git pull --ff-only
-	cp git_clone_or_update.sh /home/pi
-	cp reinstall_FieldPrism.sh /home/pi
+	cp /home/pi/FieldPrism/fieldstation/git_clone_or_update.sh /home/pi
+	cp /home/pi/FieldPrism/fieldstation/reinstall_FieldPrism.sh /home/pi
 	echo "FieldPrism is freshly installed and up to date!"
 else
 	echo "Cancelled. Nothing has been removed or changed."
