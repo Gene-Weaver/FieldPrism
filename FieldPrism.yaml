@@ -35,7 +35,7 @@ fieldprism:
         show_predicted_text: False # bool 
     scale:
         use_predefined: True # True for predefined size, False for custom placement of markers
-        scale_size: 'A3' # 'A5' or 'A4' or 'A3' or 'legal' or 'custom'
+        scale_size: 'A4' # 'A5' or 'A4' or 'A3' or 'legal' or 'custom'
         custom_ratio: null #0.61111 # 0.65 # float between 0 and 1. Assume that the page is vertical, be precise
         custom_short_distance: null # integer, mm short distance between markers
     QR_codes:
