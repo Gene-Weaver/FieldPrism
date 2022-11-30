@@ -17,15 +17,15 @@ fieldprism:
     ### Processing Images with FieldPrism ###
     skip_make_images_vertical: False # Warning! Images must be vertical. Only set to True if you are re-running on images that are already vertical!
     
-    strict_distortion_correction: False # True: requires all 4 boxes within all 4 markers to correct dist. False: will use center of detected bbox otherwise
-    use_template_for_pixel_to_metric_conversion: True
+    strict_distortion_correction: True # True: requires all 4 boxes within all 4 markers to correct dist. False: will use center of detected bbox otherwise
+    use_template_for_pixel_to_metric_conversion: False # Uses center of bbox to undistort. results in ~2% error for pixel-metric conversion
+    overlap_priority: 'barcode' # 'barcode' OR 'ruler' # if bboxe predictions overlap, keep the priority 
+    insert_clean_QR_codes: False # Use False if QR codes are very close together, or frequently at 45degrees. The insertion can obscure unread QR codes
     
-    insert_clean_QR_codes: True # Use False if QR codes are close together, or frequently at 45degrees
-    
-    dir_images_unprocessed: '/home/brlab/Dropbox/LM2_Env/Image_Datasets/FieldPrism_Training_Images/FieldPrism_Training_Outside' #'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/QR_Codes_Demo'
-    dir_home: '/home/brlab/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/TESTING_OUTPUT'
+    dir_images_unprocessed: 'D:/Dropbox/LM2_Env/Image_Datasets/FieldPrism_Training_Images/FieldPrism_Training_FS_Renaming' #'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/QR_Codes_Demo'
+    dir_home: 'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/TESTING_OUTPUT'
     folder_images_processed: 'Images_Processed'
-    current_project: 'FieldPrism_Training_Outside'
+    current_project: 'FieldPrism_Training_FS_Renaming'
     current_run: 'PREP_final_best' # nested inside of current_project
     # folder_distortion_correction: 'Distortion_Corrected'
     # folder_overlay: 'Overlay'
@@ -35,7 +35,7 @@ fieldprism:
         show_predicted_text: False # bool 
     scale:
         use_predefined: True # True for predefined size, False for custom placement of markers
-        scale_size: 'A4' # 'A5' or 'A4' or 'A3' or 'legal' or 'custom'
+        scale_size: 'A3' # 'A5' or 'A4' or 'A3' or 'legal' or 'custom'
         custom_ratio: null #0.61111 # 0.65 # float between 0 and 1. Assume that the page is vertical, be precise
         custom_short_distance: null # integer, mm short distance between markers
     QR_codes:
@@ -50,9 +50,9 @@ fieldprism:
         create_size_check: False # bool True # Either True OR False
 
         # Input / Output
-        new_file_stem: 'QQQDemo_6_Levels_N24_H_7' # str 'name_of_project' base name of created documents 'Demo_Levels_A4_QR-H-1_A3A4'
+        new_file_stem: 'Demo_6_Levels_N24_H_5' # str 'name_of_project' base name of created documents 'Demo_Levels_A4_QR-H-1_A3A4'
         dir_containing_CSV_files: 'D:\Dropbox\FieldPrism\QR_code_builder\CSV_Files'
-        name_CSV_file: 'Demo_Long_Names_Max' # CSV file containing the naming hierarchy
+        name_CSV_file: 'Demo_6_Levels' # CSV file containing the naming hierarchy
     
     ### Set the size of the  field sheet ###
     field_sheet_builder:

@@ -9,7 +9,7 @@ from torchvision.transforms import ToPILImage
 from torchvision.io import read_image
 from utils_processing import (get_cfg_from_full_path, get_label_from_index, get_color, make_images_in_dir_vertical, get_approx_conv_factor, get_scale_ratio,
                             determine_success_unknown, determine_success, generate_overlay_add, generate_overlay, correct_distortion, write_yaml,
-                            generate_overlay_QR_add, make_file_names_valid)
+                            generate_overlay_QR_add, make_file_names_valid, remove_overlapping_predictions)
 from utils_processing import bcolors, Marker, QRcode, Located_BBOXES, File_Structure, ImageCorrected, ImageOverlay
 from component_detector import detect_components_in_image
 
@@ -39,27 +39,27 @@ def process_rulers(cfg, image_name_jpg, all_rulers, option, ratio, image, image_
     # If there are not exactly 4 markers, do stuff
     if all_rulers.shape[0] != 4:
         print(f"{bcolors.WARNING}      Failed to find exactly 4 corner markers. Found {all_rulers.shape[0]} markers.{bcolors.ENDC}")
-        keep = []
-        i_keep = 0
+    keep = []
+    i_keep = 0
 
-        # Iterate through possible rulers, only keep those that are mostly square
-        for index_keep, row in all_rulers.iterrows():
-            i_keep += 1
-            print(f"{bcolors.BOLD}            Processing marker {i_keep}{bcolors.ENDC}")
-            box_dec = (row[1], row[2], row[3], row[4])
-            bbox = pybboxes.convert_bbox(box_dec, from_type="yolo", to_type="voc", image_size=(img_w, img_h))
-            x_diff = bbox[2] - bbox[0]
-            y_diff = bbox[3] - bbox[1]
+    # Iterate through possible rulers, only keep those that are mostly square
+    for index_keep, row in all_rulers.iterrows():
+        i_keep += 1
+        print(f"{bcolors.BOLD}            Processing marker {i_keep}{bcolors.ENDC}")
+        box_dec = (row[1], row[2], row[3], row[4])
+        bbox = pybboxes.convert_bbox(box_dec, from_type="yolo", to_type="voc", image_size=(img_w, img_h))
+        x_diff = bbox[2] - bbox[0]
+        y_diff = bbox[3] - bbox[1]
 
-            tol = np.multiply(min([x_diff,y_diff]),1) #0.2
+        tol = np.multiply(min([x_diff,y_diff]),1) #0.2
 
-            if (max([x_diff,y_diff]) <= (min([x_diff,y_diff]) + tol)):# or (max([x_diff,y_diff]) <= (min([x_diff,y_diff]) - tol)):
-                keep.append(row.values)
-                print(f"{bcolors.BOLD}            KEEP, ruler is square: x-side {x_diff} vs. y-side {y_diff}{bcolors.ENDC}")
-            else:
-                print(f"{bcolors.BOLD}            IGNORE, ruler not square: x-side {x_diff} vs. y-side {y_diff}{bcolors.ENDC}")
-        # update all_rulers 
-        all_rulers = pd.DataFrame(keep)
+        if (max([x_diff,y_diff]) <= (min([x_diff,y_diff]) + tol)):# or (max([x_diff,y_diff]) <= (min([x_diff,y_diff]) - tol)):
+            keep.append(row.values)
+            print(f"{bcolors.BOLD}            KEEP, ruler is square: x-side {x_diff} vs. y-side {y_diff}{bcolors.ENDC}")
+        else:
+            print(f"{bcolors.BOLD}            IGNORE, ruler not square: x-side {x_diff} vs. y-side {y_diff}{bcolors.ENDC}")
+    # update all_rulers 
+    all_rulers = pd.DataFrame(keep)
 
     # try again, are there 4 markers now?
     if all_rulers.shape[0] != 4:
@@ -130,6 +130,9 @@ def process_rulers(cfg, image_name_jpg, all_rulers, option, ratio, image, image_
 
             use_distortion_correction, use_conversion = determine_success(Marker_Top_Left,Marker_Top_Right,Marker_Bottom_Left,Marker_Bottom_Right)
 
+            # if option == 'processing' and not use_distortion_correction:
+                
+
             if use_conversion:
                 if cfg['fieldprism']['use_template_for_pixel_to_metric_conversion']:
                     conv_success, marker_dist = get_approx_conv_factor(cfg)
@@ -140,7 +143,7 @@ def process_rulers(cfg, image_name_jpg, all_rulers, option, ratio, image, image_
                         Marker_Bottom_Left.one_cm_pixels = average_one_cm_distance
                         Marker_Bottom_Right.one_cm_pixels = average_one_cm_distance
                 else: # This is the goal, it's the exact conversion factor
-                    average_one_cm_distance = np.mean([Marker_Top_Left.one_cm_pixels,Marker_Top_Right.one_cm_pixels,Marker_Bottom_Left.one_cm_pixels,Marker_Bottom_Right.one_cm_pixels])
+                    average_one_cm_distance = np.nanmean([Marker_Top_Left.one_cm_pixels,Marker_Top_Right.one_cm_pixels,Marker_Bottom_Left.one_cm_pixels,Marker_Bottom_Right.one_cm_pixels])
             else:
                 if not cfg['fieldprism']['strict_distortion_correction']:
                     conv_success, marker_dist = get_approx_conv_factor(cfg)
@@ -152,7 +155,15 @@ def process_rulers(cfg, image_name_jpg, all_rulers, option, ratio, image, image_
                         Marker_Bottom_Right.one_cm_pixels = average_one_cm_distance
 
                 else:
-                    average_one_cm_distance = 0
+                    average_one_cm_distance = np.nan
+            if average_one_cm_distance == np.nan:
+                conv_success, marker_dist = get_approx_conv_factor(cfg)
+                if conv_success:
+                    average_one_cm_distance = np.multiply(np.divide(TL_to_TR,marker_dist), 10)
+                    Marker_Top_Left.one_cm_pixels = average_one_cm_distance
+                    Marker_Top_Right.one_cm_pixels = average_one_cm_distance
+                    Marker_Bottom_Left.one_cm_pixels = average_one_cm_distance
+                    Marker_Bottom_Right.one_cm_pixels = average_one_cm_distance
 
 
             ### Distortion correction success, can get a conversion 
@@ -169,7 +180,7 @@ def process_rulers(cfg, image_name_jpg, all_rulers, option, ratio, image, image_
 
                 elif option == 'processing':
                     centers_corrected = centers
-                    image_bboxes = generate_overlay(Dirs.path_overlay, image_name_jpg, image_bboxes, bbox, labels_list, colors_list, centers_corrected, Marker_Top_Left, Marker_Top_Right, Marker_Bottom_Right, Marker_Bottom_Left)
+                    image_bboxes = generate_overlay(Dirs.path_overlay, image_name_jpg, average_one_cm_distance, image_bboxes, bbox, labels_list, colors_list, centers_corrected, Marker_Top_Left, Marker_Top_Right, Marker_Bottom_Right, Marker_Bottom_Left)
                     # Below only used for referencing dir location
                     Image_Out = ImageCorrected(os.path.join(Dirs.path_distortion_corrected,image_name_jpg), [], location='path_images_corrected')
 
@@ -230,7 +241,7 @@ def process_rulers(cfg, image_name_jpg, all_rulers, option, ratio, image, image_
                     # image_bboxes_show.save(os.path.join(Dirs.path_overlay, image_name_jpg))
                     Overlay_Out = ImageOverlay(os.path.join(Dirs.path_overlay, image_name_jpg), image_bboxes_show, location='path_overlay')
 
-                average_one_cm_distance = np.mean(distances_list)
+                average_one_cm_distance = np.nanmean(distances_list)
 
                 print(f"{bcolors.OKGREEN}      Pixel to Metric Conversion: {average_one_cm_distance} pixels = 1 cm.{bcolors.ENDC}")
             
@@ -346,6 +357,35 @@ def identify_and_process_markers(cfg, option, ratio, dir_images_to_process, Dirs
                 all_text = image_label_file.loc[image_label_file[0] == 3]
                 all_rulers = image_label_file.loc[image_label_file[0] == 0]
                 all_barcodes = image_label_file.loc[image_label_file[0] == 1]
+
+
+
+                # keep_bc = []
+                # for i_bc, bc in all_barcodes.iterrows(): 
+                #     do_keep_bc = True
+                #     bbox_b = (bc[1], bc[2], bc[3], bc[4])
+                #     bbox_b = pybboxes.convert_bbox(bbox_b, from_type="yolo", to_type="voc", image_size=(img_w, img_h))
+                #     for i_ru, ru in keep_ruler.iterrows(): 
+                #         bbox_ruler = (bc[1], bc[2], bc[3], bc[4])
+                #         bbox_ruler = pybboxes.convert_bbox(bbox_ruler, from_type="yolo", to_type="voc", image_size=(img_w, img_h))
+                #         if (bbox_ruler[0] >= bbox_b[2]) or (bbox_ruler[2]<=bbox_b[0]) or (bbox_ruler[3]<=bbox_b[1]) or (bbox_ruler[1]>=bbox_b[3]):
+                #             continue
+                #         else:
+                #             do_keep_bc = False
+                #     if do_keep_bc:
+                #         keep_bc.append(bc.values)
+                # keep_bc = pd.DataFrame(keep_bc)
+
+                print(f"{bcolors.OKCYAN}      Removing intersecting predictions. Prioritizing class: {cfg['fieldprism']['overlap_priority']}{bcolors.ENDC}")
+                print(f"{bcolors.BOLD}            Before - number of barcodes: {all_barcodes.shape[0]}{bcolors.ENDC}")
+                print(f"{bcolors.BOLD}            Before - number of rulers: {all_rulers.shape[0]}{bcolors.ENDC}")
+                if cfg['fieldprism']['overlap_priority'] == 'ruler':
+                    all_rulers, all_barcodes = remove_overlapping_predictions(all_rulers, all_barcodes, img_w, img_h)
+                else:
+                    all_barcodes, all_rulers = remove_overlapping_predictions(all_barcodes, all_rulers, img_w, img_h)
+                print(f"{bcolors.BOLD}            Before - number of barcodes: {all_barcodes.shape[0]}{bcolors.ENDC}")
+                print(f"{bcolors.BOLD}            Before - number of rulers: {all_rulers.shape[0]}{bcolors.ENDC}")
+
 
                 try:
                     image_bboxes = read_image(os.path.join(Dirs.path_overlay,image_name_jpg))

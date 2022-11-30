@@ -803,28 +803,28 @@ def main() -> None:
                         PAGESIZE_QR = 'A4',
                         USE_LEVELS=True,
                         PAGE_MARGIN_LEFT=10,
-                        PAGE_MARGIN_TOP=10,
+                        PAGE_MARGIN_TOP=15,
                         QR_TEXT_X = 30,
                         QR_DIM_X = 30,
                         QR_DIM_Y = 30,
                         QR_TALL = 8, # with long labels = 10
                         QR_WIDE = 3,# with long labels = 3
                         QR_BUFFER_X = 30,
-                        QR_BUFFER_Y = 5,
+                        QR_BUFFER_Y = 4,
                         QR_DENSITY = cfg['fieldprism']['QR_code_builder']['QR_density'])
         elif cfg['fieldprism']['QR_code_builder']['default_config'] == 'A4_Levels':
             page = Input(PDF_NAME=PDF_NAME, DIR_CSV =DIR_CSV, CSV_NAME=CSV_NAME, QR_LOCATION=QR_LOCATION, CREATE_FIELD_SHEET = CREATE_FIELD_SHEET, CREATE_QR_CODES= CREATE_QR_CODES, CREATE_SIZE_CHECK = CREATE_SIZE_CHECK,
                         SIZE = 12, SPACE = 4, LABELSHIFT = 7, PRINT_ORDER= 'row', PAGESIZE_TEMPLATE = PAGESIZE_TEMPLATE, PAGESIZE_QR = 'A4',
                         USE_LEVELS = True,
                         PAGE_MARGIN_LEFT=15,
-                        PAGE_MARGIN_TOP=10,
+                        PAGE_MARGIN_TOP=15,
                         QR_TEXT_X = 30,
                         QR_DIM_X = 30,
                         QR_DIM_Y = 30,
                         QR_TALL = 8, # with long labels = 10
                         QR_WIDE = 5,# with long labels = 3
                         QR_BUFFER_X = 5,
-                        QR_BUFFER_Y = 5,
+                        QR_BUFFER_Y = 4,
                         QR_DENSITY = cfg['fieldprism']['QR_code_builder']['QR_density'])
     else:
         # Setup page
