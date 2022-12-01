@@ -93,8 +93,8 @@ echo "***** Mounting USB Drives..."
 if [ -e /dev/sda1 ] ; then
 echo "USB1 mounted"
 pmount -w /dev/sda1 /media/USB1
-sudo e2label /dev/sda1 USB1
-sudo dosfslabel /dev/sda1 USB1
+# sudo e2label /dev/sda1 USB1
+# sudo dosfslabel /dev/sda1 USB1
 else
 echo "USB1 not connected"
 fi
@@ -102,8 +102,8 @@ fi
 if [ -e /dev/sdb1 ] ; then
 echo "USB2 mounted"
 pmount -w /dev/sdb1 /media/USB2
-sudo e2label /dev/sdb1 USB2
-sudo dosfslabel /dev/sdb1 USB2
+# sudo e2label /dev/sdb1 USB2
+# sudo dosfslabel /dev/sdb1 USB2
 else
 echo "USB2 not connected"
 fi
@@ -111,8 +111,8 @@ fi
 if [ -e /dev/sdc1 ] ; then
 echo "USB3 mounted"
 pmount -w /dev/sdc1 /media/USB3
-sudo e2label /dev/sdc1 USB3
-sudo dosfslabel /dev/sdc1 USB3
+# sudo e2label /dev/sdc1 USB3
+# sudo dosfslabel /dev/sdc1 USB3
 else
 echo "USB3 not connected"
 fi
@@ -120,8 +120,8 @@ fi
 if [ -e /dev/sdd1 ] ; then
 echo "USB4 mounted"
 pmount -w /dev/sdd1 /media/USB4
-sudo e2label /dev/sdd1 USB4
-sudo dosfslabel /dev/sdd1 USB4
+# sudo e2label /dev/sdd1 USB4
+# sudo dosfslabel /dev/sdd1 USB4
 else
 echo "USB4 not connected"
 fi
@@ -129,8 +129,8 @@ fi
 if [ -e /dev/sde1 ] ; then
 echo "USB5 mounted"
 pmount -w /dev/sde1 /media/USB5
-sudo e2label /dev/sde1 USB5
-sudo dosfslabel /dev/sde1 USB5
+# sudo e2label /dev/sde1 USB5
+# sudo dosfslabel /dev/sde1 USB5
 else
 echo "USB5 not connected"
 fi
@@ -138,8 +138,8 @@ fi
 if [ -e /dev/sdf1 ] ; then
 echo "USB6 mounted"
 pmount -w /dev/sdf1 /media/USB6
-sudo e2label /dev/sdf1 USB6
-sudo dosfslabel /dev/sdf1 USB6
+# sudo e2label /dev/sdf1 USB6
+# sudo dosfslabel /dev/sdf1 USB6
 else
 echo "USB6 not connected"
 fi
