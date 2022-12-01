@@ -33,5 +33,5 @@ else
 	echo "Cancelled. Nothing has been removed or changed."
 fi
 echo ""
-echo "This window will automatically close in 10 seconds..."
-sleep 10
+echo "This window will automatically close in 60 seconds..."
+sleep 60
