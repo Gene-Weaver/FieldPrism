@@ -25,8 +25,8 @@ then
 	git pull --ff-only
 	cp /home/pi/FieldPrism/fieldstation/git_clone_or_update.sh /home/pi
 	cp /home/pi/FieldPrism/fieldstation/reinstall_FieldPrism.sh /home/pi
-	cp /home/pi/FieldPrism/img/FieldPrism_Desktop_Black.jpg /usr/share/rpd-wallpaper
-	cp /home/pi/FieldPrism/img/FieldPrism_Desktop_Black_Plain.jpg /usr/share/rpd-wallpaper
+	sudo cp /home/pi/FieldPrism/img/FieldPrism_Desktop_Black.jpg /usr/share/rpd-wallpaper
+	sudo cp /home/pi/FieldPrism/img/FieldPrism_Desktop_Black_Plain.jpg /usr/share/rpd-wallpaper
 	echo "FieldPrism is freshly installed and up to date!"
 else
 	echo "Cancelled. Nothing has been removed or changed."
