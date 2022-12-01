@@ -176,7 +176,7 @@ def process_rulers(cfg, image_name_jpg, all_rulers, option, ratio, image, image_
                             Marker_Bottom_Right.translate_center_point,
                             Marker_Bottom_Left.translate_center_point]
                 if option == 'distortion':
-                    image, centers_corrected = correct_distortion(image, centers, ratio)                    
+                    image, centers_corrected = correct_distortion(cfg, image, centers, ratio)                    
                     # Write the distortion corrected image 
                     # cv2.imwrite(os.path.join(Dirs.path_distortion_corrected,image_name_jpg), image)
                     Image_Out = ImageCorrected(os.path.join(Dirs.path_distortion_corrected,image_name_jpg), image, location='path_images_corrected')

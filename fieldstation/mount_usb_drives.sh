@@ -193,3 +193,6 @@ echo "            --> ls: cannot access '/media/USB3': No such file or directory
 echo ""
 echo "***** Errors Thrown Below..."
 echo ""
+echo ""
+echo "This window will automatically close in 10 seconds..."
+sleep 10

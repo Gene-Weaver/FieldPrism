@@ -829,7 +829,7 @@ class QRcode:
             # cv2.imshow('QR_Code End', self.qr_code_bi)
             # cv2.waitKey(0)
 
-def correct_distortion(image, centers, ratio):
+def correct_distortion(cfg, image, centers, ratio):
     rows,cols,ch = image.shape
 
     new_h = math.sqrt((centers[2][0]-centers[1][0])*(centers[2][0]-centers[1][0])+(centers[2][1]-centers[1][1])*(centers[2][1]-centers[1][1]))
@@ -844,7 +844,31 @@ def correct_distortion(image, centers, ratio):
     transformed = np.zeros((int(new_w + offset_w), int(new_h + offset_h)), dtype=np.uint8)
     dst = cv2.warpPerspective(image, warped, transformed.shape)
 
-    dst_fit = remove_black_space(dst)
+    
+
+    if cfg['fieldprism']['justify_corrected_images']:
+        x_justify = int(cfg['fieldprism']['justify_corrected_images_origin'])
+        y_justify = int(cfg['fieldprism']['justify_corrected_images_origin'])
+        extra = int(cfg['fieldprism']['justify_corrected_images_extra'])
+        TL_x = int(centers_corrected[0][0])
+        TL_y = int(centers_corrected[0][1])
+
+        TR_x = int(centers_corrected[1][0]) + extra
+        BR_y = int(centers_corrected[2][1]) + extra
+
+
+        x_shift = x_justify - TL_x
+        y_shift = y_justify - TL_y
+
+        M = np.float32([
+            [1, 0, x_shift],
+            [0, 1, y_shift]
+        ])
+
+        dst = cv2.warpAffine(dst, M, (dst.shape[1], dst.shape[0]))
+        dst_fit = remove_black_space_justify(dst, TR_x, BR_y)
+    else:
+        dst_fit = remove_black_space(dst)
 
     # cv2.imshow("Image", dst_fit)
     # cv2.waitKey(0)
@@ -953,6 +977,13 @@ def remove_black_space(image):
     ymin, ymax = np.where(rows)[0][[0, -1]]
     xmin, xmax = np.where(cols)[0][[0, -1]]
     return image[ymin:ymax+1, xmin:xmax+1]
+
+def remove_black_space_justify(image, TR_x, BR_y):
+    # rows = np.any(image, axis=1)
+    # cols = np.any(image, axis=0)
+    # ymin, ymax = np.where(rows)[0][[0, -1]]
+    # xmin, xmax = np.where(cols)[0][[0, -1]]
+    return image[0:BR_y+1, 0:TR_x+1]
 
 def validate_dir(dir):
     if not os.path.exists(dir):
@@ -1128,19 +1159,21 @@ def generate_overlay_add(image_bboxes, bbox, labels_list, colors_list, centers_c
     # Add one cm. box
     average_one_cm_distance = distance
     if average_one_cm_distance is not np.nan:
+        label_1CM = [''.join(['1 CM = ',str(np.round(average_one_cm_distance,1)),' Pixels'])]
+        label_10CM = [''.join(['10 CM = ',str(np.round(np.multiply(average_one_cm_distance, 10), 1)),' Pixels'])]
         image_bboxes = draw_bounding_boxes_custom(image_bboxes,torch.tensor([[
                                             centers_corrected[0]-(np.divide(average_one_cm_distance,2)),
                                             centers_corrected[1]-(np.divide(average_one_cm_distance,2)),
                                             centers_corrected[0]+(np.divide(average_one_cm_distance,2)),
                                             centers_corrected[1]+(np.divide(average_one_cm_distance,2))]]),
-                                            width=1,labels=['1 CM'],colors=(255, 0, 0),fill =True,font = font_pick, font_size=20, text_color = (255, 0, 0))  
+                                            width=1,labels=label_1CM,colors=(255, 0, 0),fill =True,font = font_pick, font_size=20, text_color = (255, 0, 0))  
 
         image_bboxes = draw_bounding_boxes_custom(image_bboxes,torch.tensor([[
                                             centers_corrected[0]-np.multiply((np.divide(average_one_cm_distance,2)),3),
                                             centers_corrected[1]+np.multiply((np.divide(average_one_cm_distance,2)),4),
                                             centers_corrected[0]+np.multiply((np.divide(average_one_cm_distance,2)),17),
                                             centers_corrected[1]+np.multiply((np.divide(average_one_cm_distance,2)),4.1)]]),
-                                            width=10,labels=['10 CM'],colors=(20, 120, 10),fill =True,font = font_pick, font_size=20, text_color = (20, 120, 10))  
+                                            width=10,labels=label_10CM,colors=(20, 120, 10),fill =True,font = font_pick, font_size=20, text_color = (20, 120, 10))  
     return image_bboxes
 
 def generate_overlay(path_overlay, image_name_jpg, average_one_cm_distance, image_bboxes, bbox, labels_list, colors_list, centers_corrected, Marker_Top_Left, Marker_Top_Right, Marker_Bottom_Right, Marker_Bottom_Left):
@@ -1162,37 +1195,39 @@ def generate_overlay(path_overlay, image_name_jpg, average_one_cm_distance, imag
 
     # Add one cm. box
     if average_one_cm_distance is not np.nan:
+        label_1CM = [''.join(['1 CM = ',str(np.round(average_one_cm_distance,1)),' Pixels'])]
+        label_10CM = [''.join(['10 CM = ',str(np.round(np.multiply(average_one_cm_distance, 10), 1)),' Pixels'])]
         image_bboxes = draw_bounding_boxes_custom(image_bboxes,torch.tensor([[
                                             Marker_Top_Left.translate_center_point[0]-(np.divide(average_one_cm_distance,2)),
                                             Marker_Top_Left.translate_center_point[1]-(np.divide(average_one_cm_distance,2)),
                                             Marker_Top_Left.translate_center_point[0]+(np.divide(average_one_cm_distance,2)),
                                             Marker_Top_Left.translate_center_point[1]+(np.divide(average_one_cm_distance,2))]]),
-                                            width=1,labels=['1 CM'],colors=(255, 0, 0),fill =True,font = font_pick, font_size=20, text_color = (255, 0, 0)) 
+                                            width=1,labels=label_1CM,colors=(255, 0, 0),fill =True,font = font_pick, font_size=20, text_color = (255, 0, 0)) 
 
         image_bboxes = draw_bounding_boxes_custom(image_bboxes,torch.tensor([[
                                             Marker_Top_Right.translate_center_point[0]-np.multiply((np.divide(average_one_cm_distance,2)),3),
                                             Marker_Top_Right.translate_center_point[1]+np.multiply((np.divide(average_one_cm_distance,2)),4),
                                             Marker_Top_Right.translate_center_point[0]+np.multiply((np.divide(average_one_cm_distance,2)),17),
                                             Marker_Top_Right.translate_center_point[1]+np.multiply((np.divide(average_one_cm_distance,2)),4.1)]]),
-                                            width=10,labels=['10 CM'],colors=(20, 120, 10),fill =True,font = font_pick, font_size=20, text_color = (20, 120, 10)) 
+                                            width=10,labels=label_10CM,colors=(20, 120, 10),fill =True,font = font_pick, font_size=20, text_color = (20, 120, 10)) 
         image_bboxes = draw_bounding_boxes_custom(image_bboxes,torch.tensor([[
                                             Marker_Top_Left.translate_center_point[0]-np.multiply((np.divide(average_one_cm_distance,2)),3),
                                             Marker_Top_Left.translate_center_point[1]+np.multiply((np.divide(average_one_cm_distance,2)),4),
                                             Marker_Top_Left.translate_center_point[0]+np.multiply((np.divide(average_one_cm_distance,2)),17),
                                             Marker_Top_Left.translate_center_point[1]+np.multiply((np.divide(average_one_cm_distance,2)),4.1)]]),
-                                            width=10,labels=['10 CM'],colors=(20, 120, 10),fill =True,font = font_pick, font_size=20, text_color = (20, 120, 10)) 
+                                            width=10,labels=label_10CM,colors=(20, 120, 10),fill =True,font = font_pick, font_size=20, text_color = (20, 120, 10)) 
         image_bboxes = draw_bounding_boxes_custom(image_bboxes,torch.tensor([[
                                             Marker_Bottom_Right.translate_center_point[0]-np.multiply((np.divide(average_one_cm_distance,2)),3),
                                             Marker_Bottom_Right.translate_center_point[1]+np.multiply((np.divide(average_one_cm_distance,2)),4),
                                             Marker_Bottom_Right.translate_center_point[0]+np.multiply((np.divide(average_one_cm_distance,2)),17),
                                             Marker_Bottom_Right.translate_center_point[1]+np.multiply((np.divide(average_one_cm_distance,2)),4.1)]]),
-                                            width=10,labels=['10 CM'],colors=(20, 120, 10),fill =True,font = font_pick, font_size=20, text_color = (20, 120, 10)) 
+                                            width=10,labels=label_10CM,colors=(20, 120, 10),fill =True,font = font_pick, font_size=20, text_color = (20, 120, 10)) 
         image_bboxes = draw_bounding_boxes_custom(image_bboxes,torch.tensor([[
                                             Marker_Bottom_Left.translate_center_point[0]-np.multiply((np.divide(average_one_cm_distance,2)),3),
                                             Marker_Bottom_Left.translate_center_point[1]+np.multiply((np.divide(average_one_cm_distance,2)),4),
                                             Marker_Bottom_Left.translate_center_point[0]+np.multiply((np.divide(average_one_cm_distance,2)),17),
                                             Marker_Bottom_Left.translate_center_point[1]+np.multiply((np.divide(average_one_cm_distance,2)),4.1)]]),
-                                            width=10,labels=['10 CM'],colors=(20, 120, 10),fill =True,font = font_pick, font_size=20, text_color = (20, 120, 10)) 
+                                            width=10,labels=label_10CM,colors=(20, 120, 10),fill =True,font = font_pick, font_size=20, text_color = (20, 120, 10)) 
     # image_bboxes = draw_keypoints(image_bboxes, torch.tensor([[bottom_right_center]]), colors="blue", radius=20)
     # image_bboxes = draw_keypoints(image_bboxes, torch.tensor([[top_left_center]]), colors="red", radius=20)
     # image_bboxes = draw_keypoints(image_bboxes, torch.tensor([[top_right_center]]), colors="green", radius=20)

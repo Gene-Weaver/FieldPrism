@@ -15,12 +15,15 @@ fieldstation:
         speed: 'fast' # of 'fast' ~0.3sec. or 'cautious' ~1.5sec. # cautious adds a timy delay to allow GPS lock and waits for 10 successful pings, fast waits for 3 successful pings
 fieldprism:
     ### Processing Images with FieldPrism ###
-    skip_make_images_vertical: False # Warning! Images must be vertical. Only set to True if you are re-running on images that are already vertical!
+    skip_make_images_vertical: True # Warning! Images must be vertical. Only set to True if you are re-running on images that are already vertical!
     
     strict_distortion_correction: False # True: requires all 4 boxes within all 4 markers to correct dist. False: will use center of detected bbox otherwise
     use_template_for_pixel_to_metric_conversion: True # Uses center of bbox to undistort. results in ~2% error for pixel-metric conversion
     overlap_priority: 'barcode' # 'barcode' OR 'ruler' # if bboxe predictions overlap, keep the priority 
     insert_clean_QR_codes: False # Use False if QR codes are very close together, or frequently at 45degrees. The insertion can obscure unread QR codes
+    justify_corrected_images: True
+    justify_corrected_images_origin: 800 # Adjust based on the image resolution and how much you want trimmed
+    justify_corrected_images_extra: 800 #
     
     dir_images_unprocessed: 'D:/Dropbox/LM2_Env/Image_Datasets/FieldPrism_Training_Images/REU_Field_QR-Code-Images' #'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/QR_Codes_Demo'
     dir_home: 'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/TESTING_OUTPUT'
