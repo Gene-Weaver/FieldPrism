@@ -76,7 +76,6 @@ rm -rf /media/USB3
 rm -rf /media/USB4
 rm -rf /media/USB5
 rm -rf /media/USB6
-rm -rf /media/*
 
 
 echo ""
