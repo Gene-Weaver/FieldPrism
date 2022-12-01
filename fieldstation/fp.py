@@ -126,6 +126,7 @@ def createPipeline():
 Main code that runs the GUI, is called from start_gui()
 '''
 def run(pipeline, root):
+    software_version = '2022-12 v-1-0'
     dir_root = os.path.dirname(os.path.dirname(__file__))
     '''
     Make sure the destination path is present before starting to store the examples
@@ -160,7 +161,7 @@ def run(pipeline, root):
     frame_info = tk.Frame(master=root, width = 250, bg="black")
     frame_info.grid(row=1, column=1, rowspan=3, sticky="nsew")
 
-    frame_info.rowconfigure([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], minsize=30)
+    frame_info.rowconfigure([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], minsize=30)
     frame_info.columnconfigure(0, minsize=250)
 
     # -------------- Camera status
@@ -273,9 +274,20 @@ def run(pipeline, root):
     label_csv_status = tk.Label(master=frame_info_csv, text="Waiting", bg="black", fg="white", font=("Calibri ", 16))
     label_csv_status.grid(row=0, column=1, sticky="w")
 
+    # -------------- CSV
+    frame_info_nimage = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
+    frame_info_nimage.grid(row=14, column=0, sticky="nsew")
+    frame_info_nimage.rowconfigure(0, minsize=30)
+    frame_info_nimage.columnconfigure([0, 1], minsize=250)
+
+    label_nimage = tk.Label(master=frame_info_nimage, text="Session Image Count: ", bg="black", fg="White", font=("Calibri ", 16))
+    label_nimage.grid(row=0, column=0, sticky="e")
+    label_nimage_status = tk.Label(master=frame_info_nimage, text="0", bg="black", fg="white", font=("Calibri ", 16))
+    label_nimage_status.grid(row=0, column=1, sticky="w")
+
     # -------------- Number of storage devices
     frame_info_ndevice = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
-    frame_info_ndevice.grid(row=15, column=0, sticky="nsew")
+    frame_info_ndevice.grid(row=16, column=0, sticky="nsew")
     frame_info_ndevice.rowconfigure(0, minsize=30)
     frame_info_ndevice.columnconfigure([0, 1], minsize=250)
 
@@ -286,7 +298,7 @@ def run(pipeline, root):
 
     # -------------- USB Speed
     frame_info_usbspeed = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
-    frame_info_usbspeed.grid(row=16, column=0, sticky="nsew")
+    frame_info_usbspeed.grid(row=17, column=0, sticky="nsew")
     frame_info_usbspeed.rowconfigure(0, minsize=30)
     frame_info_usbspeed.columnconfigure([0, 1], minsize=250)
 
@@ -294,6 +306,17 @@ def run(pipeline, root):
     label_usbspeed.grid(row=0, column=0, sticky="e")
     label_usbspeed_status = tk.Label(master=frame_info_usbspeed, text="", bg="black", fg="white", font=("Calibri ", 16))
     label_usbspeed_status.grid(row=0, column=1, sticky="w")
+
+    # -------------- USB Speed
+    frame_info_version = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
+    frame_info_version.grid(row=19, column=0, sticky="nsew")
+    frame_info_version.rowconfigure(0, minsize=30)
+    frame_info_version.columnconfigure([0, 1], minsize=250)
+
+    label_version = tk.Label(master=frame_info_version, text="FieldStation Version:", bg="black", fg="White", font=("Calibri ", 8))
+    label_version.grid(row=0, column=0, sticky="e")
+    label_version_status = tk.Label(master=frame_info_version, text=software_version, bg="black", fg="white", font=("Calibri ", 8))
+    label_version_status.grid(row=0, column=1, sticky="w")
 
     '''
     # Terminal out, but causes error
@@ -434,6 +457,7 @@ def run(pipeline, root):
                     label_csv_status.config(text = 'Added 1 Row to CSV', fg='green')
                     label_camera_status.config(text = 'Ready!', fg='green')
                     label_fname_status.config(text = Image.filename)
+                    label_nimage_status.config(text = str(images_this_session))
                     print(f"{bcolors.OKGREEN}Ready{bcolors.ENDC}")
 
                     # Reset TAKE_PHOTO
