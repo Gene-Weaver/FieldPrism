@@ -979,11 +979,11 @@ def remove_black_space(image):
     return image[ymin:ymax+1, xmin:xmax+1]
 
 def remove_black_space_justify(image, TR_x, BR_y):
-    # rows = np.any(image, axis=1)
-    # cols = np.any(image, axis=0)
-    # ymin, ymax = np.where(rows)[0][[0, -1]]
-    # xmin, xmax = np.where(cols)[0][[0, -1]]
-    return image[0:BR_y+1, 0:TR_x+1]
+    rows = np.any(image, axis=1)
+    cols = np.any(image, axis=0)
+    ymin, ymax = np.where(rows)[0][[0, -1]]
+    xmin, xmax = np.where(cols)[0][[0, -1]]
+    return image[0:ymax+1, 0:xmax+1]
 
 def validate_dir(dir):
     if not os.path.exists(dir):
