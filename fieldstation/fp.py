@@ -376,6 +376,7 @@ def run(pipeline, root):
 
             # Initialize TAKE_PHOTO
             TAKE_PHOTO = False
+            images_this_session = 0
 
             # Data collection / imaging loop, exit on keypress, using Fragile class
             while True:
@@ -402,6 +403,8 @@ def run(pipeline, root):
                     # Print status
                     print(f"       Capturing Image")
                     label_camera_status.config(text = 'Capturing Image...', fg='orange')
+                    images_this_session += 1
+
 
                     # Get latest frame
                     ispFrames = ispQueue.get()
