@@ -92,42 +92,42 @@ echo "***** Mounting USB Drives..."
 ######### USB 1 ############
 if [ -e /dev/sda1 ] ; then
 echo "USB1 mounted"
-pmount -w /dev/sda1 USB1
+pmount -w /dev/sda1 /media/USB1
 else
 echo "USB1 not connected"
 fi
 ######### USB 2 ############
 if [ -e /dev/sdb1 ] ; then
 echo "USB2 mounted"
-pmount -w /dev/sdb1 USB2
+pmount -w /dev/sdb1 /media/USB2
 else
 echo "USB2 not connected"
 fi
 ######### USB 3 ############
 if [ -e /dev/sdc1 ] ; then
 echo "USB3 mounted"
-pmount -w /dev/sdc1 USB3
+pmount -w /dev/sdc1 /media/USB3
 else
 echo "USB3 not connected"
 fi
 ######### USB 4 ############
 if [ -e /dev/sdd1 ] ; then
 echo "USB4 mounted"
-pmount -w /dev/sdd1 USB4
+pmount -w /dev/sdd1 /media/USB4
 else
 echo "USB4 not connected"
 fi
 ######### USB 5 ############
 if [ -e /dev/sde1 ] ; then
 echo "USB5 mounted"
-pmount -w /dev/sde1 USB5
+pmount -w /dev/sde1 /media/USB5
 else
 echo "USB5 not connected"
 fi
 ######### USB 6 ############
 if [ -e /dev/sdf1 ] ; then
 echo "USB6 mounted"
-pmount -w /dev/sdf1 USB6
+pmount -w /dev/sdf1 /media/USB6
 else
 echo "USB6 not connected"
 fi
