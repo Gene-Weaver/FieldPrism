@@ -11,6 +11,12 @@ ls /media/
 
 
 echo ""
+echo "***** Granting xhost privileges..."
+xhost +si:localuser:pi
+xhost +si:localuser:root
+
+
+echo ""
 echo "***** Un-Mounting USB Drives..."
 #pumount /dev/sda1
 #pumount /dev/sdb1
