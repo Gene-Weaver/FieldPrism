@@ -415,6 +415,15 @@ def run(pipeline, root):
         # Load configs
         cfg_user = load_cfg() # from FieldStation.yaml
         cfg = SetupFP()
+        volume_user = cfg_user['fieldstation']['sound']['volume']
+        if volume_user == 'high':
+            volume = 1.0
+        elif volume_user == 'mid':
+            volume = 0.75
+        elif volume_user == 'low':
+            volume = 0.50
+        else:
+            volume = 0.75
 
         # Update USB Speed
         if device.getUsbSpeed().name == 'HIGH':
@@ -484,7 +493,8 @@ def run(pipeline, root):
                 # If keypress for photo on last loop, then save a still now
                 if TAKE_PHOTO:
                     # Play sound
-                    pygame.mixer.Sound.play(sound_init)
+                    if cfg_user['fieldstation']['sound']['play_sound']:
+                        pygame.mixer.Sound.play(sound_init).set_volume(volume)
                     # Print status
                     print(f"       Capturing Image")
                     label_camera_status.config(text = 'Capturing Image...', fg='orange')
@@ -521,9 +531,10 @@ def run(pipeline, root):
                     label_fname_status.config(text = Image.filename)
                     label_nimage_status.config(text = str(images_this_session))
                     print(f"{bcolors.OKGREEN}Ready{bcolors.ENDC}")
-                    pygame.mixer.Sound.play(sound_init)
-                    time.sleep(0.5)
-                    pygame.mixer.Sound.play(sound_init)
+                    if cfg_user['fieldstation']['sound']['play_sound']:
+                        pygame.mixer.Sound.play(sound_init).set_volume(volume)
+                        time.sleep(0.5)
+                        pygame.mixer.Sound.play(sound_init).set_volume(volume)
 
                     # Reset TAKE_PHOTO
                     TAKE_PHOTO = False
@@ -531,14 +542,15 @@ def run(pipeline, root):
                 # Key Press Options
                 _key = cv2.waitKey(50)
                 if keyboard.is_pressed(cfg_user['fieldstation']['keymap']['exit']):
-                    pygame.mixer.Sound.play(sound_leave)
-                    time.sleep(.5)
-                    pygame.mixer.Sound.play(sound_leave)
-                    time.sleep(.5)
-                    pygame.mixer.Sound.play(sound_leave)
-                    time.sleep(.5)
-                    pygame.mixer.Sound.play(sound_leave)
-                    time.sleep(.5)
+                    if cfg_user['fieldstation']['sound']['play_sound']:
+                        pygame.mixer.Sound.play(sound_leave).set_volume(volume)
+                        time.sleep(.5)
+                        pygame.mixer.Sound.play(sound_leave).set_volume(volume)
+                        time.sleep(.5)
+                        pygame.mixer.Sound.play(sound_leave).set_volume(volume)
+                        time.sleep(.5)
+                        pygame.mixer.Sound.play(sound_leave).set_volume(volume)
+                        time.sleep(.5)
                     print(f"{bcolors.HEADER}Stopping...{bcolors.ENDC}")
                     print_options()
                     cv2.destroyAllWindows()
@@ -557,20 +569,21 @@ def run(pipeline, root):
                 elif keyboard.is_pressed(cfg_user['fieldstation']['keymap']['test_gps']):
                     print(f"       Testing GPS")
                     GPS_data_test = gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
-                    if GPS_data_test.latitude == -999:
-                        pygame.mixer.Sound.play(sound_leave)
-                        time.sleep(.5)
-                        pygame.mixer.Sound.play(sound_leave)
-                        time.sleep(.5)
-                        pygame.mixer.Sound.play(sound_leave)
-                        time.sleep(.5)
-                        pygame.mixer.Sound.play(sound_leave)
-                        time.sleep(.5)
-                    else:
-                        pygame.mixer.Sound.play(sound_init)
-                        time.sleep(0.5)
-                        pygame.mixer.Sound.play(sound_init)
-                        time.sleep(0.5)
+                    if cfg_user['fieldstation']['sound']['play_sound']:
+                        if GPS_data_test.latitude == -999:
+                            pygame.mixer.Sound.play(sound_leave).set_volume(volume)
+                            time.sleep(.5)
+                            pygame.mixer.Sound.play(sound_leave).set_volume(volume)
+                            time.sleep(.5)
+                            pygame.mixer.Sound.play(sound_leave).set_volume(volume)
+                            time.sleep(.5)
+                            pygame.mixer.Sound.play(sound_leave).set_volume(volume)
+                            time.sleep(.5)
+                        else:
+                            pygame.mixer.Sound.play(sound_init).set_volume(volume)
+                            time.sleep(0.5)
+                            pygame.mixer.Sound.play(sound_init).set_volume(volume)
+                            time.sleep(0.5)
 
 '''
 Initialize the tkinter GUI
