@@ -11,7 +11,8 @@ from typing import List, Optional, Tuple, Union
 from PIL import Image, ImageColor, ImageDraw, ImageFont
 import pandas as pd
 import platform
-
+import tkinter
+import matplotlib.pyplot as plt
 # from qrcode.image.styledpil import StyledPilImage
 
 class bcolors:
@@ -334,7 +335,7 @@ class Located_BBOXES:
             TL_to_BR = math.dist([self.top_left_center[0], self.top_left_center[1]], [self.bottom_right_center[0], self.bottom_right_center[1]])
             if ((s_TL_to_TRbl < s_TL_to_BLtr) & (TL_to_TR < TL_to_BR)):
                 print('swap top right, bottom left')
-        return is_correct
+        # return is_correct
     
     def rotate_locations_90_ccw(self) -> None:
         hold_a = self.bottom_right_ind
@@ -638,10 +639,8 @@ class QRcode:
         if self.expanded:
             min_dim = min_dim - np.multiply(self.expanded_n, 2)
 
-        
-
-        new_dim = int(np.multiply(min_dim, 0.8))
-        new_dim_offset = int(np.multiply(min_dim, 0.1))
+        new_dim = int(np.multiply(min_dim, 0.9))
+        new_dim_offset = int(np.multiply(min_dim, 0.05))
 
         start_x = self.bbox[0] + new_dim_offset
         start_y = self.bbox[1] + new_dim_offset
@@ -674,7 +673,7 @@ class QRcode:
             new_QR_code = cv2.QRCodeEncoder().create()
             new_QR_code.Params.correction_level = 3
             new_QR_code = new_QR_code.encode(self.text_raw)
-            new_QR_code = cv2.resize(new_QR_code, (min_dim, min_dim), interpolation = cv2.INTER_AREA)
+            new_QR_code = cv2.resize(new_QR_code, (new_dim, new_dim), interpolation = cv2.INTER_AREA)
             new_QR_code = cv2.cvtColor(new_QR_code,cv2.COLOR_GRAY2RGB)  
             
             # qr = qrcode.QRCode(version=4, # version might need to be higher?
@@ -835,7 +834,7 @@ def correct_distortion(cfg, image, centers, ratio):
     new_h = math.sqrt((centers[2][0]-centers[1][0])*(centers[2][0]-centers[1][0])+(centers[2][1]-centers[1][1])*(centers[2][1]-centers[1][1]))
     new_w = np.multiply(ratio,new_h)
     centers_corrected = np.float32([[centers[0][0],centers[0][1]], [centers[0][0]+new_w, centers[0][1]], [centers[0][0]+new_w, centers[0][1]+new_h], [centers[0][0], centers[0][1]+new_h]])
-
+    
     warped = cv2.getPerspectiveTransform(np.array(centers, np.float32), np.array(centers_corrected, np.float32))
 
     offset_w = 1000 + cols
@@ -843,30 +842,157 @@ def correct_distortion(cfg, image, centers, ratio):
 
     transformed = np.zeros((int(new_w + offset_w), int(new_h + offset_h)), dtype=np.uint8)
     dst = cv2.warpPerspective(image, warped, transformed.shape)
-
     
+    points = np.float32([[[centers[0][0],centers[0][1]]], [[centers[1][0], centers[1][1]]], [[centers[2][0], centers[2][1]]], [[centers[3][0], centers[3][1]]]])
 
-    if cfg['fieldprism']['justify_corrected_images']:
-        x_justify = int(cfg['fieldprism']['justify_corrected_images_origin'])
-        y_justify = int(cfg['fieldprism']['justify_corrected_images_origin'])
-        extra = int(cfg['fieldprism']['justify_corrected_images_extra'])
-        TL_x = int(centers_corrected[0][0])
-        TL_y = int(centers_corrected[0][1])
+    # Transform the points
+    shifted_points_0 = np.array(cv2.perspectiveTransform(points, warped))
+    
+    # implot = dst####
+    shifted_points = []
+    for row in shifted_points_0:
+        px = int(row[0][0])
+        py = int(row[0][1])
+        shifted_points.append([px, py])
+        # implot = cv2.circle(implot, [px, py], 50, color=(0, 0, 255), thickness=10)
+    # cv2.imwrite("result.png",implot)
 
-        TR_x = int(centers_corrected[1][0]) + extra
-        BR_y = int(centers_corrected[2][1]) + extra
+    if cfg['fieldprism']['justify_corrected_images']['do_justify']:
+        if cfg['fieldprism']['justify_corrected_images']['make_uniform']:
+            x_justify = int(cfg['fieldprism']['justify_corrected_images']['justify_corrected_images_origin'])
+            y_justify = int(cfg['fieldprism']['justify_corrected_images']['justify_corrected_images_origin'])
+            extra = int(cfg['fieldprism']['justify_corrected_images']['make_uniform_buffer'])
+
+            TL_x = int(shifted_points[0][0])
+            TL_y = int(shifted_points[0][1])
+
+            TR_x = int(shifted_points[1][0]) #+ extra
+            BR_y = int(shifted_points[2][1]) #+ extra
 
 
-        x_shift = x_justify - TL_x
-        y_shift = y_justify - TL_y
+            # h = int(cfg['fieldprism']['justify_corrected_images']['uniform_h'])
+            # w = int(cfg['fieldprism']['justify_corrected_images']['uniform_w'])
+            origin = int(cfg['fieldprism']['justify_corrected_images']['justify_corrected_images_origin'])
+            # extra = int(cfg['fieldprism']['justify_corrected_images']['make_uniform_buffer'])
+            # _, conv_x = get_approx_conv_factor(cfg)
+            # scale_success, ratio_x = get_scale_ratio(cfg)
+            # ratio_y = 1/ratio_x
+            # conv_y = int(conv_x*ratio_y)
 
-        M = np.float32([
-            [1, 0, x_shift],
-            [0, 1, y_shift]
-        ])
+            # real_width = TR_x - TL_x
+            # real_height = BR_y - TL_y
+            # fill_width = w - origin - extra
+            # fill_height = h - origin - extra
+            
+            # strecth_x = real_width / fill_width
+            # strecth_y = real_height / fill_height
+            # fudge = int(((30 * 2) + conv_x) * strecth_x) # the marker is 30mm wide
 
-        dst = cv2.warpAffine(dst, M, (dst.shape[1], dst.shape[0]))
-        dst_fit = remove_black_space_justify(dst, TR_x, BR_y)
+            # new_origin = origin - int((strecth_x * origin))
+
+            x_shift = origin - TL_x
+            y_shift = origin - TL_y
+
+            M = np.float32([
+                [1, 0, x_shift],
+                [0, 1, y_shift]
+            ])
+
+            # im = Image.fromarray(dst)
+            # im.show()
+
+            ### dst image is in TL corner, lots of black space south and east
+            # shift to put TL center on (500,500)
+            dst0 = cv2.warpAffine(dst, M, (dst.shape[1], dst.shape[0]))
+
+            # im = Image.fromarray(dst0)
+            # im.show()
+
+            shifted_points2 = []
+            for row in shifted_points:
+                px = int(row[0]) + x_shift
+                py = int(row[1]) + y_shift
+                shifted_points2.append([px, py])
+            
+            # implot = dst0####
+            # for row in shifted_points2:
+            #     px = row[0]
+            #     py = row[1]
+            #     implot = cv2.circle(implot, [px, py], 50, color=(0, 0, 255), thickness=10)
+            # cv2.imwrite("result.png",implot)
+                
+            TL_x = int(shifted_points2[0][0])
+            TL_y = int(shifted_points2[0][1])
+
+            TR_x = int(shifted_points2[1][0]) #+ extra
+            BR_y = int(shifted_points2[2][1]) #+ extra
+
+            # TR_x = int(shifted_points2[1][0]) + extra
+            # BR_y = int(shifted_points2[2][1]) + extra
+            dst0 = remove_black_space_justify(dst0)
+
+            ##########################
+            # x_shift = origin - TL_x
+            # y_shift = origin - TL_y
+
+            # M = np.float32([
+            #     [1, 0, x_shift],
+            #     [0, 1, y_shift]
+            # ])
+
+            # shift to put TL center on (500,500)
+            # dst1 = cv2.warpAffine(dst0, M, (dst0.shape[1], dst0.shape[0]))
+            # im = Image.fromarray(dst1)
+            # im.show()
+
+            # shifted_points3 = []
+            # for row in shifted_points2:
+            #     px = int(row[0]) + x_shift
+            #     py = int(row[1]) + y_shift
+            #     shifted_points3.append([px, py])
+            
+            # implot = dst0####
+            # for row in shifted_points2:
+            #     px = row[0]
+            #     py = row[1]
+            #     implot = cv2.circle(implot, [px, py], 50, color=(0, 0, 255), thickness=10)
+            # cv2.imwrite("result.png",implot)
+                
+            # TL_x = int(shifted_points3[0][0])
+            # TL_y = int(shifted_points3[0][1])
+
+            # TR_x = int(shifted_points3[1][0]) #+ extra
+            # BR_y = int(shifted_points3[2][1]) #+ extra
+
+            # TR_x = int(shifted_points2[1][0]) + extra
+            # BR_y = int(shifted_points2[2][1]) + extra
+            # dst = remove_black_space_justify(dst)
+
+            dst_fit = remove_black_space_justify_uniform(cfg, dst0, TL_x, TL_y, TR_x, BR_y)
+            # im = Image.fromarray(dst_fit)
+            # im.show()
+
+        else:
+            x_justify = int(cfg['fieldprism']['justify_corrected_images']['justify_corrected_images_origin'])
+            y_justify = int(cfg['fieldprism']['justify_corrected_images']['justify_corrected_images_origin'])
+            # extra = int(cfg['fieldprism']['make_uniform_buffer'])
+            TL_x = int(centers_corrected[0][0])
+            TL_y = int(centers_corrected[0][1])
+
+            # TR_x = int(centers_corrected[1][0]) + extra
+            # BR_y = int(centers_corrected[2][1]) + extra
+
+
+            x_shift = x_justify - TL_x
+            y_shift = y_justify - TL_y
+
+            M = np.float32([
+                [1, 0, x_shift],
+                [0, 1, y_shift]
+            ])
+
+            dst = cv2.warpAffine(dst, M, (dst.shape[1], dst.shape[0]))
+            dst_fit = remove_black_space_justify(dst)#), TR_x, BR_y)
     else:
         dst_fit = remove_black_space(dst)
 
@@ -874,6 +1000,119 @@ def correct_distortion(cfg, image, centers, ratio):
     # cv2.waitKey(0)
 
     return dst_fit, centers_corrected
+
+def resize_and_pad(img, size, padColor=0):
+
+    h, w = img.shape[:2]
+    sh, sw = size
+
+    # interpolation method
+    if h > sh or w > sw: # shrinking image
+        interp = cv2.INTER_AREA
+    else: # stretching image
+        interp = cv2.INTER_CUBIC
+
+    # aspect ratio of image
+    aspect = w/h  # if on Python 2, you might need to cast as a float: float(w)/h
+
+    # compute scaling and pad sizing
+    if aspect > 1: # horizontal image
+        new_w = sw
+        new_h = np.round(new_w/aspect).astype(int)
+        pad_vert = (sh-new_h)/2
+        pad_top, pad_bot = np.floor(pad_vert).astype(int), np.ceil(pad_vert).astype(int)
+        pad_left, pad_right = 0, 0
+    elif aspect < 1: # vertical image
+        new_h = sh
+        new_w = np.round(new_h*aspect).astype(int)
+        pad_horz = (sw-new_w)/2
+        pad_left, pad_right = np.floor(pad_horz).astype(int), np.ceil(pad_horz).astype(int)
+        pad_top, pad_bot = 0, 0
+    else: # square image
+        new_h, new_w = sh, sw
+        pad_left, pad_right, pad_top, pad_bot = 0, 0, 0, 0
+
+    # set pad color
+    if len(img.shape) == 3 and not isinstance(padColor, (list, tuple, np.ndarray)): # color image but only one color provided
+        padColor = [padColor]*3
+
+    # scale and pad
+    scaled_img = cv2.resize(img, (new_w, new_h), interpolation=interp)
+    scaled_img = scaled_img[0:sh, 0:sw]
+    try:
+        scaled_img = cv2.copyMakeBorder(scaled_img, pad_top, pad_bot, pad_left, pad_right, borderType=cv2.BORDER_CONSTANT, value=padColor)
+    except:
+        pass
+    return scaled_img
+
+def remove_black_space(image):
+    rows = np.any(image, axis=1)
+    cols = np.any(image, axis=0)
+    ymin, ymax = np.where(rows)[0][[0, -1]]
+    xmin, xmax = np.where(cols)[0][[0, -1]]
+    return image[ymin:ymax+1, xmin:xmax+1]
+
+def remove_black_space_justify(image):#, TR_x, BR_y):
+    rows = np.any(image, axis=1)
+    cols = np.any(image, axis=0)
+    ymin, ymax = np.where(rows)[0][[0, -1]]
+    xmin, xmax = np.where(cols)[0][[0, -1]]
+    return image[0:ymax+1, 0:xmax+1]
+
+def remove_black_space_justify_uniform(cfg, image, TL_x, TL_y, TR_x, BR_y):
+    # im = Image.fromarray(image)
+    # im.show()
+    h = int(cfg['fieldprism']['justify_corrected_images']['uniform_h'])
+    w = int(cfg['fieldprism']['justify_corrected_images']['uniform_w'])
+    origin = int(cfg['fieldprism']['justify_corrected_images']['justify_corrected_images_origin'])
+    extra = int(cfg['fieldprism']['justify_corrected_images']['make_uniform_buffer'])
+    _, conv_x = get_approx_conv_factor(cfg)
+    scale_success, ratio_x = get_scale_ratio(cfg)
+    ratio_y = 1/ratio_x
+    conv_y = int(conv_x*ratio_y)
+
+    real_width = TR_x - TL_x
+    real_height = BR_y - TL_y
+    fill_width = w - origin - origin
+    fill_height = h - origin - origin
+    
+    mm_buffer = int(extra * (real_width / conv_x))
+
+    strecth_x = real_width / fill_width
+    strecth_y = real_height / fill_height
+    fudge = int(((30 * 2) + conv_x) * strecth_x) # the marker is 30mm wide
+
+    new_origin = origin - int((strecth_x * origin))
+    new_extra_x = origin - int(strecth_x * origin)
+    new_extra_y = origin - int(strecth_y * origin)
+
+    start_y = int(TL_y - (strecth_y * real_height*0.1)) - mm_buffer
+    end_y = int(BR_y + (strecth_y * real_height*0.1)) + mm_buffer
+    start_x = int(TL_x - (strecth_y * real_height*0.1)) - mm_buffer
+    end_x = int(TR_x + (strecth_y * real_height*0.1)) + mm_buffer
+    if start_y < 0: start_y = 0
+    if start_x < 0: start_x = 0
+    if end_y > image.shape[0]: end_y = image.shape[0]
+    if end_x > image.shape[1]: end_x = image.shape[1]
+
+    # im = Image.fromarray(image)
+    # im.show()
+
+    image = image[start_y: end_y, start_x: end_x]
+
+    # image = image[new_origin - fudge : BR_y + new_extra_y + fudge, new_origin - fudge: TR_x + new_extra_x + fudge]
+    # image = image[0 : BR_y + new_extra_x, 0: TR_x + new_extra_x]
+
+    # im = Image.fromarray(image)
+    # im.show()
+
+    image = resize_and_pad(image, (h,w), 0)
+
+    # im = Image.fromarray(image)
+    # im.show()
+
+    return image
+
 
 def remove_overlapping_predictions(priority_item, remove_item, img_w, img_h):
     keep_ruler = []
@@ -971,19 +1210,31 @@ def determine_success_unknown(Marker_Unknown):
         use_conversion = False
     return use_conversion
 
-def remove_black_space(image):
-    rows = np.any(image, axis=1)
-    cols = np.any(image, axis=0)
-    ymin, ymax = np.where(rows)[0][[0, -1]]
-    xmin, xmax = np.where(cols)[0][[0, -1]]
-    return image[ymin:ymax+1, xmin:xmax+1]
+def increment_path(path, exist_ok=False, sep='', mkdir=False):
+    # Increment file or directory path, i.e. runs/exp --> runs/exp{sep}2, runs/exp{sep}3, ... etc.
+    path = Path(path)  # os-agnostic
+    if path.exists() and not exist_ok:
+        path, suffix = (path.with_suffix(''), path.suffix) if path.is_file() else (path, '')
 
-def remove_black_space_justify(image, TR_x, BR_y):
-    rows = np.any(image, axis=1)
-    cols = np.any(image, axis=0)
-    ymin, ymax = np.where(rows)[0][[0, -1]]
-    xmin, xmax = np.where(cols)[0][[0, -1]]
-    return image[0:ymax+1, 0:xmax+1]
+        # Method 1
+        for n in range(2, 9999):
+            p = f'{path}{sep}{n}{suffix}'  # increment path
+            if not os.path.exists(p):  #
+                break
+        path = Path(p)
+
+        # Method 2 (deprecated)
+        # dirs = glob.glob(f"{path}{sep}*")  # similar paths
+        # matches = [re.search(rf"{path.stem}{sep}(\d+)", d) for d in dirs]
+        # i = [int(m.groups()[0]) for m in matches if m]  # indices
+        # n = max(i) + 1 if i else 2  # increment number
+        # path = Path(f"{path}{sep}{n}{suffix}")  # increment path
+
+    if mkdir:
+        path.mkdir(parents=True, exist_ok=True)  # make directory
+
+    return path
+
 
 def validate_dir(dir):
     if not os.path.exists(dir):

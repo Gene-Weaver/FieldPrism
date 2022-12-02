@@ -67,7 +67,7 @@ def validate_dir(dir):
 
 def load_cfg():
     dir_FP = os.path.dirname(os.path.dirname(__file__))
-    with open(os.path.join(dir_FP,"FieldPrism.yaml"), "r") as ymlfile:
+    with open(os.path.join(dir_FP,"FieldStation.yaml"), "r") as ymlfile:
         cfg = yaml.full_load(ymlfile)
     return cfg
 
@@ -78,10 +78,10 @@ def get_datetime():
     return new_time
 
 def print_options():
-    print("Run FieldPrism: 1")
+    print("Run FieldStation: 1")
     print("Test/Wake GPS: 2")
     print("Align Camera: 3")
-    print("Redo Previous Image: 4")
+    # print("Redo Previous Image: 4")
     print("Exit: 6")
 
 def rotate_image_options(image,cfg_user):

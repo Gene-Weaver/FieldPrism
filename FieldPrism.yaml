@@ -1,34 +1,115 @@
-# To use default value, set to null
-fieldstation:
-    keymap:
-        photo: '1'
-        test_gps: '2'
-        align_camera: '3'
-        redo: '4'
-        exit: '6'
-    # Set both rotates to true to rotate camera 270 degrees clockwise
-    rotate_camera_180: True
-    rotate_camera_90_clockwise: False
-    save:
-        always_save_to_boot: False
-    gps:
-        speed: 'fast' # of 'fast' ~0.3sec. or 'cautious' ~1.5sec. # cautious adds a timy delay to allow GPS lock and waits for 10 successful pings, fast waits for 3 successful pings
+#  ______ _      _     _______     _               
+#  |  ___(_)    | |   | | ___ \   (_)              
+#  | |_   _  ___| | __| | |_/ / __ _ ___ _ __ ___  
+#  |  _| | |/ _ \ |/ _` |  __/ '__| / __| '_ ` _ \ 
+#  | |   | |  __/ | (_| | |  | |  | \__ \ | | | | |
+#  \_|   |_|\___|_|\__,_\_|  |_|  |_|___/_| |_| |_|
+# 
+#   By: William Weaver
+#   University of Michigan, 2022
+#   Department of Ecology and Evolutionary Biology
+#
+# Thanks for using FieldPrism (FP)! Here are a few tips:
+#       - The only characters allowed in file names are letters, numbers, underscores, and dashes
+#       - A script will run to remove any illegal characters - they will be replaced with dashes.
+#       - Good images in = good images out!
+#       - The biggest failure for FP is when a marker or QR code is in mixed lighting, i.e.
+#         half of the code is in shadow, half in bright light. Do your best to keep lighting 
+#         consistent, but it does not have to be perfect.
+#       - Covering a subject with plastic to keep it flat is normally okay, just mind the glare 
+#         from the sun or reflections.
+#       - This is the configuration file. Default setting are a good place to start. If images are 
+#         being processed strangely, copy the original files to a new directory
+#         and then start tuning settings. Some edge-case images will require 
+#         different configurations to procedss successfully. Don't expect 
+#         to process all images successfully using the same config, unless
+#         your dataset is quite homogeneous. 
+
+
+########################################################################
+# Processing images with FieldPrism
+########################################################################
+
+# ----- Set the Scale-sheet Version ------------------------------------
+# scale:
+#       use_predefined --- True: set contains images that used pre-defined scale-sheet
+#                      --- False: using a custom setup
+#       scale_size --- 'A3': largest scale-sheet, tabloid, 11 x 17 inches
+#                  --- 'A4': default scale-sheet, A4, 8.5 x 11 inches
+#                  --- 'A5': smallest scale-sheet, A5, 5.8 x 8.3 inches
+#                  --- 'legal': legal size, 8.5 x 14 inches
+#                  --- 'custom': placing markers on custom background (poster board etc.) larger or smaller
+#       custom_ratio --- null: Use null if using predefined scale-sheet
+#                    --- float: floating point number between 0 and 1 (0.65 OR 0.6111). To calculate, divide long side distance by short side
+#                    --- 
+#       custom_short_distance --- integer: distance in mm. between the two markers on the short side
+#
+# ----- Make Images Vertical ------------------------------------------
+# FP requires vertical images. If you are re-running a set you can set this to True to save time.
+#       skip_make_images_vertical --- False: boolean, only set to True if you are re-running images that are already vertical!
+#   
+# ----- Processing Options --------------------------------------------
+#       strict_distortion_correction --- False: default. will use center of detected marker bbox if exact center cannot be determined. 
+#                                    --- True: requires all 4 boxes within all 4 markers to correct distortion, need good lighting for this option 
+#       use_template_for_pixel_to_metric_conversion --- False: default. 
+#                                                   --- True: If all four boxes inside at least one marker are not regularly found then this will 
+#                                                             find a very close approximation, usually +-3 % of true conversion 
+#       do_remove_overlap --- False: default. start with False. set to True for images that may become heavily distorted OR if 
+#                         --- True: for images that may become extremely warped after processing OR if QR codes and rulers are predicted incorrectly,  
+#                                   If a barcode in the middle of the image is predicted to be a ruler, then either the image will not go 
+#                                   through distortion correction ot it will be wildly warped. Setting to True can help correct this
+#       overlap_priority --- 'barcode': rulers that intersect with barcodes will be ignored
+#                        --- 'ruler': barcodes that intersect with rulers will be ignored
+#       insert_clean_QR_codes --- True: insert a new QR code over the QR code in the image, this will increase usability for any potential downstream use
+#                                       potential downstream use. QR codes that cannot be read will not be overwritten.
+#                                       Use False if QR codes are very close together, or frequently at 45degrees because 
+#                                       insertion can obscure other QR codes
+#                             --- False: keep the original barcodes
+#   
+# ----- Justify the Distortion Corrected Images -----------------------
+# justify_corrected_images:
+#       do_justify --- True: top left marker will be placed at the origin, padding will be added if needed, 
+#                            helps make images more uniform, especially if originals are heavily distorted
+#                  --- False: no image manipulation takes place after the image is corrected for distortion. overrides make_uniform
+#       justify_corrected_images_origin --- integer: x and y coordinate of where the center of the top left marker should be placed
+#                                                    500 works in most cases 
+#       make_uniform --- True: after distortion correction images are transformed into uniform dimensions
+#                              images are scaled to the same size relative to the scale markers and will be resized to the same resolution
+#                    --- False: if do_justify = False, then make_uniform will be False
+#       make_uniform_buffer --- integer: distance in mm to leave around the edges outside of the scale markers, 40 is a good start
+#       uniform_h --- integer: pixel height of final image, eg. 4000
+#       uniform_w --- integer: pixel width of final image, eg. 3000
+
+
+
+
+
 fieldprism:
-    ### Processing Images with FieldPrism ###
-    skip_make_images_vertical: True # Warning! Images must be vertical. Only set to True if you are re-running on images that are already vertical!
-    
-    strict_distortion_correction: False # True: requires all 4 boxes within all 4 markers to correct dist. False: will use center of detected bbox otherwise
-    use_template_for_pixel_to_metric_conversion: True # Uses center of bbox to undistort. results in ~2% error for pixel-metric conversion
-    overlap_priority: 'barcode' # 'barcode' OR 'ruler' # if bboxe predictions overlap, keep the priority 
-    insert_clean_QR_codes: False # Use False if QR codes are very close together, or frequently at 45degrees. The insertion can obscure unread QR codes
-    justify_corrected_images: True
-    justify_corrected_images_origin: 800 # Adjust based on the image resolution and how much you want trimmed
-    justify_corrected_images_extra: 800 #
-    
-    dir_images_unprocessed: 'D:/Dropbox/LM2_Env/Image_Datasets/FieldPrism_Training_Images/REU_Field_QR-Code-Images' #'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/QR_Codes_Demo'
+    scale:
+        use_predefined: True # bool |DEFAULT| True    
+        scale_size: 'A4' # string |DEFAULT| 'A4' FROM 'A5' or 'A4' or 'A3' or 'legal' or 'custom'
+        custom_ratio: null # null OR float |DEFAULT| null
+        custom_short_distance: null # null or integer |DEFAULT| null
+    skip_make_images_vertical: False # bool |DEFAULT| False 
+    strict_distortion_correction: False # bool |DEFAULT| False 
+    use_template_for_pixel_to_metric_conversion: False # bool |DEFAULT| False 
+    do_remove_overlap: False # bool |DEFAULT| False 
+    overlap_priority: 'barcode' # string |DEFAULT| 'barcode' FROM 'ruler' OR 'barcode' 
+    insert_clean_QR_codes: True # bool |DEFAULT| True
+    justify_corrected_images:
+        #### Justify ################################
+        do_justify: True # bool |DEFAULT| True
+        justify_corrected_images_origin: 500 # integer |DEFAULT| 500
+        #### Justify AND Make Uniform ############### requires do_justify:True and both _origin and _buffer to be set
+        make_uniform: True # bool |DEFAULT| True
+        make_uniform_buffer: 40 # integer |DEFAULT| 40 
+        uniform_h: 4000 # integer |DEFAULT| 4000 
+        uniform_w: 3000 # integer |DEFAULT| 3000
+    dir_images_unprocessed: 'D:/Dropbox/LM2_Env/Image_Datasets/FieldPrism_Training_Images/FieldPrism_Training_FS_Renaming' #'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/QR_Codes_Demo'
+    dir_images_unprocessed_labels: null #'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/TESTING_OUTPUT/Images_Processed/FieldPrism_Training_Outside/PREP_final_best3/Labels_Not_Corrected' # null # 'D:/Dropbox/LM2_Env/Image_Datasets/FieldPrism_Training_Images/REU_Field_QR-Code-Images' #'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/QR_Codes_Demo'
     dir_home: 'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/TESTING_OUTPUT'
     folder_images_processed: 'Images_Processed'
-    current_project: 'REU_Field_QR-Code-Images'
+    current_project: 'FieldPrism_Training_FS_Renaming'
     current_run: 'PREP_final_best' # nested inside of current_project
     # folder_distortion_correction: 'Distortion_Corrected'
     # folder_overlay: 'Overlay'
@@ -36,21 +117,18 @@ fieldprism:
         model_size: 'nightly' # 'small' or 'large' or 'nightly'
         min_confidence_threshold: 0.70 # float 0 > x < 1 default = 0.70 
         show_predicted_text: False # bool 
-    scale:
-        use_predefined: True # True for predefined size, False for custom placement of markers
-        scale_size: 'A4' # 'A5' or 'A4' or 'A3' or 'legal' or 'custom'
-        custom_ratio: null #0.61111 # 0.65 # float between 0 and 1. Assume that the page is vertical, be precise
-        custom_short_distance: null # integer, mm short distance between markers
+    
     QR_codes:
         n_QR_codes: 1 # int > 0
         do_rename_images: True
-
+    ########################################################################
     ### Creating QR Codes and Field Sheet for use in FieldPrism Projects ###
+    ########################################################################
     setup:
         # Which documents do you want to create? 
-        create_field_sheet: False # bool True # Either True OR False
+        create_field_sheet: True # bool True # Either True OR False
         create_QR_codes: True # bool True # Either True OR False
-        create_size_check: False # bool True # Either True OR False
+        create_size_check: True # bool True # Either True OR False
 
         # Input / Output
         new_file_stem: 'Demo_6_Levels_N24_H_5' # str 'name_of_project' base name of created documents 'Demo_Levels_A4_QR-H-1_A3A4'

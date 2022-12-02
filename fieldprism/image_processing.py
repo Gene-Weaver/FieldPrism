@@ -1,4 +1,6 @@
 import os, cv2, pybboxes, torch
+import shutil
+from pathlib import Path
 import math
 import numpy as np
 import pandas as pd
@@ -9,7 +11,7 @@ from torchvision.transforms import ToPILImage
 from torchvision.io import read_image
 from utils_processing import (get_cfg_from_full_path, get_label_from_index, get_color, make_images_in_dir_vertical, get_approx_conv_factor, get_scale_ratio,
                             determine_success_unknown, determine_success, generate_overlay_add, generate_overlay, correct_distortion, write_yaml,
-                            generate_overlay_QR_add, make_file_names_valid, remove_overlapping_predictions)
+                            generate_overlay_QR_add, make_file_names_valid, remove_overlapping_predictions, increment_path)
 from utils_processing import bcolors, Marker, QRcode, Located_BBOXES, File_Structure, ImageCorrected, ImageOverlay
 from component_detector import detect_components_in_image
 
@@ -96,7 +98,9 @@ def process_rulers(cfg, image_name_jpg, all_rulers, option, ratio, image, image_
             centers_loc_list.append([cp_x, cp_y])
             center_point = cp_x + cp_y
             centers_list.append(center_point)
-
+        ###########################################################################
+        ###########################################################################
+        ###########################################################################
         # if there are exactly 4 markers, then we can try to correct for distortion
         if len(centers_list) == 4:
             # print(f"dict:\n{centers_list}")
@@ -105,7 +109,7 @@ def process_rulers(cfg, image_name_jpg, all_rulers, option, ratio, image, image_
             bbox_list2 = bbox_list.copy()
             centers_loc_list2 = centers_loc_list.copy()
             Bboxes_4 = Located_BBOXES(centers_list2,label_row2,bbox_list2,centers_loc_list2)
-            is_correct = Bboxes_4.confirm_orientation()
+            Bboxes_4.confirm_orientation()
 
             # if the image is vertical, but the markers are hor, then rotate the image again ccw
             TL_to_TR = math.dist([Bboxes_4.top_left_center[0], Bboxes_4.top_left_center[1]], [Bboxes_4.top_right_center[0], Bboxes_4.top_right_center[1]])
@@ -121,12 +125,16 @@ def process_rulers(cfg, image_name_jpg, all_rulers, option, ratio, image, image_
             print(f"{bcolors.OKGREEN}      Found All 4 Markers!{bcolors.ENDC}")
             print(f"{bcolors.OKCYAN}      Processing Top Left Marker...{bcolors.ENDC}")
             Marker_Top_Left = Marker(cfg, 'top_left', image_name_jpg, image, Bboxes_4.top_left_ind_label, Bboxes_4.top_left_bbox, Bboxes_4.top_left_center)
+
             print(f"{bcolors.OKCYAN}      Processing Top Right Marker...{bcolors.ENDC}")
             Marker_Top_Right = Marker(cfg, 'top_right', image_name_jpg, image, Bboxes_4.top_right_ind_label, Bboxes_4.top_right_bbox, Bboxes_4.top_right_center)
+
             print(f"{bcolors.OKCYAN}      Processing Bottom Left Marker...{bcolors.ENDC}")
             Marker_Bottom_Left = Marker(cfg, 'bottom_left', image_name_jpg, image, Bboxes_4.bottom_left_ind_label, Bboxes_4.bottom_left_bbox, Bboxes_4.bottom_left_center)
+
             print(f"{bcolors.OKCYAN}      Processing Bottom Right Marker...{bcolors.ENDC}")
             Marker_Bottom_Right = Marker(cfg, 'bottom_right', image_name_jpg, image, Bboxes_4.bottom_right_ind_label, Bboxes_4.bottom_right_bbox, Bboxes_4.bottom_right_center)
+
 
             use_distortion_correction, use_conversion = determine_success(Marker_Top_Left,Marker_Top_Right,Marker_Bottom_Left,Marker_Bottom_Right)
 
@@ -332,7 +340,7 @@ def identify_and_process_markers(cfg, option, ratio, dir_images_to_process, Dirs
                     chosen_path = os.path.join(dir_images_to_process, image_name_jpg)
                     image = cv2.imread(chosen_path)
                     img_h, img_w, img_c = image.shape
-                    image_label_file = pd.read_csv(os.path.join(Dirs.actual_save_dir,'Labels_Distortion',image_name_txt),sep=' ',header=None)
+                    image_label_file = pd.read_csv(os.path.join(Dirs.actual_save_dir,'Labels_Not_Corrected',image_name_txt),sep=' ',header=None)
                 except:
                     has_ML_prediction = False
 
@@ -343,14 +351,14 @@ def identify_and_process_markers(cfg, option, ratio, dir_images_to_process, Dirs
                     chosen_path = os.path.join(Dirs.path_distortion_corrected, image_name_jpg)
                     image = cv2.imread(chosen_path)
                     img_h, img_w, img_c = image.shape
-                    image_label_file = pd.read_csv(os.path.join(Dirs.actual_save_dir,'Labels_Processing',image_name_txt),sep=' ',header=None)
+                    image_label_file = pd.read_csv(os.path.join(Dirs.actual_save_dir,'Labels_Corrected',image_name_txt),sep=' ',header=None)
                 except: # if the image could not have distortion corrected, read the old txt
                     try:
                         # Read image
                         chosen_path = os.path.join(dir_images_to_process, image_name_jpg)
                         image = cv2.imread(chosen_path)
                         img_h, img_w, img_c = image.shape
-                        image_label_file = pd.read_csv(os.path.join(Dirs.actual_save_dir,'Labels_Distortion',image_name_txt),sep=' ',header=None)
+                        image_label_file = pd.read_csv(os.path.join(Dirs.actual_save_dir,'Labels_Not_Corrected',image_name_txt),sep=' ',header=None)
                     except:
                         has_ML_prediction = False
             elif option == 'conversion_factor': ######################################################################################
@@ -380,16 +388,16 @@ def identify_and_process_markers(cfg, option, ratio, dir_images_to_process, Dirs
                 #     if do_keep_bc:
                 #         keep_bc.append(bc.values)
                 # keep_bc = pd.DataFrame(keep_bc)
-
-                print(f"{bcolors.OKCYAN}      Removing intersecting predictions. Prioritizing class: {cfg['fieldprism']['overlap_priority']}{bcolors.ENDC}")
-                print(f"{bcolors.BOLD}            Before - number of barcodes: {all_barcodes.shape[0]}{bcolors.ENDC}")
-                print(f"{bcolors.BOLD}            Before - number of rulers: {all_rulers.shape[0]}{bcolors.ENDC}")
-                if cfg['fieldprism']['overlap_priority'] == 'ruler':
-                    all_rulers, all_barcodes = remove_overlapping_predictions(all_rulers, all_barcodes, img_w, img_h)
-                else:
-                    all_barcodes, all_rulers = remove_overlapping_predictions(all_barcodes, all_rulers, img_w, img_h)
-                print(f"{bcolors.BOLD}            Before - number of barcodes: {all_barcodes.shape[0]}{bcolors.ENDC}")
-                print(f"{bcolors.BOLD}            Before - number of rulers: {all_rulers.shape[0]}{bcolors.ENDC}")
+                if cfg['fieldprism']['do_remove_overlap']:
+                    print(f"{bcolors.OKCYAN}      Removing intersecting predictions. Prioritizing class: {cfg['fieldprism']['overlap_priority']}{bcolors.ENDC}")
+                    print(f"{bcolors.BOLD}            Before - number of barcodes: {all_barcodes.shape[0]}{bcolors.ENDC}")
+                    print(f"{bcolors.BOLD}            Before - number of rulers: {all_rulers.shape[0]}{bcolors.ENDC}")
+                    if cfg['fieldprism']['overlap_priority'] == 'ruler':
+                        all_rulers, all_barcodes = remove_overlapping_predictions(all_rulers, all_barcodes, img_w, img_h)
+                    else:
+                        all_barcodes, all_rulers = remove_overlapping_predictions(all_barcodes, all_rulers, img_w, img_h)
+                    print(f"{bcolors.BOLD}            Before - number of barcodes: {all_barcodes.shape[0]}{bcolors.ENDC}")
+                    print(f"{bcolors.BOLD}            Before - number of rulers: {all_rulers.shape[0]}{bcolors.ENDC}")
 
 
                 try:
@@ -489,14 +497,33 @@ def process_images():
         print(f"{bcolors.HEADER}*** Step 2) Detect Rulers - First Pass **{bcolors.ENDC}")
         print(f"{bcolors.HEADER}*****************************************{bcolors.ENDC}")
 
-        # Run ML object detector to locate labels, ruler markers, barcodes
-        run_name_1 = cfg['fieldprism']['dir_images_unprocessed']
-
-        dir_out_1 = os.path.join(cfg['fieldprism']['dir_home'],
+        if cfg['fieldprism']['dir_images_unprocessed_labels'] != None:
+            run_name_1 = cfg['fieldprism']['dir_images_unprocessed']
+            dir_out_1 = os.path.join(cfg['fieldprism']['dir_home'],
                                 cfg['fieldprism']['folder_images_processed'],
                                 cfg['fieldprism']['current_project'])
+            name = cfg['fieldprism']['current_run']
+            exist_ok = False
 
-        actual_save_dir = detect_components_in_image('distortion',cfg, run_name_1, dir_out_1,False)
+            actual_save_dir = increment_path(Path(dir_out_1) / name, exist_ok=exist_ok)  # increment run
+            dir_copied_labels  = os.path.join(actual_save_dir,'Labels_Not_Corrected')
+            # (actual_save_dir / 'Labels_Not_Corrected' if True else actual_save_dir).mkdir(parents=True, exist_ok=True)  # make dir
+
+            dir_exisiting_labels = cfg['fieldprism']['dir_images_unprocessed_labels']
+            # dir_copied_labels = os.path.join(actual_save_dir,'Labels_Not_Corrected')
+
+            # exisiting_labels = os.listdir(dir_exisiting_labels)
+ 
+            shutil.copytree(dir_exisiting_labels, dir_copied_labels)
+        else:
+            # Run ML object detector to locate labels, ruler markers, barcodes
+            run_name_1 = cfg['fieldprism']['dir_images_unprocessed']
+
+            dir_out_1 = os.path.join(cfg['fieldprism']['dir_home'],
+                                    cfg['fieldprism']['folder_images_processed'],
+                                    cfg['fieldprism']['current_project'])
+
+            actual_save_dir = detect_components_in_image('distortion',cfg, run_name_1, dir_out_1,False)
 
         Dirs = File_Structure(actual_save_dir)
 

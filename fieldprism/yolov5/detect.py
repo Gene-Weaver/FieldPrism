@@ -96,11 +96,11 @@ def run(
     if option == 'distortion':
         # Directories
         save_dir = increment_path(Path(project) / name, exist_ok=exist_ok)  # increment run
-        (save_dir / 'Labels_Distortion' if save_txt else save_dir).mkdir(parents=True, exist_ok=True)  # make dir
+        (save_dir / 'Labels_Not_Corrected' if save_txt else save_dir).mkdir(parents=True, exist_ok=True)  # make dir
     elif option == 'processing':
         save_dir = project
-        if not os.path.exists(os.path.join(project, 'Labels_Processing')):
-            os.makedirs(os.path.join(project, 'Labels_Processing'))
+        if not os.path.exists(os.path.join(project, 'Labels_Corrected')):
+            os.makedirs(os.path.join(project, 'Labels_Corrected'))
     
 
     # Load model
@@ -160,12 +160,12 @@ def run(
                 save_path = save_dir
 
             if option == 'distortion':
-                txt_path = str(save_dir / 'Labels_Distortion' / p.stem) + ('' if dataset.mode == 'image' else f'_{frame}')  # im.txt
+                txt_path = str(save_dir / 'Labels_Not_Corrected' / p.stem) + ('' if dataset.mode == 'image' else f'_{frame}')  # im.txt
             elif option == 'processing':
                 if dataset.mode == 'image':
-                    txt_path = os.path.join(os.path.join(save_dir, 'Labels_Processing'), p.stem)
+                    txt_path = os.path.join(os.path.join(save_dir, 'Labels_Corrected'), p.stem)
                 else:
-                    txt_path = os.path.join(os.path.join(save_dir, 'Labels_Processing'), p.stem, f'_{frame}')
+                    txt_path = os.path.join(os.path.join(save_dir, 'Labels_Corrected'), p.stem, f'_{frame}')
             
             s += '%gx%g ' % im.shape[2:]  # print string
             gn = torch.tensor(im0.shape)[[1, 0, 1, 0]]  # normalization gain whwh
@@ -245,11 +245,11 @@ def run(
     LOGGER.info(f'Speed: %.1fms pre-process, %.1fms inference, %.1fms NMS per image at shape {(1, 3, *imgsz)}' % t)
     if save_txt or save_img:
         if option == 'distortion':
-            s = f"\n{len(list(save_dir.glob('Labels_Distortion/*.txt')))} labels saved to {save_dir / 'Labels_Distortion'}" if save_txt else ''
+            s = f"\n{len(list(save_dir.glob('Labels_Not_Corrected/*.txt')))} labels saved to {save_dir / 'Labels_Not_Corrected'}" if save_txt else ''
             LOGGER.info(f"Results saved to {colorstr('bold', save_dir)}{s}")
         elif option == 'processing':
-            s = f"\n{len(os.listdir(os.path.join(save_dir, 'Labels_Processing')))} labels saved to {os.path.join(save_dir, 'Labels_Processing')}" if save_txt else ''
-            LOGGER.info(f"Results saved to {colorstr('bold', os.path.join(save_dir, 'Labels_Processing'))}{s}")
+            s = f"\n{len(os.listdir(os.path.join(save_dir, 'Labels_Corrected')))} labels saved to {os.path.join(save_dir, 'Labels_Corrected')}" if save_txt else ''
+            LOGGER.info(f"Results saved to {colorstr('bold', os.path.join(save_dir, 'Labels_Corrected'))}{s}")
         
     if update:
         strip_optimizer(weights[0])  # update model (to fix SourceChangeWarning)
