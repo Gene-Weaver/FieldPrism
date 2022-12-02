@@ -475,6 +475,10 @@ def run(pipeline, root):
                 # Update "Ready" each loop
                 text_ready, ind_ready, direction = change_ready_ind(ind_ready,direction)
                 label_camera_status.config(text = text_ready, fg='green')
+                if cfg_user['fieldstation']['sound']['play_sound']:
+                    pygame.mixer.Sound.play(sound_init).set_volume(volume)
+                    time.sleep(0.75)
+                    pygame.mixer.Sound.play(sound_init).set_volume(volume)
 
                 # Get latest frame from camera video feed (center crop)
                 vidFrames = videoQueue.tryGetAll()
@@ -533,7 +537,7 @@ def run(pipeline, root):
                     print(f"{bcolors.OKGREEN}Ready{bcolors.ENDC}")
                     if cfg_user['fieldstation']['sound']['play_sound']:
                         pygame.mixer.Sound.play(sound_init).set_volume(volume)
-                        time.sleep(0.5)
+                        time.sleep(0.75)
                         pygame.mixer.Sound.play(sound_init).set_volume(volume)
 
                     # Reset TAKE_PHOTO
@@ -578,12 +582,10 @@ def run(pipeline, root):
                             pygame.mixer.Sound.play(sound_leave).set_volume(volume)
                             time.sleep(.5)
                             pygame.mixer.Sound.play(sound_leave).set_volume(volume)
-                            time.sleep(.5)
                         else:
                             pygame.mixer.Sound.play(sound_init).set_volume(volume)
-                            time.sleep(0.5)
+                            time.sleep(0.75)
                             pygame.mixer.Sound.play(sound_init).set_volume(volume)
-                            time.sleep(0.5)
 
 '''
 Initialize the tkinter GUI
