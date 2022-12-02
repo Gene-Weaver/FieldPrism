@@ -94,6 +94,9 @@
 #      - Setting both rotations parameters to True will rotate image 270 degrees CW
 
 fieldstation:
+    sound: 
+        play_sound: True # bool |DEFAULT| True  
+        volume: 'high' # string |DEFAULT| 'mid' FROM 'low' OR 'mid' OR 'high' 
     keymap:
         photo: '1'
         test_gps: '2'
