@@ -80,24 +80,23 @@
 #       uniform_h --- integer: pixel height of final image, eg. 4000
 #       uniform_w --- integer: pixel width of final image, eg. 3000
 
-
-
-
-
 fieldprism:
+    #### Set the Scale-sheet Version ############################################
     scale:
         use_predefined: True # bool |DEFAULT| True    
         scale_size: 'A4' # string |DEFAULT| 'A4' FROM 'A5' or 'A4' or 'A3' or 'legal' or 'custom'
         custom_ratio: null # null OR float |DEFAULT| null
         custom_short_distance: null # null or integer |DEFAULT| null
+    #### Make Images Vertical ###################################################
     skip_make_images_vertical: False # bool |DEFAULT| False 
+    #### Processing Options #####################################################
     strict_distortion_correction: False # bool |DEFAULT| False 
     use_template_for_pixel_to_metric_conversion: False # bool |DEFAULT| False 
     do_remove_overlap: False # bool |DEFAULT| False 
     overlap_priority: 'barcode' # string |DEFAULT| 'barcode' FROM 'ruler' OR 'barcode' 
     insert_clean_QR_codes: True # bool |DEFAULT| True
+    #### Justify the Distortion Corrected Images ################################
     justify_corrected_images:
-        #### Justify ################################
         do_justify: True # bool |DEFAULT| True
         justify_corrected_images_origin: 500 # integer |DEFAULT| 500
         #### Justify AND Make Uniform ############### requires do_justify:True and both _origin and _buffer to be set
@@ -105,84 +104,23 @@ fieldprism:
         make_uniform_buffer: 40 # integer |DEFAULT| 40 
         uniform_h: 4000 # integer |DEFAULT| 4000 
         uniform_w: 3000 # integer |DEFAULT| 3000
+    #### Images to Process ######################################################
     dir_images_unprocessed: 'D:/Dropbox/LM2_Env/Image_Datasets/FieldPrism_Training_Images/FieldPrism_Training_FS_Renaming' #'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/QR_Codes_Demo'
     dir_images_unprocessed_labels: null #'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/TESTING_OUTPUT/Images_Processed/FieldPrism_Training_Outside/PREP_final_best3/Labels_Not_Corrected' # null # 'D:/Dropbox/LM2_Env/Image_Datasets/FieldPrism_Training_Images/REU_Field_QR-Code-Images' #'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/QR_Codes_Demo'
+    #### Output Directories #####################################################
+    # dir_home = /path/to/output/images/
+    # all files from run will go to:
+    #       dir_home/dirname_images_processed/dirname_current_project/dirname_current_run
     dir_home: 'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/TESTING_OUTPUT'
-    folder_images_processed: 'Images_Processed'
-    current_project: 'FieldPrism_Training_FS_Renaming'
-    current_run: 'PREP_final_best' # nested inside of current_project
-    # folder_distortion_correction: 'Distortion_Corrected'
-    # folder_overlay: 'Overlay'
+    dirname_images_processed: 'Images_Processed'
+    dirname_current_project: 'FieldPrism_Training_FS_Renaming'
+    dirname_current_run: 'PREP_final_best' # nested inside of current_project
+    #### ML Detection Options ###################################################
     detector:
         model_size: 'nightly' # 'small' or 'large' or 'nightly'
         min_confidence_threshold: 0.70 # float 0 > x < 1 default = 0.70 
         show_predicted_text: False # bool 
-    
+    #### QR Code File Renaming Options ##########################################
     QR_codes:
-        n_QR_codes: 1 # int > 0
-        do_rename_images: True
-    ########################################################################
-    ### Creating QR Codes and Field Sheet for use in FieldPrism Projects ###
-    ########################################################################
-    setup:
-        # Which documents do you want to create? 
-        create_field_sheet: True # bool True # Either True OR False
-        create_QR_codes: True # bool True # Either True OR False
-        create_size_check: True # bool True # Either True OR False
-
-        # Input / Output
-        new_file_stem: 'Demo_6_Levels_N24_H_5' # str 'name_of_project' base name of created documents 'Demo_Levels_A4_QR-H-1_A3A4'
-        dir_containing_CSV_files: 'D:\Dropbox\FieldPrism\QR_code_builder\CSV_Files'
-        name_CSV_file: 'Demo_6_Levels' # CSV file containing the naming hierarchy
-    
-    ### Set the size of the  field sheet ###
-    field_sheet_builder:
-        page_size: 'A4' # From small to large, either 'A5' OR 'A4' OR 'Legal' OR 'A3' OR 'Custom'
-        QR_location: 'solo' # Print QR codes onto the field sheet. NOT recommended 
-    
-    ### Set parameters for constructing the QR code sheet ###
-    QR_code_builder:
-        #########################################################
-        ### Using default will override all following options ###
-        #########################################################
-        ues_default_setup: True # bool True
-        default_config: 'A4_Long_Names' # 'A4_Levels' OR 'A4_Long_Names'
-
-        # QR Code density
-        # Default = 1. Results in larger 'pixels', best for low-res cameras
-        # Can be 1 - 10 if using hi-res camera (30 MP+). Heigher n = more redundancy / error correction
-        QR_density: 5 # int 1 # should stay 1 unless you QC your exact setup
-        #########################################################
-        #########################################################
-
-        # Page size
-        page_size: 'A4' # str 'A4' # recommend 'A4' but can be either 'A5' OR 'A4' OR 'Legal' OR 'A3'
-        
-        # Font size of QR code text labels
-        QR_label_font_size: 12 # int 12 # default int 12
-        
-        # How many QR codes to fit onto one page
-        QR_wide: 5 # int 6 # number of codes in x-axis
-        QR_tall: 8 # int 10 # number of codes in y-axis
-        
-        # Text position relative to the QR code
-        QR_text_x: 28 # int 20 #
-        QR_text_y: 7 # int 6 # 
-        
-        # Dimension of QR codes
-        QR_dim_x: 30 # int 20 #
-        QR_dim_y: 30 # int 20 #
-
-        # Spacing between QR codes
-        QR_buffer_x: 5 # int 4 # buffer around the QR code x-axis. 4 for 6X10, 20 for 3x10
-        QR_buffer_y: 5 # int 5 # buffer around the QR code y-axis
-
-        # Set page margin, where QR codes begin to print
-        page_margin_left: 15
-        page_margin_top: 10
-        
-        # QR Codes are printed either row-wise or column-wise
-        print_order: 'row' # str # 'row' OR 'col'
-
-    
-
+        do_rename_images: True # bool |DEFAULT| True
+        n_QR_codes: 1 # int |DEFAULT| 3 

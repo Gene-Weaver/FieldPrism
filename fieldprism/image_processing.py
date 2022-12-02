@@ -500,9 +500,9 @@ def process_images():
         if cfg['fieldprism']['dir_images_unprocessed_labels'] != None:
             run_name_1 = cfg['fieldprism']['dir_images_unprocessed']
             dir_out_1 = os.path.join(cfg['fieldprism']['dir_home'],
-                                cfg['fieldprism']['folder_images_processed'],
-                                cfg['fieldprism']['current_project'])
-            name = cfg['fieldprism']['current_run']
+                                    cfg['fieldprism']['dirname_images_processed'],
+                                    cfg['fieldprism']['dirname_current_project'])
+            name = cfg['fieldprism']['dirname_current_run']
             exist_ok = False
 
             actual_save_dir = increment_path(Path(dir_out_1) / name, exist_ok=exist_ok)  # increment run
@@ -520,8 +520,8 @@ def process_images():
             run_name_1 = cfg['fieldprism']['dir_images_unprocessed']
 
             dir_out_1 = os.path.join(cfg['fieldprism']['dir_home'],
-                                    cfg['fieldprism']['folder_images_processed'],
-                                    cfg['fieldprism']['current_project'])
+                                    cfg['fieldprism']['dirname_images_processed'],
+                                    cfg['fieldprism']['dirname_current_project'])
 
             actual_save_dir = detect_components_in_image('distortion',cfg, run_name_1, dir_out_1,False)
 

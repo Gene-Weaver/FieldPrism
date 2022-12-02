@@ -25,7 +25,7 @@ def detect_components_in_image(option, cfg, run_name, dir_out,existing_folder):
         show_predicted_text = cfg['fieldprism']['detector']['show_predicted_text'],
         source = run_name,
         project = dir_out,
-        name = cfg['fieldprism']['current_run'],
+        name = cfg['fieldprism']['dirname_current_run'],
         imgsz = image_input_size,
         conf_thres = cfg['fieldprism']['detector']['min_confidence_threshold'],
         exist_ok = existing_folder)

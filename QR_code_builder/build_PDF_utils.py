@@ -1,41 +1,46 @@
-# py -m ensurepip --upgrade
-# .\venv\Scripts\activate
-
-from cmath import isnan
 import os, yaml, time, re
-from fpdf import FPDF 
 import qrcode # pip install qrcode[pil]
-import pandas as pd
 from dataclasses import dataclass, field
-
+import pandas as pd
+from fpdf import FPDF 
+from cmath import isnan
 from qrcode.image.styledpil import StyledPilImage
-from qrcode.image.styles.moduledrawers import RoundedModuleDrawer
-from qrcode.image.styles.colormasks import RadialGradiantColorMask
+# from qrcode.image.styles.moduledrawers import RoundedModuleDrawer
+# from qrcode.image.styles.colormasks import RadialGradiantColorMask
 
+def createProjectPDF(page):
+    print(f"{bcolors.HEADER}Starting Project - {page.PDF_NAME}{bcolors.ENDC}")
+    # nPages = labels.shape[0]
 
-class PDF(FPDF):
-    pass # nothing happens when it is executed.
+    if page.CREATE_SIZE_CHECK:
+        pdf = setupPDF(page,'field_sheet')
+        newPage_size(page,pdf)
+        savePDF_size(pdf,page)
+        
+    
+    if page.QR_LOCATION =="imbed":
+        pdf = setupPDF(page,'field_sheet')
+        varNames = list(page.LABELS_DF.columns)
+        for pageNumber in range(page.LABELS_DF.shape[0]):
+            newPage(page,page.LABELS_DF,pdf,varNames,pageNumber)    
+        savePDF(pdf,page)
+            
+    elif page.QR_LOCATION == "solo":
+        if page.CREATE_FIELD_SHEET:
+            # Print the template page
+            pdf = setupPDF(page,'field_sheet')
+            varNames = list(page.LABELS_DF.columns)
+            newPage(page,page.LABELS_DF,pdf,varNames,0)   
+            savePDF(pdf,page)
 
-#pdf = PDF()#pdf object
-# pdf.cell(100, 10, 'Hello World!')
-
-# A3.....297 x 420 mm
-# A4.....210 x 297 mm
-class bcolors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKCYAN = '\033[96m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-
-def get_cfg_from_full_path(path_cfg):
-    with open(path_cfg, "r") as ymlfile:
-        cfg = yaml.full_load(ymlfile)
-    return cfg
+        if page.CREATE_QR_CODES:
+            # Print the QR code sheets
+            pdf_QR = setupPDF(page, 'QR')
+            varNames = list(page.LABELS_DF.columns)
+            # for pageNumber in range(page.LABELS_DF.shape[0]):
+            newPage_QR(page,page.LABELS_DF,pdf_QR,varNames)  
+            savePDF_QR(pdf_QR,page)
+    print(f"{bcolors.HEADER}Project Complete!{bcolors.ENDC}")
 
 @dataclass
 class Input:
@@ -90,6 +95,26 @@ class Input:
         if (self.PAGESIZE_QR == 'L') or (self.PAGESIZE_QR == 'legal'):
             self.PAGESIZE_QR == 'Legal'
 
+class PDF(FPDF):
+    pass # nothing happens when it is executed.
+
+# A3.....297 x 420 mm
+# A4.....210 x 297 mm
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+def get_cfg_from_full_path(path_cfg):
+    with open(path_cfg, "r") as ymlfile:
+        cfg = yaml.full_load(ymlfile)
+    return cfg
 
 def validateDir(dir):
     if not os.path.exists(dir):
@@ -252,7 +277,8 @@ def draw10cm(pdf,POS,SPACE,FONT,STYLE,SIZE,PAGESIZE):
 
     #reset syles
     pdf.set_font(FONT, STYLE, SIZE)
-    
+
+   
 def draw_credit_card(pdf,x,y,fill):
     if fill:
         pdf.rect(x,y,86,54, style = 'F')
@@ -732,185 +758,3 @@ def newPage_QR(page,labels,pdf,varNames):
                         indX = 0
                         indY += 1
             previousLevel = (page.QR_TOTAL*indPage) - pageNumber + indPage
-
-def createProjectPDF(page):
-    print(f"{bcolors.HEADER}Starting Project - {page.PDF_NAME}{bcolors.ENDC}")
-    # nPages = labels.shape[0]
-
-    if page.CREATE_SIZE_CHECK:
-        pdf = setupPDF(page,'field_sheet')
-        newPage_size(page,pdf)
-        savePDF_size(pdf,page)
-        
-    
-    if page.QR_LOCATION =="imbed":
-        pdf = setupPDF(page,'field_sheet')
-        varNames = list(page.LABELS_DF.columns)
-        for pageNumber in range(page.LABELS_DF.shape[0]):
-            newPage(page,page.LABELS_DF,pdf,varNames,pageNumber)    
-        savePDF(pdf,page)
-            
-    elif page.QR_LOCATION == "solo":
-        if page.CREATE_FIELD_SHEET:
-            # Print the template page
-            pdf = setupPDF(page,'field_sheet')
-            varNames = list(page.LABELS_DF.columns)
-            newPage(page,page.LABELS_DF,pdf,varNames,0)   
-            savePDF(pdf,page)
-
-        if page.CREATE_QR_CODES:
-            # Print the QR code sheets
-            pdf_QR = setupPDF(page, 'QR')
-            varNames = list(page.LABELS_DF.columns)
-            # for pageNumber in range(page.LABELS_DF.shape[0]):
-            newPage_QR(page,page.LABELS_DF,pdf_QR,varNames)  
-            savePDF_QR(pdf_QR,page)
-
-    
-    print(f"{bcolors.HEADER}Project Complete!{bcolors.ENDC}")
-    
-
-
-
-    
-def main() -> None:
-
-    dir_FP = os.path.dirname(os.path.dirname(__file__))
-    path_cfg = os.path.join(dir_FP,'FieldPrism.yaml')
-    cfg = get_cfg_from_full_path(path_cfg)
-
-    
-    ### Creating QR Codes and Field Sheet for use in FieldPrism Projects ###
-    # Which documents do you want to create? 
-    CREATE_FIELD_SHEET = cfg['fieldprism']['setup']['create_field_sheet']
-    CREATE_QR_CODES = cfg['fieldprism']['setup']['create_QR_codes']
-    CREATE_SIZE_CHECK = cfg['fieldprism']['setup']['create_size_check']
-
-    # Input / Output
-    PDF_NAME = cfg['fieldprism']['setup']['new_file_stem']
-    DIR_CSV = cfg['fieldprism']['setup']['dir_containing_CSV_files']
-    CSV_NAME = cfg['fieldprism']['setup']['name_CSV_file']
-    QR_LOCATION = 'solo' # cfg['fieldprism']['QR_code_builder']['QR_location']
-    PAGESIZE_TEMPLATE = cfg['fieldprism']['field_sheet_builder']['page_size']
-
-    if cfg['fieldprism']['QR_code_builder']['ues_default_setup']:
-        if cfg['fieldprism']['QR_code_builder']['default_config'] == 'A4_Long_Names':
-            page = Input(PDF_NAME=PDF_NAME, DIR_CSV =DIR_CSV, CSV_NAME=CSV_NAME, QR_LOCATION=QR_LOCATION, CREATE_FIELD_SHEET = CREATE_FIELD_SHEET, CREATE_QR_CODES= CREATE_QR_CODES, CREATE_SIZE_CHECK = CREATE_SIZE_CHECK,
-                        SIZE=12, SPACE=4,
-                        LABELSHIFT=6,
-                        PRINT_ORDER='row',
-                        PAGESIZE_TEMPLATE = PAGESIZE_TEMPLATE,
-                        PAGESIZE_QR = 'A4',
-                        USE_LEVELS=True,
-                        PAGE_MARGIN_LEFT=10,
-                        PAGE_MARGIN_TOP=15,
-                        QR_TEXT_X = 30,
-                        QR_DIM_X = 30,
-                        QR_DIM_Y = 30,
-                        QR_TALL = 8, # with long labels = 10
-                        QR_WIDE = 3,# with long labels = 3
-                        QR_BUFFER_X = 30,
-                        QR_BUFFER_Y = 4,
-                        QR_DENSITY = cfg['fieldprism']['QR_code_builder']['QR_density'])
-        elif cfg['fieldprism']['QR_code_builder']['default_config'] == 'A4_Levels':
-            page = Input(PDF_NAME=PDF_NAME, DIR_CSV =DIR_CSV, CSV_NAME=CSV_NAME, QR_LOCATION=QR_LOCATION, CREATE_FIELD_SHEET = CREATE_FIELD_SHEET, CREATE_QR_CODES= CREATE_QR_CODES, CREATE_SIZE_CHECK = CREATE_SIZE_CHECK,
-                        SIZE = 12, SPACE = 4, LABELSHIFT = 7, PRINT_ORDER= 'row', PAGESIZE_TEMPLATE = PAGESIZE_TEMPLATE, PAGESIZE_QR = 'A4',
-                        USE_LEVELS = True,
-                        PAGE_MARGIN_LEFT=15,
-                        PAGE_MARGIN_TOP=15,
-                        QR_TEXT_X = 30,
-                        QR_DIM_X = 30,
-                        QR_DIM_Y = 30,
-                        QR_TALL = 8, # with long labels = 10
-                        QR_WIDE = 5,# with long labels = 3
-                        QR_BUFFER_X = 5,
-                        QR_BUFFER_Y = 4,
-                        QR_DENSITY = cfg['fieldprism']['QR_code_builder']['QR_density'])
-    else:
-        # Setup page
-        page = Input(PDF_NAME=PDF_NAME, 
-            DIR_CSV =DIR_CSV, 
-            CSV_NAME=CSV_NAME,
-            QR_LOCATION=QR_LOCATION,
-            CREATE_FIELD_SHEET = CREATE_FIELD_SHEET,
-            CREATE_QR_CODES= CREATE_QR_CODES,
-            CREATE_SIZE_CHECK = CREATE_SIZE_CHECK,
-            SIZE = cfg['fieldprism']['QR_code_builder']['QR_label_font_size'],
-            SPACE=4,
-            PRINT_ORDER=cfg['fieldprism']['QR_code_builder']['print_order'],
-            PAGESIZE_TEMPLATE = PAGESIZE_TEMPLATE,
-            PAGESIZE_QR = cfg['fieldprism']['QR_code_builder']['page_size'],
-            USE_LEVELS=True,
-            PAGE_MARGIN_LEFT=cfg['fieldprism']['QR_code_builder']['page_margin_left'],
-            PAGE_MARGIN_TOP=cfg['fieldprism']['QR_code_builder']['page_margin_top'],
-            LABELSHIFT=cfg['fieldprism']['QR_code_builder']['QR_text_y'],
-            QR_TEXT_X = cfg['fieldprism']['QR_code_builder']['QR_text_x'],
-            QR_DIM_X = cfg['fieldprism']['QR_code_builder']['QR_dim_x'],
-            QR_DIM_Y = cfg['fieldprism']['QR_code_builder']['QR_dim_y'],
-            QR_TALL = cfg['fieldprism']['QR_code_builder']['QR_tall'], # with long labels = 10
-            QR_WIDE = cfg['fieldprism']['QR_code_builder']['QR_wide'],# with long labels = 3
-            QR_BUFFER_X = cfg['fieldprism']['QR_code_builder']['QR_buffer_x'],# with long labels = 16
-            QR_BUFFER_Y = cfg['fieldprism']['QR_code_builder']['QR_buffer_y'],
-            QR_DENSITY = cfg['fieldprism']['QR_code_builder']['QR_density'])
-    createProjectPDF(page)
-
-
-    # 60 per page
-    # page = Input(PDF_NAME="POC_Levels_60perpage",CSV_NAME="POC_Levels",QR_LOCATION="solo",SIZE=12,SPACE=4,LABELSHIFT=3,PRINT_ORDER="row",
-    # USE_LEVELS=True,
-    #     QR_TEXT_X = 22,
-    #     QR_DIM_X = 20,
-    #     QR_DIM_Y = 20,
-    #     QR_TALL = 10,
-    #     QR_WIDE = 6,
-    #     QR_BUFFER_X = 5.1,
-    #     QR_BUFFER_Y = 5,
-    #     QR_DENSITY = 3)
-    # createProjectPDF(page)
-
-    # # 162 per page
-    # page = Input(PDF_NAME="POC_Levels_162perpage",CSV_NAME="POC_Levels",QR_LOCATION="solo",SIZE=12,SPACE=4,LABELSHIFT=3,PRINT_ORDER="row",
-    # USE_LEVELS=True,
-    #     QR_TEXT_X = 11,
-    #     QR_DIM_X = 10,
-    #     QR_DIM_Y = 10,
-    #     QR_TALL = 18,
-    #     QR_WIDE = 9,
-    #     QR_BUFFER_X = 5.1,
-    #     QR_BUFFER_Y = 5,
-    #     QR_DENSITY = 3)# 1 = not good enough # 3 - default # 5 = a bit too small
-    # createProjectPDF(page)
-
-    # page = Input(PDF_NAME="Demo_Levels_Predefined_Rows",CSV_NAME="Demo_Levels",QR_LOCATION="solo",SIZE=12,SPACE=4,LABELSHIFT=3,PRINT_ORDER="row",USE_LEVELS=False)
-    # createProjectPDF(page)
-
-
-main()
-
-
-# Run
-# PDF_NAME = 'Warp_Test_A4'
-# PAGESIZE = 'A4' # 'A3' OR 'A4'
-# DIR_QR = 'QR_bin'
-# DIR_PDF = 'PDF_bin'
-# SAVE_QR = 0
-# QR_LOCATION = "solo" # "solo" OR "imbed"
-# COLOR = 'gray' # 'gray' OR 'color'
-# POS = 'both' # 'top' OR 'bottom' OR 'both'
-# FONT = 'Helvetica' # 'Courier' OR 'Helvetica' OR 'Times' 
-# STYLE = 'B' # '' OR 'B' OR 'I' or 'U'
-# SIZE = 16 # Default: 16
-# SPACE = 6 # Default: 6
-# LABELSHIFT = 1
-
-# LABELS = pd.read_csv(os.path.abspath('Warp_Test.csv')) 
-
-# createProjectPDF(LABELS,PDF_NAME,PAGESIZE,DIR_PDF,DIR_QR,SAVE_QR,SPACE,LABELSHIFT,POS,COLOR,FONT,STYLE,SIZE)
-
-# Default => SIZE = 16 SPACE = 6 LABELSHIFT = 0
-# 12 variabl => SIZE = 8 SPACE = 2.8 LABELSHIFT = -1
-# 3 variable => SIZE = 24 SPACE = 12 LABELSHIFT = 2.8
-
-
-
-
