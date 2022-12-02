@@ -457,6 +457,15 @@ def run(pipeline, root):
         if cfg.storage_present == False:
             print(f"{bcolors.HEADER}Stopping...{bcolors.ENDC}")
             print_options()
+            if cfg_user['fieldstation']['sound']['play_sound']:
+                pygame.mixer.Sound.play(sound_leave).set_volume(volume)
+                time.sleep(.5)
+                pygame.mixer.Sound.play(sound_leave).set_volume(volume)
+                time.sleep(.5)
+                pygame.mixer.Sound.play(sound_leave).set_volume(volume)
+                time.sleep(.5)
+                pygame.mixer.Sound.play(sound_leave).set_volume(volume)
+                time.sleep(.5)
             raise Fragile.Break
         else:
             # Get data queues from camera
@@ -469,16 +478,16 @@ def run(pipeline, root):
             # Initialize TAKE_PHOTO
             TAKE_PHOTO = False
             images_this_session = 0
-
+            if cfg_user['fieldstation']['sound']['play_sound']:
+                pygame.mixer.Sound.play(sound_init).set_volume(volume)
+                time.sleep(0.75)
+                pygame.mixer.Sound.play(sound_init).set_volume(volume)
             # Data collection / imaging loop, exit on keypress, using Fragile class
             while True:
                 # Update "Ready" each loop
                 text_ready, ind_ready, direction = change_ready_ind(ind_ready,direction)
                 label_camera_status.config(text = text_ready, fg='green')
-                if cfg_user['fieldstation']['sound']['play_sound']:
-                    pygame.mixer.Sound.play(sound_init).set_volume(volume)
-                    time.sleep(0.75)
-                    pygame.mixer.Sound.play(sound_init).set_volume(volume)
+                
 
                 # Get latest frame from camera video feed (center crop)
                 vidFrames = videoQueue.tryGetAll()
