@@ -521,9 +521,9 @@ def run(pipeline, root):
                     label_fname_status.config(text = Image.filename)
                     label_nimage_status.config(text = str(images_this_session))
                     print(f"{bcolors.OKGREEN}Ready{bcolors.ENDC}")
-                    pygame.mixer.Sound.play(sound_complete)
+                    pygame.mixer.Sound.play(sound_init)
                     time.sleep(0.5)
-                    pygame.mixer.Sound.play(sound_complete)
+                    pygame.mixer.Sound.play(sound_init)
 
                     # Reset TAKE_PHOTO
                     TAKE_PHOTO = False
@@ -532,13 +532,13 @@ def run(pipeline, root):
                 _key = cv2.waitKey(50)
                 if keyboard.is_pressed(cfg_user['fieldstation']['keymap']['exit']):
                     pygame.mixer.Sound.play(sound_leave)
-                    time.sleep(1)
+                    time.sleep(.5)
                     pygame.mixer.Sound.play(sound_leave)
-                    time.sleep(1)
+                    time.sleep(.5)
                     pygame.mixer.Sound.play(sound_leave)
-                    time.sleep(1)
+                    time.sleep(.5)
                     pygame.mixer.Sound.play(sound_leave)
-                    time.sleep(1)
+                    time.sleep(.5)
                     print(f"{bcolors.HEADER}Stopping...{bcolors.ENDC}")
                     print_options()
                     cv2.destroyAllWindows()
@@ -559,17 +559,17 @@ def run(pipeline, root):
                     GPS_data_test = gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
                     if GPS_data_test.latitude == -999:
                         pygame.mixer.Sound.play(sound_leave)
-                        time.sleep(1)
+                        time.sleep(.5)
                         pygame.mixer.Sound.play(sound_leave)
-                        time.sleep(1)
+                        time.sleep(.5)
                         pygame.mixer.Sound.play(sound_leave)
-                        time.sleep(1)
+                        time.sleep(.5)
                         pygame.mixer.Sound.play(sound_leave)
-                        time.sleep(1)
+                        time.sleep(.5)
                     else:
-                        pygame.mixer.Sound.play(sound_complete)
+                        pygame.mixer.Sound.play(sound_init)
                         time.sleep(0.5)
-                        pygame.mixer.Sound.play(sound_complete)
+                        pygame.mixer.Sound.play(sound_init)
                         time.sleep(0.5)
 
 '''
