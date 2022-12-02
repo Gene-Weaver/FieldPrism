@@ -419,11 +419,11 @@ def run(pipeline, root):
         if volume_user == 'high':
             volume = 1.0
         elif volume_user == 'mid':
-            volume = 0.75
-        elif volume_user == 'low':
             volume = 0.50
+        elif volume_user == 'low':
+            volume = 0.20
         else:
-            volume = 0.75
+            volume = 0.50
 
         # Update USB Speed
         if device.getUsbSpeed().name == 'HIGH':
