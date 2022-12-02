@@ -191,8 +191,8 @@ def run(pipeline, root):
     '''
     pygame.mixer.init() # add this line
     sound_init = pygame.mixer.Sound(os.path.join(dir_root,'fieldstation','sound', 'beep.ogg'))
-    sound_complete = pygame.mixer.Sound(os.path.join(dir_root,'fieldstation','sound', 'sharp.mp3'))
-    sound_leave = pygame.mixer.Sound(os.path.join(dir_root,'fieldstation','sound', 'blurp.mp3'))
+    # sound_complete = pygame.mixer.Sound(os.path.join(dir_root,'fieldstation','sound', 'sharp.mp3'))
+    # sound_leave = pygame.mixer.Sound(os.path.join(dir_root,'fieldstation','sound', 'blurp.mp3'))
 
     '''
     Setup the GUI
@@ -521,7 +521,9 @@ def run(pipeline, root):
                     label_fname_status.config(text = Image.filename)
                     label_nimage_status.config(text = str(images_this_session))
                     print(f"{bcolors.OKGREEN}Ready{bcolors.ENDC}")
-                    pygame.mixer.Sound.play(sound_complete)
+                    pygame.mixer.Sound.play(sound_init)
+                    time.sleep(0.1)
+                    pygame.mixer.Sound.play(sound_init)
 
                     # Reset TAKE_PHOTO
                     TAKE_PHOTO = False
@@ -529,11 +531,13 @@ def run(pipeline, root):
                 # Key Press Options
                 _key = cv2.waitKey(50)
                 if keyboard.is_pressed(cfg_user['fieldstation']['keymap']['exit']):
-                    pygame.mixer.Sound.play(sound_leave)
+                    pygame.mixer.Sound.play(sound_init)
                     time.sleep(0.5)
-                    pygame.mixer.Sound.play(sound_leave)
+                    pygame.mixer.Sound.play(sound_init)
                     time.sleep(0.5)
-                    pygame.mixer.Sound.play(sound_leave)
+                    pygame.mixer.Sound.play(sound_init)
+                    time.sleep(0.5)
+                    pygame.mixer.Sound.play(sound_init)
                     time.sleep(0.5)
                     print(f"{bcolors.HEADER}Stopping...{bcolors.ENDC}")
                     print_options()
@@ -554,19 +558,19 @@ def run(pipeline, root):
                     print(f"       Testing GPS")
                     GPS_data_test = gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
                     if GPS_data_test.latitude == -999:
-                        pygame.mixer.Sound.play(sound_leave)
+                        pygame.mixer.Sound.play(sound_init)
                         time.sleep(0.5)
-                        pygame.mixer.Sound.play(sound_leave)
+                        pygame.mixer.Sound.play(sound_init)
                         time.sleep(0.5)
-                        pygame.mixer.Sound.play(sound_leave)
+                        pygame.mixer.Sound.play(sound_init)
                         time.sleep(0.5)
-                        pygame.mixer.Sound.play(sound_leave)
+                        pygame.mixer.Sound.play(sound_init)
                         time.sleep(0.5)
                     else:
                         pygame.mixer.Sound.play(sound_init)
-                        time.sleep(0.5)
+                        time.sleep(0.1)
                         pygame.mixer.Sound.play(sound_init)
-                        time.sleep(0.5)
+                        time.sleep(0.1)
 
 '''
 Initialize the tkinter GUI
