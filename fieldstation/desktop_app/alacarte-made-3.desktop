@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Run FieldPrism
+Exec=sudo python /home/pi/FieldPrism/fieldstation/fp.py
+Comment=
+Terminal=true
+Icon=/home/pi/FieldPrism/img/icon_fp.png
+Type=Application
+Path=/home/pi/FieldPrism

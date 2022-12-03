@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Edit Config File
+Exec=sh /home/pi/FieldPrism/fieldstation/edit_config_rpi.sh
+Comment=Edit Config File
+Terminal=false
+Icon=/home/pi/FieldPrism/img/icon_config.png
+Type=Application

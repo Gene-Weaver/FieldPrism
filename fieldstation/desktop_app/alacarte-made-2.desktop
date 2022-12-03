@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Mount USB Drives
+Exec=sh /home/pi/FieldPrism/fieldstation/mount_usb_drives.sh
+Comment=
+Terminal=true
+Icon=/home/pi/FieldPrism/img/icon_usb.png
+Type=Application

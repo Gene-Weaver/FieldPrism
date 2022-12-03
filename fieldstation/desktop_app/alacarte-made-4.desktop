@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Test GPS
+Exec=sudo python /home/pi/FieldPrism/fieldstation/utils_gps.py
+Comment=
+Terminal=true
+Icon=/home/pi/FieldPrism/img/icon_gps.png
+Type=Application
+NoDisplay=false

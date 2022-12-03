@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Update or Install FieldPrism
+Exec=sh /home/pi/git_clone_or_update.sh
+Comment=
+Terminal=true
+Icon=/home/pi/FieldPrism/img/icon_update.png
+Type=Application

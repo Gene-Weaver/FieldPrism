@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Re-Install FieldPrism
+Exec=sh /home/pi/reinstall_FieldPrism.sh
+Comment=Delete /home/pi/FieldPrism and pull from git repo
+Terminal=true
+Icon=/home/pi/FieldPrism/img/icon_reinstall.png
+Type=Application

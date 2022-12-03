@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Shut Down
+Exec=sh /home/pi/FieldPrism/fieldstation/shut_down.sh
+Comment=Shut down R Pi
+Terminal=false
+Icon=/home/pi/FieldPrism/img/icon_shut_down.png
+Type=Application
+Name[en_US]=Shut Down

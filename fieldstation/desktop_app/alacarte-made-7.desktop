@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Reboot
+Exec=sh /home/pi/FieldPrism/fieldstation/reboot.sh
+Comment=Reboot R Pi
+Terminal=false
+Icon=/home/pi/FieldPrism/img/icon_reboot.png
+Type=Application
