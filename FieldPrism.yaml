@@ -92,7 +92,7 @@ fieldprism:
     #### Processing Options #####################################################
     strict_distortion_correction: False # bool |DEFAULT| False 
     use_template_for_pixel_to_metric_conversion: False # bool |DEFAULT| False 
-    do_remove_overlap: False # bool |DEFAULT| False 
+    do_remove_overlap: True # bool |DEFAULT| False 
     overlap_priority: 'barcode' # string |DEFAULT| 'barcode' FROM 'ruler' OR 'barcode' 
     insert_clean_QR_codes: True # bool |DEFAULT| True
     #### Justify the Distortion Corrected Images ################################
@@ -105,7 +105,7 @@ fieldprism:
         uniform_h: 4000 # integer |DEFAULT| 4000 
         uniform_w: 3000 # integer |DEFAULT| 3000
     #### Images to Process ######################################################
-    dir_images_unprocessed: 'D:/Dropbox/LM2_Env/Image_Datasets/FieldPrism_Training_Images/FieldPrism_Training_FS_Renaming' #'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/QR_Codes_Demo'
+    dir_images_unprocessed: 'D:\Dropbox\LM2_Env\Image_Datasets\SET_FieldPrism_Test\TESTING_OUTPUT\Images_Processed\FieldPrism_QR_Validation_12MP_Waterproof\PREP_final_best3\Images_Markers_Missing' #'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/QR_Codes_Demo'
     dir_images_unprocessed_labels: null #'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/TESTING_OUTPUT/Images_Processed/FieldPrism_Training_Outside/PREP_final_best3/Labels_Not_Corrected' # null # 'D:/Dropbox/LM2_Env/Image_Datasets/FieldPrism_Training_Images/REU_Field_QR-Code-Images' #'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/QR_Codes_Demo'
     #### Output Directories #####################################################
     # dir_home = /path/to/output/images/
@@ -113,12 +113,12 @@ fieldprism:
     #       dir_home/dirname_images_processed/dirname_current_project/dirname_current_run
     dir_home: 'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/TESTING_OUTPUT'
     dirname_images_processed: 'Images_Processed'
-    dirname_current_project: 'FieldPrism_Training_FS_Renaming'
+    dirname_current_project: 'FieldPrism_QR_Validation_12MP_Waterproof_REPROCESS'
     dirname_current_run: 'PREP_final_best' # nested inside of current_project
     #### ML Detection Options ###################################################
     detector:
         model_size: 'nightly' # 'small' or 'large' or 'nightly'
-        min_confidence_threshold: 0.70 # float 0 > x < 1 default = 0.70 
+        min_confidence_threshold: 0.30 # float 0 > x < 1 default = 0.70 
         show_predicted_text: False # bool 
     #### QR Code File Renaming Options ##########################################
     QR_codes:

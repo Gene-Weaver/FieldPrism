@@ -1,1 +1,1 @@
-geany /home/pi/FieldPrism/FieldPrism.yaml
+geany /home/pi/FieldPrism/FieldStation.yaml

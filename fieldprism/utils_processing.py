@@ -1113,23 +1113,30 @@ def remove_black_space_justify_uniform(cfg, image, TL_x, TL_y, TR_x, BR_y):
 
     return image
 
-
+# TODO completely inside/outside
 def remove_overlapping_predictions(priority_item, remove_item, img_w, img_h):
-    keep_ruler = []
-    for i_ru, ru in remove_item.iterrows(): 
+    keep_remove = []
+    for i_r, remove in remove_item.iterrows(): 
         do_keep_ru = True
-        bbox_ruler = (ru[1], ru[2], ru[3], ru[4])
-        bbox_ruler = pybboxes.convert_bbox(bbox_ruler, from_type="yolo", to_type="voc", image_size=(img_w, img_h))
-        for i_bc, bc in priority_item.iterrows(): 
-            bbox_b = (bc[1], bc[2], bc[3], bc[4])
-            bbox_b = pybboxes.convert_bbox(bbox_b, from_type="yolo", to_type="voc", image_size=(img_w, img_h))
-            if (bbox_ruler[0] >= bbox_b[2]) or (bbox_ruler[2]<=bbox_b[0]) or (bbox_ruler[3]<=bbox_b[1]) or (bbox_ruler[1]>=bbox_b[3]):
+        bbox_remove = (remove[1], remove[2], remove[3], remove[4])
+        bbox_remove = pybboxes.convert_bbox(bbox_remove, from_type="yolo", to_type="voc", image_size=(img_w, img_h))
+        for i_bc, priority in priority_item.iterrows(): 
+            bbox_priority = (priority[1], priority[2], priority[3], priority[4])
+            bbox_priority = pybboxes.convert_bbox(bbox_priority, from_type="yolo", to_type="voc", image_size=(img_w, img_h))
+            # Intersection
+            if (bbox_remove[0] >= bbox_priority[2]) or (bbox_remove[2]<=bbox_priority[0]) or (bbox_remove[3]<=bbox_priority[1]) or (bbox_remove[1]>=bbox_priority[3]):
+                continue
+            # Completely inside of the remove bbox
+            elif ((bbox_remove[0] <= bbox_priority[0]) and (bbox_remove[1] <= bbox_priority[1]) and (bbox_remove[2] >= bbox_priority[2])  and (bbox_remove[3] >= bbox_priority[3])):
+                continue
+            # Completely surrounding the remove bbox
+            elif ((bbox_remove[0] >= bbox_priority[0]) and (bbox_remove[1] >= bbox_priority[1]) and (bbox_remove[2] <= bbox_priority[2])  and (bbox_remove[3] <= bbox_priority[3])):
                 continue
             else:
                 do_keep_ru = False
         if do_keep_ru:
-            keep_ruler.append(ru.values)
-    remove_item = pd.DataFrame(keep_ruler)
+            keep_remove.append(remove.values)
+    remove_item = pd.DataFrame(keep_remove)
     return priority_item, remove_item
 
 ''' Rotate image, has 180 option, works with pytorch tensor images too '''
