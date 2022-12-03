@@ -13,7 +13,7 @@ echo "eg."
 echo "     FieldPrism-A_v-1-0"
 read SIZE
 
-dir_target = "/media/${USB}/${FILENAME}.img"
+$dir_target = "/media/${USB}/${FILENAME}.img"
 echo "dir_target"
 echo $dir_target
 sudo dd if=/dev/mmcblk0 of="${dir_target}" bs=1M count="${SIZE}"
