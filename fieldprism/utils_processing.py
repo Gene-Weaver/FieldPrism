@@ -378,7 +378,7 @@ class Marker:
     success_conv: bool = False
     success_dist: bool = False
 
-    one_cm_pixels: int = 0
+    one_cm_pixels: int = np.nan
     center_point: list = field(default_factory=None)
     # Convert local cropped points to the whole image location
     translate_center_point: list = field(default_factory=None)
@@ -398,15 +398,17 @@ class Marker:
     cropped_marker_gray: list = field(default_factory=None)
     cropped_marker_bi: list = field(default_factory=None)
     cropped_marker_plot: list = field(default_factory=None)
+    directory_masks: list = field(default_factory=None)
 
 
-    def __init__(self, cfg, location, image_name, image, label_row, bbox, rough_center) -> None:
+    def __init__(self, cfg, directory_masks, location, image_name, image, label_row, bbox, rough_center) -> None:
         self.location = location
         self.image_name = image_name
         self.image = image
         self.label_row = label_row
         self.bbox = bbox
         self.rough_center = rough_center
+        self.directory_masks = directory_masks
         self.sweep()
 
         if not self.success_conv:
@@ -421,7 +423,7 @@ class Marker:
 
     def remove_border_blobs(self, image: np.ndarray) -> np.ndarray:
         # Dilate the image by 3 pixels.
-        dilated_image = dilation(image, selem=np.ones((3, 3)))
+        dilated_image = dilation(image, footprint=np.ones((3, 3)))
 
         # Label the blobs in the dilated image.
         labeled_blobs, num_blobs = label(dilated_image, return_num=True)
@@ -438,73 +440,138 @@ class Marker:
             labeled_blobs[labeled_blobs != largest_blob_index] = 0
 
         # Erode the labeled_blobs image by 3 pixels.
-        eroded_image = erosion(labeled_blobs, selem=np.ones((3, 3)))
+        output_image = erosion(labeled_blobs, footprint=np.ones((3, 3)))
 
         # Convert the eroded_image into a 3 channel image, with white pixels representing the largest blob and black pixels representing everything else.
-        output_image = np.where(eroded_image[:,:,None] == 1, [255, 255, 255], [0, 0, 0])
+        output_image = np.where(output_image[:,:,None] >= 1, [255, 255, 255], [0, 0, 0])
         output_image = resize(output_image, (224, 224), preserve_range=True) 
+        # output_image[output_image >=1] = 1
         # Return the output image.
         return output_image
 
+    def compare_binary_blob_areas(self, binary_image1, binary_image2_list, thresh) -> None:
+        _, binary_image1 = cv2.threshold(binary_image1, 128, 255, cv2.THRESH_BINARY)
+        binary_image1 = cv2.convertScaleAbs(binary_image1, alpha=1.0, beta=0.0)
+        binary_image1 = cv2.cvtColor(binary_image1, cv2.COLOR_BGR2GRAY)
 
-    def fuzzy_match(self, unknown_map, desired_mask, threshold=0.8) -> None:
-        # Ensure that the input arrays are binary maps 
-        unknown_map = np.array(unknown_map, dtype=bool) 
-        desired_mask = np.array(desired_mask, dtype=bool) 
-        # Resize the unknown map and the desired mask to 224x224 
-        unknown_map = resize(unknown_map, (224, 224), preserve_range=True) 
-        desired_mask = resize(desired_mask, (224, 224), preserve_range=True) 
-        # Apply a closing operation to the binary maps to remove any small holes or gaps
-        unknown_map = closing(unknown_map, square(3)) 
-        desired_mask = closing(desired_mask, square(3)) 
-        # Calculate the contours for both maps 
-        unknown_contours = find_contours(unknown_map, threshold_otsu(unknown_map)) 
-        desired_contours = find_contours(desired_mask, threshold_otsu(desired_mask)) 
-        # Compare the contours using structural similarity 
-        confidence = ssim(unknown_contours, desired_contours, multichannel=True) 
-        # Return True if the confidence score is greater than or equal to the threshold 
-        return confidence >= threshold
+        success = 0
+        area1 = cv2.findNonZero(binary_image1)
+        if area1 is None:
+            return False
+        else:
+            for binary_image2 in binary_image2_list:
+                # area1 = len(area1)
+                try:
+                    area1 = area1.shape[0]
+                except: 
+                    area1 = area1
+                try:
+                    area2 = cv2.findNonZero(binary_image2).shape[0]
+                except:
+                    area2 = area2
+                # area2 = len(area2)
+
+                # Check if the difference between the areas is no more than 30%
+                if abs(area1 - area2) <= thresh*max(area1, area2):
+                    success += 1
+            if success > 0:
+                return True
+            else:
+                return False
+
+    def compare_mask(self, mask, accepted_masks, threshold) -> None:
+        # Convert the mask to a binary image (with only 0s and 1s)
+        _, mask = cv2.threshold(mask, 128, 255, cv2.THRESH_BINARY)
+
+        # Convert each accepted mask to a binary image
+        for i in range(len(accepted_masks)):
+            _, accepted_masks[i] = cv2.threshold(accepted_masks[i], 128, 255, cv2.THRESH_BINARY)
+
+        # Create a list to store the similarity scores between the mask and the accepted masks
+        similarity_scores = []
+
+        mask = cv2.convertScaleAbs(mask, alpha=1.0, beta=0.0)
+        mask = cv2.cvtColor(mask, cv2.COLOR_BGR2GRAY)
+        # Find the contours of the binary mask
+        contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+        min_score = 999
+        # Iterate over the contours of the mask
+        for contour in contours:
+            # Compare the mask to each accepted mask
+            for accepted_mask in accepted_masks:
+                # Find the contours of the accepted mask
+                accepted_contours, _ = cv2.findContours(accepted_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+                # Iterate over the contours of the accepted mask
+                for accepted_contour in accepted_contours:
+                    # Use cv2.matchShapes() to compare the mask to the accepted mask
+                    similarity_score = cv2.matchShapes(contour, accepted_contour, cv2.CONTOURS_MATCH_I1, 0)
+
+                    # Add the similarity score to the list of scores
+                    similarity_scores.append(similarity_score)
+
+        # Check if any of the similarity scores are below the threshold
+        if any(score < threshold for score in similarity_scores):
+            # If any of the scores are below the threshold, return True
+            min_score = int(round(min(similarity_scores)*100))
+            return True, min_score
+        else:
+            try:
+                min_score = int(round(min(similarity_scores)*100))
+            except:
+                pass
+            # If all of the scores are above the threshold, return False
+            return False, min_score
 
     def sweep(self) -> None:
         self.cropped_marker = self.image[self.bbox[1]:self.bbox[3], self.bbox[0]:self.bbox[2]]
         # self.cropped_marker = deskew(self.cropped_marker)  #############################################################################################
         self.cropped_marker_gray = cv2.cvtColor(self.cropped_marker, cv2.COLOR_RGB2GRAY)
 
-        
-
-        bi_options = range(80, 180, 20)
+        bi_options = [80, 120, 60, 100, 40, 20, 140, 160, 180]
         bi_sweep = []
+        bi_sweep_score = []
+        print(f"{bcolors.OKGREEN}            Checking marker patterns for {self.location}{bcolors.ENDC}")
         for bi in bi_options:
             ret, candidate_square = cv2.threshold(self.cropped_marker_gray,bi,255,cv2.THRESH_BINARY_INV) # was 127
-            bi_sweep.append(candidate_square)
 
             candidate_square = self.remove_border_blobs(candidate_square)
 
-            cv2.imwrite(''.join(["./fieldprism/marker_template/marker-",str(bi),"-",self.image_name]),candidate_square)
-            # cv2.imshow('cropped_bi', candidate_square)
+            result, min_score = self.compare_mask(candidate_square, self.directory_masks, 0.4)
+
+            result_area = self.compare_binary_blob_areas(candidate_square, self.directory_masks, 0.3)
+            cv2.imwrite(''.join(["./fieldprism/marker2/",self.image_name.split('.')[0],"__",str(bi),"__","SC-",str(min_score),".jpg"]),candidate_square)
+            if result and result_area:
+                # cv2.imwrite(''.join(["./fieldprism/marker/",self.image_name.split('.')[0],"__",str(bi),"__","SC-",min_score,".jpg"]),candidate_square)
+                bi_sweep.append(candidate_square)
+                bi_sweep_score.append(min_score)
+
+        if bi_sweep != []:
+            # Pick lowest score
+            best_score = min(bi_sweep_score)
+            best_index = bi_sweep_score.index(best_score)
+            bi_sweep = bi_sweep[best_index] 
+            print(f"{bcolors.OKGREEN}            Best marker score: {str(best_score)} - Picked from {len(bi_sweep_score)} binarized options{bcolors.ENDC}")
+            
+            kernel = cv2.getStructuringElement(cv2.MORPH_RECT,(3,3))
+            image_0 = cv2.morphologyEx(bi_sweep, cv2.MORPH_CLOSE, kernel)
+
+            # cv2.imshow('cropped_bi', image_0)
             # cv2.waitKey(0)
-        image_0 = np.zeros(bi_sweep[0].shape)
-        for image in bi_sweep:
-            image_0 = image_0 + image
-        im_max = np.amax(image_0)
-        image_0[image_0 < np.multiply(0.8,im_max)] = 0
-        image_0[image_0 >= np.multiply(0.8,im_max)] = 1
-        kernel = cv2.getStructuringElement(cv2.MORPH_RECT,(3,3))
-        image_0 = cv2.morphologyEx(image_0, cv2.MORPH_CLOSE, kernel)
 
-        # cv2.imshow('cropped_bi', image_0)
-        # cv2.waitKey(0)
+            image_0 = image_0.astype(np.uint8)
+            self.cropped_marker_bi = cv2.cvtColor(image_0, cv2.COLOR_RGB2GRAY)
 
-        image_0 = image_0.astype(np.uint8)
-        self.cropped_marker_bi = image_0
+            self.erode_edges(self.cropped_marker_bi,6)
+            self.erode_edges(self.cropped_marker_bi,6)
 
-        self.erode_edges(self.cropped_marker_bi,6)
-        self.erode_edges(self.cropped_marker_bi,6)
-
-        
-        try:
-            self.find_centroid()
-        except:
+            try:
+                self.find_centroid()
+            except:
+                self.success_conv = False
+                self.success_dist = False
+        else:
             self.success_conv = False
             self.success_dist = False
 
@@ -552,7 +619,7 @@ class Marker:
         hypot_distances = []
         total_distances = []
         kdtree = KDTree(self.centroid_list)
-        if len(self.centroid_list) == 4:
+        if len(self.centroid_list) in [3, 4]: # used to be == 4:
             for c in self.centroid_list:
                 # Get the conversion factor
                 d, i = kdtree.query(c,k=2)
@@ -578,15 +645,15 @@ class Marker:
             self.translate_center_point = [self.bbox[0] + self.center_point[0], self.bbox[1] + self.center_point[1]]
 
             ### if the binarization is a failure, then the center point might have drifted. If it did, then treat it as failure
-            x_wiggle = np.multiply((self.bbox[2] - self.bbox[0]), 0.05)
-            y_wiggle = np.multiply((self.bbox[3] - self.bbox[1]), 0.05)
+            x_wiggle = np.multiply((self.bbox[2] - self.bbox[0]), 0.25)
+            y_wiggle = np.multiply((self.bbox[3] - self.bbox[1]), 0.25)
             new_point_x_low = int(self.rough_center[0] -  x_wiggle)
             new_point_x_high = int(self.rough_center[0] + x_wiggle)
             new_point_y_low = int(self.rough_center[1] - y_wiggle)
             new_point_y_high = int(self.rough_center[1] + y_wiggle)
 
             if ((new_point_x_low < self.translate_center_point[0]) and (new_point_x_high > self.translate_center_point[0]) and 
-            (new_point_y_low < self.translate_center_point[1]) and (new_point_y_high > self.translate_center_point[1])):
+                (new_point_y_low < self.translate_center_point[1]) and (new_point_y_high > self.translate_center_point[1])):
                 self.translate_center_point = self.translate_center_point
             else:
                 self.translate_center_point = self.rough_center
@@ -1490,7 +1557,7 @@ def generate_overlay_add(image_bboxes, bbox, labels_list, colors_list, centers_c
                                             centers_corrected[1]+np.multiply((np.divide(average_one_cm_distance,2)),4),
                                             centers_corrected[0]+np.multiply((np.divide(average_one_cm_distance,2)),17),
                                             centers_corrected[1]+np.multiply((np.divide(average_one_cm_distance,2)),4.1)]]),
-                                            width=10,labels=label_10CM,colors=(20, 120, 10),fill =True,font = font_pick, font_size=20, text_color = (20, 120, 10))  
+                                            width=1,labels=label_10CM,colors=(20, 120, 10),fill =True,font = font_pick, font_size=20, text_color = (20, 120, 10))  
     return image_bboxes
 
 def generate_overlay(path_overlay, image_name_jpg, average_one_cm_distance, image_bboxes, bbox, labels_list, colors_list, centers_corrected, Marker_Top_Left, Marker_Top_Right, Marker_Bottom_Right, Marker_Bottom_Left):
@@ -1526,25 +1593,25 @@ def generate_overlay(path_overlay, image_name_jpg, average_one_cm_distance, imag
                                             Marker_Top_Right.translate_center_point[1]+np.multiply((np.divide(average_one_cm_distance,2)),4),
                                             Marker_Top_Right.translate_center_point[0]+np.multiply((np.divide(average_one_cm_distance,2)),17),
                                             Marker_Top_Right.translate_center_point[1]+np.multiply((np.divide(average_one_cm_distance,2)),4.1)]]),
-                                            width=10,labels=label_10CM,colors=(20, 120, 10),fill =True,font = font_pick, font_size=20, text_color = (20, 120, 10)) 
+                                            width=1,labels=label_10CM,colors=(20, 120, 10),fill =True,font = font_pick, font_size=20, text_color = (20, 120, 10)) 
         image_bboxes = draw_bounding_boxes_custom(image_bboxes,torch.tensor([[
                                             Marker_Top_Left.translate_center_point[0]-np.multiply((np.divide(average_one_cm_distance,2)),3),
                                             Marker_Top_Left.translate_center_point[1]+np.multiply((np.divide(average_one_cm_distance,2)),4),
                                             Marker_Top_Left.translate_center_point[0]+np.multiply((np.divide(average_one_cm_distance,2)),17),
                                             Marker_Top_Left.translate_center_point[1]+np.multiply((np.divide(average_one_cm_distance,2)),4.1)]]),
-                                            width=10,labels=label_10CM,colors=(20, 120, 10),fill =True,font = font_pick, font_size=20, text_color = (20, 120, 10)) 
+                                            width=1,labels=label_10CM,colors=(20, 120, 10),fill =True,font = font_pick, font_size=20, text_color = (20, 120, 10)) 
         image_bboxes = draw_bounding_boxes_custom(image_bboxes,torch.tensor([[
                                             Marker_Bottom_Right.translate_center_point[0]-np.multiply((np.divide(average_one_cm_distance,2)),3),
                                             Marker_Bottom_Right.translate_center_point[1]+np.multiply((np.divide(average_one_cm_distance,2)),4),
                                             Marker_Bottom_Right.translate_center_point[0]+np.multiply((np.divide(average_one_cm_distance,2)),17),
                                             Marker_Bottom_Right.translate_center_point[1]+np.multiply((np.divide(average_one_cm_distance,2)),4.1)]]),
-                                            width=10,labels=label_10CM,colors=(20, 120, 10),fill =True,font = font_pick, font_size=20, text_color = (20, 120, 10)) 
+                                            width=1,labels=label_10CM,colors=(20, 120, 10),fill =True,font = font_pick, font_size=20, text_color = (20, 120, 10)) 
         image_bboxes = draw_bounding_boxes_custom(image_bboxes,torch.tensor([[
                                             Marker_Bottom_Left.translate_center_point[0]-np.multiply((np.divide(average_one_cm_distance,2)),3),
                                             Marker_Bottom_Left.translate_center_point[1]+np.multiply((np.divide(average_one_cm_distance,2)),4),
                                             Marker_Bottom_Left.translate_center_point[0]+np.multiply((np.divide(average_one_cm_distance,2)),17),
                                             Marker_Bottom_Left.translate_center_point[1]+np.multiply((np.divide(average_one_cm_distance,2)),4.1)]]),
-                                            width=10,labels=label_10CM,colors=(20, 120, 10),fill =True,font = font_pick, font_size=20, text_color = (20, 120, 10)) 
+                                            width=1,labels=label_10CM,colors=(20, 120, 10),fill =True,font = font_pick, font_size=20, text_color = (20, 120, 10)) 
     # image_bboxes = draw_keypoints(image_bboxes, torch.tensor([[bottom_right_center]]), colors="blue", radius=20)
     # image_bboxes = draw_keypoints(image_bboxes, torch.tensor([[top_left_center]]), colors="red", radius=20)
     # image_bboxes = draw_keypoints(image_bboxes, torch.tensor([[top_right_center]]), colors="green", radius=20)

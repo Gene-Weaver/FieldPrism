@@ -14,6 +14,8 @@ QR_code_builder/bin_QR/
 fieldprism/yolov5/runs/
 fieldprism/yolov5/weights/
 rpi_images/
+fieldprism/marker/
+fieldprism/marker2/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

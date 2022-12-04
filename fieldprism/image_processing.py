@@ -30,7 +30,7 @@ from component_detector import detect_components_in_image
 #         self.location = location
 #         self.image = image
 
-def process_rulers(cfg, image_name_jpg, all_rulers, option, ratio, image, image_bboxes, img_w, img_h, dir_images_to_process, Dirs):
+def process_rulers(cfg, directory_masks, image_name_jpg, all_rulers, option, ratio, image, image_bboxes, img_w, img_h, dir_images_to_process, Dirs):
     Overlay_Out = None
     Image_Out = None
     use_conversion = False
@@ -124,16 +124,16 @@ def process_rulers(cfg, image_name_jpg, all_rulers, option, ratio, image, image_
 
             print(f"{bcolors.OKGREEN}      Found All 4 Markers!{bcolors.ENDC}")
             print(f"{bcolors.OKCYAN}      Processing Top Left Marker...{bcolors.ENDC}")
-            Marker_Top_Left = Marker(cfg, 'top_left', image_name_jpg, image, Bboxes_4.top_left_ind_label, Bboxes_4.top_left_bbox, Bboxes_4.top_left_center)
+            Marker_Top_Left = Marker(cfg, directory_masks, 'top_left', image_name_jpg, image, Bboxes_4.top_left_ind_label, Bboxes_4.top_left_bbox, Bboxes_4.top_left_center)
 
             print(f"{bcolors.OKCYAN}      Processing Top Right Marker...{bcolors.ENDC}")
-            Marker_Top_Right = Marker(cfg, 'top_right', image_name_jpg, image, Bboxes_4.top_right_ind_label, Bboxes_4.top_right_bbox, Bboxes_4.top_right_center)
+            Marker_Top_Right = Marker(cfg, directory_masks, 'top_right', image_name_jpg, image, Bboxes_4.top_right_ind_label, Bboxes_4.top_right_bbox, Bboxes_4.top_right_center)
 
             print(f"{bcolors.OKCYAN}      Processing Bottom Left Marker...{bcolors.ENDC}")
-            Marker_Bottom_Left = Marker(cfg, 'bottom_left', image_name_jpg, image, Bboxes_4.bottom_left_ind_label, Bboxes_4.bottom_left_bbox, Bboxes_4.bottom_left_center)
+            Marker_Bottom_Left = Marker(cfg, directory_masks, 'bottom_left', image_name_jpg, image, Bboxes_4.bottom_left_ind_label, Bboxes_4.bottom_left_bbox, Bboxes_4.bottom_left_center)
 
             print(f"{bcolors.OKCYAN}      Processing Bottom Right Marker...{bcolors.ENDC}")
-            Marker_Bottom_Right = Marker(cfg, 'bottom_right', image_name_jpg, image, Bboxes_4.bottom_right_ind_label, Bboxes_4.bottom_right_bbox, Bboxes_4.bottom_right_center)
+            Marker_Bottom_Right = Marker(cfg, directory_masks, 'bottom_right', image_name_jpg, image, Bboxes_4.bottom_right_ind_label, Bboxes_4.bottom_right_bbox, Bboxes_4.bottom_right_center)
 
 
             use_distortion_correction, use_conversion = determine_success(Marker_Top_Left,Marker_Top_Right,Marker_Bottom_Left,Marker_Bottom_Right)
@@ -167,7 +167,7 @@ def process_rulers(cfg, image_name_jpg, all_rulers, option, ratio, image, image_
 
                 else:
                     average_one_cm_distance = np.nan
-            if average_one_cm_distance == np.nan:
+            if average_one_cm_distance is np.nan:
                 conv_success, marker_dist = get_approx_conv_factor(cfg)
                 if conv_success:
                     average_one_cm_distance = np.multiply(np.divide(TL_to_TR,marker_dist), 10)
@@ -228,7 +228,7 @@ def process_rulers(cfg, image_name_jpg, all_rulers, option, ratio, image, image_
                 center = centers_loc_list[i]
 
                 print(f"{bcolors.OKCYAN}      Processing Unknown Marker {i+1} / {len(centers_list)}{bcolors.ENDC}")
-                Marker_Unknown = Marker(cfg, 'unknown', image_name_jpg, image, ind_label, bbox_m, center)
+                Marker_Unknown = Marker(cfg, directory_masks, 'unknown', image_name_jpg, image, ind_label, bbox_m, center)
 
                 use_conversion = determine_success_unknown(Marker_Unknown)
                 if use_conversion:
@@ -260,7 +260,7 @@ def process_rulers(cfg, image_name_jpg, all_rulers, option, ratio, image, image_
             
             ### No rulers
             else:
-                average_one_cm_distance = 0
+                average_one_cm_distance = np.nan
                 print(f"{bcolors.FAIL}      Image: {image_name_jpg} had no ruler predictions - Marker_Unknown{bcolors.ENDC}")
     else:
         ### Write the FAILED. No rulers found
@@ -321,6 +321,10 @@ def process_barcodes(cfg, image_name_jpg, all_barcodes, image, image_bboxes, img
     
 
 def identify_and_process_markers(cfg, option, ratio, dir_images_to_process, Dirs):
+    dir_FP = os.path.dirname(os.path.dirname(__file__))
+    path_directory_masks = os.path.join(dir_FP,'fieldprism','marker_template')
+    # directory_masks = [cv2.imread(f, 0) for f in os.listdir(path_directory_masks)]
+    directory_masks = [cv2.threshold(cv2.imread(os.path.join(path_directory_masks, filename), cv2.IMREAD_GRAYSCALE), 128, 255, cv2.THRESH_BINARY)[1] for filename in os.listdir(path_directory_masks)]
     # Loop through image dir and process each image
     n_total = len(os.listdir(dir_images_to_process))
     for index, image_name_jpg in enumerate(os.listdir(dir_images_to_process)):
@@ -407,7 +411,7 @@ def identify_and_process_markers(cfg, option, ratio, dir_images_to_process, Dirs
                 
 
                 '''Rulers and Distortion Correction'''
-                average_one_cm_distance, image, image_bboxes, use_conversion, use_distortion_correction, Image_Out, Overlay_Out  = process_rulers(cfg, image_name_jpg, all_rulers, option, ratio, image, image_bboxes, img_w, img_h, dir_images_to_process, Dirs)
+                average_one_cm_distance, image, image_bboxes, use_conversion, use_distortion_correction, Image_Out, Overlay_Out  = process_rulers(cfg, directory_masks, image_name_jpg, all_rulers, option, ratio, image, image_bboxes, img_w, img_h, dir_images_to_process, Dirs)
 
 
                 '''Save Distortion Corrected Images'''
@@ -507,13 +511,9 @@ def process_images():
 
             actual_save_dir = increment_path(Path(dir_out_1) / name, exist_ok=exist_ok)  # increment run
             dir_copied_labels  = os.path.join(actual_save_dir,'Labels_Not_Corrected')
-            # (actual_save_dir / 'Labels_Not_Corrected' if True else actual_save_dir).mkdir(parents=True, exist_ok=True)  # make dir
 
             dir_exisiting_labels = cfg['fieldprism']['dir_images_unprocessed_labels']
-            # dir_copied_labels = os.path.join(actual_save_dir,'Labels_Not_Corrected')
 
-            # exisiting_labels = os.listdir(dir_exisiting_labels)
- 
             shutil.copytree(dir_exisiting_labels, dir_copied_labels)
         else:
             # Run ML object detector to locate labels, ruler markers, barcodes
