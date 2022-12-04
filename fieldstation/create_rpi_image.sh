@@ -19,4 +19,4 @@ sudo dd if=/dev/mmcblk0 of="$USB_DIR/$IMAGE_NAME" bs=1M count="$SIZE"
 cd "$USB_DIR"
 
 # Run the pishrink.sh script with the user-specified image name
-sudo pishrink.sh -z "$IMAGE_NAME" | pv -l -s "$SIZE"
+sudo pishrink.sh -z "$IMAGE_NAME"

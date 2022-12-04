@@ -13,6 +13,14 @@ import pandas as pd
 import platform
 import tkinter
 import matplotlib.pyplot as plt
+from skimage.transform import resize 
+from skimage.metrics import structural_similarity as ssim
+from skimage.filters import threshold_otsu 
+from skimage.morphology import closing, square 
+from skimage.measure import find_contours 
+from skimage import filters, transform
+from skimage.measure import label
+from skimage.morphology import dilation, erosion
 # from qrcode.image.styledpil import StyledPilImage
 
 class bcolors:
@@ -411,17 +419,68 @@ class Marker:
             self.success_conv = True
             print(f"{bcolors.WARNING}      Using approx. center point for distortion correction{bcolors.ENDC}")
 
+    def remove_border_blobs(self, image: np.ndarray) -> np.ndarray:
+        # Dilate the image by 3 pixels.
+        dilated_image = dilation(image, selem=np.ones((3, 3)))
+
+        # Label the blobs in the dilated image.
+        labeled_blobs, num_blobs = label(dilated_image, return_num=True)
+
+        # If there are multiple blobs, find the blob with the largest area.
+        if num_blobs > 1:
+            # Find the size of each blob.
+            blob_sizes = [np.sum(labeled_blobs == i) for i in range(1, num_blobs + 1)]
+
+            # Find the index of the blob with the largest size.
+            largest_blob_index = np.argmax(blob_sizes) + 1
+
+            # Set all pixels in the labeled_blobs image to 0, except for the pixels in the largest blob.
+            labeled_blobs[labeled_blobs != largest_blob_index] = 0
+
+        # Erode the labeled_blobs image by 3 pixels.
+        eroded_image = erosion(labeled_blobs, selem=np.ones((3, 3)))
+
+        # Convert the eroded_image into a 3 channel image, with white pixels representing the largest blob and black pixels representing everything else.
+        output_image = np.where(eroded_image[:,:,None] == 1, [255, 255, 255], [0, 0, 0])
+        output_image = resize(output_image, (224, 224), preserve_range=True) 
+        # Return the output image.
+        return output_image
+
+
+    def fuzzy_match(self, unknown_map, desired_mask, threshold=0.8) -> None:
+        # Ensure that the input arrays are binary maps 
+        unknown_map = np.array(unknown_map, dtype=bool) 
+        desired_mask = np.array(desired_mask, dtype=bool) 
+        # Resize the unknown map and the desired mask to 224x224 
+        unknown_map = resize(unknown_map, (224, 224), preserve_range=True) 
+        desired_mask = resize(desired_mask, (224, 224), preserve_range=True) 
+        # Apply a closing operation to the binary maps to remove any small holes or gaps
+        unknown_map = closing(unknown_map, square(3)) 
+        desired_mask = closing(desired_mask, square(3)) 
+        # Calculate the contours for both maps 
+        unknown_contours = find_contours(unknown_map, threshold_otsu(unknown_map)) 
+        desired_contours = find_contours(desired_mask, threshold_otsu(desired_mask)) 
+        # Compare the contours using structural similarity 
+        confidence = ssim(unknown_contours, desired_contours, multichannel=True) 
+        # Return True if the confidence score is greater than or equal to the threshold 
+        return confidence >= threshold
 
     def sweep(self) -> None:
         self.cropped_marker = self.image[self.bbox[1]:self.bbox[3], self.bbox[0]:self.bbox[2]]
         # self.cropped_marker = deskew(self.cropped_marker)  #############################################################################################
         self.cropped_marker_gray = cv2.cvtColor(self.cropped_marker, cv2.COLOR_RGB2GRAY)
 
+        
+
         bi_options = range(80, 180, 20)
         bi_sweep = []
         for bi in bi_options:
             ret, candidate_square = cv2.threshold(self.cropped_marker_gray,bi,255,cv2.THRESH_BINARY_INV) # was 127
             bi_sweep.append(candidate_square)
+
+            candidate_square = self.remove_border_blobs(candidate_square)
+
+            cv2.imwrite(''.join(["./fieldprism/marker_template/marker-",str(bi),"-",self.image_name]),candidate_square)
             # cv2.imshow('cropped_bi', candidate_square)
             # cv2.waitKey(0)
         image_0 = np.zeros(bi_sweep[0].shape)

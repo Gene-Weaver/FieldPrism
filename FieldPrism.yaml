@@ -88,7 +88,7 @@ fieldprism:
         custom_ratio: null # null OR float |DEFAULT| null
         custom_short_distance: null # null or integer |DEFAULT| null
     #### Make Images Vertical ###################################################
-    skip_make_images_vertical: False # bool |DEFAULT| False 
+    skip_make_images_vertical: True # bool |DEFAULT| False 
     #### Processing Options #####################################################
     strict_distortion_correction: False # bool |DEFAULT| False 
     use_template_for_pixel_to_metric_conversion: False # bool |DEFAULT| False 
@@ -105,15 +105,15 @@ fieldprism:
         uniform_h: 4000 # integer |DEFAULT| 4000 
         uniform_w: 3000 # integer |DEFAULT| 3000
     #### Images to Process ######################################################
-    dir_images_unprocessed: 'D:\Dropbox\LM2_Env\Image_Datasets\SET_FieldPrism_Test\TESTING_OUTPUT\Images_Processed\FieldPrism_QR_Validation_12MP_Waterproof\PREP_final_best3\Images_Markers_Missing' #'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/QR_Codes_Demo'
-    dir_images_unprocessed_labels: null #'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/TESTING_OUTPUT/Images_Processed/FieldPrism_Training_Outside/PREP_final_best3/Labels_Not_Corrected' # null # 'D:/Dropbox/LM2_Env/Image_Datasets/FieldPrism_Training_Images/REU_Field_QR-Code-Images' #'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/QR_Codes_Demo'
+    dir_images_unprocessed: 'D:/Dropbox/LM2_Env/Image_Datasets/FieldPrism_Training_Images/FieldPrism_Training_Sheets' #'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/QR_Codes_Demo'
+    dir_images_unprocessed_labels: 'D:\Dropbox\LM2_Env\Image_Datasets\SET_FieldPrism_Test\TESTING_OUTPUT\Images_Processed\FieldPrism_Training_Sheets\PREP_final_best\Labels_Not_Corrected' #'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/TESTING_OUTPUT/Images_Processed/FieldPrism_Training_Outside/PREP_final_best3/Labels_Not_Corrected' # null # 'D:/Dropbox/LM2_Env/Image_Datasets/FieldPrism_Training_Images/REU_Field_QR-Code-Images' #'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/QR_Codes_Demo'
     #### Output Directories #####################################################
     # dir_home = /path/to/output/images/
     # all files from run will go to:
     #       dir_home/dirname_images_processed/dirname_current_project/dirname_current_run
     dir_home: 'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/TESTING_OUTPUT'
     dirname_images_processed: 'Images_Processed'
-    dirname_current_project: 'FieldPrism_QR_Validation_12MP_Waterproof_REPROCESS'
+    dirname_current_project: 'FieldPrism_Training_Sheets'
     dirname_current_run: 'PREP_final_best' # nested inside of current_project
     #### ML Detection Options ###################################################
     detector:
