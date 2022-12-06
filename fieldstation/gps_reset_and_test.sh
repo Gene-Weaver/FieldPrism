@@ -6,4 +6,4 @@ sudo systemctl disable gpsd.socket
 sudo killall gpsd
 sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock
 echo "Close this terminal window when done..."
-cgps -s
+# cgps -s
