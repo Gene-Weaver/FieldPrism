@@ -214,13 +214,17 @@ def run(
             # Save results (image with detections)
             if save_img:
                 if dataset.mode == 'image':
-                    if option == 'distortion':
-                        path_image = os.path.join(save_path,'Detections_Not_Corrected',p.name)
-                        validate_dir(os.path.join(save_path,'Detections_Not_Corrected'))
-                        cv2.imwrite(path_image, im0)
-                    elif option == 'processing':
+                    # if option == 'distortion':
+                    #     path_image = os.path.join(save_path,'Detections_Not_Corrected',p.name)
+                    #     validate_dir(os.path.join(save_path,'Detections_Not_Corrected'))
+                    #     cv2.imwrite(path_image, im0)
+                    if option == 'processing':
                         path_image = os.path.join(save_path,'Detections_Corrected',p.name)
                         validate_dir(os.path.join(save_path,'Detections_Corrected'))
+                        cv2.imwrite(path_image, im0)
+                    else:
+                        path_image = os.path.join(save_path,'Detections_Not_Corrected',p.name)
+                        validate_dir(os.path.join(save_path,'Detections_Not_Corrected'))
                         cv2.imwrite(path_image, im0)
                 else:  # 'video' or 'stream'
                     if vid_path[i] != save_dir:  # new video

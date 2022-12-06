@@ -377,6 +377,7 @@ class Marker:
     location: str = ''
     success_conv: bool = False
     success_dist: bool = False
+    is_approx: bool = False
 
     one_cm_pixels: int = np.nan
     center_point: list = field(default_factory=None)
@@ -536,12 +537,12 @@ class Marker:
         for bi in bi_options:
             ret, candidate_square = cv2.threshold(self.cropped_marker_gray,bi,255,cv2.THRESH_BINARY_INV) # was 127
 
-            candidate_square = self.remove_border_blobs(candidate_square)
+            candidate_square2 = self.remove_border_blobs(candidate_square)
 
-            result, min_score = self.compare_mask(candidate_square, self.directory_masks, 0.4)
+            result, min_score = self.compare_mask(candidate_square2, self.directory_masks, 0.4)
 
-            result_area = self.compare_binary_blob_areas(candidate_square, self.directory_masks, 0.3)
-            cv2.imwrite(''.join(["./fieldprism/marker2/",self.image_name.split('.')[0],"__",str(bi),"__","SC-",str(min_score),".jpg"]),candidate_square)
+            result_area = self.compare_binary_blob_areas(candidate_square2, self.directory_masks, 0.3)
+            cv2.imwrite(''.join(["./fieldprism/marker2/",self.image_name.split('.')[0],"__",str(bi),"__","SC-",str(min_score),".jpg"]),candidate_square2)
             if result and result_area:
                 # cv2.imwrite(''.join(["./fieldprism/marker/",self.image_name.split('.')[0],"__",str(bi),"__","SC-",min_score,".jpg"]),candidate_square)
                 bi_sweep.append(candidate_square)
@@ -561,7 +562,7 @@ class Marker:
             # cv2.waitKey(0)
 
             image_0 = image_0.astype(np.uint8)
-            self.cropped_marker_bi = cv2.cvtColor(image_0, cv2.COLOR_RGB2GRAY)
+            self.cropped_marker_bi = image_0#cv2.cvtColor(image_0, cv2.COLOR_RGB2GRAY)
 
             self.erode_edges(self.cropped_marker_bi,6)
             self.erode_edges(self.cropped_marker_bi,6)
@@ -619,7 +620,7 @@ class Marker:
         hypot_distances = []
         total_distances = []
         kdtree = KDTree(self.centroid_list)
-        if len(self.centroid_list) in [3, 4]: # used to be == 4:
+        if len(self.centroid_list)  == 4: #in [3, 4]: # used to be == 4:
             for c in self.centroid_list:
                 # Get the conversion factor
                 d, i = kdtree.query(c,k=2)
@@ -632,7 +633,8 @@ class Marker:
                 total_distances.append(np.sum(d_t))
                 
             mean_hypot_distance = np.mean(hypot_distances) # min vs mean ****************************************************************************************************************************************
-            self.one_cm_pixels = np.floor(np.multiply(np.divide(mean_hypot_distance,2),np.sqrt(2))) # removed np.floor
+            # self.one_cm_pixels = np.floor(np.multiply(np.divide(mean_hypot_distance,2),np.sqrt(2))) # removed np.floor
+            self.one_cm_pixels = np.multiply(np.divide(mean_hypot_distance,2),np.sqrt(2)) # removed np.floor
             self.success_conv = True
             self.success_dist = True
             print(f"{bcolors.BOLD}      Side of 1 CM square = {self.one_cm_pixels} pixels{bcolors.ENDC}")
@@ -645,8 +647,8 @@ class Marker:
             self.translate_center_point = [self.bbox[0] + self.center_point[0], self.bbox[1] + self.center_point[1]]
 
             ### if the binarization is a failure, then the center point might have drifted. If it did, then treat it as failure
-            x_wiggle = np.multiply((self.bbox[2] - self.bbox[0]), 0.25)
-            y_wiggle = np.multiply((self.bbox[3] - self.bbox[1]), 0.25)
+            x_wiggle = np.multiply((self.bbox[2] - self.bbox[0]), 0.15)
+            y_wiggle = np.multiply((self.bbox[3] - self.bbox[1]), 0.15)
             new_point_x_low = int(self.rough_center[0] -  x_wiggle)
             new_point_x_high = int(self.rough_center[0] + x_wiggle)
             new_point_y_low = int(self.rough_center[1] - y_wiggle)
@@ -655,15 +657,18 @@ class Marker:
             if ((new_point_x_low < self.translate_center_point[0]) and (new_point_x_high > self.translate_center_point[0]) and 
                 (new_point_y_low < self.translate_center_point[1]) and (new_point_y_high > self.translate_center_point[1])):
                 self.translate_center_point = self.translate_center_point
+                self.is_approx = False
             else:
                 self.translate_center_point = self.rough_center
                 self.one_cm_pixels = np.nan
+                self.is_approx = True
             print('')
             
         else:
             self.one_cm_pixels = np.nan
             self.success_conv = True
             self.success_dist = False
+            self.is_approx = True
             self.translate_center_point = self.rough_center
             print(f"{bcolors.WARNING}      Could not locate all four markers in {self.location} of image {self.image_name}{bcolors.ENDC}")
         # cv2.imshow("Image", self.cropped_marker_plot)

@@ -135,6 +135,15 @@ def process_rulers(cfg, directory_masks, image_name_jpg, all_rulers, option, rat
             print(f"{bcolors.OKCYAN}      Processing Bottom Right Marker...{bcolors.ENDC}")
             Marker_Bottom_Right = Marker(cfg, directory_masks, 'bottom_right', image_name_jpg, image, Bboxes_4.bottom_right_ind_label, Bboxes_4.bottom_right_bbox, Bboxes_4.bottom_right_center)
 
+            if Marker_Top_Left.is_approx or Marker_Top_Right.is_approx or Marker_Bottom_Left.is_approx or Marker_Bottom_Right.is_approx:
+                Marker_Top_Left.translate_center_point = Marker_Top_Left.rough_center
+                Marker_Top_Right.translate_center_point = Marker_Top_Right.rough_center
+                Marker_Bottom_Left.translate_center_point = Marker_Bottom_Left.rough_center
+                Marker_Bottom_Right.translate_center_point = Marker_Bottom_Right.rough_center
+                Marker_Top_Left.is_approx = True
+                Marker_Top_Right.is_approx = True
+                Marker_Bottom_Left.is_approx = True
+                Marker_Bottom_Right.is_approx = True
 
             use_distortion_correction, use_conversion = determine_success(Marker_Top_Left,Marker_Top_Right,Marker_Bottom_Left,Marker_Bottom_Right)
 

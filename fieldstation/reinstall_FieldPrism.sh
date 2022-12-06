@@ -32,6 +32,13 @@ then
 	# Copy desktop apps
 	sudo cp /home/pi/FieldPrism/fieldstation/desktop_app/* /home/pi/.local/share/applications
 	pcmanfm --set-wallpaper="/usr/share/rpd-wallpaper/FieldPrism_Desktop_Black.jpg"
+	# GPS
+	ls /dev/ttyUSB*
+	sudo lsusb
+	sudo systemctl stop gpsd.socket
+	sudo systemctl disable gpsd.socket
+	sudo killall gpsd
+	sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock
 	echo "FieldPrism is freshly installed and up to date!"
 else
 	echo "Cancelled. Nothing has been removed or changed."
