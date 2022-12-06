@@ -123,9 +123,9 @@ def get_gps(agps_thread, speed, do_print):
         max_count = 10
     GPS_data = GPSPacket()
 
-    # agps_thread = AGPS3mechanism()  # Instantiate AGPS3 Mechanisms
-    agps_thread.stream_data()  # From localhost (), or other hosts, by example, (host='gps.ddns.net')
-    agps_thread.run_thread()  # Throttle time to sleep after an empty lookup, default '()' 0.2 two tenths of a second
+    # # agps_thread = AGPS3mechanism()  # Instantiate AGPS3 Mechanisms
+    # agps_thread.stream_data()  # From localhost (), or other hosts, by example, (host='gps.ddns.net')
+    # agps_thread.run_thread()  # Throttle time to sleep after an empty lookup, default '()' 0.2 two tenths of a second
 
     count = 0
     count_fail = 0
@@ -167,11 +167,9 @@ def get_gps(agps_thread, speed, do_print):
             GPS_data.lon_error_est = agps_thread.data_stream.epx
             GPS_data.alt_error_est = agps_thread.data_stream.epv
             GPS_data.print_report('Pass',do_print)
-            agps_thread.stop()
         else:
             # Set the time to the R Pi's local time
             GPS_data.current_time = ''.join(['Approx-',get_datetime()])
-            agps_thread.stop()
     return GPS_data
 
 if __name__ == '__main__':
