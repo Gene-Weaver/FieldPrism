@@ -77,11 +77,11 @@ class GPSPacket:
                 print(f"{bcolors.FAIL}       Alt error estimate: {self.alt_error_est}{bcolors.ENDC}")
                 print(f"")
 
-def gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,use_data,do_print):
+def gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,use_data,do_print):
     print(f"       GPS Activated")
     if use_data:
         label_gps_status.config(text = 'GPS Activated', fg='orange')
-        GPS_data = get_gps(cfg_user['fieldstation']['gps']['speed'],do_print)
+        GPS_data = get_gps(agps_thread, cfg_user['fieldstation']['gps']['speed'],do_print)
         if GPS_data.latitude == -999:
             label_gps_status.config(text = 'No GPS Signal!', fg='red')
             label_gps_lat_status.config(text = 'Fail', fg='red')
@@ -96,7 +96,7 @@ def gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, l
             label_local_time_status.config(text = get_datetime(), fg='white') 
     else:
         label_gps_status.config(text = 'Testing GPS Signal - Failing', fg='orange')
-        GPS_data = get_gps(cfg_user['fieldstation']['gps']['speed'],do_print)
+        GPS_data = get_gps(agps_thread, cfg_user['fieldstation']['gps']['speed'],do_print)
         if GPS_data.latitude == -999:
             print('************************************************************')
             label_gps_status.config(text = 'Testing GPS Signal - Failing', fg='orange')
@@ -116,14 +116,14 @@ def update_GPS_data(data_stream, item):
     if data_stream.TPV[item] is not None:
         print(data_stream.TPV[item])
 
-def get_gps(speed,do_print):
+def get_gps(agps_thread, speed, do_print):
     if speed == 'fast':
         max_count = 3
     elif speed == 'cautious':
         max_count = 10
     GPS_data = GPSPacket()
 
-    agps_thread = AGPS3mechanism()  # Instantiate AGPS3 Mechanisms
+    # agps_thread = AGPS3mechanism()  # Instantiate AGPS3 Mechanisms
     agps_thread.stream_data()  # From localhost (), or other hosts, by example, (host='gps.ddns.net')
     agps_thread.run_thread()  # Throttle time to sleep after an empty lookup, default '()' 0.2 two tenths of a second
 
@@ -174,14 +174,15 @@ def get_gps(speed,do_print):
     return GPS_data
 
 if __name__ == '__main__':
+    agps_thread = AGPS3mechanism()  # Instantiate AGPS3 Mechanisms
     start = time.perf_counter()
-    get_gps('fast',do_print=True)
+    get_gps(agps_thread, 'fast',do_print=True)
     end = time.perf_counter()
     print(f"{bcolors.HEADER}GPS Fast: {round(end-start,5)} sec.{bcolors.ENDC}")
     print(f"")
 
     start = time.perf_counter()
-    get_gps('cautious',do_print=True)
+    get_gps(agps_thread, 'cautious',do_print=True)
     end = time.perf_counter()
     print(f"{bcolors.HEADER}GPS Cautious: {round(end-start,5)} sec.{bcolors.ENDC}")
     print(f"")
