@@ -167,10 +167,11 @@ def get_gps(agps_thread, speed, do_print):
             GPS_data.lon_error_est = agps_thread.data_stream.epx
             GPS_data.alt_error_est = agps_thread.data_stream.epv
             GPS_data.print_report('Pass',do_print)
+            agps_thread.stop()
         else:
             # Set the time to the R Pi's local time
-            GPS_data.current_time = get_datetime()
-
+            GPS_data.current_time = ''.join(['Approx-',get_datetime()])
+            agps_thread.stop()
     return GPS_data
 
 if __name__ == '__main__':
