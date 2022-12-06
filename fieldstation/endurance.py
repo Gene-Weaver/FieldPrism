@@ -384,11 +384,11 @@ def run(pipeline, root):
         label_camera_status.config(text = 'Allow ~30 seconds for GPS fix', fg='cyan')
         for i in range(0,5):
             print(f"{bcolors.WARNING}       Attempt #{i} to get GPS fix{bcolors.ENDC}")
-            GPS_data_test = gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,False,False)
+            GPS_data_test = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,False,False)
             if GPS_data_test.latitude != -999:
                 break
             time.sleep(4)
-        GPS_data_test = gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
+        GPS_data_test = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
         label_camera_status.config(text = ' Please Wait ', fg='green')
 
         if cfg.storage_present == False:
