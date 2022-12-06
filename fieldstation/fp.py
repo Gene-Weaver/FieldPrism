@@ -188,7 +188,6 @@ def run(pipeline, root):
 
     '''Start the GPS'''
     agps_thread = AGPS3mechanism()  # Instantiate AGPS3 Mechanisms
-    # agps_thread = AGPS3mechanism()  # Instantiate AGPS3 Mechanisms
     agps_thread.stream_data()  # From localhost (), or other hosts, by example, (host='gps.ddns.net')
     agps_thread.run_thread()  # Throttle time to sleep after an empty lookup, default '()' 0.2 two tenths of a second
 

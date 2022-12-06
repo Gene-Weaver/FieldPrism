@@ -136,7 +136,7 @@ def get_gps(agps_thread, speed, do_print):
         print(agps_thread.data_stream.lat)
         # line #140-ff of /usr/local/lib/python3.5/dist-packages/gps3/agps.py
         # time.sleep(0.1) # Sleep, or do other things for as long as you like.
-        if (agps_thread.data_stream.lat != 'n/a') and (len(str(agps_thread.data_stream.lat).split('.')[1]) >= 3):
+        if (agps_thread.data_stream.lat != 'n/a') and (agps_thread.data_stream.lat != '99999.0') and (len(str(agps_thread.data_stream.lat).split('.')[1]) >= 3):
             # print('YES')
             count += 1
         else:
@@ -169,11 +169,13 @@ def get_gps(agps_thread, speed, do_print):
             GPS_data.print_report('Pass',do_print)
         else:
             # Set the time to the R Pi's local time
-            GPS_data.current_time = ''.join(['Approx-',get_datetime()])
+            GPS_data.current_time = ''.join(['Approx- ',get_datetime()])
     return GPS_data
 
 if __name__ == '__main__':
     agps_thread = AGPS3mechanism()  # Instantiate AGPS3 Mechanisms
+    agps_thread.stream_data()  # From localhost (), or other hosts, by example, (host='gps.ddns.net')
+    agps_thread.run_thread()  # Throttle time to sleep after an empty lookup, default '()' 0.2 two tenths of a second
     start = time.perf_counter()
     get_gps(agps_thread, 'fast',do_print=True)
     end = time.perf_counter()
