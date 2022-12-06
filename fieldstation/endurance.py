@@ -4,6 +4,7 @@ import depthai as dai
 from threading import Thread
 import tkinter as tk
 from tkinter import Tk
+from gps3.agps3threaded import AGPS3mechanism
 from utils import bcolors, load_cfg, print_options, rotate_image_options
 from utils_gps import gps_activate, get_gps
 from utils_gui import init_ready, change_ready_ind
@@ -133,6 +134,11 @@ def run(pipeline, root):
     '''
     img_preview = cv2.imread(os.path.join(dir_root,'img/preview_window.jpg'))
     img_saved = cv2.imread(os.path.join(dir_root,'img/saved_image_window.jpg'))
+
+    '''Start the GPS'''
+    agps_thread = AGPS3mechanism()  # Instantiate AGPS3 Mechanisms
+    agps_thread.stream_data()  # From localhost (), or other hosts, by example, (host='gps.ddns.net')
+    agps_thread.run_thread()  # Throttle time to sleep after an empty lookup, default '()' 0.2 two tenths of a second
 
     '''
     Setup the GUI
@@ -447,7 +453,7 @@ def run(pipeline, root):
                     Window_Saved.update_image(cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
 
                     # Activate GPS, update GUI, and return GPS data
-                    GPS_data = gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
+                    GPS_data = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
 
                     # Write data to CSV file
                     Image = ImageData(cfg, path_to_saved, GPS_data, height, width)
@@ -468,6 +474,7 @@ def run(pipeline, root):
                 if keyboard.is_pressed(cfg_user['fieldstation']['keymap']['exit']):
                     print(f"{bcolors.HEADER}Stopping...{bcolors.ENDC}")
                     print_options()
+                    agps_thread.stop()
                     cv2.destroyAllWindows()
                     root.destroy()
                     break
@@ -483,7 +490,7 @@ def run(pipeline, root):
 
                 # elif keyboard.is_pressed(cfg_user['fieldstation']['keymap']['test_gps']):
                 #     print(f"       Testing GPS")
-                #     GPS_data_test = gps_activate(label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
+                #     GPS_data_test = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
                     
 '''
 Initialize the tkinter GUI
