@@ -20,6 +20,9 @@ then
 	sudo systemctl disable gpsd.socket
 	sudo killall gpsd
 	sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock
+	sudo lsusb
+	sudo systemctl stop gpsd.socket
+	sudo systemctl disable gpsd.socket
 	echo "FieldPrism is up to date!"
 else
 	echo "FieldPrism main directory /home/pi/FieldPrism does NOT exist. Cloning GitHub Repo..."
@@ -43,6 +46,9 @@ else
 	sudo systemctl disable gpsd.socket
 	sudo killall gpsd
 	sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock
+	sudo lsusb
+	sudo systemctl stop gpsd.socket
+	sudo systemctl disable gpsd.socket
 	echo "FieldPrism is freshly installed and to date!"
 fi
 echo ""
