@@ -97,7 +97,7 @@ def run(
         # Directories
         save_dir = increment_path(Path(project) / name, exist_ok=exist_ok)  # increment run
         (save_dir / 'Labels_Not_Corrected' if save_txt else save_dir).mkdir(parents=True, exist_ok=True)  # make dir
-    elif option == 'processing':
+    elif option == 'corrected':
         save_dir = project
         if not os.path.exists(os.path.join(project, 'Labels_Corrected')):
             os.makedirs(os.path.join(project, 'Labels_Corrected'))
@@ -161,7 +161,7 @@ def run(
 
             if option == 'distortion':
                 txt_path = str(save_dir / 'Labels_Not_Corrected' / p.stem) + ('' if dataset.mode == 'image' else f'_{frame}')  # im.txt
-            elif option == 'processing':
+            elif option == 'corrected':
                 if dataset.mode == 'image':
                     txt_path = os.path.join(os.path.join(save_dir, 'Labels_Corrected'), p.stem)
                 else:
@@ -218,7 +218,7 @@ def run(
                     #     path_image = os.path.join(save_path,'Detections_Not_Corrected',p.name)
                     #     validate_dir(os.path.join(save_path,'Detections_Not_Corrected'))
                     #     cv2.imwrite(path_image, im0)
-                    if option == 'processing':
+                    if option == 'corrected':
                         path_image = os.path.join(save_path,'Detections_Corrected',p.name)
                         validate_dir(os.path.join(save_path,'Detections_Corrected'))
                         cv2.imwrite(path_image, im0)
@@ -251,7 +251,7 @@ def run(
         if option == 'distortion':
             s = f"\n{len(list(save_dir.glob('Labels_Not_Corrected/*.txt')))} labels saved to {save_dir / 'Labels_Not_Corrected'}" if save_txt else ''
             LOGGER.info(f"Results saved to {colorstr('bold', save_dir)}{s}")
-        elif option == 'processing':
+        elif option == 'corrected':
             s = f"\n{len(os.listdir(os.path.join(save_dir, 'Labels_Corrected')))} labels saved to {os.path.join(save_dir, 'Labels_Corrected')}" if save_txt else ''
             LOGGER.info(f"Results saved to {colorstr('bold', os.path.join(save_dir, 'Labels_Corrected'))}{s}")
         

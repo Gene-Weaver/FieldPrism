@@ -133,7 +133,7 @@ def get_gps(agps_thread, speed, do_print):
     take_data = False
     
     while do_get_GPS:  
-        print(agps_thread.data_stream.lat)
+        # print(agps_thread.data_stream.lat)
         # line #140-ff of /usr/local/lib/python3.5/dist-packages/gps3/agps.py
         # time.sleep(0.1) # Sleep, or do other things for as long as you like.
         if (agps_thread.data_stream.lat != 'n/a') and (agps_thread.data_stream.lat != '99999.0') and (len(str(agps_thread.data_stream.lat).split('.')[1]) >= 3):
