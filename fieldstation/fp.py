@@ -639,5 +639,5 @@ def route():
             align_camera()
 
 if __name__ == "__main__":
-    route()
-    # start_gui()
+    # route()
+    start_gui()
