@@ -1,4 +1,4 @@
-import os, cv2
+import os, cv2, time
 import shutil
 from pathlib import Path
 import pandas as pd
@@ -20,6 +20,8 @@ def identify_and_process_markers(cfg, option, ratio, dir_images_to_process, Dirs
     
     # Loop through image dir and process each image
     n_total = len(os.listdir(dir_images_to_process))
+
+    writing_dirs = ['Detections_Corrected', 'Detections_Not_Corrected', 'Images_Corrected', 'Images_Markers_Missing', 'Images_Not_Corrected', 'Labels_Not_Corrected', 'Overlay_Corrected', 'Overlay_Not_Corrected']
 
     for index, image_name_jpg in enumerate(os.listdir(dir_images_to_process)):
         chosen_path = ''
@@ -146,6 +148,7 @@ def identify_and_process_markers(cfg, option, ratio, dir_images_to_process, Dirs
                 '''Barcodes'''
                 # Process barcodes on first pass if the image is not distortion corrected
                 # Process barcodes on second pass (corrected) if the image was corrected
+                barcodes_added = False
                 if ((option == 'corrected') or (Image_Out.location in ['path_markers_missing','path_distortion_not_corrected'])):
                     image, image_bboxes, QR_List_Pass, QR_List_Fail = process_barcodes(cfg, image_name_jpg, all_barcodes, image, image_bboxes, img_w, img_h, Dirs)
                     # Overwrite previous corrected image *if* user wants clean QR codes inserted
@@ -154,7 +157,7 @@ def identify_and_process_markers(cfg, option, ratio, dir_images_to_process, Dirs
 
 
                     # Add to vault
-                    DataVault.add_process_barcodes(QR_List_Pass, QR_List_Fail)
+                    barcodes_added = DataVault.add_process_barcodes(QR_List_Pass, QR_List_Fail)
 
 
                 # image, image_bboxes = process_barcodes(cfg, image_name_jpg, all_barcodes, image, image_bboxes, img_w, img_h, Dirs)
@@ -177,12 +180,132 @@ def identify_and_process_markers(cfg, option, ratio, dir_images_to_process, Dirs
                 chosen_path = os.path.join(dir_images_to_process, image_name_jpg)
                 image = cv2.imread(chosen_path)
                 cv2.imwrite(os.path.join(Dirs.path_markers_missing,image_name_jpg),image)
+                average_one_cm_distance = None
 
-        if average_one_cm_distance > 0:
+        if average_one_cm_distance is None:
+            print(f"{bcolors.FAIL}            Could not convert pixel distance to metric{bcolors.ENDC}")
+        elif average_one_cm_distance > 0:
             print(f"{bcolors.OKGREEN}      Pixel to Metric Conversion: {average_one_cm_distance} pixels = 1 cm.{bcolors.ENDC}")
         else:
             print(f"{bcolors.FAIL}      Could not determine pixel to metric conversion: {average_one_cm_distance} pixels = 1 cm.{bcolors.ENDC}")
-        # return average_one_cm_distance
+
+
+        # Change file names
+        if barcodes_added:
+            if cfg['fieldprism']['QR_codes']['do_rename_images']:
+                print(f"{bcolors.OKCYAN}      Renaming File...{bcolors.ENDC}")
+                dirs_to_search = os.listdir(Dirs.actual_save_dir)
+                # print(dirs_to_search)
+                for folder in dirs_to_search:
+                    if folder in writing_dirs:
+                        path_search = os.path.join(Dirs.actual_save_dir, folder)
+                        files_to_search = os.listdir(path_search)
+                        if len(files_to_search) > 0:
+                            files = [os.path.splitext(filename)[0] for filename in files_to_search]
+                            if DataVault.image_name in files:
+                                ext = os.path.splitext(files_to_search[files == DataVault.image_name])[1]
+
+                                file_to_rename = os.path.join(path_search, ''.join([DataVault.image_name, ext]))
+                                # print(file_to_rename)
+                                if not DataVault.rename_success:
+                                    if cfg['fieldprism']['QR_codes']['do_keep_original_name_if_fail']:
+                                        pass
+                                    else: 
+                                        # Rename the default string, check for increment
+                                        if DataVault.new_full_name == '':
+                                            DataVault.add_process_barcodes([],[])
+                                        
+                                        new_file_name = increment_filename(path_search, DataVault.new_full_name, ext)
+                                        new_file_name = ''.join([new_file_name, ext])
+
+                                        success_rename = rename_loop(file_to_rename, new_file_name)
+                                        # os.rename(file_to_rename, new_file_name)
+                                        print(f"{bcolors.OKCYAN}      File Renamed: Original --> {''.join([os.path.basename(os.path.normpath(path_search)), '/', DataVault.image_name, ext])} New --> {''.join([os.path.basename(os.path.normpath(path_search)), '/', new_file_name, ext])}{bcolors.ENDC}")
+                                else: # Rename with as much as we can get from the QR code
+                                    if not os.path.exists(os.path.join(path_search, ''.join([DataVault.new_full_name, ext]))):
+                                        success_rename = rename_loop(file_to_rename, os.path.join(path_search, ''.join([DataVault.new_full_name, ext])))
+                                        
+                                        # os.rename(file_to_rename, os.path.join(path_search, ''.join([DataVault.new_full_name, ext])))
+                                        print(f"{bcolors.OKCYAN}      File Renamed: Original --> {''.join([os.path.basename(os.path.normpath(path_search)), '/', DataVault.image_name, ext])} New --> {''.join([os.path.basename(os.path.normpath(path_search)), '/', DataVault.new_full_name, ext])}{bcolors.ENDC}")
+                                    else:
+                                        new_file_name = increment_filename_duplicate_barcodes(path_search, DataVault.new_full_name, ext)
+                                        new_file_name = ''.join([new_file_name, ext])
+                                        _head, tail = os.path.split(new_file_name)
+                                        success_rename = rename_loop(file_to_rename, os.path.join(path_search, new_file_name))
+                                        
+                                        # os.rename(file_to_rename, os.path.join(path_search, new_file_name))
+                                        print(f"{bcolors.OKCYAN}      File Renamed: Original --> {''.join([os.path.basename(os.path.normpath(path_search)), '/', DataVault.image_name, ext])} New --> {''.join([os.path.basename(os.path.normpath(path_search)), '/', tail])}{bcolors.ENDC}")
+                
+        # Write data to csv
+
+
+def increment_filename_duplicate_barcodes(dir_path, new_filename, ext):
+    # create a path object for the new filename
+    path_new_filename = os.path.join(dir_path, ''.join([new_filename, ext]))
+
+    # check if the new filename already exists in the directory
+    if os.path.exists(path_new_filename):
+        f_stem = new_filename.split('___DUP')[0]
+        try:
+            inc = new_filename.split('___DUP')[1]
+            inc = int(inc) + 1
+            new_filename = os.path.join(dir_path, ''.join([f_stem, '___DUP1', str(inc)]))
+        except:
+            new_filename = os.path.join(dir_path, ''.join([f_stem, '___DUP1']))
+        return increment_filename_duplicate_barcodes(dir_path, new_filename, ext)
+    else:
+        if '___' in new_filename:
+            inc = new_filename.split('___DUP')[1]
+        else:
+            f_stem = new_filename.split('___DUP')[0]
+            new_filename = os.path.join(dir_path, ''.join([f_stem, '___DUP1']))
+        
+        if os.path.exists(os.path.join(dir_path, ''.join([new_filename, ext]))):
+            f_stem = new_filename.split('___DUP')[0]
+            inc = new_filename.split('___DUP')[1]
+            inc = int(inc) + 1
+            new_filename = os.path.join(dir_path, ''.join([f_stem, '___DUP', str(inc)]))
+            return increment_filename_duplicate_barcodes(dir_path, new_filename, ext)
+
+        return new_filename
+                                
+def increment_filename(dir_path, new_filename, ext):
+    # create a path object for the new filename
+    path_new_filename = os.path.join(dir_path, ''.join([new_filename, ext]))
+
+    # check if the new filename already exists in the directory
+    if os.path.exists(path_new_filename):
+        f_stem = new_filename.split('___')[0]
+        inc = new_filename.split('___')[1]
+        inc = int(inc) + 1
+        new_filename = os.path.join(dir_path, ''.join([f_stem, '___', str(inc)]))
+        return increment_filename(dir_path, new_filename, ext)
+    else:
+        if '___' in new_filename:
+            inc = new_filename.split('___')[1]
+        else:
+            f_stem = new_filename.split('___')[0]
+            new_filename = os.path.join(dir_path, ''.join([f_stem, '___1']))
+        
+        if os.path.exists(os.path.join(dir_path, ''.join([new_filename, ext]))):
+            f_stem = new_filename.split('___')[0]
+            inc = new_filename.split('___')[1]
+            inc = int(inc) + 1
+            new_filename = os.path.join(dir_path, ''.join([f_stem, '___', str(inc)]))
+            return increment_filename(dir_path, new_filename, ext)
+
+        return new_filename
+
+def rename_loop(file_to_rename, new_name):
+    success = False
+    while not success:
+        try:
+            os.rename(file_to_rename, new_name)
+            success = True
+        except Exception as e:
+            print("rename fail...")
+            time.sleep(0.01)
+    return success
 
 
 def process_images():

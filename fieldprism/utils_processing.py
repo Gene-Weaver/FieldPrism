@@ -107,19 +107,19 @@ def remove_overlapping_predictions(priority_item, remove_item, img_w, img_h):
             bbox_priority = pybboxes.convert_bbox(bbox_priority, from_type="yolo", to_type="voc", image_size=(img_w, img_h))
             # Intersection
 
-            do_keep_ru = check_overlap(bbox_priority, bbox_remove)
+            # do_keep_ru = check_overlap(bbox_priority, bbox_remove)
 
 
-            # if (bbox_remove[0] >= bbox_priority[2]) or (bbox_remove[2]<=bbox_priority[0]) or (bbox_remove[3]<=bbox_priority[1]) or (bbox_remove[1]>=bbox_priority[3]):
-            #     continue
-            # # Completely inside of the remove bbox
-            # elif ((bbox_remove[0] <= bbox_priority[0]) and (bbox_remove[1] <= bbox_priority[1]) and (bbox_remove[2] >= bbox_priority[2])  and (bbox_remove[3] >= bbox_priority[3])):
-            #     continue
-            # # Completely surrounding the remove bbox
-            # elif ((bbox_remove[0] >= bbox_priority[0]) and (bbox_remove[1] >= bbox_priority[1]) and (bbox_remove[2] <= bbox_priority[2])  and (bbox_remove[3] <= bbox_priority[3])):
-            #     continue
-            # else:
-            #     do_keep_ru = False
+            if (bbox_remove[0] >= bbox_priority[2]) or (bbox_remove[2]<=bbox_priority[0]) or (bbox_remove[3]<=bbox_priority[1]) or (bbox_remove[1]>=bbox_priority[3]):
+                continue
+            # Completely inside of the remove bbox
+            elif ((bbox_remove[0] <= bbox_priority[0]) and (bbox_remove[1] <= bbox_priority[1]) and (bbox_remove[2] >= bbox_priority[2])  and (bbox_remove[3] >= bbox_priority[3])):
+                continue
+            # Completely surrounding the remove bbox
+            elif ((bbox_remove[0] >= bbox_priority[0]) and (bbox_remove[1] >= bbox_priority[1]) and (bbox_remove[2] <= bbox_priority[2])  and (bbox_remove[3] <= bbox_priority[3])):
+                continue
+            else:
+                do_keep_ru = False
 
         if do_keep_ru:
             keep_remove.append(remove.values)
