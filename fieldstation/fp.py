@@ -252,7 +252,7 @@ def run(pipeline, root):
         # -------------- Camera Focus Live
     frame_info_focus_live = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
     frame_info_focus_live.grid(row=1, column=0, sticky="nsew")
-    frame_info_focus_live.rowconfigure(0, minsize=60)
+    frame_info_focus_live.rowconfigure(0, minsize=30)
     frame_info_focus_live.columnconfigure([0, 1], minsize=250)
 
     label_focus_live = tk.Label(master=frame_info_focus_live, text="Live Camera Focus: ", bg="black", fg="White", font=("Calibri ", 16))
@@ -263,7 +263,7 @@ def run(pipeline, root):
     # -------------- Camera Focus Saved
     frame_info_focus_saved = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
     frame_info_focus_saved.grid(row=2, column=0, sticky="nsew")
-    frame_info_focus_saved.rowconfigure(0, minsize=60)
+    frame_info_focus_saved.rowconfigure(0, minsize=30)
     frame_info_focus_saved.columnconfigure([0, 1], minsize=250)
 
     label_focus_saved = tk.Label(master=frame_info_focus_saved, text="Prev. Image Focus: ", bg="black", fg="White", font=("Calibri ", 16))
