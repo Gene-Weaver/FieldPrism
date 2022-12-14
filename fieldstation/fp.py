@@ -112,7 +112,6 @@ Detect if image was blurry
 '''
 def detect_sharpness(sharpness_min_cutoff, img):
     # Blurry image cutoff
-    # BLURRY = cfg_user['fieldstation']['sharpness']
     blur = int(cv2.Laplacian(img, cv2.CV_64F).var())
     if blur < sharpness_min_cutoff:
         return False, blur
@@ -133,8 +132,12 @@ def save_image(save_frame, name_time, save_dir):
 '''
 Route the photo to each attached storage device. 
 '''
-def route_save_image(Setup,save_frame):
+def route_save_image(Setup, cfg_user, save_frame, is_sharp):
     name_time = str(int(time.time() * 1000))
+    if not is_sharp:
+        if cfg_user['fieldstation']['add_flag_to_blurry_images']:
+            name_time = ''.join([name_time, '__B'])
+
     if Setup.save_to_boot:
         path_to_saved = save_image(save_frame, name_time, Setup.usb_none)
     if Setup.has_1_usb:
@@ -581,9 +584,8 @@ def run(pipeline, root):
                         text_focus_live = ''.join(['Blurry - ', str(sharpness_actual)])
                         label_focus_saved_status.config(text = text_focus_live, fg='red')
 
-
                     # Save image
-                    path_to_saved = route_save_image(cfg,save_frame)
+                    path_to_saved = route_save_image(cfg, cfg_user, save_frame, is_sharp)
 
                     # Update the image in the GUI by reading the image that was just written to storage
                     Window_Saved.update_image(cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))

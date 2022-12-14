@@ -93,6 +93,10 @@
 #        rotation options below
 #      - Setting both rotations parameters to True will rotate image 270 degrees CW
 
+# ----- Sharpness ------------------------------------
+#      - cv2.Laplacian(img, cv2.CV_64F).var()
+#      - adds '__B' at the end of the jpg file name
+
 fieldstation:
     sound: 
         play_sound: True # bool |DEFAULT| True  
@@ -109,4 +113,5 @@ fieldstation:
         always_save_to_boot: False # bool |DEFAULT| False  
     gps:
         speed: 'fast' # string |DEFAULT| 'fast' FROM 'fast' OR 'cautious'
-    sharpness: 150
+    sharpness: 150 # int |DEFAULT| 150 
+    add_flag_to_blurry_images: True  # bool |DEFAULT| True  
