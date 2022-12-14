@@ -234,6 +234,10 @@ class ImageData:
     lon_error_est: float = -888
     alt_error_est: float = -888
 
+    sharpness_actual: int = -888
+    sharpness_min_cutoff: int = -888
+    is_sharp: str = ''
+
     cfg: object = field(init=False)
 
     headers: list = field(init=False,default_factory=None)
@@ -254,8 +258,8 @@ class ImageData:
         self.lon_error_est = GPS_data.lon_error_est
         self.alt_error_est = GPS_data.alt_error_est
 
-        self.blur_actual = sharpness_actual
-        self.blur_cutoff = sharpness_min_cutoff
+        self.sharpness_actual = sharpness_actual
+        self.sharpness_min_cutoff = sharpness_min_cutoff
         self.is_sharp = str(is_sharp)
 
         self.image_height = image_height
