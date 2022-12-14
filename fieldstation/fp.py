@@ -6,7 +6,7 @@ import tkinter as tk
 from tkinter import Tk
 from gps3.agps3threaded import AGPS3mechanism
 from utils import bcolors, load_cfg, print_options, rotate_image_options
-from utils_gps import gps_activate, get_gps
+from utils_gps import gps_activate, test_gps
 from utils_gui import init_ready, change_ready_ind
 from fp_align_camera  import align_camera
 from fp_classes import PreviewWindow, SaveWindow, Fragile, SetupFP, ImageData
@@ -449,9 +449,10 @@ def run(pipeline, root):
         print('Usb speed: ', device.getUsbSpeed().name)
         
         # Load configs
-        sharpness_min_cutoff = cfg_user['fieldstation']['sharpness']
+        
         cfg_user = load_cfg() # from FieldStation.yaml
         cfg = SetupFP()
+        sharpness_min_cutoff = cfg_user['fieldstation']['sharpness']
         volume_user = cfg_user['fieldstation']['sound']['volume']
         if volume_user == 'high':
             volume = 1.0
@@ -683,7 +684,7 @@ def route():
             start_gui()
         elif keyboard.is_pressed('2'):
             print("Test/Wake GPS")
-            get_gps('cautious')
+            test_gps()
         elif keyboard.is_pressed('3'):
             print("Aligning Camera")
             align_camera()

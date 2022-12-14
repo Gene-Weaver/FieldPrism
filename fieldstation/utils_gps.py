@@ -172,6 +172,24 @@ def get_gps(agps_thread, speed, do_print):
             GPS_data.current_time = ''.join(['Approx- ',get_datetime()])
     return GPS_data
 
+def test_gps():
+    agps_thread = AGPS3mechanism()  # Instantiate AGPS3 Mechanisms
+    agps_thread.stream_data()  # From localhost (), or other hosts, by example, (host='gps.ddns.net')
+    agps_thread.run_thread()  # Throttle time to sleep after an empty lookup, default '()' 0.2 two tenths of a second
+    start = time.perf_counter()
+    get_gps(agps_thread, 'fast',do_print=True)
+    end = time.perf_counter()
+    print(f"{bcolors.HEADER}GPS Fast: {round(end-start,5)} sec.{bcolors.ENDC}")
+    print(f"")
+
+    start = time.perf_counter()
+    get_gps(agps_thread, 'cautious',do_print=True)
+    end = time.perf_counter()
+    print(f"{bcolors.HEADER}GPS Cautious: {round(end-start,5)} sec.{bcolors.ENDC}")
+    print(f"")
+    print("This window will automatically close in 5 seconds...")
+    time.sleep(5)
+
 if __name__ == '__main__':
     agps_thread = AGPS3mechanism()  # Instantiate AGPS3 Mechanisms
     agps_thread.stream_data()  # From localhost (), or other hosts, by example, (host='gps.ddns.net')
