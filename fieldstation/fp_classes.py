@@ -273,7 +273,7 @@ class ImageData:
         new_data = pd.DataFrame([[self.cfg.session_time,self.cfg.name_session_csv,self.cfg.name_total_csv,
         self.filename_short,self.current_time,self.latitude,self.longitude,self.altitude,self.climb,self.speed,
         self.lat_error_est,self.lon_error_est,self.alt_error_est,
-        self.blur_actual, self.blur_cutoff,
+        self.sharpness_actual, self.sharpness_min_cutoff, self.is_sharp,
         self.filename,self.filename_ext,self.path_from_fp,self.path_to_saved,
         self.image_height, self.image_width]], columns=self.headers)
 
