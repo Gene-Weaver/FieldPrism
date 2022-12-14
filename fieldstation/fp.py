@@ -113,7 +113,7 @@ Detect if image was blurry
 def detect_sharpness(cfg_user, img):
     # Blurry image cutoff
     BLURRY = cfg_user['fieldstation']['sharpness']
-    blur = cv2.Laplacian(img, cv2.CV_64F).var()
+    blur = round(cv2.Laplacian(img, cv2.CV_64F).var(), 0)
     if blur < BLURRY:
         return False, blur
     else:
