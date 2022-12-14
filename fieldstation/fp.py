@@ -107,8 +107,17 @@ Thanks for using FieldPrism (FP) and FieldStation (FS)! Here are a few tips:
        rotation options below
      - Setting both rotations parameters to True will rotate image 270 degrees CW
 '''
-
-
+'''
+Detect if image was blurry
+'''
+def detect_sharpness(cfg_user, img):
+    # Blurry image cutoff
+    BLURRY = cfg_user['fieldstation']['sharpness']
+    blur = cv2.Laplacian(img, cv2.CV_64F).var()
+    if blur < BLURRY:
+        return False, blur
+    else:
+        return True, blur
 '''
 Save image to storage device
 '''
@@ -226,7 +235,7 @@ def run(pipeline, root):
     frame_info = tk.Frame(master=root, width = 250, bg="black")
     frame_info.grid(row=1, column=1, rowspan=3, sticky="nsew")
 
-    frame_info.rowconfigure([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], minsize=30)
+    frame_info.rowconfigure([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], minsize=30)
     frame_info.columnconfigure(0, minsize=250)
 
     # -------------- Camera status
@@ -240,9 +249,31 @@ def run(pipeline, root):
     label_camera_status = tk.Label(master=frame_info_camera, text=" Please Wait ", bg="black", fg="green", font=("Calibri", 16))
     label_camera_status.grid(row=0, column=1, sticky="w")
 
+        # -------------- Camera Focus Live
+    frame_info_focus_live = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
+    frame_info_focus_live.grid(row=1, column=0, sticky="nsew")
+    frame_info_focus_live.rowconfigure(0, minsize=60)
+    frame_info_focus_live.columnconfigure([0, 1], minsize=250)
+
+    label_focus_live = tk.Label(master=frame_info_focus_live, text="Live Camera Focus: ", bg="black", fg="White", font=("Calibri ", 16))
+    label_focus_live.grid(row=0, column=0, sticky="e")
+    label_focus_live_status = tk.Label(master=frame_info_focus_live, text="  ", bg="black", fg="green", font=("Calibri", 16))
+    label_focus_live_status.grid(row=0, column=1, sticky="w")
+
+    # -------------- Camera Focus Saved
+    frame_info_focus_saved = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
+    frame_info_focus_saved.grid(row=2, column=0, sticky="nsew")
+    frame_info_focus_saved.rowconfigure(0, minsize=60)
+    frame_info_focus_saved.columnconfigure([0, 1], minsize=250)
+
+    label_focus_saved = tk.Label(master=frame_info_focus_saved, text="Prev. Image Focus: ", bg="black", fg="White", font=("Calibri ", 16))
+    label_focus_saved.grid(row=0, column=0, sticky="e")
+    label_focus_saved_status = tk.Label(master=frame_info_focus_saved, text="  ", bg="black", fg="green", font=("Calibri", 16))
+    label_focus_saved_status.grid(row=0, column=1, sticky="w")
+
     # -------------- File name
     frame_info_fname = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
-    frame_info_fname.grid(row=1, column=0, sticky="nsew")
+    frame_info_fname.grid(row=4, column=0, sticky="nsew")
     frame_info_fname.rowconfigure(0, minsize=30)
     frame_info_fname.columnconfigure([0, 1], minsize=250)
 
@@ -253,7 +284,7 @@ def run(pipeline, root):
 
     # -------------- GPS Status
     frame_info_gps = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
-    frame_info_gps.grid(row=3, column=0, sticky="nsew")
+    frame_info_gps.grid(row=6, column=0, sticky="nsew")
     frame_info_gps.rowconfigure(0, minsize=30)
     frame_info_gps.columnconfigure([0, 1], minsize=250)
 
@@ -264,7 +295,7 @@ def run(pipeline, root):
 
     # -------------- GPS Lat
     frame_info_gps_lat = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
-    frame_info_gps_lat.grid(row=4, column=0, sticky="nsew")
+    frame_info_gps_lat.grid(row=7, column=0, sticky="nsew")
     frame_info_gps_lat.rowconfigure(0, minsize=30)
     frame_info_gps_lat.columnconfigure([0, 1], minsize=250)
 
@@ -275,7 +306,7 @@ def run(pipeline, root):
 
     # -------------- GPS Long
     frame_info_gps_lon = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
-    frame_info_gps_lon.grid(row=5, column=0, sticky="nsew")
+    frame_info_gps_lon.grid(row=8, column=0, sticky="nsew")
     frame_info_gps_lon.rowconfigure(0, minsize=30)
     frame_info_gps_lon.columnconfigure([0, 1], minsize=250)
 
@@ -286,7 +317,7 @@ def run(pipeline, root):
 
     # -------------- GPS Time (UTC)
     frame_info_gps_time = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
-    frame_info_gps_time.grid(row=6, column=0, sticky="nsew")
+    frame_info_gps_time.grid(row=9, column=0, sticky="nsew")
     frame_info_gps_time.rowconfigure(0, minsize=30)
     frame_info_gps_time.columnconfigure([0, 1], minsize=250)
 
@@ -297,7 +328,7 @@ def run(pipeline, root):
 
     # -------------- R Pi Local Time
     frame_info_local_time = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
-    frame_info_local_time.grid(row=7, column=0, sticky="nsew")
+    frame_info_local_time.grid(row=10, column=0, sticky="nsew")
     frame_info_local_time.rowconfigure(0, minsize=30)
     frame_info_local_time.columnconfigure([0, 1], minsize=250)
 
@@ -308,7 +339,7 @@ def run(pipeline, root):
 
     # -------------- CSV Total
     frame_info_total = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
-    frame_info_total.grid(row=10, column=0, sticky="nsew")
+    frame_info_total.grid(row=12, column=0, sticky="nsew")
     frame_info_total.rowconfigure(0, minsize=30)
     frame_info_total.columnconfigure([0, 1], minsize=250)
 
@@ -319,7 +350,7 @@ def run(pipeline, root):
     
     # -------------- CSV Session
     frame_info_session = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
-    frame_info_session.grid(row=11, column=0, sticky="nsew")
+    frame_info_session.grid(row=13, column=0, sticky="nsew")
     frame_info_session.rowconfigure(0, minsize=30)
     frame_info_session.columnconfigure([0, 1], minsize=250)
 
@@ -330,7 +361,7 @@ def run(pipeline, root):
 
     # -------------- CSV
     frame_info_csv = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
-    frame_info_csv.grid(row=12, column=0, sticky="nsew")
+    frame_info_csv.grid(row=14, column=0, sticky="nsew")
     frame_info_csv.rowconfigure(0, minsize=30)
     frame_info_csv.columnconfigure([0, 1], minsize=250)
 
@@ -339,9 +370,9 @@ def run(pipeline, root):
     label_csv_status = tk.Label(master=frame_info_csv, text="Waiting", bg="black", fg="white", font=("Calibri ", 16))
     label_csv_status.grid(row=0, column=1, sticky="w")
 
-    # -------------- CSV
+    # -------------- Session Image Count
     frame_info_nimage = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
-    frame_info_nimage.grid(row=14, column=0, sticky="nsew")
+    frame_info_nimage.grid(row=16, column=0, sticky="nsew")
     frame_info_nimage.rowconfigure(0, minsize=30)
     frame_info_nimage.columnconfigure([0, 1], minsize=250)
 
@@ -352,7 +383,7 @@ def run(pipeline, root):
 
     # -------------- Number of storage devices
     frame_info_ndevice = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
-    frame_info_ndevice.grid(row=16, column=0, sticky="nsew")
+    frame_info_ndevice.grid(row=18, column=0, sticky="nsew")
     frame_info_ndevice.rowconfigure(0, minsize=30)
     frame_info_ndevice.columnconfigure([0, 1], minsize=250)
 
@@ -363,7 +394,7 @@ def run(pipeline, root):
 
     # -------------- USB Speed
     frame_info_usbspeed = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
-    frame_info_usbspeed.grid(row=17, column=0, sticky="nsew")
+    frame_info_usbspeed.grid(row=19, column=0, sticky="nsew")
     frame_info_usbspeed.rowconfigure(0, minsize=30)
     frame_info_usbspeed.columnconfigure([0, 1], minsize=250)
 
@@ -372,9 +403,9 @@ def run(pipeline, root):
     label_usbspeed_status = tk.Label(master=frame_info_usbspeed, text="", bg="black", fg="white", font=("Calibri ", 16))
     label_usbspeed_status.grid(row=0, column=1, sticky="w")
 
-    # -------------- USB Speed
+    # -------------- FP version
     frame_info_version = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
-    frame_info_version.grid(row=19, column=0, sticky="nsew")
+    frame_info_version.grid(row=21, column=0, sticky="nsew")
     frame_info_version.rowconfigure(0, minsize=30)
     frame_info_version.columnconfigure([0, 1], minsize=250)
 
@@ -503,6 +534,14 @@ def run(pipeline, root):
                     # PreviewWindow(FS.frame_preview,vframe)
                     # Window_Preview.change_image(vframe)
                     Window_Preview.update_image(vframe)
+                    is_sharp, blur = detect_sharpness(cfg_user, vframe)
+                    if is_sharp:
+                        text_focus_live = ''.join(['Sharp - ', str(blur)])
+                        label_focus_live_status.config(text = text_focus_live, fg='green')
+                    else:
+                        text_focus_live = ''.join(['Blurry - ', str(blur)])
+                        label_focus_live_status.config(text = text_focus_live, fg='orange')
+
                 
                 # Get latest frame from camera full sensor
                 ispFrames = ispQueue.get()
@@ -530,6 +569,16 @@ def run(pipeline, root):
                     # Rotate Camera
                     # Can rotate 270 by setting both to True
                     save_frame = rotate_image_options(save_frame,cfg_user)
+
+                    # Check focus
+                    is_sharp, blur = detect_sharpness(cfg_user, save_frame)
+                    if is_sharp:
+                        text_focus_live = ''.join(['Sharp - ', str(blur)])
+                        label_focus_saved_status.config(text = text_focus_live, fg='green')
+                    else:
+                        text_focus_live = ''.join(['Blurry - ', str(blur)])
+                        label_focus_saved_status.config(text = text_focus_live, fg='red')
+
 
                     # Save image
                     path_to_saved = route_save_image(cfg,save_frame)
@@ -639,5 +688,5 @@ def route():
             align_camera()
 
 if __name__ == "__main__":
-    # route()
-    start_gui()
+    route()
+    # start_gui()

@@ -78,53 +78,121 @@ class File_Structure():
         validate_dir(self.path_Data)
         validate_dir(self.path_Config)
 
-def check_overlap(priority, remove):
-    px1, py1, px2, py2 = priority 
-    ix1, iy1, ix2, iy2 = remove 
-    # check if ignore is completely inside of priority 
-    if (px1 >= ix1 and px2 <= ix2) and (py1 >= iy1 and py2 <= iy2): 
-        return True 
-    # check if ignore completely surrounds priority 
-    elif (px1 < ix1 and px2 > ix2) and (py1 < iy1 and py2 > iy2): 
-        return True 
-    # check if ignore intersects with priority on x-axis 
-    elif (px1 < ix1 and px2 > ix1) or (px1 < ix2 and px2 > ix2): 
-        return True 
-    # check if ignore intersects with priority on y-axis 
-    elif (py1 < iy1 and py2 > iy1) or (py1 < iy2 and py2 > iy2): 
-        return True 
-    else: 
-        return False
 
-def remove_overlapping_predictions(priority_item, remove_item, img_w, img_h):
+
+def remove_overlapping_predictions(cfg, n_barcode_before, n_ruler_before, all_rulers, all_barcodes, img_w, img_h):
+    if cfg['fieldprism']['do_remove_overlap']:    
+        print(f"{bcolors.OKCYAN}      Removing intersecting predictions. Prioritizing class: {cfg['fieldprism']['overlap_priority']}{bcolors.ENDC}")
+        print(f"{bcolors.BOLD}            Before - number of barcodes: {n_barcode_before}{bcolors.ENDC}")
+        print(f"{bcolors.BOLD}            Before - number of rulers: {n_ruler_before}{bcolors.ENDC}")
+        if cfg['fieldprism']['overlap_priority'] == 'ruler':
+            all_rulers, all_barcodes = check_overlap(all_rulers, all_barcodes, img_w, img_h)
+        else:
+            all_barcodes, all_rulers = check_overlap(all_barcodes, all_rulers, img_w, img_h)
+        n_barcode_afer = all_barcodes.shape[0]
+        n_ruler_after = all_rulers.shape[0]
+        print(f"{bcolors.BOLD}            After - number of barcodes: {n_barcode_afer}{bcolors.ENDC}")
+        print(f"{bcolors.BOLD}            After - number of rulers: {n_ruler_after}{bcolors.ENDC}")
+    else:
+        n_barcode_afer = all_barcodes.shape[0]
+        n_ruler_after = all_rulers.shape[0]
+    return all_barcodes, all_rulers, n_barcode_afer, n_ruler_after
+
+def check_overlap(priority_item, remove_item, img_w, img_h):
     keep_remove = []
     for i_r, remove in remove_item.iterrows(): 
         do_keep_ru = True
         bbox_remove = (remove[1], remove[2], remove[3], remove[4])
         bbox_remove = pybboxes.convert_bbox(bbox_remove, from_type="yolo", to_type="voc", image_size=(img_w, img_h))
+        intersect_count = 0
         for i_bc, priority in priority_item.iterrows(): 
             bbox_priority = (priority[1], priority[2], priority[3], priority[4])
             bbox_priority = pybboxes.convert_bbox(bbox_priority, from_type="yolo", to_type="voc", image_size=(img_w, img_h))
             # Intersection
 
-            # do_keep_ru = check_overlap(bbox_priority, bbox_remove)
+            do_keep_ru = check_overlap_conditions(bbox_priority, bbox_remove)
+            if not do_keep_ru:
+                intersect_count += 1
 
 
-            if (bbox_remove[0] >= bbox_priority[2]) or (bbox_remove[2]<=bbox_priority[0]) or (bbox_remove[3]<=bbox_priority[1]) or (bbox_remove[1]>=bbox_priority[3]):
-                continue
-            # Completely inside of the remove bbox
-            elif ((bbox_remove[0] <= bbox_priority[0]) and (bbox_remove[1] <= bbox_priority[1]) and (bbox_remove[2] >= bbox_priority[2])  and (bbox_remove[3] >= bbox_priority[3])):
-                continue
-            # Completely surrounding the remove bbox
-            elif ((bbox_remove[0] >= bbox_priority[0]) and (bbox_remove[1] >= bbox_priority[1]) and (bbox_remove[2] <= bbox_priority[2])  and (bbox_remove[3] <= bbox_priority[3])):
-                continue
-            else:
-                do_keep_ru = False
+            # if (bbox_remove[0] >= bbox_priority[2]) or (bbox_remove[2]<=bbox_priority[0]) or (bbox_remove[3]<=bbox_priority[1]) or (bbox_remove[1]>=bbox_priority[3]):
+            #     continue
+            # # Completely inside of the remove bbox
+            # elif ((bbox_remove[0] <= bbox_priority[0]) and (bbox_remove[1] <= bbox_priority[1]) and (bbox_remove[2] >= bbox_priority[2])  and (bbox_remove[3] >= bbox_priority[3])):
+            #     continue
+            # # Completely surrounding the remove bbox
+            # elif ((bbox_remove[0] >= bbox_priority[0]) and (bbox_remove[1] >= bbox_priority[1]) and (bbox_remove[2] <= bbox_priority[2])  and (bbox_remove[3] <= bbox_priority[3])):
+            #     continue
+            # else:
+            #     do_keep_ru = False
 
-        if do_keep_ru:
+        if intersect_count == 0:
             keep_remove.append(remove.values)
     remove_item = pd.DataFrame(keep_remove)
     return priority_item, remove_item
+
+def get_iou(a, b, epsilon=1e-7):
+    # COORDINATES OF THE INTERSECTION BOX
+    x1 = max(a[0], b[0])
+    y1 = max(a[1], b[1])
+    x2 = min(a[2], b[2])
+    y2 = min(a[3], b[3])
+
+    # AREA OF OVERLAP - Area where the boxes intersect
+    width = (x2 - x1)
+    height = (y2 - y1)
+    # handle case where there is NO overlap
+    if (width<0) or (height <0):
+        return True, 0.0
+    area_overlap = width * height
+
+    # COMBINED AREA
+    area_a = (a[2] - a[0]) * (a[3] - a[1])
+    area_b = (b[2] - b[0]) * (b[3] - b[1])
+    area_combined = area_a + area_b - area_overlap
+
+    # RATIO OF AREA OF OVERLAP OVER COMBINED AREA
+    iou = area_overlap / (area_combined+epsilon)
+    # if iou > 1e-6:
+    do_keep = False
+    # else:
+        # do_keep = True
+    return do_keep, iou
+
+def check_overlap_conditions(priority, ignore):
+    px1, py1, px2, py2 = priority 
+    ix1, iy1, ix2, iy2 = ignore 
+    # check if ignore is completely inside of priority 
+    if ((px1 <= ix1) and (py1 <= iy1)) and ((px2 >= ix2) and (py2 >= iy2)):
+        print('            -> ignore is inside priority')
+        return False 
+    # check if ignore completely surrounds priority 
+    elif ((px1 >= ix1) and (py1 >= iy1)) and ((px2 <= ix2) and (py2 <= iy2)):
+        print('            -> ignore surrounds priority')
+        return False 
+    
+    else: 
+        do_keep_ru, iou = get_iou(priority, ignore, epsilon=1e-7)
+        if do_keep_ru:
+            return True
+        else:
+            print('            -> ignore intersects priority')
+            return False
+
+
+    # if (px1 >= ix1 and px2 <= ix2) and (py1 >= iy1 and py2 <= iy2): 
+    #     return True 
+    # # check if ignore completely surrounds priority 
+    # elif (px1 < ix1 and px2 > ix2) and (py1 < iy1 and py2 > iy2): 
+    #     return True 
+    # # check if ignore intersects with priority on x-axis 
+    # elif (px1 < ix1 and px2 > ix1) or (px1 < ix2 and px2 > ix2): 
+    #     return True 
+    # # check if ignore intersects with priority on y-axis 
+    # elif (py1 < iy1 and py2 > iy1) or (py1 < iy2 and py2 > iy2): 
+    #     return True 
+    # else: 
+    #     return False
 
 ''' Rotate image, has 180 option, works with pytorch tensor images too '''
 def make_image_vertical(image, h, w, do_rotate_180):
@@ -153,12 +221,13 @@ def make_images_in_dir_vertical(dir_images_unprocessed):
     n_rotate = 0
     n_total = len(os.listdir(dir_images_unprocessed))
     for image_name_jpg in tqdm(os.listdir(dir_images_unprocessed), desc=f'{bcolors.HEADER}Checking Image Dimensions{bcolors.ENDC}',colour="cyan",position=0,total = n_total):
-        image = cv2.imread(os.path.join(dir_images_unprocessed, image_name_jpg))
-        h, w, img_c = image.shape
-        image, img_h, img_w, did_rotate = make_image_vertical(image, h, w, do_rotate_180=False)
-        if did_rotate:
-            n_rotate += 1
-        cv2.imwrite(os.path.join(dir_images_unprocessed,image_name_jpg), image)
+        if image_name_jpg.endswith((".jpg",".JPG",".jpeg",".JPEG")):
+            image = cv2.imread(os.path.join(dir_images_unprocessed, image_name_jpg))
+            h, w, img_c = image.shape
+            image, img_h, img_w, did_rotate = make_image_vertical(image, h, w, do_rotate_180=False)
+            if did_rotate:
+                n_rotate += 1
+            cv2.imwrite(os.path.join(dir_images_unprocessed,image_name_jpg), image)
     print(f"{bcolors.BOLD}Number of Images Rotated: {n_rotate}{bcolors.ENDC}")
 
 def rotate_image_90_ccw(image):
@@ -342,9 +411,37 @@ def deskew(cvImage):
     return rotate_image(cvImage, -1.0 * angle)
 
 
+if __name__ == '__main__':
+    # test case 1: ignore surrounds priority
+    print('ignore surrounds')
+    ignore = (1,1,10,10)
+    priority = (2,2,6,6)
+    _ = check_overlap_conditions(priority, ignore)
 
+    # test case 2: ignore is inside priority
+    print('ignore is inside')
+    priority = (1,1,10,10)
+    ignore = (2,2,6,6)
+    _ = check_overlap_conditions(priority, ignore)
 
-# if __name__ == '__main__':
+    # test case 3: ignore intersects with priority on the x axis
+    print('ignore intersects with priority on the x axis')
+    ignore = (5,3,10,10)
+    priority = (2,2,6,6)
+    _ = check_overlap_conditions(priority, ignore)
+
+    # test case 4: ignore intersects with priority on the y axis
+    print('ignore intersects with priority on the y axis')
+    ignore = (1,5,10,10)
+    priority = (2,2,6,6)
+    _ = check_overlap_conditions(priority, ignore)
+
+    # test case 5: no overlap
+    print('no overlap')
+    ignore = (12,12,14,14)
+    priority = (2,2,6,6)
+    _ = check_overlap_conditions(priority, ignore)
+
 #     dir_images_unprocessed= 'D:\Dropbox\LM2_Env\Image_Datasets\FieldPrism_Training_Images\FieldPrism_Training_Outside'
 #     make_images_in_dir_vertical(dir_images_unprocessed)
 #     dir_images_unprocessed= 'D:\Dropbox\LM2_Env\Image_Datasets\FieldPrism_Training_Images\FieldPrism_Training_Sheets'

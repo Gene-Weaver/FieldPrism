@@ -109,3 +109,4 @@ fieldstation:
         always_save_to_boot: False # bool |DEFAULT| False  
     gps:
         speed: 'fast' # string |DEFAULT| 'fast' FROM 'fast' OR 'cautious'
+    sharpness: 5
