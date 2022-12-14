@@ -110,11 +110,11 @@ Thanks for using FieldPrism (FP) and FieldStation (FS)! Here are a few tips:
 '''
 Detect if image was blurry
 '''
-def detect_sharpness(cfg_user, img):
+def detect_sharpness(sharpness_min_cutoff, img):
     # Blurry image cutoff
-    BLURRY = cfg_user['fieldstation']['sharpness']
+    # BLURRY = cfg_user['fieldstation']['sharpness']
     blur = round(cv2.Laplacian(img, cv2.CV_64F).var(), 0)
-    if blur < BLURRY:
+    if blur < sharpness_min_cutoff:
         return False, blur
     else:
         return True, blur
@@ -449,6 +449,7 @@ def run(pipeline, root):
         print('Usb speed: ', device.getUsbSpeed().name)
         
         # Load configs
+        sharpness_min_cutoff = cfg_user['fieldstation']['sharpness']
         cfg_user = load_cfg() # from FieldStation.yaml
         cfg = SetupFP()
         volume_user = cfg_user['fieldstation']['sound']['volume']
@@ -534,8 +535,8 @@ def run(pipeline, root):
                     # PreviewWindow(FS.frame_preview,vframe)
                     # Window_Preview.change_image(vframe)
                     Window_Preview.update_image(vframe)
-                    is_sharp, blur = detect_sharpness(cfg_user, vframe)
-                    if is_sharp:
+                    is_sharp_live, blur = detect_sharpness(sharpness_min_cutoff, vframe)
+                    if is_sharp_live:
                         text_focus_live = ''.join(['Sharp - ', str(blur)])
                         label_focus_live_status.config(text = text_focus_live, fg='green')
                     else:
@@ -571,12 +572,12 @@ def run(pipeline, root):
                     save_frame = rotate_image_options(save_frame,cfg_user)
 
                     # Check focus
-                    is_sharp, blur = detect_sharpness(cfg_user, save_frame)
+                    is_sharp, sharpness_actual = detect_sharpness(sharpness_min_cutoff, save_frame)
                     if is_sharp:
-                        text_focus_live = ''.join(['Sharp - ', str(blur)])
+                        text_focus_live = ''.join(['Sharp - ', str(sharpness_actual)])
                         label_focus_saved_status.config(text = text_focus_live, fg='green')
                     else:
-                        text_focus_live = ''.join(['Blurry - ', str(blur)])
+                        text_focus_live = ''.join(['Blurry - ', str(sharpness_actual)])
                         label_focus_saved_status.config(text = text_focus_live, fg='red')
 
 
@@ -590,7 +591,7 @@ def run(pipeline, root):
                     GPS_data = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
 
                     # Write data to CSV file
-                    Image = ImageData(cfg, path_to_saved, GPS_data, height, width)
+                    Image = ImageData(cfg, path_to_saved, GPS_data, height, width, sharpness_actual, sharpness_min_cutoff, is_sharp)
 
                     # Print status
                     label_csv_status.config(text = 'Added 1 Row to CSV', fg='green')
