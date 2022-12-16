@@ -1,18 +1,6 @@
 #!/usr/bin/env python3
 import tkinter as tk
 
-# def button_photo():
-#     global TAKE_PHOTO
-#     TAKE_PHOTO = True
-
-# def button_gps():
-#     global TAKE_GPS
-#     TAKE_GPS = True
-
-# def button_exit():
-#     global TAKE_EXIT
-#     TAKE_EXIT = True
-
 '''
 Configure the GUI
 '''

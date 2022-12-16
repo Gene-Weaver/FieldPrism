@@ -111,6 +111,52 @@ Thanks for using FieldPrism (FP) and FieldStation (FS)! Here are a few tips:
 '''
 Detect if image was blurry
 '''
+def startup(dir_root, device, agps_thread, label_total_status, label_session_status, label_ndevice_status, label_usbspeed_status, label_camera_status, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status):
+    print('Connected cameras: ', device.getConnectedCameras())
+    print('Usb speed: ', device.getUsbSpeed().name)
+    
+    # Load configs
+    
+    cfg_user = load_cfg() # from FieldStation.yaml
+    cfg = SetupFP()
+    sharpness_min_cutoff = cfg_user['fieldstation']['sharpness']
+    '''
+    Start the sound
+    '''
+    Sound = Sounds(dir_root, cfg_user)
+
+    # Update USB Speed
+    if device.getUsbSpeed().name == 'HIGH':
+        label_usbspeed_status.config(text = str(device.getUsbSpeed().name), fg='green2')
+    else:
+        label_usbspeed_status.config(text = str(device.getUsbSpeed().name), fg='red')
+
+    # Update device count 
+    if cfg.device_count > 0:
+        label_ndevice_status.config(text = str(cfg.device_count), fg='green2')
+    else:
+        label_ndevice_status.config(text = str(cfg.device_count), fg='red')
+
+    # Update Total CSV
+    label_total_status.config(text = str(cfg.name_total_csv), fg='white')
+
+    # Update Session ID
+    label_session_status.config(text = str(cfg.name_session_csv), fg='white')
+
+    label_camera_status.config(text = 'Allow ~30 seconds for GPS fix', fg='cyan')
+    n_attempts_on_startup = abs(int(cfg_user['fieldstation']['gps']['n_attempts_on_startup']))
+    sec_pause_between_attempts_on_startup = abs(int(cfg_user['fieldstation']['gps']['n_attempts_on_startup']))
+    for i in range(0,n_attempts_on_startup):
+        print(f"{bcolors.WARNING}       Attempt #{i} to get GPS fix{bcolors.ENDC}")
+        GPS_data_test = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,False,False)
+        if GPS_data_test.latitude != -999:
+            break
+        time.sleep(sec_pause_between_attempts_on_startup)
+    GPS_data_test = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
+    label_camera_status.config(text = ' Please Wait ', fg='green2')
+
+    return cfg, cfg_user, Sound, sharpness_min_cutoff
+
 def detect_sharpness(sharpness_min_cutoff, img):
     # Blurry image cutoff
     blur = int(cv2.Laplacian(img, cv2.CV_64F).var())
@@ -118,6 +164,35 @@ def detect_sharpness(sharpness_min_cutoff, img):
         return False, blur
     else:
         return True, blur
+
+def report_sharpness(label_focus_saved_status, is_sharp, sharpness_min_cutoff, sharpness_actual):
+    if is_sharp:
+        text_focus_live = ''.join(['(',str(sharpness_min_cutoff),')',' Sharp - ', str(sharpness_actual)])
+        label_focus_saved_status.config(text = text_focus_live, fg='green2')
+    else:
+        text_focus_live = ''.join(['(',str(sharpness_min_cutoff),')',' Blurry - ', str(sharpness_actual)])
+        label_focus_saved_status.config(text = text_focus_live, fg='red')
+
+def report_camera_activated(cfg_user, label_camera_status, images_this_session, Sound):
+    print(f"       Camera Activated")
+    # Play sound
+    if cfg_user['fieldstation']['sound']['play_sound']:
+        sound_taking_photo(Sound)
+    # Print status
+    print(f"       Capturing Image")
+    label_camera_status.config(text = 'Capturing Image...', fg='goldenrod')
+    images_this_session += 1
+    return images_this_session
+
+def report_camera_complete(cfg_user, Image, images_this_session, label_csv_status, label_camera_status, label_fname_status, label_nimage_status, Sound):
+    label_csv_status.config(text = 'Added 1 Row to CSV', fg='green2')
+    label_camera_status.config(text = 'Ready!', fg='green2')
+    label_fname_status.config(text = Image.filename)
+    label_nimage_status.config(text = str(images_this_session))
+    print(f"{bcolors.OKGREEN}Ready{bcolors.ENDC}")
+    if cfg_user['fieldstation']['sound']['play_sound']:
+        sound_photo_complete(Sound)
+
 '''
 Save image to storage device
 '''
@@ -155,7 +230,7 @@ def route_save_image(Setup, cfg_user, save_frame, is_sharp):
         path_to_saved = save_image(save_frame, name_time, Setup.usb_6)
     return path_to_saved
 '''
-Botton callbacks
+Button callbacks
 '''
 def command_exit(cfg_user, Sound, agps_thread, root):
     if cfg_user['fieldstation']['sound']['play_sound']:
@@ -278,49 +353,11 @@ def run(pipeline, root):
         Fragile class allows the whole pipeline and GUI to terminate on exit keypress
     '''
     with Fragile(dai.Device(pipeline)) as device:
-        print('Connected cameras: ', device.getConnectedCameras())
-        print('Usb speed: ', device.getUsbSpeed().name)
-        
-        # Load configs
-        
-        cfg_user = load_cfg() # from FieldStation.yaml
-        cfg = SetupFP()
-        sharpness_min_cutoff = cfg_user['fieldstation']['sharpness']
-        '''
-        Start the sound
-        '''
-        Sound = Sounds(dir_root, cfg_user)
-
-        # Update USB Speed
-        if device.getUsbSpeed().name == 'HIGH':
-            label_usbspeed_status.config(text = str(device.getUsbSpeed().name), fg='green2')
-        else:
-            label_usbspeed_status.config(text = str(device.getUsbSpeed().name), fg='red')
-
-        # Update device count 
-        if cfg.device_count > 0:
-            label_ndevice_status.config(text = str(cfg.device_count), fg='green2')
-        else:
-            label_ndevice_status.config(text = str(cfg.device_count), fg='red')
-
-        # Update Total CSV
-        label_total_status.config(text = str(cfg.name_total_csv), fg='white')
-
-        # Update Session ID
-        label_session_status.config(text = str(cfg.name_session_csv), fg='white')
-
         # Test GPS, takes 34 seconds to wake, try to get signal 
-        label_camera_status.config(text = 'Allow ~30 seconds for GPS fix', fg='cyan')
-        n_attempts_on_startup = abs(int(cfg_user['fieldstation']['gps']['n_attempts_on_startup']))
-        sec_pause_between_attempts_on_startup = abs(int(cfg_user['fieldstation']['gps']['n_attempts_on_startup']))
-        for i in range(0,n_attempts_on_startup):
-            print(f"{bcolors.WARNING}       Attempt #{i} to get GPS fix{bcolors.ENDC}")
-            GPS_data_test = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,False,False)
-            if GPS_data_test.latitude != -999:
-                break
-            time.sleep(sec_pause_between_attempts_on_startup)
-        GPS_data_test = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
-        label_camera_status.config(text = ' Please Wait ', fg='green2')
+        cfg, cfg_user, Sound, sharpness_min_cutoff = startup(dir_root, device, agps_thread, label_total_status,
+                                                            label_session_status, label_ndevice_status, label_usbspeed_status,
+                                                            label_camera_status, label_gps_status, label_gps_lat_status, label_gps_lon_status, 
+                                                            label_local_time_status, label_gps_time_status)     
 
         '''
         If USB storage is not present, quit
@@ -358,12 +395,7 @@ def run(pipeline, root):
                     # Window_Preview.change_image(vframe)
                     Window_Preview.update_image(vframe)
                     is_sharp_live, blur = detect_sharpness(sharpness_min_cutoff, vframe)
-                    if is_sharp_live:
-                        text_focus_live = ''.join(['(',str(sharpness_min_cutoff),')',' Sharp  - ', str(blur)])
-                        label_focus_live_status.config(text = text_focus_live, fg='green2')
-                    else:
-                        text_focus_live = ''.join(['(',str(sharpness_min_cutoff),')',' Blurry - ', str(blur)])
-                        label_focus_live_status.config(text = text_focus_live, fg='goldenrod')
+                    report_sharpness(label_focus_saved_status, is_sharp, sharpness_min_cutoff, sharpness_actual)
 
                 # Get latest frame from camera full sensor
                 ispFrames = ispQueue.get()
@@ -374,14 +406,8 @@ def run(pipeline, root):
                     # Print status
                     label_camera_status.config(text = 'Camera Activated...', fg='goldenrod')
                     label_csv_status.config(text = 'Collecting Data', fg='goldenrod')
-                    print(f"       Camera Activated")
-                    # Play sound
-                    if cfg_user['fieldstation']['sound']['play_sound']:
-                        sound_taking_photo(Sound)
-                    # Print status
-                    print(f"       Capturing Image")
-                    label_camera_status.config(text = 'Capturing Image...', fg='goldenrod')
-                    images_this_session += 1
+                    
+                    images_this_session = report_camera_activated(cfg_user, label_camera_status, images_this_session, Sound)
 
                     # Get latest frame
                     ispFrames = ispQueue.get()
@@ -397,12 +423,7 @@ def run(pipeline, root):
 
                     # Check focus
                     is_sharp, sharpness_actual = detect_sharpness(sharpness_min_cutoff, save_frame)
-                    if is_sharp:
-                        text_focus_live = ''.join(['(',str(sharpness_min_cutoff),')',' Sharp - ', str(sharpness_actual)])
-                        label_focus_saved_status.config(text = text_focus_live, fg='green2')
-                    else:
-                        text_focus_live = ''.join(['(',str(sharpness_min_cutoff),')',' Blurry - ', str(sharpness_actual)])
-                        label_focus_saved_status.config(text = text_focus_live, fg='red')
+                    report_sharpness(label_focus_saved_status, is_sharp, sharpness_min_cutoff, sharpness_actual)
 
                     # Save image
                     path_to_saved = route_save_image(cfg, cfg_user, save_frame, is_sharp)
@@ -417,13 +438,7 @@ def run(pipeline, root):
                     Image = ImageData(cfg, path_to_saved, GPS_data, height, width, sharpness_actual, sharpness_min_cutoff, is_sharp)
 
                     # Print status
-                    label_csv_status.config(text = 'Added 1 Row to CSV', fg='green2')
-                    label_camera_status.config(text = 'Ready!', fg='green2')
-                    label_fname_status.config(text = Image.filename)
-                    label_nimage_status.config(text = str(images_this_session))
-                    print(f"{bcolors.OKGREEN}Ready{bcolors.ENDC}")
-                    if cfg_user['fieldstation']['sound']['play_sound']:
-                        sound_photo_complete(Sound)
+                    report_camera_complete(cfg_user, Image, images_this_session, label_csv_status, label_camera_status, label_fname_status, label_nimage_status, Sound)
 
                     # Reset TAKE_PHOTO
                     TAKE_PHOTO = False
