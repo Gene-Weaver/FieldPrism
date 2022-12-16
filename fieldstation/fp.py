@@ -214,7 +214,7 @@ def run(pipeline, root):
     '''
     Setup the GUI
     '''
-    root.rowconfigure([0, 1, 2, 3], minsize=30)
+    root.rowconfigure([0, 1, 2, 3, 4], minsize=30)
     root.columnconfigure([0, 1], minsize=100)
 
     # -------------- Camera Preview Window (Check Camera Focus)
@@ -228,6 +228,22 @@ def run(pipeline, root):
     label_saved.grid(row=2, column=0, sticky="nsew")
     frame_saved = tk.Frame(master=root, height=380, bg="black")
     frame_saved.grid(row=3, column=0, sticky="nsew")
+    
+    # -------------- Buttons
+    # frame
+    frame_button = tk.Frame(master=root, height = 60, bg="black")
+    frame_button.grid(row=4, column=0, sticky="nsew")
+    
+    frame_button.rowconfigure(0, minsize=60)
+    frame_button.columnconfigure([0, 1, 2], minsize=200)
+
+    b_photo = tk.Button(master=frame_button, text = "PHOTO")
+    b_gps = tk.Button(master=frame_button, text = "GPS")
+    b_exit = tk.Button(master=frame_button, text = "QUIT")
+
+    b_exit.grid(row=0, column=0, sticky="nsew", minsize=60, font=("Arial", 20), bg="maroon", fg="white")
+    b_gps.grid(row=0, column=1, sticky="nsew", minsize=60, font=("Arial", 20), bg="deep sky blue", fg="black")
+    b_photo.grid(row=0, column=2, sticky="nsew", minsize=60, font=("Arial", 20), bg="green2", fg="black")
 
     # -------------- Info header
     label_top_info = tk.Label(master=root, text="Info", bg="black", fg="white", font=("Arial", 20))
