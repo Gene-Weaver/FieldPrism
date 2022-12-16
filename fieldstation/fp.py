@@ -394,7 +394,7 @@ def run(pipeline, root):
                     # PreviewWindow(FS.frame_preview,vframe)
                     # Window_Preview.change_image(vframe)
                     Window_Preview.update_image(vframe)
-                    is_sharp_live, blur = detect_sharpness(sharpness_min_cutoff, vframe)
+                    is_sharp, blur = detect_sharpness(sharpness_min_cutoff, vframe)
                     report_sharpness(label_focus_saved_status, is_sharp, sharpness_min_cutoff, sharpness_actual)
 
                 # Get latest frame from camera full sensor
