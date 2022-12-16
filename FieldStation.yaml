@@ -106,7 +106,6 @@ fieldstation:
         photo: '1'
         test_gps: '2'
         align_camera: '3'
-        # redo: '4' # not supported yet
         exit: '6'
     rotate_camera_180: True # bool |DEFAULT| True  
     rotate_camera_90_clockwise: False # bool |DEFAULT| False  
@@ -114,5 +113,7 @@ fieldstation:
         always_save_to_boot: False # bool |DEFAULT| False  
     gps:
         speed: 'fast' # string |DEFAULT| 'fast' FROM 'fast' OR 'cautious'
+        n_attempts_on_startup: 1 # int |DEFAULT| 5
+        sec_pause_between_attempts_on_startup: 0 # int |DEFAULT| 4
     sharpness: 150 # int |DEFAULT| 150 
     add_flag_to_blurry_images: True  # bool |DEFAULT| True  

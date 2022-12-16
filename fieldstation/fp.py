@@ -132,6 +132,17 @@ def save_image(save_frame, name_time, save_dir):
     print(f"{bcolors.OKGREEN}       Image Saved: {path_to_saved}{bcolors.ENDC}")    
     return path_to_saved
 
+def set_volumne(cfg_user):
+    volume_user = cfg_user['fieldstation']['sound']['volume']
+    if volume_user == 'high':
+        volume = 1.0
+    elif volume_user == 'mid':
+        volume = 0.50
+    elif volume_user == 'low':
+        volume = 0.20
+    else:
+        volume = 0.50
+    return volume
 '''
 Route the photo to each attached storage device. 
 '''
@@ -529,15 +540,7 @@ def run(pipeline, root):
         cfg_user = load_cfg() # from FieldStation.yaml
         cfg = SetupFP()
         sharpness_min_cutoff = cfg_user['fieldstation']['sharpness']
-        volume_user = cfg_user['fieldstation']['sound']['volume']
-        if volume_user == 'high':
-            volume = 1.0
-        elif volume_user == 'mid':
-            volume = 0.50
-        elif volume_user == 'low':
-            volume = 0.20
-        else:
-            volume = 0.50
+        volume = set_volumne(cfg_user)
 
         # Update USB Speed
         if device.getUsbSpeed().name == 'HIGH':
@@ -559,12 +562,14 @@ def run(pipeline, root):
 
         # Test GPS, takes 34 seconds to wake, try to get signal 
         label_camera_status.config(text = 'Allow ~30 seconds for GPS fix', fg='cyan')
-        for i in range(0,5):
+        n_attempts_on_startup = abs(int(cfg_user['fieldstation']['gps']['n_attempts_on_startup']))
+        sec_pause_between_attempts_on_startup = abs(int(cfg_user['fieldstation']['gps']['n_attempts_on_startup']))
+        for i in range(0,n_attempts_on_startup):
             print(f"{bcolors.WARNING}       Attempt #{i} to get GPS fix{bcolors.ENDC}")
             GPS_data_test = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,False,False)
             if GPS_data_test.latitude != -999:
                 break
-            time.sleep(4)
+            time.sleep(sec_pause_between_attempts_on_startup)
         GPS_data_test = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
         label_camera_status.config(text = ' Please Wait ', fg='green2')
 
@@ -596,18 +601,10 @@ def run(pipeline, root):
                 pygame.mixer.Sound.play(sound_init).set_volume(volume)
             # Data collection / imaging loop, exit on keypress, using Fragile class
             while True:
-                # b_photo = tk.Button(master=frame_button, command = lambda: command_photo(label_camera_status, label_csv_status),
-                #     text = "PHOTO", font=("Arial", 20), bg="green4", fg="black", activebackground="green2")
-                # b_gps = tk.Button(master=frame_button, command = lambda: command_gps(cfg_user, agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, sound_leave, volume, sound_init),
-                #     text = "GPS", font=("Arial", 20), bg="medium blue", fg="black", activebackground="deep sky blue")
-                # b_exit = tk.Button(master=frame_button, command = lambda: command_exit(cfg_user, sound_leave, volume, agps_thread, root), 
-                #     text = "QUIT", font=("Arial", 20), bg="maroon", fg="white", activebackground="red")
-
                 # Update "Ready" each loop
                 text_ready, ind_ready, direction = change_ready_ind(ind_ready,direction)
                 label_camera_status.config(text = text_ready, fg='green2')
                 
-
                 # Get latest frame from camera video feed (center crop)
                 vidFrames = videoQueue.tryGetAll()
                 for vidFrame in vidFrames:
@@ -625,7 +622,6 @@ def run(pipeline, root):
                         text_focus_live = ''.join(['(',str(sharpness_min_cutoff),')',' Blurry - ', str(blur)])
                         label_focus_live_status.config(text = text_focus_live, fg='goldenrod')
 
-                
                 # Get latest frame from camera full sensor
                 ispFrames = ispQueue.get()
                 isp = ispFrames.getCvFrame()
@@ -643,7 +639,6 @@ def run(pipeline, root):
                     print(f"       Capturing Image")
                     label_camera_status.config(text = 'Capturing Image...', fg='goldenrod')
                     images_this_session += 1
-
 
                     # Get latest frame
                     ispFrames = ispQueue.get()
