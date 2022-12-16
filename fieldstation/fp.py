@@ -153,7 +153,49 @@ def route_save_image(Setup, cfg_user, save_frame, is_sharp):
     if Setup.has_6_usb:
         path_to_saved = save_image(save_frame, name_time, Setup.usb_6)
     return path_to_saved
+'''
+Botton callbacks
+'''
+def command_exit(cfg_user, sound_leave, volume, agps_thread, root):
+    if cfg_user['fieldstation']['sound']['play_sound']:
+        pygame.mixer.Sound.play(sound_leave).set_volume(volume)
+        time.sleep(.5)
+        pygame.mixer.Sound.play(sound_leave).set_volume(volume)
+        time.sleep(.5)
+        pygame.mixer.Sound.play(sound_leave).set_volume(volume)
+        time.sleep(.5)
+        pygame.mixer.Sound.play(sound_leave).set_volume(volume)
+        time.sleep(.5)
+    print(f"{bcolors.HEADER}Stopping...{bcolors.ENDC}")
+    print_options()
+    agps_thread.stop()
+    cv2.destroyAllWindows()
+    root.destroy()
 
+def command_photo(label_camera_status, label_csv_status):
+    TAKE_PHOTO = True
+    # Print status
+    label_camera_status.config(text = 'Camera Activated...', fg='orange')
+    label_csv_status.config(text = 'Collecting Data', fg='orange')
+    print(f"       Camera Activated")
+    return TAKE_PHOTO, label_camera_status, label_csv_status
+
+def command_gps(cfg_user, agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, sound_leave, volume, sound_init):
+    print(f"       Testing GPS")
+    GPS_data_test = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
+    if cfg_user['fieldstation']['sound']['play_sound']:
+        if GPS_data_test.latitude == -999:
+            pygame.mixer.Sound.play(sound_leave).set_volume(volume)
+            time.sleep(.5)
+            pygame.mixer.Sound.play(sound_leave).set_volume(volume)
+            time.sleep(.5)
+            pygame.mixer.Sound.play(sound_leave).set_volume(volume)
+            time.sleep(.5)
+            pygame.mixer.Sound.play(sound_leave).set_volume(volume)
+        else:
+            pygame.mixer.Sound.play(sound_init).set_volume(volume)
+            time.sleep(0.75)
+            pygame.mixer.Sound.play(sound_init).set_volume(volume)
 '''
 Creates the pipeline that the OAK camera requires
     THE_12_MP allows us to use the full sensor of the OAK-1 camera
@@ -237,9 +279,9 @@ def run(pipeline, root):
     frame_button.rowconfigure(0, minsize=60)
     frame_button.columnconfigure([0, 1, 2, 3, 4, 5], minsize=200)
 
-    b_photo = tk.Button(master=frame_button, text = "PHOTO", font=("Arial", 20), bg="green4", fg="black", activebackground="green2")
-    b_gps = tk.Button(master=frame_button, text = "GPS", font=("Arial", 20), bg="medium blue", fg="black", activebackground="deep sky blue")
-    b_exit = tk.Button(master=frame_button, text = "QUIT", font=("Arial", 20), bg="maroon", fg="white", activebackground="red")
+    b_photo = tk.Button(master=frame_button, command = command_photo, text = "PHOTO", font=("Arial", 20), bg="green4", fg="black", activebackground="green2")
+    b_gps = tk.Button(master=frame_button, command = command_gps, text = "GPS", font=("Arial", 20), bg="medium blue", fg="black", activebackground="deep sky blue")
+    b_exit = tk.Button(master=frame_button, command = command_exit, text = "QUIT", font=("Arial", 20), bg="maroon", fg="white", activebackground="red")
 
     b_exit.grid(row=0, column=0, sticky="nsew")
     b_gps.grid(row=0, column=3, sticky="nsew")
@@ -629,47 +671,15 @@ def run(pipeline, root):
                 # Key Press Options
                 _key = cv2.waitKey(50)
                 if keyboard.is_pressed(cfg_user['fieldstation']['keymap']['exit']):
-                    if cfg_user['fieldstation']['sound']['play_sound']:
-                        pygame.mixer.Sound.play(sound_leave).set_volume(volume)
-                        time.sleep(.5)
-                        pygame.mixer.Sound.play(sound_leave).set_volume(volume)
-                        time.sleep(.5)
-                        pygame.mixer.Sound.play(sound_leave).set_volume(volume)
-                        time.sleep(.5)
-                        pygame.mixer.Sound.play(sound_leave).set_volume(volume)
-                        time.sleep(.5)
-                    print(f"{bcolors.HEADER}Stopping...{bcolors.ENDC}")
-                    print_options()
-                    agps_thread.stop()
-                    cv2.destroyAllWindows()
-                    root.destroy()
+                    command_exit(cfg_user, sound_leave, volume, agps_thread, root)
                     break
 
                 elif keyboard.is_pressed(cfg_user['fieldstation']['keymap']['photo']):
                     # Take photo
-                    TAKE_PHOTO = True
-                    
-                    # Print status
-                    label_camera_status.config(text = 'Camera Activated...', fg='orange')
-                    label_csv_status.config(text = 'Collecting Data', fg='orange')
-                    print(f"       Camera Activated")
+                    TAKE_PHOTO, label_camera_status, label_csv_status = command_photo(label_camera_status, label_csv_status)
 
                 elif keyboard.is_pressed(cfg_user['fieldstation']['keymap']['test_gps']):
-                    print(f"       Testing GPS")
-                    GPS_data_test = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
-                    if cfg_user['fieldstation']['sound']['play_sound']:
-                        if GPS_data_test.latitude == -999:
-                            pygame.mixer.Sound.play(sound_leave).set_volume(volume)
-                            time.sleep(.5)
-                            pygame.mixer.Sound.play(sound_leave).set_volume(volume)
-                            time.sleep(.5)
-                            pygame.mixer.Sound.play(sound_leave).set_volume(volume)
-                            time.sleep(.5)
-                            pygame.mixer.Sound.play(sound_leave).set_volume(volume)
-                        else:
-                            pygame.mixer.Sound.play(sound_init).set_volume(volume)
-                            time.sleep(0.75)
-                            pygame.mixer.Sound.play(sound_init).set_volume(volume)
+                    command_gps(cfg_user, agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, sound_leave, volume, sound_init)
 
 '''
 Initialize the tkinter GUI
