@@ -232,7 +232,7 @@ def run(pipeline, root):
     # -------------- Buttons
     # frame
     frame_button = tk.Frame(master=root, height = 60, bg="black")
-    frame_button.grid(row=4, column=0, colspan= 2, sticky="nsew")
+    frame_button.grid(row=4, column=0, columnspan= 2, sticky="nsew")
     
     frame_button.rowconfigure(0, minsize=60)
     frame_button.columnconfigure([0, 1, 2, 3, 4, 5], minsize=200)
