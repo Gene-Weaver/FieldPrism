@@ -237,13 +237,13 @@ def run(pipeline, root):
     frame_button.rowconfigure(0, minsize=60)
     frame_button.columnconfigure([0, 1, 2], minsize=200)
 
-    b_photo = tk.Button(master=frame_button, text = "PHOTO")
-    b_gps = tk.Button(master=frame_button, text = "GPS")
-    b_exit = tk.Button(master=frame_button, text = "QUIT")
+    b_photo = tk.Button(master=frame_button, text = "PHOTO", font=("Arial", 20))
+    b_gps = tk.Button(master=frame_button, text = "GPS", font=("Arial", 20))
+    b_exit = tk.Button(master=frame_button, text = "QUIT", font=("Arial", 20))
 
-    b_exit.grid(row=0, column=0, sticky="nsew", font=("Arial", 20), bg="maroon", fg="white")
-    b_gps.grid(row=0, column=1, sticky="nsew", font=("Arial", 20), bg="deep sky blue", fg="black")
-    b_photo.grid(row=0, column=2, sticky="nsew", font=("Arial", 20), bg="green2", fg="black")
+    b_exit.grid(row=0, column=0, sticky="nsew", bg="maroon", fg="white")
+    b_gps.grid(row=0, column=1, sticky="nsew", bg="deep sky blue", fg="black")
+    b_photo.grid(row=0, column=2, sticky="nsew", bg="green2", fg="black")
 
     # -------------- Info header
     label_top_info = tk.Label(master=root, text="Info", bg="black", fg="white", font=("Arial", 20))
