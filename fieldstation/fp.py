@@ -599,10 +599,10 @@ def run(pipeline, root):
                     Window_Preview.update_image(vframe)
                     is_sharp_live, blur = detect_sharpness(sharpness_min_cutoff, vframe)
                     if is_sharp_live:
-                        text_focus_live = ''.join(['(',sharpness_min_cutoff,')',' Sharp  - ', str(blur)])
+                        text_focus_live = ''.join(['(',str(sharpness_min_cutoff),')',' Sharp  - ', str(blur)])
                         label_focus_live_status.config(text = text_focus_live, fg='green')
                     else:
-                        text_focus_live = ''.join(['(',sharpness_min_cutoff,')',' Blurry - ', str(blur)])
+                        text_focus_live = ''.join(['(',str(sharpness_min_cutoff),')',' Blurry - ', str(blur)])
                         label_focus_live_status.config(text = text_focus_live, fg='orange')
 
                 
@@ -636,10 +636,10 @@ def run(pipeline, root):
                     # Check focus
                     is_sharp, sharpness_actual = detect_sharpness(sharpness_min_cutoff, save_frame)
                     if is_sharp:
-                        text_focus_live = ''.join(['(',sharpness_min_cutoff,')',' Sharp - ', str(sharpness_actual)])
+                        text_focus_live = ''.join(['(',str(sharpness_min_cutoff),')',' Sharp - ', str(sharpness_actual)])
                         label_focus_saved_status.config(text = text_focus_live, fg='green')
                     else:
-                        text_focus_live = ''.join(['(',sharpness_min_cutoff,')',' Blurry - ', str(sharpness_actual)])
+                        text_focus_live = ''.join(['(',str(sharpness_min_cutoff),')',' Blurry - ', str(sharpness_actual)])
                         label_focus_saved_status.config(text = text_focus_live, fg='red')
 
                     # Save image
