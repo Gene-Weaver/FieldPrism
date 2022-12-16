@@ -706,11 +706,10 @@ def start_gui():
     root = Tk()
     root.title("FieldPrism - Field Station")
     root.minsize(width=507, height=450)
-    root.mainloop()
 
     Thread(target=run, args=(pipeline,root,), daemon=True).start()
 
-    # root.mainloop()
+    root.mainloop()
 
 '''
 Routing options
