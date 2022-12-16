@@ -172,10 +172,6 @@ def command_exit(cfg_user, sound_leave, volume, agps_thread, root):
     cv2.destroyAllWindows()
     root.destroy()
 
-def command_photo():
-    TAKE_PHOTO = True
-    return TAKE_PHOTO
-
 def command_gps(cfg_user, agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, sound_leave, volume, sound_init):
     print(f"       Testing GPS")
     GPS_data_test = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
@@ -193,9 +189,17 @@ def command_gps(cfg_user, agps_thread, label_gps_status, label_gps_lat_status, l
             time.sleep(0.75)
             pygame.mixer.Sound.play(sound_init).set_volume(volume)
 
-def update_photo():
+def button_photo():
     global TAKE_PHOTO
     TAKE_PHOTO = True
+
+def button_gps():
+    global TAKE_GPS
+    TAKE_GPS = True
+
+def button_exit():
+    global TAKE_EXIT
+    TAKE_EXIT = True
 
 '''
 Creates the pipeline that the OAK camera requires
@@ -246,9 +250,13 @@ def run(pipeline, root):
     agps_thread.stream_data()  # From localhost (), or other hosts, by example, (host='gps.ddns.net')
     agps_thread.run_thread()  # Throttle time to sleep after an empty lookup, default '()' 0.2 two tenths of a second
 
-    # Initialize TAKE_PHOTO
+    # Initialize globals for buttons
     global TAKE_PHOTO
     TAKE_PHOTO = False
+    global TAKE_GPS
+    TAKE_GPS = False
+    global TAKE_EXIT
+    TAKE_EXIT = False
     '''
     Start the sound
     '''
@@ -286,9 +294,9 @@ def run(pipeline, root):
     # command_photo_p = partial(command_photo, label_camera_status, label_csv_status)
     # command_gps_p = partial(command_gps, cfg_user, agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, sound_leave, volume, sound_init)
     # command_exit_p = partial(command_exit, cfg_user, sound_leave, volume, agps_thread, root)
-    b_photo = tk.Button(master=frame_button, command=lambda: update_photo(), text = "PHOTO", font=("Arial", 20), bg="green4", fg="black", activebackground="green2")
-    b_gps = tk.Button(master=frame_button, text = "GPS", font=("Arial", 20), bg="medium blue", fg="black", activebackground="deep sky blue")
-    b_exit = tk.Button(master=frame_button, text = "QUIT", font=("Arial", 20), bg="maroon", fg="white", activebackground="red")
+    b_photo = tk.Button(master=frame_button, command=lambda: button_photo(), text = "PHOTO", font=("Arial", 20), bg="green4", fg="black", activebackground="green2")
+    b_gps = tk.Button(master=frame_button, command=lambda: button_gps(), text = "GPS", font=("Arial", 20), bg="medium blue", fg="black", activebackground="deep sky blue")
+    b_exit = tk.Button(master=frame_button, command=lambda: button_exit(), text = "QUIT", font=("Arial", 20), bg="maroon", fg="white", activebackground="red")
 
     b_exit.grid(row=0, column=0, sticky="nsew")
     b_gps.grid(row=0, column=3, sticky="nsew")
@@ -686,7 +694,7 @@ def run(pipeline, root):
 
                 # Key Press Options
                 _key = cv2.waitKey(50)
-                if keyboard.is_pressed(cfg_user['fieldstation']['keymap']['exit']):
+                if (keyboard.is_pressed(cfg_user['fieldstation']['keymap']['exit']) or TAKE_EXIT):
                     command_exit(cfg_user, sound_leave, volume, agps_thread, root)
                     break
 
@@ -694,7 +702,8 @@ def run(pipeline, root):
                     # Take photo
                     TAKE_PHOTO = True
 
-                elif keyboard.is_pressed(cfg_user['fieldstation']['keymap']['test_gps']):
+                elif (keyboard.is_pressed(cfg_user['fieldstation']['keymap']['test_gps']) or TAKE_GPS):
+                    TAKE_GPS = False
                     command_gps(cfg_user, agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, sound_leave, volume, sound_init)
 
 '''
