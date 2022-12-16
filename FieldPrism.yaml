@@ -93,7 +93,7 @@ fieldprism:
     strict_distortion_correction: False # bool |DEFAULT| False 
     use_template_for_pixel_to_metric_conversion: True # bool |DEFAULT| False 
     do_remove_overlap: True # bool |DEFAULT| False 
-    overlap_priority: 'barcode' # string |DEFAULT| 'barcode' FROM 'ruler' OR 'barcode' 
+    overlap_priority: 'ruler' # string |DEFAULT| 'barcode' FROM 'ruler' OR 'barcode' 
     insert_clean_QR_codes: True # bool |DEFAULT| True
     #### Justify the Distortion Corrected Images ################################
     justify_corrected_images:
