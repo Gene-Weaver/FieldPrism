@@ -10,7 +10,7 @@ from utils_gps import gps_activate, test_gps
 from utils_gui import init_ready, change_ready_ind
 from fp_align_camera  import align_camera
 from fp_classes import PreviewWindow, SaveWindow, Fragile, SetupFP, ImageData
-
+from functools import partial
 '''
  ______ _      _     _ _____ _        _   _             
  |  ___(_)    | |   | /  ___| |      | | (_)            
@@ -279,7 +279,8 @@ def run(pipeline, root):
     frame_button.rowconfigure(0, minsize=60)
     frame_button.columnconfigure([0, 1, 2, 3, 4, 5], minsize=200)
 
-    b_photo = tk.Button(master=frame_button, command = command_photo(label_camera_status, label_csv_status), 
+    command_photo_p = partial(command_photo, label_camera_status, label_csv_status)
+    b_photo = tk.Button(master=frame_button, command = command_photo_p, 
                     text = "PHOTO", font=("Arial", 20), bg="green4", fg="black", activebackground="green2")
     b_gps = tk.Button(master=frame_button, command = command_gps(cfg_user, agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, sound_leave, volume, sound_init),
                     text = "GPS", font=("Arial", 20), bg="medium blue", fg="black", activebackground="deep sky blue")
