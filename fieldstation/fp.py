@@ -292,7 +292,7 @@ def run(pipeline, root):
     frame_button.columnconfigure([0, 1, 2, 3, 4, 5], minsize=200)
 
     b_photo = tk.Button(master=frame_button, command=lambda: button_photo(), text = "PHOTO", font=("Arial", 20), bg="green4", fg="black", activebackground="green2")
-    b_gps = tk.Button(master=frame_button, command=lambda: button_gps(), text = "GPS", font=("Arial", 20), bg="medium blue", fg="black", activebackground="deep sky blue")
+    b_gps = tk.Button(master=frame_button, command=lambda: button_gps(), text = "GPS", font=("Arial", 20), bg="royal blue", fg="black", activebackground="deep sky blue")
     b_exit = tk.Button(master=frame_button, command=lambda: button_exit(), text = "QUIT", font=("Arial", 20), bg="maroon", fg="white", activebackground="red")
 
     b_exit.grid(row=0, column=0, sticky="nsew")
@@ -319,7 +319,7 @@ def run(pipeline, root):
 
     label_camera = tk.Label(master=frame_info_camera, text="Camera Status: ", bg="black", fg="White", font=("Calibri ", 16))
     label_camera.grid(row=0, column=0, sticky="e")
-    label_camera_status = tk.Label(master=frame_info_camera, text=" Please Wait ", bg="black", fg="green", font=("Calibri", 16))
+    label_camera_status = tk.Label(master=frame_info_camera, text=" Please Wait ", bg="black", fg="green2", font=("Calibri", 16))
     label_camera_status.grid(row=0, column=1, sticky="w")
 
         # -------------- Camera Focus Live
@@ -330,7 +330,7 @@ def run(pipeline, root):
 
     label_focus_live = tk.Label(master=frame_info_focus_live, text="Live Camera Focus: ", bg="black", fg="White", font=("Calibri ", 16))
     label_focus_live.grid(row=0, column=0, sticky="e")
-    label_focus_live_status = tk.Label(master=frame_info_focus_live, text="  ", bg="black", fg="green", font=("Calibri", 16))
+    label_focus_live_status = tk.Label(master=frame_info_focus_live, text="  ", bg="black", fg="green2", font=("Calibri", 16))
     label_focus_live_status.grid(row=0, column=1, sticky="w")
 
     # -------------- Camera Focus Saved
@@ -341,7 +341,7 @@ def run(pipeline, root):
 
     label_focus_saved = tk.Label(master=frame_info_focus_saved, text="Saved Image Focus: ", bg="black", fg="White", font=("Calibri ", 16))
     label_focus_saved.grid(row=0, column=0, sticky="e")
-    label_focus_saved_status = tk.Label(master=frame_info_focus_saved, text="  ", bg="black", fg="green", font=("Calibri", 16))
+    label_focus_saved_status = tk.Label(master=frame_info_focus_saved, text="  ", bg="black", fg="green2", font=("Calibri", 16))
     label_focus_saved_status.grid(row=0, column=1, sticky="w")
 
     # -------------- File name
@@ -352,7 +352,7 @@ def run(pipeline, root):
 
     label_fname = tk.Label(master=frame_info_fname, text="Image File Name: ", bg="black", fg="White", font=("Calibri ", 16))
     label_fname.grid(row=0, column=0, sticky="e")
-    label_fname_status = tk.Label(master=frame_info_fname, text="", bg="black", fg="green", font=("Calibri ", 16))
+    label_fname_status = tk.Label(master=frame_info_fname, text="", bg="black", fg="green2", font=("Calibri ", 16))
     label_fname_status.grid(row=0, column=1, sticky="w")
 
     # -------------- GPS Status
@@ -363,7 +363,7 @@ def run(pipeline, root):
 
     label_gps = tk.Label(master=frame_info_gps, text="GPS Status: ", bg="black", fg="White", font=("Calibri ", 16))
     label_gps.grid(row=0, column=0, sticky="e")
-    label_gps_status = tk.Label(master=frame_info_gps, text="", bg="black", fg="green", font=("Calibri ", 16))
+    label_gps_status = tk.Label(master=frame_info_gps, text="", bg="black", fg="green2", font=("Calibri ", 16))
     label_gps_status.grid(row=0, column=1, sticky="w")
 
     # -------------- GPS Lat
@@ -374,7 +374,7 @@ def run(pipeline, root):
 
     label_gps_lat = tk.Label(master=frame_info_gps_lat, text="Latitude: ", bg="black", fg="White", font=("Calibri ", 16))
     label_gps_lat.grid(row=0, column=0, sticky="e")
-    label_gps_lat_status = tk.Label(master=frame_info_gps_lat, text="", bg="black", fg="green", font=("Calibri ", 16))
+    label_gps_lat_status = tk.Label(master=frame_info_gps_lat, text="", bg="black", fg="green2", font=("Calibri ", 16))
     label_gps_lat_status.grid(row=0, column=1, sticky="w")
 
     # -------------- GPS Long
@@ -385,7 +385,7 @@ def run(pipeline, root):
 
     label_gps_lon = tk.Label(master=frame_info_gps_lon, text="Longitude: ", bg="black", fg="White", font=("Calibri ", 16))
     label_gps_lon.grid(row=0, column=0, sticky="e")
-    label_gps_lon_status = tk.Label(master=frame_info_gps_lon, text="", bg="black", fg="green", font=("Calibri ", 16))
+    label_gps_lon_status = tk.Label(master=frame_info_gps_lon, text="", bg="black", fg="green2", font=("Calibri ", 16))
     label_gps_lon_status.grid(row=0, column=1, sticky="w")
 
     # -------------- GPS Time (UTC)
@@ -538,13 +538,13 @@ def run(pipeline, root):
 
         # Update USB Speed
         if device.getUsbSpeed().name == 'HIGH':
-            label_usbspeed_status.config(text = str(device.getUsbSpeed().name), fg='green')
+            label_usbspeed_status.config(text = str(device.getUsbSpeed().name), fg='green2')
         else:
             label_usbspeed_status.config(text = str(device.getUsbSpeed().name), fg='red')
 
         # Update device count 
         if cfg.device_count > 0:
-            label_ndevice_status.config(text = str(cfg.device_count), fg='green')
+            label_ndevice_status.config(text = str(cfg.device_count), fg='green2')
         else:
             label_ndevice_status.config(text = str(cfg.device_count), fg='red')
 
@@ -563,7 +563,7 @@ def run(pipeline, root):
                 break
             time.sleep(4)
         GPS_data_test = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
-        label_camera_status.config(text = ' Please Wait ', fg='green')
+        label_camera_status.config(text = ' Please Wait ', fg='green2')
 
         if cfg.storage_present == False:
             print(f"{bcolors.HEADER}Stopping...{bcolors.ENDC}")
@@ -593,16 +593,16 @@ def run(pipeline, root):
                 pygame.mixer.Sound.play(sound_init).set_volume(volume)
             # Data collection / imaging loop, exit on keypress, using Fragile class
             while True:
-                b_photo = tk.Button(master=frame_button, command = lambda: command_photo(label_camera_status, label_csv_status),
-                    text = "PHOTO", font=("Arial", 20), bg="green4", fg="black", activebackground="green2")
-                b_gps = tk.Button(master=frame_button, command = lambda: command_gps(cfg_user, agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, sound_leave, volume, sound_init),
-                    text = "GPS", font=("Arial", 20), bg="medium blue", fg="black", activebackground="deep sky blue")
-                b_exit = tk.Button(master=frame_button, command = lambda: command_exit(cfg_user, sound_leave, volume, agps_thread, root), 
-                    text = "QUIT", font=("Arial", 20), bg="maroon", fg="white", activebackground="red")
+                # b_photo = tk.Button(master=frame_button, command = lambda: command_photo(label_camera_status, label_csv_status),
+                #     text = "PHOTO", font=("Arial", 20), bg="green4", fg="black", activebackground="green2")
+                # b_gps = tk.Button(master=frame_button, command = lambda: command_gps(cfg_user, agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, sound_leave, volume, sound_init),
+                #     text = "GPS", font=("Arial", 20), bg="medium blue", fg="black", activebackground="deep sky blue")
+                # b_exit = tk.Button(master=frame_button, command = lambda: command_exit(cfg_user, sound_leave, volume, agps_thread, root), 
+                #     text = "QUIT", font=("Arial", 20), bg="maroon", fg="white", activebackground="red")
 
                 # Update "Ready" each loop
                 text_ready, ind_ready, direction = change_ready_ind(ind_ready,direction)
-                label_camera_status.config(text = text_ready, fg='green')
+                label_camera_status.config(text = text_ready, fg='green2')
                 
 
                 # Get latest frame from camera video feed (center crop)
@@ -617,10 +617,10 @@ def run(pipeline, root):
                     is_sharp_live, blur = detect_sharpness(sharpness_min_cutoff, vframe)
                     if is_sharp_live:
                         text_focus_live = ''.join(['(',str(sharpness_min_cutoff),')',' Sharp  - ', str(blur)])
-                        label_focus_live_status.config(text = text_focus_live, fg='green')
+                        label_focus_live_status.config(text = text_focus_live, fg='green2')
                     else:
                         text_focus_live = ''.join(['(',str(sharpness_min_cutoff),')',' Blurry - ', str(blur)])
-                        label_focus_live_status.config(text = text_focus_live, fg='orange')
+                        label_focus_live_status.config(text = text_focus_live, fg='goldenrod')
 
                 
                 # Get latest frame from camera full sensor
@@ -630,15 +630,15 @@ def run(pipeline, root):
                 # If keypress for photo on last loop, then save a still now
                 if TAKE_PHOTO:
                     # Print status
-                    label_camera_status.config(text = 'Camera Activated...', fg='orange')
-                    label_csv_status.config(text = 'Collecting Data', fg='orange')
+                    label_camera_status.config(text = 'Camera Activated...', fg='goldenrod')
+                    label_csv_status.config(text = 'Collecting Data', fg='goldenrod')
                     print(f"       Camera Activated")
                     # Play sound
                     if cfg_user['fieldstation']['sound']['play_sound']:
                         pygame.mixer.Sound.play(sound_init).set_volume(volume)
                     # Print status
                     print(f"       Capturing Image")
-                    label_camera_status.config(text = 'Capturing Image...', fg='orange')
+                    label_camera_status.config(text = 'Capturing Image...', fg='goldenrod')
                     images_this_session += 1
 
 
@@ -658,7 +658,7 @@ def run(pipeline, root):
                     is_sharp, sharpness_actual = detect_sharpness(sharpness_min_cutoff, save_frame)
                     if is_sharp:
                         text_focus_live = ''.join(['(',str(sharpness_min_cutoff),')',' Sharp - ', str(sharpness_actual)])
-                        label_focus_saved_status.config(text = text_focus_live, fg='green')
+                        label_focus_saved_status.config(text = text_focus_live, fg='green2')
                     else:
                         text_focus_live = ''.join(['(',str(sharpness_min_cutoff),')',' Blurry - ', str(sharpness_actual)])
                         label_focus_saved_status.config(text = text_focus_live, fg='red')
@@ -676,8 +676,8 @@ def run(pipeline, root):
                     Image = ImageData(cfg, path_to_saved, GPS_data, height, width, sharpness_actual, sharpness_min_cutoff, is_sharp)
 
                     # Print status
-                    label_csv_status.config(text = 'Added 1 Row to CSV', fg='green')
-                    label_camera_status.config(text = 'Ready!', fg='green')
+                    label_csv_status.config(text = 'Added 1 Row to CSV', fg='green2')
+                    label_camera_status.config(text = 'Ready!', fg='green2')
                     label_fname_status.config(text = Image.filename)
                     label_nimage_status.config(text = str(images_this_session))
                     print(f"{bcolors.OKGREEN}Ready{bcolors.ENDC}")
