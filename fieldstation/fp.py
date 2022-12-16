@@ -172,13 +172,9 @@ def command_exit(cfg_user, sound_leave, volume, agps_thread, root):
     cv2.destroyAllWindows()
     root.destroy()
 
-def command_photo(label_camera_status, label_csv_status):
+def command_photo():
     TAKE_PHOTO = True
-    # Print status
-    label_camera_status.config(text = 'Camera Activated...', fg='orange')
-    label_csv_status.config(text = 'Collecting Data', fg='orange')
-    print(f"       Camera Activated")
-    return TAKE_PHOTO, label_camera_status, label_csv_status
+    return TAKE_PHOTO
 
 def command_gps(cfg_user, agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, sound_leave, volume, sound_init):
     print(f"       Testing GPS")
@@ -628,6 +624,10 @@ def run(pipeline, root):
 
                 # If keypress for photo on last loop, then save a still now
                 if TAKE_PHOTO:
+                    # Print status
+                    label_camera_status.config(text = 'Camera Activated...', fg='orange')
+                    label_csv_status.config(text = 'Collecting Data', fg='orange')
+                    print(f"       Camera Activated")
                     # Play sound
                     if cfg_user['fieldstation']['sound']['play_sound']:
                         pygame.mixer.Sound.play(sound_init).set_volume(volume)
@@ -692,7 +692,7 @@ def run(pipeline, root):
 
                 elif keyboard.is_pressed(cfg_user['fieldstation']['keymap']['photo']):
                     # Take photo
-                    TAKE_PHOTO, label_camera_status, label_csv_status = command_photo(label_camera_status, label_csv_status)
+                    TAKE_PHOTO = command_photo()
 
                 elif keyboard.is_pressed(cfg_user['fieldstation']['keymap']['test_gps']):
                     command_gps(cfg_user, agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, sound_leave, volume, sound_init)
