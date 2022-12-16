@@ -692,7 +692,7 @@ def run(pipeline, root):
 
                 elif keyboard.is_pressed(cfg_user['fieldstation']['keymap']['photo']):
                     # Take photo
-                    TAKE_PHOTO = command_photo()
+                    TAKE_PHOTO = True
 
                 elif keyboard.is_pressed(cfg_user['fieldstation']['keymap']['test_gps']):
                     command_gps(cfg_user, agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, sound_leave, volume, sound_init)
@@ -706,10 +706,11 @@ def start_gui():
     root = Tk()
     root.title("FieldPrism - Field Station")
     root.minsize(width=507, height=450)
+    root.mainloop()
 
     Thread(target=run, args=(pipeline,root,), daemon=True).start()
 
-    root.mainloop()
+    # root.mainloop()
 
 '''
 Routing options
