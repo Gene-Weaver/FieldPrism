@@ -291,9 +291,6 @@ def run(pipeline, root):
     frame_button.rowconfigure(0, minsize=60)
     frame_button.columnconfigure([0, 1, 2, 3, 4, 5], minsize=200)
 
-    # command_photo_p = partial(command_photo, label_camera_status, label_csv_status)
-    # command_gps_p = partial(command_gps, cfg_user, agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, sound_leave, volume, sound_init)
-    # command_exit_p = partial(command_exit, cfg_user, sound_leave, volume, agps_thread, root)
     b_photo = tk.Button(master=frame_button, command=lambda: button_photo(), text = "PHOTO", font=("Arial", 20), bg="green4", fg="black", activebackground="green2")
     b_gps = tk.Button(master=frame_button, command=lambda: button_gps(), text = "GPS", font=("Arial", 20), bg="medium blue", fg="black", activebackground="deep sky blue")
     b_exit = tk.Button(master=frame_button, command=lambda: button_exit(), text = "QUIT", font=("Arial", 20), bg="maroon", fg="white", activebackground="red")
@@ -725,23 +722,26 @@ Routing options
     May be deprecated
 '''
 def route():
-    print_options()
-    while True:
-        key = cv2.waitKey(1)
-        if keyboard.is_pressed('6'):
-            print(f"{bcolors.HEADER}Exiting FieldPrism{bcolors.ENDC}")
-            cv2.destroyAllWindows()
-            break
-        elif keyboard.is_pressed('1'):
-            print("Starting FieldPrism Data Collection")
-            start_gui()
-        elif keyboard.is_pressed('2'):
-            print("Test/Wake GPS")
-            test_gps()
-        elif keyboard.is_pressed('3'):
-            print("Aligning Camera")
-            align_camera()
+    cfg_user = load_cfg()
+    if cfg_user['fieldstation']['open_GUI_directly']:
+        start_gui()
+    else:
+        print_options()
+        while True:
+            key = cv2.waitKey(1)
+            if keyboard.is_pressed('6'):
+                print(f"{bcolors.HEADER}Exiting FieldPrism{bcolors.ENDC}")
+                cv2.destroyAllWindows()
+                break
+            elif keyboard.is_pressed('1'):
+                print("Starting FieldPrism Data Collection")
+                start_gui()
+            elif keyboard.is_pressed('2'):
+                print("Test/Wake GPS")
+                test_gps()
+            elif keyboard.is_pressed('3'):
+                print("Aligning Camera")
+                align_camera()
 
 if __name__ == "__main__":
     route()
-    # start_gui()

@@ -98,6 +98,7 @@
 #      - adds '__B' at the end of the jpg file name
 
 fieldstation:
+    open_GUI_directly: True # bool |DEFAULT| True  
     sound: 
         play_sound: True # bool |DEFAULT| True  
         volume: 'low' # string |DEFAULT| 'mid' FROM 'low' OR 'mid' OR 'high' 
