@@ -196,6 +196,10 @@ def command_gps(cfg_user, agps_thread, label_gps_status, label_gps_lat_status, l
             pygame.mixer.Sound.play(sound_init).set_volume(volume)
             time.sleep(0.75)
             pygame.mixer.Sound.play(sound_init).set_volume(volume)
+
+def update_photo(TAKE_PHOTO):
+    TAKE_PHOTO = True
+
 '''
 Creates the pipeline that the OAK camera requires
     THE_12_MP allows us to use the full sensor of the OAK-1 camera
@@ -245,6 +249,9 @@ def run(pipeline, root):
     agps_thread.stream_data()  # From localhost (), or other hosts, by example, (host='gps.ddns.net')
     agps_thread.run_thread()  # Throttle time to sleep after an empty lookup, default '()' 0.2 two tenths of a second
 
+    # Initialize TAKE_PHOTO
+    global TAKE_PHOTO
+    TAKE_PHOTO = False
     '''
     Start the sound
     '''
@@ -282,7 +289,7 @@ def run(pipeline, root):
     # command_photo_p = partial(command_photo, label_camera_status, label_csv_status)
     # command_gps_p = partial(command_gps, cfg_user, agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, sound_leave, volume, sound_init)
     # command_exit_p = partial(command_exit, cfg_user, sound_leave, volume, agps_thread, root)
-    b_photo = tk.Button(master=frame_button, text = "PHOTO", font=("Arial", 20), bg="green4", fg="black", activebackground="green2")
+    b_photo = tk.Button(master=frame_button, command = partial(update_photo, TAKE_PHOTO), text = "PHOTO", font=("Arial", 20), bg="green4", fg="black", activebackground="green2")
     b_gps = tk.Button(master=frame_button, text = "GPS", font=("Arial", 20), bg="medium blue", fg="black", activebackground="deep sky blue")
     b_exit = tk.Button(master=frame_button, text = "QUIT", font=("Arial", 20), bg="maroon", fg="white", activebackground="red")
 
@@ -577,8 +584,6 @@ def run(pipeline, root):
             # Initialize "Ready" animated text for the GUI
             ind_ready, direction = init_ready()
 
-            # Initialize TAKE_PHOTO
-            TAKE_PHOTO = False
             images_this_session = 0
             if cfg_user['fieldstation']['sound']['play_sound']:
                 pygame.mixer.Sound.play(sound_init).set_volume(volume)
