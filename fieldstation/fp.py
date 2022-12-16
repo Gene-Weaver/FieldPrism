@@ -241,9 +241,9 @@ def run(pipeline, root):
     b_gps = tk.Button(master=frame_button, text = "GPS")
     b_exit = tk.Button(master=frame_button, text = "QUIT")
 
-    b_exit.grid(row=0, column=0, sticky="nsew", minsize=60, font=("Arial", 20), bg="maroon", fg="white")
-    b_gps.grid(row=0, column=1, sticky="nsew", minsize=60, font=("Arial", 20), bg="deep sky blue", fg="black")
-    b_photo.grid(row=0, column=2, sticky="nsew", minsize=60, font=("Arial", 20), bg="green2", fg="black")
+    b_exit.grid(row=0, column=0, sticky="nsew", font=("Arial", 20), bg="maroon", fg="white")
+    b_gps.grid(row=0, column=1, sticky="nsew", font=("Arial", 20), bg="deep sky blue", fg="black")
+    b_photo.grid(row=0, column=2, sticky="nsew", font=("Arial", 20), bg="green2", fg="black")
 
     # -------------- Info header
     label_top_info = tk.Label(master=root, text="Info", bg="black", fg="white", font=("Arial", 20))
