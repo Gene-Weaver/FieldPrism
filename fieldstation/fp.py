@@ -159,19 +159,27 @@ def startup(dir_root, device, agps_thread, label_total_status, label_session_sta
 
 def detect_sharpness(sharpness_min_cutoff, img):
     # Blurry image cutoff
-    blur = int(cv2.Laplacian(img, cv2.CV_64F).var())
-    if blur < sharpness_min_cutoff:
-        return False, blur
+    sharpness_actual = int(cv2.Laplacian(img, cv2.CV_64F).var())
+    if sharpness_actual < sharpness_min_cutoff:
+        return False, sharpness_actual
     else:
-        return True, blur
+        return True, sharpness_actual
 
-def report_sharpness(label_focus_saved_status, is_sharp, sharpness_min_cutoff, sharpness_actual):
-    if is_sharp:
-        text_focus_live = ''.join(['(',str(sharpness_min_cutoff),')',' Sharp - ', str(sharpness_actual)])
-        label_focus_saved_status.config(text = text_focus_live, fg='green2')
+def report_sharpness(live_or_saved, label_focus_live_status, label_focus_saved_status, is_sharp, sharpness_min_cutoff, sharpness_actual):
+    if live_or_saved == 'live':
+        if is_sharp:
+            text_focus_live = ''.join(['(',str(sharpness_min_cutoff),')',' Sharp - ', str(sharpness_actual)])
+            label_focus_live_status.config(text = text_focus_live, fg='green2')
+        else:
+            text_focus_live = ''.join(['(',str(sharpness_min_cutoff),')',' Blurry - ', str(sharpness_actual)])
+            label_focus_live_status.config(text = text_focus_live, fg='goldenrod')
     else:
-        text_focus_live = ''.join(['(',str(sharpness_min_cutoff),')',' Blurry - ', str(sharpness_actual)])
-        label_focus_saved_status.config(text = text_focus_live, fg='red')
+        if is_sharp:
+            text_focus_live = ''.join(['(',str(sharpness_min_cutoff),')',' Sharp - ', str(sharpness_actual)])
+            label_focus_saved_status.config(text = text_focus_live, fg='green2')
+        else:
+            text_focus_live = ''.join(['(',str(sharpness_min_cutoff),')',' Blurry - ', str(sharpness_actual)])
+            label_focus_saved_status.config(text = text_focus_live, fg='red')
 
 def report_camera_activated(cfg_user, label_camera_status, images_this_session, Sound):
     print(f"       Camera Activated")
@@ -394,8 +402,8 @@ def run(pipeline, root):
                     # PreviewWindow(FS.frame_preview,vframe)
                     # Window_Preview.change_image(vframe)
                     Window_Preview.update_image(vframe)
-                    is_sharp, blur = detect_sharpness(sharpness_min_cutoff, vframe)
-                    report_sharpness(label_focus_saved_status, is_sharp, sharpness_min_cutoff, sharpness_actual)
+                    is_sharp, sharpness_actual = detect_sharpness(sharpness_min_cutoff, vframe)
+                    report_sharpness('live', label_focus_live_status, label_focus_saved_status, is_sharp, sharpness_min_cutoff, sharpness_actual)
 
                 # Get latest frame from camera full sensor
                 ispFrames = ispQueue.get()
@@ -423,7 +431,7 @@ def run(pipeline, root):
 
                     # Check focus
                     is_sharp, sharpness_actual = detect_sharpness(sharpness_min_cutoff, save_frame)
-                    report_sharpness(label_focus_saved_status, is_sharp, sharpness_min_cutoff, sharpness_actual)
+                    report_sharpness('saved', label_focus_live_status, label_focus_saved_status, is_sharp, sharpness_min_cutoff, sharpness_actual)
 
                     # Save image
                     path_to_saved = route_save_image(cfg, cfg_user, save_frame, is_sharp)
