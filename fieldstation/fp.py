@@ -197,7 +197,8 @@ def command_gps(cfg_user, agps_thread, label_gps_status, label_gps_lat_status, l
             time.sleep(0.75)
             pygame.mixer.Sound.play(sound_init).set_volume(volume)
 
-def update_photo(TAKE_PHOTO):
+def update_photo():
+    global TAKE_PHOTO
     TAKE_PHOTO = True
 
 '''
@@ -289,7 +290,7 @@ def run(pipeline, root):
     # command_photo_p = partial(command_photo, label_camera_status, label_csv_status)
     # command_gps_p = partial(command_gps, cfg_user, agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, sound_leave, volume, sound_init)
     # command_exit_p = partial(command_exit, cfg_user, sound_leave, volume, agps_thread, root)
-    b_photo = tk.Button(master=frame_button, command = partial(update_photo, TAKE_PHOTO), text = "PHOTO", font=("Arial", 20), bg="green4", fg="black", activebackground="green2")
+    b_photo = tk.Button(master=frame_button, command = update_photo(), text = "PHOTO", font=("Arial", 20), bg="green4", fg="black", activebackground="green2")
     b_gps = tk.Button(master=frame_button, text = "GPS", font=("Arial", 20), bg="medium blue", fg="black", activebackground="deep sky blue")
     b_exit = tk.Button(master=frame_button, text = "QUIT", font=("Arial", 20), bg="maroon", fg="white", activebackground="red")
 
