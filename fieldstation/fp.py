@@ -285,7 +285,7 @@ def run(pipeline, root):
     frame_info_focus_saved.rowconfigure(0, minsize=30)
     frame_info_focus_saved.columnconfigure([0, 1], minsize=250)
 
-    label_focus_saved = tk.Label(master=frame_info_focus_saved, text="Prev. Image Focus: ", bg="black", fg="White", font=("Calibri ", 16))
+    label_focus_saved = tk.Label(master=frame_info_focus_saved, text="Saved Image Focus: ", bg="black", fg="White", font=("Calibri ", 16))
     label_focus_saved.grid(row=0, column=0, sticky="e")
     label_focus_saved_status = tk.Label(master=frame_info_focus_saved, text="  ", bg="black", fg="green", font=("Calibri", 16))
     label_focus_saved_status.grid(row=0, column=1, sticky="w")
@@ -557,10 +557,10 @@ def run(pipeline, root):
                     Window_Preview.update_image(vframe)
                     is_sharp_live, blur = detect_sharpness(sharpness_min_cutoff, vframe)
                     if is_sharp_live:
-                        text_focus_live = ''.join(['Sharp - ', str(blur)])
+                        text_focus_live = ''.join(['(',sharpness_min_cutoff,')',' Sharp  - ', str(blur)])
                         label_focus_live_status.config(text = text_focus_live, fg='green')
                     else:
-                        text_focus_live = ''.join(['Blurry - ', str(blur)])
+                        text_focus_live = ''.join(['(',sharpness_min_cutoff,')',' Blurry - ', str(blur)])
                         label_focus_live_status.config(text = text_focus_live, fg='orange')
 
                 
@@ -594,10 +594,10 @@ def run(pipeline, root):
                     # Check focus
                     is_sharp, sharpness_actual = detect_sharpness(sharpness_min_cutoff, save_frame)
                     if is_sharp:
-                        text_focus_live = ''.join(['Sharp - ', str(sharpness_actual)])
+                        text_focus_live = ''.join(['(',sharpness_min_cutoff,')',' Sharp - ', str(sharpness_actual)])
                         label_focus_saved_status.config(text = text_focus_live, fg='green')
                     else:
-                        text_focus_live = ''.join(['Blurry - ', str(sharpness_actual)])
+                        text_focus_live = ''.join(['(',sharpness_min_cutoff,')',' Blurry - ', str(sharpness_actual)])
                         label_focus_saved_status.config(text = text_focus_live, fg='red')
 
                     # Save image
