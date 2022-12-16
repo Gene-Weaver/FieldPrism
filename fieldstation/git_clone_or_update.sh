@@ -14,6 +14,7 @@ then
 	sudo cp /home/pi/FieldPrism/fieldstation/desktop_app/* /home/pi/.local/share/applications
 	pcmanfm --set-wallpaper="/usr/share/rpd-wallpaper/FieldPrism_Desktop_Black.jpg"
 	# GPS
+	echo "Restarting GPS..."
 	ls /dev/ttyUSB*
 	sudo lsusb
 	sudo systemctl stop gpsd.socket
@@ -40,6 +41,7 @@ else
 	sudo cp /home/pi/FieldPrism/fieldstation/desktop_app/* /home/pi/.local/share/applications
 	pcmanfm --set-wallpaper="/usr/share/rpd-wallpaper/FieldPrism_Desktop_Black.jpg"
 	# GPS
+	echo "Restarting GPS..."
 	ls /dev/ttyUSB*
 	sudo lsusb
 	sudo systemctl stop gpsd.socket

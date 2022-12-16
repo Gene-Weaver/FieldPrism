@@ -1,5 +1,17 @@
 #!/bin/bash 
 echo ""
+# GPS
+echo "Restarting GPS service..."
+ls /dev/ttyUSB*
+sudo lsusb
+sudo systemctl stop gpsd.socket
+sudo systemctl disable gpsd.socket
+sudo killall gpsd
+sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock
+sudo lsusb
+sudo systemctl stop gpsd.socket
+sudo systemctl disable gpsd.socket
+echo ""
 echo "***** Attempting to Mount USB Drives..."  
 echo ""
 echo "***** View USB Devices..."  
