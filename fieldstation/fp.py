@@ -232,18 +232,18 @@ def run(pipeline, root):
     # -------------- Buttons
     # frame
     frame_button = tk.Frame(master=root, height = 60, bg="black")
-    frame_button.grid(row=4, column=0, sticky="nsew")
+    frame_button.grid(row=4, column=0, colspan= 2, sticky="nsew")
     
     frame_button.rowconfigure(0, minsize=60)
-    frame_button.columnconfigure([0, 1, 2], minsize=200)
+    frame_button.columnconfigure([0, 1, 2, 3, 4, 5], minsize=200)
 
-    b_photo = tk.Button(master=frame_button, text = "PHOTO", font=("Arial", 20), bg="green2", fg="black")
-    b_gps = tk.Button(master=frame_button, text = "GPS", font=("Arial", 20), bg="deep sky blue", fg="black")
-    b_exit = tk.Button(master=frame_button, text = "QUIT", font=("Arial", 20), bg="maroon", fg="white")
+    b_photo = tk.Button(master=frame_button, text = "PHOTO", font=("Arial", 20), bg="green4", fg="black", activebackground="green2")
+    b_gps = tk.Button(master=frame_button, text = "GPS", font=("Arial", 20), bg="medium blue", fg="black", activebackground="deep sky blue")
+    b_exit = tk.Button(master=frame_button, text = "QUIT", font=("Arial", 20), bg="maroon", fg="white", activebackground="red")
 
     b_exit.grid(row=0, column=0, sticky="nsew")
-    b_gps.grid(row=0, column=1, sticky="nsew")
-    b_photo.grid(row=0, column=2, sticky="nsew")
+    b_gps.grid(row=0, column=3, sticky="nsew")
+    b_photo.grid(row=0, column=4, sticky="nsew")
 
     # -------------- Info header
     label_top_info = tk.Label(master=root, text="Info", bg="black", fg="white", font=("Arial", 20))
