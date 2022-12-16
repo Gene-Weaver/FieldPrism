@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-import time, os, cv2, keyboard, pygame
+import time, os, cv2, keyboard
+from os import environ
+environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
+import pygame
 import depthai as dai
 from threading import Thread
 import tkinter as tk
