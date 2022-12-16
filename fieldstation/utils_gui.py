@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 import tkinter as tk
 
-def button_photo():
-    global TAKE_PHOTO
-    TAKE_PHOTO = True
+# def button_photo():
+#     global TAKE_PHOTO
+#     TAKE_PHOTO = True
 
-def button_gps():
-    global TAKE_GPS
-    TAKE_GPS = True
+# def button_gps():
+#     global TAKE_GPS
+#     TAKE_GPS = True
 
-def button_exit():
-    global TAKE_EXIT
-    TAKE_EXIT = True
+# def button_exit():
+#     global TAKE_EXIT
+#     TAKE_EXIT = True
 
 '''
 Configure the GUI
@@ -32,21 +32,21 @@ def config_gui(root, software_version):
     frame_saved = tk.Frame(master=root, height=380, bg="black")
     frame_saved.grid(row=3, column=0, sticky="nsew")
     
-    # -------------- Buttons
-    # frame
-    frame_button = tk.Frame(master=root, height = 60, bg="black")
-    frame_button.grid(row=4, column=0, columnspan= 2, sticky="nsew")
+    # # -------------- Buttons
+    # # frame
+    # frame_button = tk.Frame(master=root, height = 60, bg="black")
+    # frame_button.grid(row=4, column=0, columnspan= 2, sticky="nsew")
     
-    frame_button.rowconfigure(0, minsize=60)
-    frame_button.columnconfigure([0, 1, 2, 3, 4, 5], minsize=200)
+    # frame_button.rowconfigure(0, minsize=60)
+    # frame_button.columnconfigure([0, 1, 2, 3, 4, 5], minsize=200)
 
-    b_photo = tk.Button(master=frame_button, command=lambda: button_photo(), text = "PHOTO", font=("Arial", 20), bg="green4", fg="black", activebackground="green2")
-    b_gps = tk.Button(master=frame_button, command=lambda: button_gps(), text = "GPS", font=("Arial", 20), bg="royal blue", fg="black", activebackground="deep sky blue")
-    b_exit = tk.Button(master=frame_button, command=lambda: button_exit(), text = "QUIT", font=("Arial", 20), bg="maroon", fg="white", activebackground="red")
+    # b_photo = tk.Button(master=frame_button, command=lambda: button_photo(), text = "PHOTO", font=("Arial", 20), bg="green4", fg="black", activebackground="green2")
+    # b_gps = tk.Button(master=frame_button, command=lambda: button_gps(), text = "GPS", font=("Arial", 20), bg="royal blue", fg="black", activebackground="deep sky blue")
+    # b_exit = tk.Button(master=frame_button, command=lambda: button_exit(), text = "QUIT", font=("Arial", 20), bg="maroon", fg="white", activebackground="red")
 
-    b_exit.grid(row=0, column=0, sticky="nsew")
-    b_gps.grid(row=0, column=3, sticky="nsew")
-    b_photo.grid(row=0, column=4, sticky="nsew")
+    # b_exit.grid(row=0, column=0, sticky="nsew")
+    # b_gps.grid(row=0, column=3, sticky="nsew")
+    # b_photo.grid(row=0, column=4, sticky="nsew")
 
     # -------------- Info header
     label_top_info = tk.Label(master=root, text="Info", bg="black", fg="white", font=("Arial", 20))
@@ -237,6 +237,27 @@ def config_gui(root, software_version):
     label_version_status.grid(row=0, column=1, sticky="w")
 
     return root, frame_preview, frame_saved, label_camera_status, label_focus_live_status, label_focus_saved_status, label_fname_status, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_gps_time_status, label_local_time_status, label_total_status, label_session_status, label_csv_status, label_nimage_status, label_ndevice_status, label_usbspeed_status, label_version_status
+
+'''
+    # Terminal out, but causes error
+    # empty1 = tk.Label(master=root, text="Terminal Output", bg="black", fg="white")
+    empty1.grid(row=0, column=1, sticky="nsew")
+    
+    frame_terminal = tk.Frame(root, height=350, width=400, bg="black")
+    frame_terminal.grid(row=1, column= 1, rowspan=3, sticky="nsew")
+
+    text_terminal = tk.Text(frame_terminal, bg="black", fg="white")
+    text_terminal.pack(side='left', fill='both')
+
+    scrollbar = tk.Scrollbar(frame_terminal)
+    scrollbar.pack(side='right', fill='y')
+
+    text_terminal['yscrollcommand'] = scrollbar.set
+    scrollbar['command'] = text_terminal.yview
+
+    old_stdout = sys.stdout    
+    sys.stdout = Redirect(text_terminal)
+'''
 
 '''
 Function to animate "Ready" in the GUI
