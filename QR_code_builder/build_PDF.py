@@ -45,7 +45,7 @@ def main() -> None:
                         QR_BUFFER_X = 30,
                         QR_BUFFER_Y = 4,
                         QR_DENSITY = cfg['fieldsheetbuilder']['QR_code_builder']['QR_density'])
-        elif cfg['fieldsheetbuilder']['QR_code_builder']['default_config'] == 'A4_Levels':
+        elif cfg['fieldsheetbuilder']['QR_code_builder']['default_config'] == 'A4_Short_Names':
             page = Input(PDF_NAME=PDF_NAME, DIR_CSV =DIR_CSV, CSV_NAME=CSV_NAME, QR_LOCATION=QR_LOCATION, CREATE_FIELD_SHEET = CREATE_FIELD_SHEET, CREATE_QR_CODES= CREATE_QR_CODES, CREATE_SIZE_CHECK = CREATE_SIZE_CHECK,
                         SIZE = 12, SPACE = 4, LABELSHIFT = 7, PRINT_ORDER= 'row', PAGESIZE_TEMPLATE = PAGESIZE_TEMPLATE, PAGESIZE_QR = 'A4',
                         USE_LEVELS = True,

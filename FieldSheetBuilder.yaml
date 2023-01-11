@@ -18,36 +18,26 @@ fieldsheetbuilder:
     setup:
         # Which documents do you want to create? 
         create_field_sheet: True # bool True # Either True OR False
-        create_QR_codes: True # bool True # Either True OR False
-        create_size_check: True # bool True # Either True OR False
+        create_QR_codes: False # bool True # Either True OR False
+        create_size_check: False # bool True # Either True OR False
 
         # Input / Output
-        new_file_stem: 'Demo_6_Levels_N24_H_5' # str 'name_of_project' base name of created documents 'Demo_Levels_A4_QR-H-1_A3A4'
+        new_file_stem: 'A5' # str 'name_of_project' base name of created documents 'Demo_Levels_A4_QR-H-1_A3A4'
         dir_containing_CSV_files: 'D:\Dropbox\FieldPrism\QR_code_builder\CSV_Files'
-        name_CSV_file: 'Demo_6_Levels' # CSV file containing the naming hierarchy
+        name_CSV_file: 'Demo_Levels' # CSV file containing the naming hierarchy
     
     ### Set the size of the  field sheet ###
     field_sheet_builder:
-        page_size: 'A4' # From small to large, either 'A5' OR 'A4' OR 'Legal' OR 'A3' OR 'Custom'
+        page_size: 'A5' # From small to large, either 'A5' OR 'A4' OR 'Legal' OR 'A3' OR 'Custom'
         QR_location: 'solo' # Print QR codes onto the field sheet. NOT recommended 
     
     ### Set parameters for constructing the QR code sheet ###
-    level_designer:
-        level_names:
-            level_1: 'Collector'
-            level_2: 
-            level_3: 
-            level_4: 
-            level_5: 
-            level_6: 
-        level_iterate:
-            L1_ind: ['WW','SW','MW']
     QR_code_builder:
         #########################################################
         ### Using default will override all following options ###
         #########################################################
         ues_default_setup: True # bool True
-        default_config: 'A4_Long_Names' # 'A4_Levels' OR 'A4_Long_Names'
+        default_config: 'A4_Short_Names' # 'A4_Short_Names' OR 'A4_Long_Names'
 
         # QR Code density
         # Default = 1. Results in larger 'pixels', best for low-res cameras

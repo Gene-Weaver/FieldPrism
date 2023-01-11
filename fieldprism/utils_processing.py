@@ -362,20 +362,14 @@ def get_scale_ratio(cfg):
         print(f"{bcolors.FAIL}In FieldPrism.yaml - cfg['fieldprism']['scale']['use_predefined'] require boolean True or False{bcolors.ENDC}")
     return scale_success, scale
 
-
-
-
 # Calculate skew angle of an image
 def find_skew_angle(cvImage) -> float:
-    # Prep image, copy, convert to gray scale, blur, and threshold
+    # gray scale, blur, and threshold
     newImage = cvImage.copy()
     gray = cv2.cvtColor(newImage, cv2.COLOR_BGR2GRAY)
     blur = cv2.GaussianBlur(gray, (9, 9), 0)
     thresh = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
 
-    # Apply dilate to merge text into meaningful lines/paragraphs.
-    # Use larger kernel on X axis to merge characters into single line, cancelling out any spaces.
-    # But use smaller kernel on Y axis to separate between different blocks of text
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 2))
     dilate = cv2.dilate(thresh, kernel, iterations=2)
 

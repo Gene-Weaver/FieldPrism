@@ -90,10 +90,10 @@ class Input:
         self.QR_TALL = self.QR_TALL - 1
         self.QR_WIDE = self.QR_WIDE - 1
         self.QR_TOTAL = (self.QR_TALL + 1) * (self.QR_WIDE + 1)
-        if (self.PAGESIZE_TEMPLATE == 'L') or (self.PAGESIZE_TEMPLATE == 'legal'):
-            self.PAGESIZE_TEMPLATE == 'Legal'
-        if (self.PAGESIZE_QR == 'L') or (self.PAGESIZE_QR == 'legal'):
-            self.PAGESIZE_QR == 'Legal'
+        # if (self.PAGESIZE_TEMPLATE == 'L') or (self.PAGESIZE_TEMPLATE == 'legal'):
+        #     self.PAGESIZE_TEMPLATE == 'Legal'
+        # if (self.PAGESIZE_QR == 'L') or (self.PAGESIZE_QR == 'legal'):
+        #     self.PAGESIZE_QR == 'Legal'
 
 class PDF(FPDF):
     pass # nothing happens when it is executed.
@@ -187,7 +187,7 @@ def drawMarker(pdf,color,POS,LR,PAGESIZE):
         y_pagesize = 220
     elif PAGESIZE == 'A5':
         y_pagesize = 133
-    elif PAGESIZE == 'Legal':
+    elif PAGESIZE in ['Legal', 'legal', 'L']:
         y_pagesize = 280
     elif PAGESIZE == 'Custom':
         y_pagesize = 220
@@ -205,7 +205,7 @@ def drawMarker(pdf,color,POS,LR,PAGESIZE):
         x_pagesize = 140
     elif PAGESIZE == 'A5':
         x_pagesize = 78
-    elif PAGESIZE == 'Legal':
+    elif PAGESIZE in ['Legal', 'legal', 'L']:
         x_pagesize = 140
     elif PAGESIZE == 'Custom':
         x_pagesize = 140
@@ -255,7 +255,7 @@ def draw10cm(pdf,POS,SPACE,FONT,STYLE,SIZE,PAGESIZE):
         y_pagesize = 220
     elif PAGESIZE == 'A5':
         y_pagesize = 133
-    elif PAGESIZE == 'Legal':
+    elif PAGESIZE in ['Legal', 'legal', 'L']:
         y_pagesize = 280
     elif PAGESIZE == 'Custom':
         y_pagesize = 220
@@ -271,7 +271,10 @@ def draw10cm(pdf,POS,SPACE,FONT,STYLE,SIZE,PAGESIZE):
     pdf.set_font('Helvetica', 'B', 16)
     pdf.text(35,y-(SPACE/3),''.join(['10cm - ',PAGESIZE]))
     pdf.set_font('Helvetica', 'B', 6)
-    pdf.text(80,y-(SPACE/3),'www.FieldPrism.org')
+    if PAGESIZE == 'A5':
+        pdf.text(75,y-(SPACE/3),'www.FieldPrism.org')
+    else:
+        pdf.text(80,y-(SPACE/3),'www.FieldPrism.org')
     pdf.set_font('Helvetica', 'B', 16)
     pdf.set_line_width(0)
 
@@ -297,7 +300,7 @@ def insertText_credit_card(page,pdf,data,pos):
         y_pagesize = 120
     elif page.PAGESIZE_TEMPLATE == 'A5':
         y_pagesize = 83
-    elif page.PAGESIZE_TEMPLATE == 'Legal':
+    elif page.PAGESIZE_TEMPLATE in ['Legal', 'legal', 'L']:
         y_pagesize = 99
     elif page.PAGESIZE_TEMPLATE == 'Custom':
         y_pagesize = 120
@@ -328,7 +331,7 @@ def drawMarker_credit_card(text_to_add, page, pdf,fill,POS,LR,PAGESIZE):
         y_pagesize = 120
     elif PAGESIZE == 'A5':
         y_pagesize = 83
-    elif PAGESIZE == 'Legal':
+    elif PAGESIZE in ['Legal', 'legal', 'L']:
         y_pagesize = 180
     elif PAGESIZE == 'Custom':
         y_pagesize = 120
@@ -348,7 +351,7 @@ def drawMarker_credit_card(text_to_add, page, pdf,fill,POS,LR,PAGESIZE):
         x_pagesize = 140
     elif PAGESIZE == 'A5':
         x_pagesize = 78
-    elif PAGESIZE == 'Legal':
+    elif PAGESIZE in ['Legal', 'legal', 'L']:
         x_pagesize = 140
     elif PAGESIZE == 'Custom':
         x_pagesize = 140
@@ -390,7 +393,7 @@ def insertQRCode(page,pdf,QRname,data,POS,):
         y_pagesize = 220
     elif page.PAGESIZE_QR == 'A5':
         y_pagesize = 133
-    elif page.PAGESIZE_QR == 'Legal':
+    elif page.PAGESIZE_QR in ['Legal', 'legal', 'L']:
         y_pagesize = 280
     elif page.PAGESIZE_QR == 'Custom':
         y_pagesize = 220
@@ -570,7 +573,7 @@ def insertDataText(page,pdf,data,pos):
         y_pagesize = 220
     elif page.PAGESIZE_QR == 'A5':
         y_pagesize = 133
-    elif page.PAGESIZE_QR == 'Legal':
+    elif page.PAGESIZE_QR in ['Legal', 'legal', 'L']:
         y_pagesize = 199
     elif page.PAGESIZE_QR == 'Custom':
         y_pagesize = 220

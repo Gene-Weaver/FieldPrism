@@ -727,7 +727,7 @@ class Marker:
             result, min_score = self.compare_mask(candidate_square2, self.directory_masks, 0.4)
 
             result_area = self.compare_binary_blob_areas(candidate_square2, self.directory_masks, 0.3)
-            cv2.imwrite(''.join(["./fieldprism/marker2/",self.image_name.split('.')[0],"__",str(bi),"__","SC-",str(min_score),".jpg"]),candidate_square2)
+            # cv2.imwrite(''.join(["./fieldprism/marker2/",self.image_name.split('.')[0],"__",str(bi),"__","SC-",str(min_score),".jpg"]),candidate_square2)
             if result and result_area:
                 # cv2.imwrite(''.join(["./fieldprism/marker/",self.image_name.split('.')[0],"__",str(bi),"__","SC-",min_score,".jpg"]),candidate_square)
                 bi_sweep.append(candidate_square)
