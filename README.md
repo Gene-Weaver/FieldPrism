@@ -56,8 +56,7 @@ A virtual environment is a tool to keep the dependencies required by different p
 1. Install the required dependencies to use FieldPrism: `pip install opencv-python pandas pybboxes scipy scikit-image numpy tqdm pyyaml IPython matplotlib seaborn tensorboard fpdf`
 2. Upgrade numpy: `pip install numpy -U`
 3. Install qrcode[pil]: `pip install qrcode[pil]`
-4. The FieldPrism machine learning algorithm requires PyTorch version 1.11 for CUDA version 11.3. If your computer does not have a GPU, then use the CPU version and the CUDA version is not applicable. PyTorch is large and will take a bit to install.
-    - WITH GPU: `pip install torch==1.11.0+cu113 torchvision==0.12.0+cu113 torchaudio==0.11.0 --extra-index-url https://download.pytorch.org/whl/cu113`
-    - WITH CPU ONLY: `pip install torch==1.11.0+cpu torchvision==0.12.0+cpu torchaudio==0.11.0 --extra-index-url https://download.pytorch.org/whl/cpu`
+4. The FieldPrism machine learning algorithm requires PyTorch version 1.11 
+    - `pip install torch==1.11.0 torchvision==0.12.0 torchaudio==0.11.0`
 5. Test the installation: `python3 test.py`
 
