@@ -28,7 +28,7 @@ A virtual environment is a tool to keep the dependencies required by different p
 3. Make sure you're inside of the FieldPrism directory, then create the virtual environment (venv_fp is the name of our new virtual environment): `python3 -m venv venv_fp`
 4. Activate the virtual environment: `source ./venv_fp/bin/activate`
 5. Confirm that the venv is active (should be different from step 1): `which python`
-6. To deactivate the venv: `deactivate`
+6. If you want to exit the venv, deactivate the venv using: `deactivate`
 
 #### Installing packages
 
@@ -49,7 +49,7 @@ A virtual environment is a tool to keep the dependencies required by different p
 3. Make sure you're inside of the FieldPrism directory. use `cd` to change directories. Then create the virtual environment (venv_fp is the name of our new virtual environment): `python3 -m venv venv_fp`
 4. Activate the virtual environment: `source venv_fp/bin/activate`
 5. Confirm that the venv is active (should be different from step 1): `which python`
-6. To deactivate the venv: `deactivate`
+6. If you want to exit the venv, deactivate the venv using: `deactivate`
 
 #### Installing packages
 
