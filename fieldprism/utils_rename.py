@@ -1,5 +1,11 @@
-import os, time
-from utils_processing import bcolors
+import os, time, sys, inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+try:
+    from utils_processing import bcolors
+except:
+    from fieldprism.utils_processing import bcolors
 
 
 ''' Get DataVault.new_full_name '''

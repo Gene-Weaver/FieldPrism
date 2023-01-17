@@ -6,14 +6,6 @@ from dataclasses import dataclass, field
 from typing import List, Optional, Tuple, Union
 from PIL import Image, ImageColor, ImageDraw, ImageFont
 import platform
-# from skimage.transform import resize 
-# from skimage.metrics import structural_similarity as ssim
-# from skimage.filters import threshold_otsu 
-# from skimage.morphology import closing, square 
-# from skimage.measure import find_contours 
-# from skimage import filters, transform
-# from skimage.measure import label
-# from skimage.morphology import dilation, erosion
 
 @dataclass
 class ImageOverlay:

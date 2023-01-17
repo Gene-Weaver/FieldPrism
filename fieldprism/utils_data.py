@@ -1,8 +1,15 @@
-import os, cv2, math
+from __future__ import annotations
+import os, cv2, math, sys, inspect
 from dataclasses import dataclass, field
 import numpy as np
 import pandas as pd
-from utils_processing import bcolors
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+try:
+    from utils_processing import bcolors
+except:
+    from fieldprism.utils_processing import bcolors
 
 
 @dataclass
@@ -129,18 +136,19 @@ class Data_Vault:
             self.n_markers = len(Markers_All)
         ### Can add more Marker info here
         self.Marker_Info = []
-        for Marker in Markers_All:
-            info = {'marker_location': Marker.location,
-            'success_distortion_correction': Marker.success_dist,
-            'success_pixel_to_metric': Marker.success_conv,
-            'distortion_correction_was_approx': Marker.is_approx,
-            'one_cm_pixels': Marker.one_cm_pixels,
-            'center_point': Marker.translate_center_point,
-            'center_point_approx': Marker.rough_center,
-            'n_cm_boxes_found': Marker.count,
-            'bbox_coordinates': Marker.bbox,
-            }
-            self.Marker_Info.append(info)
+        if Markers_All is not None:
+            for Marker in Markers_All:
+                info = {'marker_location': Marker.location,
+                'success_distortion_correction': Marker.success_dist,
+                'success_pixel_to_metric': Marker.success_conv,
+                'distortion_correction_was_approx': Marker.is_approx,
+                'one_cm_pixels': Marker.one_cm_pixels,
+                'center_point': Marker.translate_center_point,
+                'center_point_approx': Marker.rough_center,
+                'n_cm_boxes_found': Marker.count,
+                'bbox_coordinates': Marker.bbox,
+                }
+                self.Marker_Info.append(info)
             # print(info)
             
     def add_process_barcodes(self, QR_List_Pass, QR_List_Fail) -> None:

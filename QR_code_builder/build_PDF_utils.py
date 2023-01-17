@@ -1,10 +1,19 @@
-import os, yaml, time, re
+from __future__ import annotations
+import os, yaml, time, re, inspect, sys
 import qrcode # pip install qrcode[pil]
 from dataclasses import dataclass, field
 import pandas as pd
 from fpdf import FPDF 
 from cmath import isnan
 from qrcode.image.styledpil import StyledPilImage
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+try:
+    from build_PDF_PageSizes import PageInfo
+except:
+    from QR_code_builder.build_PDF_PageSizes import PageInfo
+
 # from qrcode.image.styles.moduledrawers import RoundedModuleDrawer
 # from qrcode.image.styles.colormasks import RadialGradiantColorMask
 
@@ -12,9 +21,12 @@ def createProjectPDF(page):
     print(f"{bcolors.HEADER}Starting Project - {page.PDF_NAME}{bcolors.ENDC}")
     # nPages = labels.shape[0]
 
+    # Initialize Page Dimension
+    PageSizes = PageInfo()
+
     if page.CREATE_SIZE_CHECK:
         pdf = setupPDF(page,'field_sheet')
-        newPage_size(page,pdf)
+        newPage_size(page,pdf, PageSizes)
         savePDF_size(pdf,page)
         
     
@@ -22,15 +34,15 @@ def createProjectPDF(page):
         pdf = setupPDF(page,'field_sheet')
         varNames = list(page.LABELS_DF.columns)
         for pageNumber in range(page.LABELS_DF.shape[0]):
-            newPage(page,page.LABELS_DF,pdf,varNames,pageNumber)    
-        savePDF(pdf,page)
+            newPage(page, page.LABELS_DF, pdf, varNames, pageNumber, PageSizes)    
+        savePDF(pdf, page)
             
     elif page.QR_LOCATION == "solo":
         if page.CREATE_FIELD_SHEET:
             # Print the template page
             pdf = setupPDF(page,'field_sheet')
             varNames = list(page.LABELS_DF.columns)
-            newPage(page,page.LABELS_DF,pdf,varNames,0)   
+            newPage(page, page.LABELS_DF, pdf, varNames, 0, PageSizes)   
             savePDF(pdf,page)
 
         if page.CREATE_QR_CODES:
@@ -38,9 +50,9 @@ def createProjectPDF(page):
             pdf_QR = setupPDF(page, 'QR')
             varNames = list(page.LABELS_DF.columns)
             # for pageNumber in range(page.LABELS_DF.shape[0]):
-            newPage_QR(page,page.LABELS_DF,pdf_QR,varNames)  
+            newPage_QR(page, page.LABELS_DF, pdf_QR, varNames, PageSizes)  
             savePDF_QR(pdf_QR,page)
-    print(f"{bcolors.HEADER}Project Complete!{bcolors.ENDC}")
+    print(f"{bcolors.HEADER}Project Complete!{bcolors.ENDC}") 
 
 @dataclass
 class Input:
@@ -87,6 +99,7 @@ class Input:
         self.DIR_PDF = os.path.join(self.DIR_QR_CODE_BUILDER, self.DIR_PDF)
         self.LABELS: str = buildCSVpath(self.CSV_NAME)
         self.LABELS_DF = pd.read_csv(os.path.join(self.DIR_CSV,self.LABELS),dtype=str) 
+        self.LABELS_DF = self.filter_level_columns(self.LABELS_DF)
         self.QR_TALL = self.QR_TALL - 1
         self.QR_WIDE = self.QR_WIDE - 1
         self.QR_TOTAL = (self.QR_TALL + 1) * (self.QR_WIDE + 1)
@@ -94,6 +107,9 @@ class Input:
         #     self.PAGESIZE_TEMPLATE == 'Legal'
         # if (self.PAGESIZE_QR == 'L') or (self.PAGESIZE_QR == 'legal'):
         #     self.PAGESIZE_QR == 'Legal'
+
+    def filter_level_columns(self, df):
+        return df.filter(regex='Level')
 
 class PDF(FPDF):
     pass # nothing happens when it is executed.
@@ -176,45 +192,8 @@ def color_gray2(pdf):
 def draw_1cm(pdf,x,y):
     pdf.rect(x,y,10,10, style = 'DF')
 
-def drawMarker(pdf,color,POS,LR,PAGESIZE):
-    # A3.....297 x 420 mm 
-    # A4.....210 x 297 mm
-    # A5.....148 x 210 mm 
-    y_init_top = 23
-    if PAGESIZE == 'A3':
-        y_pagesize = 343
-    elif PAGESIZE == 'A4':
-        y_pagesize = 220
-    elif PAGESIZE == 'A5':
-        y_pagesize = 133
-    elif PAGESIZE in ['Legal', 'legal', 'L']:
-        y_pagesize = 280
-    elif PAGESIZE == 'Custom':
-        y_pagesize = 220
-    y_init_bottom = y_init_top + y_pagesize
-
-    if POS == 'top':
-        y = y_init_top
-    elif POS == 'bottom':
-        y = y_init_bottom
-    
-    x_init_top = 20
-    if PAGESIZE == 'A3':
-        x_pagesize = 227
-    elif PAGESIZE == 'A4':
-        x_pagesize = 140
-    elif PAGESIZE == 'A5':
-        x_pagesize = 78
-    elif PAGESIZE in ['Legal', 'legal', 'L']:
-        x_pagesize = 140
-    elif PAGESIZE == 'Custom':
-        x_pagesize = 140
-    x_init_bottom = x_init_top + x_pagesize
-    
-    if LR == 'left':
-        x = x_init_top
-    elif LR == 'right':
-        x = x_init_bottom
+def drawMarker(pdf, color, POS, LR, PAGESIZE, PageSizes):
+    x, y = PageSizes.xy_drawMarker(POS, LR, PAGESIZE)
         
     if color == 'color':
         color_red(pdf)
@@ -244,27 +223,8 @@ def drawMarker(pdf,color,POS,LR,PAGESIZE):
         color_black(pdf)
         draw_1cm(pdf,x+10,y+10)
 
-def draw10cm(pdf,POS,SPACE,FONT,STYLE,SIZE,PAGESIZE):
-    # A3.....297 x 420 mm 
-    # A4.....210 x 297 mm
-    # A5.....148 x 210 mm 
-    y_init_top = 55
-    if PAGESIZE == 'A3':
-        y_pagesize = 343
-    elif PAGESIZE == 'A4':
-        y_pagesize = 220
-    elif PAGESIZE == 'A5':
-        y_pagesize = 133
-    elif PAGESIZE in ['Legal', 'legal', 'L']:
-        y_pagesize = 280
-    elif PAGESIZE == 'Custom':
-        y_pagesize = 220
-    y_init_bottom = y_init_top + y_pagesize
-
-    if POS == 'top':
-        y = y_init_top
-    elif POS == 'bottom':
-        y = y_init_bottom
+def draw10cm(pdf,POS,SPACE,FONT,STYLE,SIZE,PAGESIZE, PageSizes):
+    y = PageSizes.xy_draw10cm(POS, PAGESIZE)
 
     pdf.set_line_width(1)
     pdf.line(20.4,y,120,y)
@@ -288,28 +248,8 @@ def draw_credit_card(pdf,x,y,fill):
     else:
         pdf.rect(x,y,86,54, style = 'D')
 
-def insertText_credit_card(page,pdf,data,pos):
-    # A3.....297 x 420 mm  for A4: top:x=95 y=23 bottom:x=95 y=366 
-    # A4.....210 x 297 mm  for A4: top:x=95 y=23 bottom:x=95 y=243
-    # A5.....148 x 210 mm  for A4: top:x=95 y=23 bottom:x=95 y=156
-    x = 20
-    y_init_top = 80
-    if page.PAGESIZE_TEMPLATE == 'A3':
-        y_pagesize = 243
-    if page.PAGESIZE_TEMPLATE == 'A4':
-        y_pagesize = 120
-    elif page.PAGESIZE_TEMPLATE == 'A5':
-        y_pagesize = 83
-    elif page.PAGESIZE_TEMPLATE in ['Legal', 'legal', 'L']:
-        y_pagesize = 99
-    elif page.PAGESIZE_TEMPLATE == 'Custom':
-        y_pagesize = 120
-    y_init_bottom = y_init_top + y_pagesize
-    
-    if pos == 'top':
-        y = y_init_top + page.LABELSHIFT
-    elif pos == 'bottom':
-        y = y_init_bottom + page.LABELSHIFT
+def insertText_credit_card(page,pdf,data,pos, PageSizes):
+    x, y = PageSizes.xy_insertText_credit_card(page, pos)
 
     padding = y+(page.SPACE)
     pdf.text(x, padding, data)
@@ -317,53 +257,20 @@ def insertText_credit_card(page,pdf,data,pos):
 def insertImage(page,pdf,image,x,y):
     pdf.image(image, x = x+7, y = y+3, w = 77, h = 50, type = '', link = '')
 
-def drawMarker_credit_card(text_to_add, page, pdf,fill,POS,LR,PAGESIZE):
+def drawMarker_credit_card(text_to_add, page, pdf, fill, POS, LR, PAGESIZE, PageSizes):
     dir_img = os.path.join(os.path.dirname(os.path.dirname(__file__)),'img')
     img_black = os.path.join(dir_img,'FieldPrism_Size_Ckeck_Black.jpg')
     img_white = os.path.join(dir_img,'FieldPrism_Size_Ckeck_White.jpg')
-    # A3.....297 x 420 mm 
-    # A4.....210 x 297 mm
-    # A5.....148 x 210 mm 
-    y_init_top = 28
-    if PAGESIZE == 'A3':
-        y_pagesize = 243
-    elif PAGESIZE == 'A4':
-        y_pagesize = 120
-    elif PAGESIZE == 'A5':
-        y_pagesize = 83
-    elif PAGESIZE in ['Legal', 'legal', 'L']:
-        y_pagesize = 180
-    elif PAGESIZE == 'Custom':
-        y_pagesize = 120
-    y_init_bottom = y_init_top + y_pagesize
-
+    
     if POS == 'top':
         image = img_white
-        y = y_init_top
     elif POS == 'bottom':
         image = img_black
-        y = y_init_bottom
-    
-    x_init_top = 20
-    if PAGESIZE == 'A3':
-        x_pagesize = 227
-    elif PAGESIZE == 'A4':
-        x_pagesize = 140
-    elif PAGESIZE == 'A5':
-        x_pagesize = 78
-    elif PAGESIZE in ['Legal', 'legal', 'L']:
-        x_pagesize = 140
-    elif PAGESIZE == 'Custom':
-        x_pagesize = 140
-    x_init_bottom = x_init_top + x_pagesize
-    
-    if LR == 'left':
-        x = x_init_top
-    elif LR == 'right':
-        x = x_init_bottom
+
+    x, y = PageSizes.xy_drawMarker_credit_card(POS, LR, PAGESIZE)
     
     draw_credit_card(pdf,x,y,fill)
-    insertText_credit_card(page,pdf,text_to_add,POS)
+    insertText_credit_card(page,pdf,text_to_add,POS, PageSizes)
     insertImage(page,pdf,image,x,y)
     
     
@@ -380,29 +287,8 @@ def generateQRCode(page,QRpath,data,dirLevel):
     #img = qr.make_image(fill_color="black", back_color="white")
     img.save(QRpath)
 
-def insertQRCode(page,pdf,QRname,data,POS,):
-    # Legal..216 x 356 mm  for  L: top:x=95 y=23 bottom:x=95 y=366 
-    # A3.....297 x 420 mm  for A4: top:x=95 y=23 bottom:x=95 y=366 
-    # A4.....210 x 297 mm  for A4: top:x=95 y=23 bottom:x=95 y=243
-    # A5.....148 x 210 mm  for A4: top:x=95 y=23 bottom:x=95 y=156
-    x = 95
-    y_init_top = 23
-    if page.PAGESIZE_QR == 'A3':
-        y_pagesize = 343
-    if page.PAGESIZE_QR == 'A4':
-        y_pagesize = 220
-    elif page.PAGESIZE_QR == 'A5':
-        y_pagesize = 133
-    elif page.PAGESIZE_QR in ['Legal', 'legal', 'L']:
-        y_pagesize = 280
-    elif page.PAGESIZE_QR == 'Custom':
-        y_pagesize = 220
-    y_init_bottom = y_init_top + y_pagesize
-
-    if POS == 'top':
-        y = y_init_top
-    elif POS == 'bottom':
-        y = y_init_bottom
+def insertQRCode(page, pdf, QRname, data, POS, PageSizes):
+    x, y = PageSizes.xy_insertQRCode(page, POS)
     # if SAVE_QR:
     QRpath = os.path.abspath(os.path.join(page.DIR_QR,QRname+'.png'))
     # else:
@@ -561,28 +447,8 @@ def compileDataLevels(labels,varNames,pageNumber): #varNames labels
     QRname = dataMod.replace('|',sep3)
     return data, QRname
 
-def insertDataText(page,pdf,data,pos):
-    # A3.....297 x 420 mm  for A4: top:x=95 y=23 bottom:x=95 y=366 
-    # A4.....210 x 297 mm  for A4: top:x=95 y=23 bottom:x=95 y=243
-    # A5.....148 x 210 mm  for A4: top:x=95 y=23 bottom:x=95 y=156
-    x = 95
-    y_init_top = 23
-    if page.PAGESIZE_QR == 'A3':
-        y_pagesize = 343
-    elif page.PAGESIZE_QR == 'A4':
-        y_pagesize = 220
-    elif page.PAGESIZE_QR == 'A5':
-        y_pagesize = 133
-    elif page.PAGESIZE_QR in ['Legal', 'legal', 'L']:
-        y_pagesize = 199
-    elif page.PAGESIZE_QR == 'Custom':
-        y_pagesize = 220
-    y_init_bottom = y_init_top + y_pagesize
-    
-    if pos == 'top':
-        y = y_init_top + page.LABELSHIFT
-    elif pos == 'bottom':
-        y = y_init_bottom + page.LABELSHIFT
+def insertDataText(page, pdf, data, pos, PageSizes):
+    x, y = PageSizes.xy_insertDataText( page, pos)
     
     textToShow = parseData(data)
 
@@ -594,48 +460,48 @@ def insertDataText(page,pdf,data,pos):
     # pdf.text(95, y+3*SPACE, D)
     # pdf.text(95, y+4*SPACE, E)
     
-def newPage(page,labels,pdf,varNames,pageNumber):
+def newPage(page, labels, pdf, varNames, pageNumber, PageSizes):
     if page.QR_LOCATION == "imbed":
         print(f"{bcolors.OKGREEN}       Creating Page {pageNumber + 1} / {labels.shape[0]}{bcolors.ENDC}")
     elif page.QR_LOCATION == "solo":
         print(f"{bcolors.OKGREEN}       Creating Template Page{bcolors.ENDC}")
     pdf.add_page()
 
-    drawMarker(pdf,page.COLOR,'top','left',page.PAGESIZE_TEMPLATE)
-    drawMarker(pdf,page.COLOR,'top','right',page.PAGESIZE_TEMPLATE)
-    drawMarker(pdf,page.COLOR,'bottom','left',page.PAGESIZE_TEMPLATE)
-    drawMarker(pdf,page.COLOR,'bottom','right',page.PAGESIZE_TEMPLATE)
+    drawMarker(pdf,page.COLOR,'top','left',page.PAGESIZE_TEMPLATE, PageSizes)
+    drawMarker(pdf,page.COLOR,'top','right',page.PAGESIZE_TEMPLATE, PageSizes)
+    drawMarker(pdf,page.COLOR,'bottom','left',page.PAGESIZE_TEMPLATE, PageSizes)
+    drawMarker(pdf,page.COLOR,'bottom','right',page.PAGESIZE_TEMPLATE, PageSizes)
 
     data,QRname = compileData(labels,varNames,pageNumber)
 
     if page.QR_LOCATION == "imbed":
         if page.POS == 'both':
-            insertQRCode(page,pdf,QRname,data,'top')
-            insertQRCode(page,pdf,QRname,data,'bottom')
-            draw10cm(pdf,'top',6,page.FONT,page.STYLE,page.SIZE,page.PAGESIZE_TEMPLATE)
-            draw10cm(pdf,'bottom',6,page.FONT,page.STYLE,page.SIZE,page.PAGESIZE_TEMPLATE)
-            insertDataText(page,pdf,data,'top')
-            insertDataText(page,pdf,data,'bottom')
+            insertQRCode(page,pdf,QRname,data,'top', PageSizes)
+            insertQRCode(page,pdf,QRname,data,'bottom', PageSizes)
+            draw10cm(pdf,'top',6,page.FONT,page.STYLE,page.SIZE,page.PAGESIZE_TEMPLATE, PageSizes)
+            draw10cm(pdf,'bottom',6,page.FONT,page.STYLE,page.SIZE,page.PAGESIZE_TEMPLATE, PageSizes)
+            insertDataText(page, pdf, data, 'top', PageSizes)
+            insertDataText(page, pdf, data, 'bottom', PageSizes)
         else:
-            insertQRCode(page,pdf,QRname,data,page.POS)
-            draw10cm(pdf,page.POS,6,page.FONT,page.STYLE,page.SIZE,page.PAGESIZE_TEMPLATE)
-            insertDataText(page,pdf,data,page.POS)
+            insertQRCode(page,pdf,QRname,data,page.POS, PageSizes)
+            draw10cm(pdf,page.POS,6,page.FONT,page.STYLE,page.SIZE,page.PAGESIZE_TEMPLATE, PageSizes)
+            insertDataText(page, pdf, data, page.POS, PageSizes)
     elif page.QR_LOCATION == "solo":
         # insertQRCode(pdf,page.DIR_QR,QRname,page.SAVE_QR,data,'top',page.PAGESIZE_TEMPLATE)
         # insertQRCode(pdf,page.DIR_QR,QRname,page.SAVE_QR,data,'bottom',page.PAGESIZE_TEMPLATE)
-        draw10cm(pdf,'top',6,page.FONT,page.STYLE,page.SIZE,page.PAGESIZE_TEMPLATE)
-        draw10cm(pdf,'bottom',6,page.FONT,page.STYLE,page.SIZE,page.PAGESIZE_TEMPLATE)
+        draw10cm(pdf,'top',6,page.FONT,page.STYLE,page.SIZE,page.PAGESIZE_TEMPLATE, PageSizes)
+        draw10cm(pdf,'bottom',6,page.FONT,page.STYLE,page.SIZE,page.PAGESIZE_TEMPLATE, PageSizes)
         # insertDataText(page,pdf,data,'top')
         # insertDataText(page,pdf,data,'bottom')
 
 
-def newPage_size(page,pdf):
+def newPage_size(page, pdf, PageSizes):
     print(f"{bcolors.OKGREEN}       Creating Size Check{bcolors.ENDC}")
     pdf.add_page()
     text_to_add = 'Standard credit card should fit inside the lines with no white space: 86mm. x 54 mm.'
-    drawMarker_credit_card(text_to_add, page, pdf,False,'top','left',page.PAGESIZE_TEMPLATE)
+    drawMarker_credit_card(text_to_add, page, pdf,False,'top','left',page.PAGESIZE_TEMPLATE, PageSizes)
     text_to_add = 'Standard credit card should cover all black, except the corner tips: 86mm. x 54 mm.'
-    drawMarker_credit_card(text_to_add, page, pdf,True,'bottom','left',page.PAGESIZE_TEMPLATE)
+    drawMarker_credit_card(text_to_add, page, pdf,True,'bottom','left',page.PAGESIZE_TEMPLATE, PageSizes)
     
 
 
@@ -690,7 +556,7 @@ def buildCSVpath(fname) -> str:
         fname = fname
     return fname
 
-def newPage_QR(page,labels,pdf,varNames):
+def newPage_QR(page, labels, pdf, varNames, PageSizes):
     pdf.add_page()
 
     indX = 0
@@ -761,3 +627,14 @@ def newPage_QR(page,labels,pdf,varNames):
                         indX = 0
                         indY += 1
             previousLevel = (page.QR_TOTAL*indPage) - pageNumber + indPage
+
+if __name__ == '__main__':
+    Size = PageInfo()
+
+    POS = 'top' # 'top' 'bottom' 
+    LR = 'right' # 'left' 'right'
+    PAGESIZE = 't'
+    
+    x, y = Size.xy_drawMarker(POS, LR, PAGESIZE)
+    print(f'x: {x}')
+    print(f'y: {y}')

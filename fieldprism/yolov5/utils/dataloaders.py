@@ -33,7 +33,14 @@ from utils.general import (DATASETS_DIR, LOGGER, NUM_THREADS, check_dataset, che
                            cv2, is_colab, is_kaggle, segments2boxes, unzip_file, xyn2xy, xywh2xyxy, xywhn2xyxy,
                            xyxy2xywhn)
 from utils.torch_utils import torch_distributed_zero_first
-from utils_processing import bcolors
+import inspect, sys
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+try:
+    from utils_processing import bcolors
+except:
+    from fieldprism.utils_processing import bcolors
 
 # Parameters
 HELP_URL = 'See https://github.com/ultralytics/yolov5/wiki/Train-Custom-Data'

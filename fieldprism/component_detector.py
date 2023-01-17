@@ -1,6 +1,13 @@
-import os
-from utils_processing import bcolors
-from yolov5.detect import run
+import os, inspect, sys
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+try:
+    from utils_processing import bcolors
+    from yolov5.detect import run
+except:
+    from fieldprism.utils_processing import bcolors
+    from fieldprism.yolov5.detect import run
 
 def detect_components_in_image(option, cfg, run_name, dir_out,existing_folder):
     dir_FP = os.path.dirname(os.path.dirname(__file__))
@@ -10,7 +17,7 @@ def detect_components_in_image(option, cfg, run_name, dir_out,existing_folder):
     elif cfg['fieldprism']['detector']['model_size'] == 'small':
         image_input_size = (512, 512)
         dir_weights =  os.path.join(dir_FP,'fieldprism','yolov5','weights','fp_small_v_1.pt')
-    elif cfg['fieldprism']['detector']['model_size'] == 'nightly':
+    elif cfg['fieldprism']['detector']['model_size'] == 'best':
         image_input_size = (1280, 1280)
         dir_weights =  os.path.join(dir_FP,'fieldprism','yolov5','weights','best.pt')
     else:

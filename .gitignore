@@ -8,6 +8,7 @@ archive/
 venv_old/
 venv_fp/
 venv_fp_linux/
+venv_fp_38/
 fieldprism/yolov5/weights/
 QR_code_builder/bin_PDF/
 QR_code_builder/bin_QR/

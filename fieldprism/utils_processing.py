@@ -329,7 +329,7 @@ def get_approx_conv_factor(cfg):
 
 def get_scale_ratio(cfg):
     scale_success = False
-    predefined_names = ['A5', 'A4', 'A3', 'legal']
+    predefined_names = ['A5', 'A4', 'A3', 'legal', 'tabloid', 'letter']
     custom_names = ['custom']
     if cfg['fieldprism']['scale']['use_predefined']:
         user_scale = cfg['fieldprism']['scale']['scale_size']
@@ -340,7 +340,11 @@ def get_scale_ratio(cfg):
                 scale = np.divide(13.7,21.55)  ### TODO check all ratios, good as of 11/11/2022
             elif user_scale == 'A3':
                 scale = np.divide(22.4,33.8)  ### TODO check all ratios, good as of 11/11/2022
-            elif user_scale == 'legal':
+            elif user_scale in ['letter', 'LETTER', 'Letter']:
+                scale = np.divide(14.55,20.2)  ### TODO check all ratios, good as of 01/12/2022
+            elif user_scale in ['tabloid', 'TABLOID', 'Tabloid']:
+                scale = np.divide(22.4,0)  ### TODO check all ratios
+            elif user_scale in ['legal', 'LEGAL', 'Legal']:
                 scale = np.divide(14.0,28.0)  ### TODO check all ratios, good as of 11/11/2022
             scale_success = True
             print(f"{bcolors.OKGREEN}Predefined Scale: {user_scale}{bcolors.ENDC}")

@@ -1,17 +1,30 @@
-import os, cv2
+import os, cv2, sys, inspect
 import shutil
 from pathlib import Path
 import pandas as pd
 from torchvision.transforms import ToPILImage
 from torchvision.io import read_image
-from utils_processing import (get_cfg_from_full_path, make_images_in_dir_vertical, get_scale_ratio, write_yaml, 
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+try:
+    from utils_processing import (get_cfg_from_full_path, make_images_in_dir_vertical, get_scale_ratio, write_yaml, 
+                                    make_file_names_valid, remove_overlapping_predictions, increment_path)
+    from utils_processing import bcolors, File_Structure
+    from component_detector import detect_components_in_image
+    from utils_rulers import process_rulers
+    from utils_barcodes import process_barcodes
+    from utils_rename import rename_files_from_QR_codes
+    from utils_data import Data_Vault, Data_FS, build_empty_csv, write_datarow_to_file
+except:
+    from fieldprism.utils_processing import (get_cfg_from_full_path, make_images_in_dir_vertical, get_scale_ratio, write_yaml, 
                                 make_file_names_valid, remove_overlapping_predictions, increment_path)
-from utils_processing import bcolors, File_Structure
-from component_detector import detect_components_in_image
-from utils_rulers import process_rulers
-from utils_barcodes import process_barcodes
-from utils_rename import rename_files_from_QR_codes
-from utils_data import Data_Vault, Data_FS, build_empty_csv, write_datarow_to_file
+    from fieldprism.utils_processing import bcolors, File_Structure
+    from fieldprism.component_detector import detect_components_in_image
+    from fieldprism.utils_rulers import process_rulers
+    from fieldprism.utils_barcodes import process_barcodes
+    from fieldprism.utils_rename import rename_files_from_QR_codes
+    from fieldprism.utils_data import Data_Vault, Data_FS, build_empty_csv, write_datarow_to_file
 
 def identify_and_process_markers(cfg, option, ratio, dir_images_to_process, Dirs, path_CSV_out):
     # Get marker templates for maker matching

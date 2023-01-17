@@ -1,9 +1,16 @@
 # py -m ensurepip --upgrade
 # .\venv\Scripts\activate
-import os
-from build_PDF_utils import bcolors, Input, get_cfg_from_full_path, createProjectPDF
+import os, inspect, sys
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+try:
+    from build_PDF_utils import bcolors, Input, get_cfg_from_full_path, createProjectPDF
+except:
+    from QR_code_builder.build_PDF_utils import bcolors, Input, get_cfg_from_full_path, createProjectPDF
 
-def main() -> None:
+
+def build_pdf() -> None:
     ### Import from config file
     dir_FP = os.path.dirname(os.path.dirname(__file__))
     path_cfg = os.path.join(dir_FP,'FieldSheetBuilder.yaml')
@@ -33,7 +40,7 @@ def main() -> None:
                         LABELSHIFT=6,
                         PRINT_ORDER='row',
                         PAGESIZE_TEMPLATE = PAGESIZE_TEMPLATE,
-                        PAGESIZE_QR = 'A4',
+                        PAGESIZE_QR = 'letter',
                         USE_LEVELS=True,
                         PAGE_MARGIN_LEFT=10,
                         PAGE_MARGIN_TOP=15,
@@ -43,11 +50,11 @@ def main() -> None:
                         QR_TALL = 8, # with long labels = 10
                         QR_WIDE = 3,# with long labels = 3
                         QR_BUFFER_X = 30,
-                        QR_BUFFER_Y = 4,
+                        QR_BUFFER_Y = 1,
                         QR_DENSITY = cfg['fieldsheetbuilder']['QR_code_builder']['QR_density'])
         elif cfg['fieldsheetbuilder']['QR_code_builder']['default_config'] == 'A4_Short_Names':
             page = Input(PDF_NAME=PDF_NAME, DIR_CSV =DIR_CSV, CSV_NAME=CSV_NAME, QR_LOCATION=QR_LOCATION, CREATE_FIELD_SHEET = CREATE_FIELD_SHEET, CREATE_QR_CODES= CREATE_QR_CODES, CREATE_SIZE_CHECK = CREATE_SIZE_CHECK,
-                        SIZE = 12, SPACE = 4, LABELSHIFT = 7, PRINT_ORDER= 'row', PAGESIZE_TEMPLATE = PAGESIZE_TEMPLATE, PAGESIZE_QR = 'A4',
+                        SIZE = 12, SPACE = 4, LABELSHIFT = 7, PRINT_ORDER= 'row', PAGESIZE_TEMPLATE = PAGESIZE_TEMPLATE, PAGESIZE_QR = 'letter',
                         USE_LEVELS = True,
                         PAGE_MARGIN_LEFT=15,
                         PAGE_MARGIN_TOP=15,
@@ -56,8 +63,8 @@ def main() -> None:
                         QR_DIM_Y = 30,
                         QR_TALL = 8, # with long labels = 10
                         QR_WIDE = 5,# with long labels = 3
-                        QR_BUFFER_X = 5,
-                        QR_BUFFER_Y = 4,
+                        QR_BUFFER_X = 8,
+                        QR_BUFFER_Y = 1,
                         QR_DENSITY = cfg['fieldsheetbuilder']['QR_code_builder']['QR_density'])
     ### Manual / Custom Config
     else:
@@ -89,7 +96,7 @@ def main() -> None:
     createProjectPDF(page)
 
 if __name__ == '__main__':
-    main()
+    build_pdf()
 
 
 

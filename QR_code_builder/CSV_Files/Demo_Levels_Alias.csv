@@ -1,0 +1,53 @@
+Level_1,Alias_1,Level_2,Alias_2,Level_3,Alias_3
+A,Acer,1,Stem,a,Red
+B,Alnus,2,Leaf,b,Orange
+C,Betula,3,Petiole,c,Yellow
+D,Carpinus,4,Lamina,d,Green
+E,Castanea,5,Venation,e,Blue
+F,Cedrus,6,Leaf margin,f,Purple
+G,Cercis,7,Leaf tip,g,Pink
+H,Cornus,8,Leaf base,h,Brown
+I,Corylus,9,Leaf arrangement,i,Black
+J,Cotinus,10,Leaf shape,j,White
+K,Crataegus,11,Leaf structure,k,Gray
+L,Fagus,12,Leaf surface,l,Light Red
+M,Fraxinus,13,Leaf hair,m,Light Orange
+N,Gleditsia,14,Leaf gland,n,Light Yellow
+O,Gymnocladus,15,Leaf scar,o,Light Green
+P,Ilex,16,Leaf bud,p,Light Blue
+Q,Juglans,17,Leaf axil,q,Light Purple
+R,Juniperus,18,Leaf sheath,r,Light Pink
+S,Larix,19,Leaf stipule,s,Beige
+T,Liriodendron,20,Leaflet,t,Olive
+U,Maclura,21,Leaf vein,u,Cyan
+V,Magnolia,22,Leaflet arrangement,v,Lavender
+W,Morus,23,Leaflet shape,w,Maroon
+X,Nothofagus,24,Leaflet margin,x,Turquoise
+Y,Ostrya,25,Leaflet vein,y,Navy
+Z,Pinus,26,Leaflet base,z,Forest Green
+AA,Populus,27,Leaflet tip,aa,Olive Drab
+BB,Prunus,28,Leaflet hair,bb,Indigo
+CC,Pseudotsuga,29,Leaflet gland,cc,Burgundy
+DD,Pyrus,30,Leaflet scar,dd,Bronze
+EE,Quercus,31,Flower,ee,Silver
+FF,Rhododendron,32,Sepal,ff,Gold
+GG,Robinia,33,Petal,gg,Bronze
+HH,Salix,34,Stamen,hh,Copper
+II,Sassafras,35,Pistil,ii,Rust
+JJ,Sequoiadendron,36,Ovary,jj,Mustard
+KK,Sorbus,37,Stigma,kk,Sage
+LL,Stewartia,38,Style,ll,Peach
+MM,Styrax,39,Filament,mm,Coral
+NN,Taxus,40,Anther,nn,Sky Blue
+OO,Tilia,41,Pedicel,oo,Cream
+PP,Ulmus,42,Receptacle,pp,Eggplant
+QQ,Viburnum,43,Inflorescence,qq,Violet
+RR,Zelkova,44,Bract,rr,Steel Blue
+SS,Echinacea,45,Calyx,ss,Lavender
+TT,Echinops,46,Pith,tt,Plum
+UU,Eupatorium,47,Phloem,uu,Teal
+VV,Eurybia,48,Xylem,vv,Chocolate
+WW,Eutrochium,49,Bark,ww,Tan
+XX,Euthamia,50,Root,xx,Seafoam
+YY,Fragaria,51,Embryo,yy,Lemon
+ZZ,Galium,52,Endosperm,zz,Lime

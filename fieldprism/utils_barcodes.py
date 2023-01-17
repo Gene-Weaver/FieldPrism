@@ -1,10 +1,17 @@
-import os, cv2, pybboxes, torch
+import os, cv2, pybboxes, torch, inspect, sys
 import numpy as np
-from utils_processing import get_color
-from utils_overlay import generate_overlay_QR_add
-from utils_processing import bcolors
 from dataclasses import dataclass, field
-
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+try:
+    from utils_processing import get_color
+    from utils_overlay import generate_overlay_QR_add
+    from utils_processing import bcolors
+except:
+    from fieldprism.utils_processing import get_color
+    from fieldprism.utils_overlay import generate_overlay_QR_add
+    from fieldprism.utils_processing import bcolors
 '''
 Main Function
 '''

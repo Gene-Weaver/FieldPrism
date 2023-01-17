@@ -6,15 +6,24 @@ import pandas as pd
 from scipy.spatial import KDTree
 from torchvision.transforms import ToPILImage
 from torchvision.io import read_image
-from utils_processing import get_color, get_approx_conv_factor, get_scale_ratio
-from utils_processing import bcolors, ImageCorrected
-from utils_overlay import ImageOverlay, generate_overlay, generate_overlay_add
+import inspect, sys
 from skimage.morphology import closing, square 
 from skimage.measure import find_contours 
 from skimage import filters, transform
 from skimage.measure import label
 from skimage.morphology import dilation, erosion
 from skimage.transform import resize 
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+try:
+    from utils_processing import get_color, get_approx_conv_factor, get_scale_ratio
+    from utils_processing import bcolors, ImageCorrected
+    from utils_overlay import ImageOverlay, generate_overlay, generate_overlay_add
+except:
+    from fieldprism.utils_processing import get_color, get_approx_conv_factor, get_scale_ratio
+    from fieldprism.utils_processing import bcolors, ImageCorrected
+    from fieldprism.utils_overlay import ImageOverlay, generate_overlay, generate_overlay_add
 
 '''
 Main Function
