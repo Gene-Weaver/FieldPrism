@@ -1,0 +1,86 @@
+#  ______ _      _     _ _____ _               _  ______       _ _     _           
+#  |  ___(_)    | |   | /  ___| |             | | | ___ \     (_) |   | |          
+#  | |_   _  ___| | __| \ `--.| |__   ___  ___| |_| |_/ /_   _ _| | __| | ___ _ __ 
+#  |  _| | |/ _ \ |/ _` |`--. \ '_ \ / _ \/ _ \ __| ___ \ | | | | |/ _` |/ _ \ '__|
+#  | |   | |  __/ | (_| /\__/ / | | |  __/  __/ |_| |_/ / |_| | | | (_| |  __/ |   
+#  \_|   |_|\___|_|\__,_\____/|_| |_|\___|\___|\__\____/ \__,_|_|_|\__,_|\___|_|   
+# 
+#   By: William Weaver
+#   University of Michigan, 2022
+#   Department of Ecology and Evolutionary Biology
+#
+# Thanks for using FieldPrism (FP) and FieldStation (FS)! Here are a few tips:
+
+# If in the U.S.A. use Letter, Tabloid, or Legal
+# If elsewhere, you may use the metric A3, A4, or A5
+# You can print the folowing interchageably, the aspect ratios
+# will just be a bit different. Just make sure that you process 
+# your images in FieldPrism using the *PRINT* settings and not 
+# base on the size of paper
+#     - A3 on Tabloid
+#     - A4 and Letter
+#     - print A5 on either A4 or Letter stock
+
+########################################################################
+### Creating QR Codes and Field Sheet for use in FieldPrism Projects ###
+########################################################################
+fieldsheetbuilder:
+    setup:
+        # Which documents do you want to create? 
+        create_field_sheet: True # bool True # Either True OR False
+        create_QR_codes: True # bool True # Either True OR False
+        create_size_check: True # bool True # Either True OR False
+
+        # Input / Output
+        new_file_stem: 'demo' # str 'name_of_project' base name of created documents 'Demo_Levels_A4_QR-H-1_A3A4'
+        dir_containing_CSV_files: ''
+        name_CSV_file: 'Demo_Levels_Short' # CSV file containing the naming hierarchy
+        dir_home: None
+    ### Set the size of the  field sheet ###
+    field_sheet_builder:
+        page_size: 'letter' # From small to large, either 'A5' OR 'A4' OR 'Legal' OR 'A3' OR 'Custom'
+        QR_location: 'solo' # Print QR codes onto the field sheet. NOT recommended 
+    
+    ### Set parameters for constructing the QR code sheet ###
+    QR_code_builder:
+        #########################################################
+        ### Using default will override all following options ###
+        #########################################################
+        ues_default_setup: True # bool True
+        default_config: 'A4_Short_Names' # 'A4_Short_Names' OR 'A4_Long_Names'
+
+        # QR Code density
+        # Default = 1. Results in larger 'pixels', best for low-res cameras
+        # Can be 1 - 10 if using hi-res camera (30 MP+). Heigher n = more redundancy / error correction
+        QR_density: 5 # int 1 # should stay 1 unless you QC your exact setup
+        #########################################################
+        #########################################################
+
+        # Page size
+        page_size: 'letter' # str 'A4' # recommend 'A4' but can be either 'A5' OR 'A4' OR 'Legal' OR 'A3'
+        
+        # Font size of QR code text labels
+        QR_label_font_size: 12 # int 12 # default int 12
+        
+        # How many QR codes to fit onto one page
+        QR_wide: 5 # int 6 # number of codes in x-axis # 5 for letter/A4 # 7 for A3/tabloid
+        QR_tall: 8 # int 10 # number of codes in y-axis # 8 for letter/A4 # 12 for A3/tabloid
+        
+        # Text position relative to the QR code
+        QR_text_x: 28 # int 20 #
+        QR_text_y: 7 # int 6 # 
+        
+        # Dimension of QR codes
+        QR_dim_x: 30 # int 20 #
+        QR_dim_y: 30 # int 20 #
+
+        # Spacing between QR codes
+        QR_buffer_x: 5 # int 4 # buffer around the QR code x-axis. 4 for 6X10, 20 for 3x10
+        QR_buffer_y: 5 # int 5 # buffer around the QR code y-axis
+
+        # Set page margin, where QR codes begin to print
+        page_margin_left: 15
+        page_margin_top: 10
+        
+        # QR Codes are printed either row-wise or column-wise
+        print_order: 'row' # str # 'row' OR 'col'

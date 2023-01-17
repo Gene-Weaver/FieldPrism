@@ -75,6 +75,7 @@ class Input:
     PRINT_ORDER: str = "row"
     DIR_CSV: str = ''
     DIR_QR_CODE_BUILDER: str = ''
+    DIR_HOME: str = None
     DIR_QR: str = 'bin_QR'
     DIR_PDF: str = 'bin_PDF'
     COLOR: str = "gray"
@@ -95,8 +96,12 @@ class Input:
 
     def __post_init__(self) -> None:
         self.DIR_QR_CODE_BUILDER = os.path.join(os.path.dirname(__file__))
-        self.DIR_QR = os.path.join(self.DIR_QR_CODE_BUILDER, self.DIR_QR)
-        self.DIR_PDF = os.path.join(self.DIR_QR_CODE_BUILDER, self.DIR_PDF)
+        if self.DIR_HOME == None:
+            self.DIR_QR = os.path.join(self.DIR_QR_CODE_BUILDER, self.DIR_QR)
+            self.DIR_PDF = os.path.join(self.DIR_QR_CODE_BUILDER, self.DIR_PDF)
+        else:
+            self.DIR_QR = os.path.join(self.DIR_HOME, self.DIR_QR)
+            self.DIR_PDF = os.path.join(self.DIR_HOME, self.DIR_PDF)
         self.LABELS: str = buildCSVpath(self.CSV_NAME)
         self.LABELS_DF = pd.read_csv(os.path.join(self.DIR_CSV,self.LABELS),dtype=str) 
         self.LABELS_DF = self.filter_level_columns(self.LABELS_DF)

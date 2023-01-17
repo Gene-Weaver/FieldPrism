@@ -10,23 +10,37 @@ except:
     from QR_code_builder.build_PDF_utils import bcolors, Input, get_cfg_from_full_path, createProjectPDF
 
 
-def build_pdf() -> None:
+def build_pdf(cfg_file_path) -> None:
     ### Import from config file
     dir_FP = os.path.dirname(os.path.dirname(__file__))
-    path_cfg = os.path.join(dir_FP,'FieldSheetBuilder.yaml')
-    cfg = get_cfg_from_full_path(path_cfg)
 
-    
+    if cfg_file_path == None:
+        path_cfg = os.path.join(dir_FP,'FieldSheetBuilder.yaml')
+        cfg = get_cfg_from_full_path(path_cfg)
+    else:
+        if cfg_file_path == 'test_installation':
+            path_cfg = os.path.join(dir_FP,'demo','test_FS.yaml')
+            cfg = get_cfg_from_full_path(path_cfg)
+        else:
+            path_cfg = cfg_file_path
+            cfg = get_cfg_from_full_path(path_cfg)
+
+    if cfg_file_path == 'test_installation':
+        test_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),'demo')
+        DIR_HOME = os.path.join(test_path, 'demo_output')
+        DIR_CSV = os.path.join(test_path, 'names')
+    else:
+        DIR_CSV = cfg['fieldsheetbuilder']['setup']['dir_containing_CSV_files']    
+        DIR_HOME = cfg['fieldsheetbuilder']['setup']['dir_home']    
+
     ### Creating QR Codes and Field Sheet for use in FieldPrism Projects ###
     # Which documents do you want to create? 
     CREATE_FIELD_SHEET = cfg['fieldsheetbuilder']['setup']['create_field_sheet']
     CREATE_QR_CODES = cfg['fieldsheetbuilder']['setup']['create_QR_codes']
     CREATE_SIZE_CHECK = cfg['fieldsheetbuilder']['setup']['create_size_check']
 
-
     # Input / Output
     PDF_NAME = cfg['fieldsheetbuilder']['setup']['new_file_stem']
-    DIR_CSV = cfg['fieldsheetbuilder']['setup']['dir_containing_CSV_files']
     CSV_NAME = cfg['fieldsheetbuilder']['setup']['name_CSV_file']
     QR_LOCATION = 'solo' # cfg['fieldsheetbuilder']['QR_code_builder']['QR_location']
     PAGESIZE_TEMPLATE = cfg['fieldsheetbuilder']['field_sheet_builder']['page_size']
@@ -36,6 +50,7 @@ def build_pdf() -> None:
     if cfg['fieldsheetbuilder']['QR_code_builder']['ues_default_setup']:
         if cfg['fieldsheetbuilder']['QR_code_builder']['default_config'] == 'A4_Long_Names':
             page = Input(PDF_NAME=PDF_NAME, DIR_CSV =DIR_CSV, CSV_NAME=CSV_NAME, QR_LOCATION=QR_LOCATION, CREATE_FIELD_SHEET = CREATE_FIELD_SHEET, CREATE_QR_CODES= CREATE_QR_CODES, CREATE_SIZE_CHECK = CREATE_SIZE_CHECK,
+                        DIR_HOME = DIR_HOME,
                         SIZE=12, SPACE=4,
                         LABELSHIFT=6,
                         PRINT_ORDER='row',
@@ -55,6 +70,7 @@ def build_pdf() -> None:
         elif cfg['fieldsheetbuilder']['QR_code_builder']['default_config'] == 'A4_Short_Names':
             page = Input(PDF_NAME=PDF_NAME, DIR_CSV =DIR_CSV, CSV_NAME=CSV_NAME, QR_LOCATION=QR_LOCATION, CREATE_FIELD_SHEET = CREATE_FIELD_SHEET, CREATE_QR_CODES= CREATE_QR_CODES, CREATE_SIZE_CHECK = CREATE_SIZE_CHECK,
                         SIZE = 12, SPACE = 4, LABELSHIFT = 7, PRINT_ORDER= 'row', PAGESIZE_TEMPLATE = PAGESIZE_TEMPLATE, PAGESIZE_QR = 'letter',
+                        DIR_HOME = DIR_HOME,
                         USE_LEVELS = True,
                         PAGE_MARGIN_LEFT=15,
                         PAGE_MARGIN_TOP=15,
@@ -70,6 +86,7 @@ def build_pdf() -> None:
     else:
         # Setup page
         page = Input(PDF_NAME=PDF_NAME, 
+            DIR_HOME = DIR_HOME,
             DIR_CSV =DIR_CSV, 
             CSV_NAME=CSV_NAME,
             QR_LOCATION=QR_LOCATION,
@@ -96,7 +113,7 @@ def build_pdf() -> None:
     createProjectPDF(page)
 
 if __name__ == '__main__':
-    build_pdf()
+    build_pdf(None)
 
 
 

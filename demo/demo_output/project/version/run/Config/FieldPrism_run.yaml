@@ -1,0 +1,37 @@
+fieldprism:
+  QR_codes:
+    do_keep_original_name_if_fail: true
+    do_rename_images: false
+    fail_value: null
+    n_QR_codes: 4
+    sep_value: __
+  detector:
+    min_confidence_threshold: 0.7
+    model_size: best
+    show_predicted_text: false
+  dir_home: ''
+  dir_images_unprocessed: ''
+  dir_images_unprocessed_labels: null
+  dirname_current_project: version
+  dirname_current_run: run
+  dirname_images_processed: project
+  do_remove_overlap: true
+  do_use_FieldStation_csv: false
+  insert_clean_QR_codes: true
+  justify_corrected_images:
+    do_justify: true
+    justify_corrected_images_origin: 500
+    make_uniform: true
+    make_uniform_buffer: 40
+    uniform_h: 4000
+    uniform_w: 3000
+  overlap_priority: barcode
+  path_to_FieldStation_csv: ''
+  scale:
+    custom_ratio: null
+    custom_short_distance: null
+    scale_size: A4
+    use_predefined: true
+  skip_make_images_vertical: false
+  strict_distortion_correction: false
+  use_template_for_pixel_to_metric_conversion: true

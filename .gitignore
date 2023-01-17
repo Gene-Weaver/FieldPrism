@@ -17,6 +17,9 @@ fieldprism/yolov5/weights/
 rpi_images/
 fieldprism/marker/
 fieldprism/marker2/
+demo/demo_output/*
+demo/demo_output/.gitkeep
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

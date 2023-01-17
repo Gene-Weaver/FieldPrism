@@ -235,16 +235,32 @@ def identify_and_process_markers(cfg, option, ratio, dir_images_to_process, Dirs
         
 
 
-def process_images():
+def process_images(cfg_file_path):
     print(f"{bcolors.HEADER}*****************************************{bcolors.ENDC}")
     print(f"{bcolors.HEADER}********** Starting FieldPrism **********{bcolors.ENDC}")
     print(f"{bcolors.HEADER}*****************************************{bcolors.ENDC}")
 
     dir_FP = os.path.dirname(os.path.dirname(__file__))
-    path_cfg = os.path.join(dir_FP,'FieldPrism.yaml')
-    cfg = get_cfg_from_full_path(path_cfg)
 
-    dir_images_unprocessed = cfg['fieldprism']['dir_images_unprocessed']
+    if cfg_file_path == None:
+        path_cfg = os.path.join(dir_FP,'FieldPrism.yaml')
+        cfg = get_cfg_from_full_path(path_cfg)
+    else:
+        if cfg_file_path == 'test_installation':
+            path_cfg = os.path.join(dir_FP,'demo','test_FP.yaml')
+            cfg = get_cfg_from_full_path(path_cfg)
+        else:
+            path_cfg = cfg_file_path
+            cfg = get_cfg_from_full_path(path_cfg)
+
+
+    if cfg_file_path == 'test_installation':
+        test_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),'demo')
+        dir_home = os.path.join(test_path, 'demo_output')
+        dir_images_unprocessed = os.path.join(test_path, 'images')
+    else:
+        dir_home = cfg['fieldprism']['dir_home']
+        dir_images_unprocessed = cfg['fieldprism']['dir_images_unprocessed']
     scale_success, ratio = get_scale_ratio(cfg)
 
 
@@ -255,14 +271,14 @@ def process_images():
         print(f"{bcolors.HEADER}*** Step 1) Make all images vertical ****{bcolors.ENDC}")
         print(f"{bcolors.HEADER}*****************************************{bcolors.ENDC}")
 
-        make_file_names_valid(cfg['fieldprism']['dir_images_unprocessed'])
+        make_file_names_valid(dir_images_unprocessed)
 
         if cfg['fieldprism']['skip_make_images_vertical']:
             print(f"{bcolors.BOLD}User asserts that images are already vertial.{bcolors.ENDC}")
             print(f"{bcolors.BOLD}Skipping Step 1{bcolors.ENDC}")
             pass
         else:
-            make_images_in_dir_vertical(cfg['fieldprism']['dir_images_unprocessed'])
+            make_images_in_dir_vertical(dir_images_unprocessed)
 
 
 
@@ -272,8 +288,8 @@ def process_images():
         print(f"{bcolors.HEADER}*****************************************{bcolors.ENDC}")
 
         if cfg['fieldprism']['dir_images_unprocessed_labels'] != None:
-            run_name_1 = cfg['fieldprism']['dir_images_unprocessed']
-            dir_out_1 = os.path.join(cfg['fieldprism']['dir_home'],
+            run_name_1 = dir_images_unprocessed
+            dir_out_1 = os.path.join(dir_home,
                                     cfg['fieldprism']['dirname_images_processed'],
                                     cfg['fieldprism']['dirname_current_project'])
             name = cfg['fieldprism']['dirname_current_run']
@@ -287,9 +303,9 @@ def process_images():
             shutil.copytree(dir_exisiting_labels, dir_copied_labels)
         else:
             # Run ML object detector to locate labels, ruler markers, barcodes
-            run_name_1 = cfg['fieldprism']['dir_images_unprocessed']
+            run_name_1 = dir_images_unprocessed
 
-            dir_out_1 = os.path.join(cfg['fieldprism']['dir_home'],
+            dir_out_1 = os.path.join(dir_home,
                                     cfg['fieldprism']['dirname_images_processed'],
                                     cfg['fieldprism']['dirname_current_project'])
 
