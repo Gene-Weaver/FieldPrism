@@ -32,7 +32,7 @@ A virtual environment is a tool to keep the dependencies required by different p
 
 #### Installing packages
 
-1. Install the required dependencies to use FieldPrism: `pip install opencv-python pandas pybboxes scipy scikit-image numpy tqdm pyyaml IPython matplotlib seaborn tensorboard fpdf`
+1. Install the required dependencies to use FieldPrism: `pip install opencv-python pandas zipfile urllib pybboxes scipy scikit-image numpy tqdm pyyaml IPython matplotlib seaborn tensorboard fpdf`
 2. Upgrade numpy: `pip install numpy -U`
 3. Install qrcode[pil]: `pip install qrcode[pil]`
 4. The FieldPrism machine learning algorithm requires PyTorch version 1.11 for CUDA version 11.3. If your computer does not have a GPU, then use the CPU version and the CUDA version is not applicable. PyTorch is large and will take a bit to install.
@@ -53,7 +53,7 @@ A virtual environment is a tool to keep the dependencies required by different p
 
 #### Installing packages
 
-1. Install the required dependencies to use FieldPrism: `pip install opencv-python pandas pybboxes scipy scikit-image numpy tqdm pyyaml IPython matplotlib seaborn tensorboard fpdf`
+1. Install the required dependencies to use FieldPrism: `pip install opencv-python pandas zipfile urllib pybboxes scipy scikit-image numpy tqdm pyyaml IPython matplotlib seaborn tensorboard fpdf`
 2. Upgrade numpy: `pip install numpy -U`
 3. Install qrcode[pil]: `pip install qrcode[pil]`
 4. The FieldPrism machine learning algorithm requires PyTorch version 1.11 
