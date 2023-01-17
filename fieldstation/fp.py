@@ -275,16 +275,14 @@ Creates the pipeline that the OAK camera requires
     'video' shows the check camera focus window
 '''
 def createPipeline():
-    # cfg_user = load_cfg()
-
     # Create pipeline
     pipeline = dai.Pipeline()
 
     # Define sources and outputs
     camRgb = pipeline.create(dai.node.ColorCamera)
     camRgb.setBoardSocket(dai.CameraBoardSocket.RGB)
-    camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_4_K)
-    # camRgb.setFps(30)
+    camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_5312X6000)
+    camRgb.setFps(30)
 
     ispOut = pipeline.create(dai.node.XLinkOut)
     videoOut = pipeline.create(dai.node.XLinkOut)

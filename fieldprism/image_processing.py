@@ -24,7 +24,7 @@ except:
     from fieldprism.utils_rulers import process_rulers
     from fieldprism.utils_barcodes import process_barcodes
     from fieldprism.utils_rename import rename_files_from_QR_codes
-    from fieldprism.utils_data import Data_Vault, Data_FS, build_empty_csv, write_datarow_to_file
+    from fieldprism.utils_data import Data_Vault, Data_FS, build_empty_csv, write_datarow_to_file, get_weights
 
 def identify_and_process_markers(cfg, option, ratio, dir_images_to_process, Dirs, path_CSV_out):
     # Get marker templates for maker matching
@@ -263,6 +263,12 @@ def process_images(cfg_file_path):
         dir_images_unprocessed = cfg['fieldprism']['dir_images_unprocessed']
     scale_success, ratio = get_scale_ratio(cfg)
 
+    # Make sure weights are present
+    if os.path.isfile(os.path.join(dir_FP,'fieldprism','yolov5','weights','best.pt')):
+        print(f"{bcolors.CWHITEBG2}Machine Learning Model Located in {os.path.join(dir_FP,'fieldprism','yolov5','weights','best.pt')}{bcolors.ENDC}")
+    else:
+        get_weights(dir_FP)
+        
 
 
     if scale_success:
@@ -379,4 +385,4 @@ def process_images(cfg_file_path):
 # train more LM2 using FP images
 
 if __name__ == '__main__':
-    process_images()
+    process_images(None)

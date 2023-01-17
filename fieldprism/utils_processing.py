@@ -25,6 +25,9 @@ class bcolors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+    CGREENBG2  = '\33[102m'
+    CREDBG2    = '\33[101m'
+    CWHITEBG2  = '\33[107m'
 
 @dataclass
 class ImageCorrected:

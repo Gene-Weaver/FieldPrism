@@ -3,6 +3,9 @@ import os, cv2, math, sys, inspect
 from dataclasses import dataclass, field
 import numpy as np
 import pandas as pd
+from io import BytesIO
+from urllib.request import urlopen
+from zipfile import ZipFile
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
@@ -11,6 +14,19 @@ try:
 except:
     from fieldprism.utils_processing import bcolors
 
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+    CGREENBG2  = '\33[102m'
+    CREDBG2    = '\33[101m'
+    CWHITEBG2  = '\33[107m'
 
 @dataclass
 class Data_Vault:
@@ -430,3 +446,15 @@ class Data_FS:
         image_row = self.csv_FS[self.csv_FS['filename_short'] == image_name]
         # image_row = self.csv_FS[self.csv_FS == image_name]
         return image_row
+
+def get_weights(dir_FP):
+    try:
+        zipurl = 'https://fieldprism.org/data/fp/best.zip'
+        path_zip = os.path.join(dir_FP,'fieldprism','yolov5','weights')
+        with urlopen(zipurl) as zipresp:
+            with ZipFile(BytesIO(zipresp.read())) as zfile:
+                zfile.extractall(path_zip)
+        print(f"{bcolors.CGREENBG2}Machine Learning model added to {path_zip}{bcolors.ENDC}")
+    except Exception as e:
+        print(f"{bcolors.CREDBG2}Machine Learning model could not be added to {path_zip}{bcolors.ENDC}")
+
