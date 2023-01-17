@@ -283,7 +283,7 @@ def createPipeline():
     # Define sources and outputs
     camRgb = pipeline.create(dai.node.ColorCamera)
     print('before')
-    camRgb.CameraBoardSocket.RGB
+    camRgb.setBoardSocket(dai.CameraBoardSocket.RGB)
     print('after')
     camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_4_K)
     camRgb.setFps(30)
