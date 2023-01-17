@@ -282,7 +282,7 @@ def createPipeline():
 
     # Define sources and outputs
     camRgb = pipeline.create(dai.node.ColorCamera)
-    camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_12_MP)
+    camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_4_K)
     camRgb.setFps(30)
 
     ispOut = pipeline.create(dai.node.XLinkOut)
