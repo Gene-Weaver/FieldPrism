@@ -147,7 +147,8 @@ FieldSheetBuilder is a tool for creating field sheets and QR codes for use in Fi
 - Name your FieldSheets by setting `new_file_stem: 'my_project_name'`
    - For names, only use alphanumeric characters, underscores, or dashes.
 - Set the FieldSheet size in the `field_sheet_builder` section with `page_size: 'letter'`
-   - Options from small to large: 'A5' OR 'Letter' OR 'A4' OR 'Legal' OR 'Tabloid' OR 'A3' OR 'Custom'
+   - Options from small to large: 
+      - 'A5' OR 'Letter' OR 'A4' OR 'Legal' OR 'Tabloid' OR 'A3' OR 'Custom'
    - Note: Letter and A4 are interchangeable, Tabloid and A3 are interchangeable. Each have slightly different marker patterns to maximize the usable area, but as long as you print the sheets at 100% in your printer's settings, then either can be used. 
    - Note: To print with `Tabloid` you have to edit the fpdf script. If you are not comfortable doing that, then just use the A3 setting and print onto Tabloid sized paper. 
 - Optional, assign an ouput directory by setting `dir_home: '/path/to/output/folder'`
