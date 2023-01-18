@@ -8,13 +8,10 @@
 
 ### Installation
 1. First, install Python 3.8.10 on your machine of choice.
-2. Create a python virtual environment.
-3. Install the required packages.
-4. Clone the FieldPrism repository from GitHub by running `git clone https://github.com/Gene-Weaver/FieldPrism.git` in the terminal.
-5. Navigate to the location where you want to install FieldPrism. Example: `cd documents/home/mycomputer/programs/`
-6. Verify that the FieldPrism directory is present by running `ls` in the terminal or by checking the directory in your file explorer.
-7. Move into the FieldPrism directory by running `cd FieldPrism` in the terminal.
-8. Create your virtual environment by following the instructions for your machine/OS.
+2. Open a terminal window and `cd` into the directory where you want to install FieldPrism.
+3. Clone the FieldPrism repository from GitHub by running `git clone https://github.com/Gene-Weaver/FieldPrism.git` in the terminal.
+4. Move into the FieldPrism directory by running `cd FieldPrism` in the terminal.
+5. To run FieldPrism we need to install its dependencies inside of a python virtual environmnet. Follow the instructions below for your operating system. 
 
 ### About Python Virtual Environments
 A virtual environment is a tool to keep the dependencies required by different projects in separate places, by creating isolated python virtual environments for them. This avoids any conflicts between the packages that you have installed for different projects. It makes it easier to maintain different versions of packages for different projects.
@@ -23,9 +20,9 @@ A virtual environment is a tool to keep the dependencies required by different p
 
 #### Virtual Environment
 
-1. Show that a venv is currently not active: `which python`
+1. Still inside the FieldPrism directory, show that a venv is currently not active: `which python`
 2. Install python virtual environment: `python3 -m pip install --user virtualenv`
-3. Make sure you're inside of the FieldPrism directory, then create the virtual environment (venv_fp is the name of our new virtual environment): `python3 -m venv venv_fp`
+3. Then create the virtual environment (venv_fp is the name of our new virtual environment): `python3 -m venv venv_fp`
 4. Activate the virtual environment: `source ./venv_fp/bin/activate`
 5. Confirm that the venv is active (should be different from step 1): `which python`
 6. If you want to exit the venv, deactivate the venv using: `deactivate`
@@ -44,9 +41,9 @@ A virtual environment is a tool to keep the dependencies required by different p
 
 #### Virtual Environment
 
-1. Show that a venv is currently not active: `which python`
+1. Still inside the FieldPrism directory, show that a venv is currently not active: `which python`
 2. Install python virtual environment: `python3 -m pip install virtualenv`
-3. Make sure you're inside of the FieldPrism directory. use `cd` to change directories. Then create the virtual environment (venv_fp is the name of our new virtual environment): `python3 -m venv venv_fp`
+3. Then create the virtual environment (venv_fp is the name of our new virtual environment): `python3 -m venv venv_fp`
 4. Activate the virtual environment: `source venv_fp/bin/activate`
 5. Confirm that the venv is active (should be different from step 1): `which python`
 6. If you want to exit the venv, deactivate the venv using: `deactivate`
@@ -58,5 +55,7 @@ A virtual environment is a tool to keep the dependencies required by different p
 3. Install qrcode[pil]: `pip install qrcode[pil]`
 4. The FieldPrism machine learning algorithm requires PyTorch version 1.11 
     - `pip install torch==1.11.0 torchvision==0.12.0 torchaudio==0.11.0`
-5. Test the installation: `python3 test.py`
+5. Test the installation. test.py will test the QR code builder and image processing portions of FieldPrism: `python3 test.py`
+    - If you see large red messages, then the installation was not successful.
+6. Mac OS does not support the use of a GPU, so image processing will run more slowly.
 
