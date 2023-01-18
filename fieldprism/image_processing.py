@@ -359,30 +359,5 @@ def process_images(cfg_file_path):
             dir_images_corrected = Dirs.path_distortion_corrected
             identify_and_process_markers(cfg, 'corrected', ratio, dir_images_corrected, Dirs, path_CSV_out)
 
-
-
-# TODO
-# make yaml for existing pdf builder etc...
-# read image
-# make vertical (use square patterns to always make it upright, align them between images so they stay in the same place?)
-# run through LM2 PREP, only show label, barcode, ruler
-# locate 4 ruler points
-#       * within each, ohtsu imbinarize -> erode -> count 4 squares -> get pairwise distances -> smallest total will be the center -> get centroid = alignment point
-#       * aspect ratio = fixed (possible to use cm2 to determine skew?)
-#       * correct distortion
-#       * calc distance between centroids = conversion factor
-#       * save new image to Images_Processed 
-# locate qr codes
-#       * create a "don't use this" QR code
-#       * user sets how many there should be
-#       * locate them -> straighten them -> ohtsu??
-#       * read them -> if fail, expand box, try again -> manipulate?
-# determine heirachy 
-#       * look for L1,L2....
-#       * print summary in console
-#       * rename the files, append to FieldPrism_Processed_Images.csv
-#
-# train more LM2 using FP images
-
 if __name__ == '__main__':
     process_images(None)

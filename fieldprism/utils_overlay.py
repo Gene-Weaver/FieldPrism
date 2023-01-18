@@ -222,7 +222,10 @@ def draw_bounding_boxes_custom(
     else:
         draw = ImageDraw.Draw(img_to_draw)
 
-    txt_font = ImageFont.load_default() if font is None else ImageFont.truetype(font=font, size=font_size)
+    try:
+        txt_font = ImageFont.load_default() if font is None else ImageFont.truetype(font=font, size=font_size)
+    except:
+        txt_font = ImageFont.truetype("Arial Bold.ttf", font_size, encoding="unic")
 
     for bbox, color, label in zip(img_boxes, colors, labels):  # type: ignore[arg-type]
         if fill:
