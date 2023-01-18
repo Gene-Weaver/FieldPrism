@@ -16,4 +16,4 @@ elif(format=='tabloid'): # added by Will Weaver 2023
 '''
 
 if __name__ == '__main__':
-    build_pdf()
+    build_pdf(None)
