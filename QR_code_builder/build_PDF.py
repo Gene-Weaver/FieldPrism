@@ -5,9 +5,9 @@ currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentfram
 parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
 try:
-    from build_PDF_utils import bcolors, Input, get_cfg_from_full_path, createProjectPDF
-except:
     from QR_code_builder.build_PDF_utils import bcolors, Input, get_cfg_from_full_path, createProjectPDF
+except:
+    from build_PDF_utils import bcolors, Input, get_cfg_from_full_path, createProjectPDF
 
 
 def build_pdf(cfg_file_path) -> None:
