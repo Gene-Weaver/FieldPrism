@@ -1,5 +1,23 @@
 # FieldPrism Software
 
+Table of Contents
+=================
+
+* [FieldPrism Software](#fieldprism-software)
+      * [Prerequisites](#prerequisites)
+      * [Installation - Cloning the FieldPrism Repository](#installation---cloning-the-fieldprism-repository)
+      * [About Python Virtual Environments](#about-python-virtual-environments)
+      * [Installation - Ubuntu 20.04](#installation---ubuntu-2004)
+         * [Virtual Environment](#virtual-environment)
+         * [Installing packages](#installing-packages)
+      * [Installation - Mac OS](#installation---mac-os)
+         * [Virtual Environment](#virtual-environment-1)
+         * [Installing packages](#installing-packages-1)
+      * [Installation - Windows 10+](#installation---windows-10)
+         * [Virtual Environment](#virtual-environment-2)
+         * [Installing packages](#installing-packages-2)
+      * [Troubleshooting CUDA](#troubleshooting-cuda)
+
 ### Prerequisites
 - Python 3.8.10
 - PyTorch 1.11 
