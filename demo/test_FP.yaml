@@ -84,7 +84,7 @@ fieldprism:
     #### Set the Scale-sheet Version ############################################
     scale:
         use_predefined: True # bool |DEFAULT| True    
-        scale_size: 'A4' # string |DEFAULT| 'A4' FROM 'A5' or 'A4' or 'A3' or 'legal' or 'custom'
+        scale_size: 'A3' # string |DEFAULT| 'A4' FROM 'A5' or 'A4' or 'A3' or 'legal' or 'custom'
         custom_ratio: null # null OR float |DEFAULT| null
         custom_short_distance: null # null or integer |DEFAULT| null
     #### Make Images Vertical ###################################################
