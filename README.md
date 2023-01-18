@@ -110,3 +110,10 @@ A virtual environment is a tool to keep the dependencies required by different p
     - `python3 test.py`
     - If you see large red messages, then the installation was not successful. The rror message will be below the large red boxes, providing information on how to correct the installation error. If you need more help, please submit an inquiry in the form at [FieldPrism.org](https://fieldprism.org/)
 6. You can view the test output in `FieldPrism/demo/demo_output/`
+
+### Troubleshooting CUDA
+
+- If your system already has another version of CUDA (e.g., CUDA 11.7) then it can be complicated to switch to CUDA 11.3. 
+- The simplest solution is to install pytorch with CPU only, avoiding the CUDA problem entirely.
+- Alternatively, you can install the [latest pytorch release]https://pytorch.org/get-started/locally/ for your specific system, either using the cpu only version `pip3 install torch`, `pip3 install torchvision`, `pip3 install torchaudio` or by matching the pythorch version to your CUDA version.
+- We have not validated CUDA 11.6 or CUDA 11.7, but our code is likely to work with them too. If you have success with other versions of CUDA/pytorch, let us know and we will update our instructions. 
