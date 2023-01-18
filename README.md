@@ -16,6 +16,8 @@ Table of Contents
    * [Installing Packages](#installing-packages-2)
 * [Troubleshooting CUDA](#troubleshooting-cuda)
 
+## Installing FieldPrism
+
 ### Prerequisites
 - Python 3.8.10
 - PyTorch 1.11 
@@ -133,3 +135,37 @@ A virtual environment is a tool to keep the dependencies required by different p
 - The simplest solution is to install pytorch with CPU only, avoiding the CUDA problem entirely.
 - Alternatively, you can install the [latest pytorch release]https://pytorch.org/get-started/locally/ for your specific system, either using the cpu only version `pip3 install torch`, `pip3 install torchvision`, `pip3 install torchaudio` or by matching the pythorch version to your CUDA version.
 - We have not validated CUDA 11.6 or CUDA 11.7, but our code is likely to work with them too. If you have success with other versions of CUDA/pytorch, let us know and we will update our instructions. 
+
+## Using FieldPrism
+
+### FieldSheetBuilder
+
+FieldSheetBuilder is a tool for creating field sheets and QR codes for use in FieldPrism projects. It allows you to specify which documents you want to create, as well as customize the size and appearance of the field sheet and QR codes. To change the settings of FieldSheetBuilder we need to edit the configuration file: `FieldSheetBuilder.yaml`. You can edit this file using a text editor (not Microsoft Word) or your favorite IDE, like VS Code, Sublime, or PyCharm. Premade FieldSheets are available at [https://fieldprism.org/]FieldPrism.org
+
+#### Setup
+- Enable building FieldSheets by setting `create_field_sheet: True`
+- Name your FieldSheets by setting `new_file_stem: 'my_project_name'`
+   - For names, only use alphanumeric characters, underscores, or dashes.
+- Set the FieldSheet size in the `field_sheet_builder` section with `page_size: 'letter'`
+   - Options from small to large: 'A5' OR 'Letter' OR 'A4' OR 'Legal' OR 'Tabloid' OR 'A3' OR 'Custom'
+   - Note: Letter and A4 are interchangeable, Tabloid and A3 are interchangeable. Each have slightly different marker patterns to maximize the usable area, but as long as you print the sheets at 100% in your printer's settings, then either can be used. 
+   - Note: To print with `Tabloid` you have to edit the fpdf script. If you are not comfortable doing that, then just use the A3 setting and print onto Tabloid sized paper. 
+- Optional, assign an ouput directory by setting `dir_home: '/path/to/output/folder'`
+   - by default, output will be saved to `FieldPrism/QR_code_builder/bin_PDF` 
+
+#### Run 
+
+1. To build FieldSheets we run FieldSheetBuilder.py
+2. In a terminal window, make sure that you have `cd`'d into the FieldPrism directory and that the virtual environment is activated. 
+3. To run: `python3 FieldSheetBuilder.py`
+4. Then go to either your output directory or the default location to view your FieldSheets
+
+
+
+
+
+
+
+### QR Code Generator
+
+### FieldPrism - Image Processing
