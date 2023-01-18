@@ -7,13 +7,13 @@ Table of Contents
 * [About Python Virtual Environments](#about-python-virtual-environments)
 * [Installation - Ubuntu 20.04](#installation---ubuntu-2004)
     * [Virtual Environment](#virtual-environment)
-    * [Installing packages](#installing-packages)
+    * [Installing Packages](#installing-packages)
 * [Installation - Mac OS](#installation---mac-os)
    * [Virtual Environment](#virtual-environment-1)
-   * [Installing packages](#installing-packages-1)
+   * [Installing Packages](#installing-packages-1)
 * [Installation - Windows 10+](#installation---windows-10)
    * [Virtual Environment](#virtual-environment-2)
-   * [Installing packages](#installing-packages-2)
+   * [Installing Packages](#installing-packages-2)
 * [Troubleshooting CUDA](#troubleshooting-cuda)
 
 ### Prerequisites
@@ -49,7 +49,7 @@ A virtual environment is a tool to keep the dependencies required by different p
 5. If you want to exit the venv, deactivate the venv using:  
     - `deactivate`
 
-#### Installing packages
+#### Installing Packages
 
 1. Install the required dependencies to use FieldPrism: 
     - `pip install opencv-python pandas pybboxes scipy scikit-image numpy tqdm pyyaml IPython matplotlib seaborn tensorboard fpdf`
@@ -80,7 +80,7 @@ A virtual environment is a tool to keep the dependencies required by different p
 5. If you want to exit the venv, deactivate the venv using:  
     - `deactivate`
 
-#### Installing packages
+#### Installing Packages
 
 1. Install the required dependencies to use FieldPrism:  
     - `pip install opencv-python pandas pybboxes scipy scikit-image numpy tqdm pyyaml IPython matplotlib seaborn tensorboard fpdf`
@@ -111,7 +111,7 @@ A virtual environment is a tool to keep the dependencies required by different p
 5. If you want to exit the venv, deactivate the venv using:  
     - `deactivate`
 
-#### Installing packages
+#### Installing Packages
 
 1. Install the required dependencies to use FieldPrism:  
     - `pip install opencv-python pandas pybboxes scipy scikit-image numpy tqdm pyyaml IPython matplotlib seaborn tensorboard fpdf`
