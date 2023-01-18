@@ -3,18 +3,17 @@
 Table of Contents
 =================
 
-* [FieldPrism Software](#fieldprism-software)
 * [Prerequisites](#prerequisites)
 * [About Python Virtual Environments](#about-python-virtual-environments)
 * [Installation - Ubuntu 20.04](#installation---ubuntu-2004)
     * [Virtual Environment](#virtual-environment)
     * [Installing packages](#installing-packages)
 * [Installation - Mac OS](#installation---mac-os)
-* [Virtual Environment](#virtual-environment-1)
-* [Installing packages](#installing-packages-1)
+   * [Virtual Environment](#virtual-environment-1)
+   * [Installing packages](#installing-packages-1)
 * [Installation - Windows 10+](#installation---windows-10)
-* [Virtual Environment](#virtual-environment-2)
-* [Installing packages](#installing-packages-2)
+   * [Virtual Environment](#virtual-environment-2)
+   * [Installing packages](#installing-packages-2)
 * [Troubleshooting CUDA](#troubleshooting-cuda)
 
 ### Prerequisites
