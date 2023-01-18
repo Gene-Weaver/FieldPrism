@@ -46,7 +46,7 @@ A virtual environment is a tool to keep the dependencies required by different p
     - WITH CPU ONLY: `pip install torch==1.11.0+cpu torchvision==0.12.0+cpu torchaudio==0.11.0 --extra-index-url https://download.pytorch.org/whl/cpu`
 5. Test the installation:  
     - `python3 test.py`
-    - If you see large red messages, then the installation was not successful. The rror message will be below the large red boxes, providing information on how to correct the installation error. If you need more help, please submit an inquiry in the form at [httpFieldPrism.org](https://fieldprism.org/)
+    - If you see large red messages, then the installation was not successful. The rror message will be below the large red boxes, providing information on how to correct the installation error. If you need more help, please submit an inquiry in the form at [FieldPrism.org](https://fieldprism.org/)
 
 ### Installation - Mac OS
 
@@ -77,6 +77,6 @@ A virtual environment is a tool to keep the dependencies required by different p
     - `pip install torch==1.11.0 torchvision==0.12.0 torchaudio==0.11.0`
 5. Test the installation. test.py will test the QR code builder and image processing portions of FieldPrism:  
     - `python3 test.py`
-    - If you see large red messages, then the installation was not successful. The rror message will be below the large red boxes, providing information on how to correct the installation error. If you need more help, please submit an inquiry in the form at [httpFieldPrism.org](https://fieldprism.org/)
+    - If you see large red messages, then the installation was not successful. The rror message will be below the large red boxes, providing information on how to correct the installation error. If you need more help, please submit an inquiry in the form at [FieldPrism.org](https://fieldprism.org/)
 6. Mac OS does not support the use of a GPU, so image processing will run more slowly.
 
