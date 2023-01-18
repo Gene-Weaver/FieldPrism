@@ -1,3 +1,7 @@
+import os, inspect, sys
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
 from fieldprism.image_processing import process_images
 
 if __name__ == '__main__':

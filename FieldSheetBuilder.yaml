@@ -36,6 +36,7 @@ fieldsheetbuilder:
         dir_containing_CSV_files: '/home/brlab/Dropbox/FieldPrism/QR_code_builder/CSV_Files'
         name_CSV_file: 'Demo_Levels_Short_Alias' # CSV file containing the naming hierarchy
         dir_home: null # null or assign an output dir
+        
     ### Set the size of the  field sheet ###
     field_sheet_builder:
         page_size: 'letter' # From small to large, either 'A5' OR 'A4' OR 'Legal' OR 'A3' OR 'Custom'

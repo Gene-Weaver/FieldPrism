@@ -1,3 +1,7 @@
+import os, inspect, sys
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
 from QR_code_builder.build_PDF import build_pdf
 
 '''
