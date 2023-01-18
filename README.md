@@ -6,7 +6,9 @@
 - CUDA version 11.3 (if utilizing a GPU)
 - Git
 
-### Installation
+- Note: we have also verified python 3.10.4  
+
+### Installation - Cloning the FieldPrism Repository
 1. First, install Python 3.8.10 on your machine of choice.
 2. Open a terminal window and `cd` into the directory where you want to install FieldPrism.
 3. Clone the FieldPrism repository from GitHub by running `git clone https://github.com/Gene-Weaver/FieldPrism.git` in the terminal.
@@ -22,15 +24,13 @@ A virtual environment is a tool to keep the dependencies required by different p
 
 1. Still inside the FieldPrism directory, show that a venv is currently not active: 
     - `which python`
-2. Install python virtual environment:  
-    - `python3 -m pip install --user virtualenv`
-3. Then create the virtual environment (venv_fp is the name of our new virtual environment):  
+2. Then create the virtual environment (venv_fp is the name of our new virtual environment):  
     - `python3 -m venv venv_fp`
-4. Activate the virtual environment:  
+3. Activate the virtual environment:  
     - `source ./venv_fp/bin/activate`
-5. Confirm that the venv is active (should be different from step 1):  
+4. Confirm that the venv is active (should be different from step 1):  
     - `which python`
-6. If you want to exit the venv, deactivate the venv using:  
+5. If you want to exit the venv, deactivate the venv using:  
     - `deactivate`
 
 #### Installing packages
@@ -55,15 +55,13 @@ A virtual environment is a tool to keep the dependencies required by different p
 
 1. Still inside the FieldPrism directory, show that a venv is currently not active:  
     - `which python`
-2. Install python virtual environment:  
-    - `python3 -m pip install virtualenv`
-3. Then create the virtual environment (venv_fp is the name of our new virtual environment):  
+2. Then create the virtual environment (venv_fp is the name of our new virtual environment):  
     - `python3 -m venv venv_fp`
-4. Activate the virtual environment:  
+3. Activate the virtual environment:  
     - `source venv_fp/bin/activate`
-5. Confirm that the venv is active (should be different from step 1):  
+4. Confirm that the venv is active (should be different from step 1):  
     - `which python`
-6. If you want to exit the venv, deactivate the venv using:  
+5. If you want to exit the venv, deactivate the venv using:  
     - `deactivate`
 
 #### Installing packages
@@ -82,3 +80,19 @@ A virtual environment is a tool to keep the dependencies required by different p
 6. Mac OS does not support the use of a GPU, so image processing will run more slowly.
 7. You can view the test output in `FieldPrism/demo/demo_output/`
 
+### Installation - Windows 10+
+
+#### Virtual Environment
+
+1. Still inside the FieldPrism directory, show that a venv is currently not active: 
+    - `python --version`
+2. Then create the virtual environment (venv_fp is the name of our new virtual environment):  
+    - `python3 -m venv venv_fp`
+    - If you have more than one version of python, locate the python 3.8.10 installation and add that to the above command
+    - `python3 -m / venv_fp`
+3. Activate the virtual environment:  
+    - `source ./venv_fp/bin/activate`
+4. Confirm that the venv is active (should be different from step 1):  
+    - `which python`
+5. If you want to exit the venv, deactivate the venv using:  
+    - `deactivate`
