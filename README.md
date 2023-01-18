@@ -47,6 +47,7 @@ A virtual environment is a tool to keep the dependencies required by different p
 5. Test the installation:  
     - `python3 test.py`
     - If you see large red messages, then the installation was not successful. The rror message will be below the large red boxes, providing information on how to correct the installation error. If you need more help, please submit an inquiry in the form at [FieldPrism.org](https://fieldprism.org/)
+6. You can view the test output in `FieldPrism/demo/demo_output/`
 
 ### Installation - Mac OS
 
@@ -79,4 +80,5 @@ A virtual environment is a tool to keep the dependencies required by different p
     - `python3 test.py`
     - If you see large red messages, then the installation was not successful. The rror message will be below the large red boxes, providing information on how to correct the installation error. If you need more help, please submit an inquiry in the form at [FieldPrism.org](https://fieldprism.org/)
 6. Mac OS does not support the use of a GPU, so image processing will run more slowly.
+7. You can view the test output in `FieldPrism/demo/demo_output/`
 
