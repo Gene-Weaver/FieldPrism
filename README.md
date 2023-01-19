@@ -1,7 +1,5 @@
 [![Field Prism](https://fieldprism.org/img/FieldPrism_Desktop_narrow.jpg "Field Prism")](https://fieldprism.org/)
 
-# FieldPrism
-
 Table of Contents
 =================
 
