@@ -1,4 +1,5 @@
-(https://fieldprism.org/img/FieldPrism_Desktop_Large.jpg)
+![Field Prism](https://fieldprism.org/img/FieldPrism_Desktop_Large.jpg)
+
 # FieldPrism
 
 Table of Contents
