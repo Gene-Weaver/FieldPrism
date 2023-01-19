@@ -293,4 +293,22 @@ FP requires vertical images. If you are re-running a set you can set this to Tru
 - **dir_images_unprocessed**
    - directory of the images that you want to process 
 - **dir_images_unprocessed_labels**
-   - directory of the labels for previously processed images. You can speed up processing by adding the folder that contains the machine learning predictions/labels from a previous run. The labels are in the /Labels_Not_Corrected folder. So set to '/path/to/Labels_Not_Corrected'
+   - directory of the labels for previously processed images. You can speed up processing by adding the folder that contains the machine learning predictions/labels from a previous run. The labels are in the "/Labels_Not_Corrected" folder. So set to `/path/to/Labels_Not_Corrected`
+
+##### Output Directories
+- **dir_home**
+   - parent folder for all output files. Will go to `dir_home/dirname_images_processed/dirname_current_project/dirname_current_run`
+- **dirname_images_processed**
+   - image set
+- **dirname_current_project**
+   - project
+- **dirname_current_run**
+   - run
+
+##### FieldStation Info
+- If you collected data with FieldStation, add the data output file here
+- **do_use_FieldStation_csv**
+   - False: default. Did not use FieldStation
+   - True: Did use FieldStation
+- **path_to_FieldStation_csv**
+   - full path to CSV data file: `path/to/file/FieldPrism_Data.csv`
