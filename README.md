@@ -1,4 +1,4 @@
-[![FieldPrism](https://fieldprism.org/img/FieldPrism_Desktop_Large.jpg "Field Prism")](https://fieldprism.org/){:target="_blank"}
+[![FieldPrism](https://fieldprism.org/img/FieldPrism_Desktop_narrow.jpg "Field Prism")](https://fieldprism.org/){:target="_blank"}
 
 Table of Contents
 =================
