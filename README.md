@@ -233,32 +233,64 @@ Here are a few tips:
 #### FieldPrism configurations
 ##### Set the Scale-sheet Version
 - **scale:**
-    - **use_predefined** --- True: set contains images that used pre-defined scale-sheet
-                        --- False: using a custom setup
-    - **scale_size** --- 'A3': largest scale-sheet, tabloid, 11 x 17 inches
-                     --- 'A4': default scale-sheet, A4, 8.5 x 11 inches
-                     --- 'A5': smallest scale-sheet, A5, 5.8 x 8.3 inches
-                     --- 'legal': legal size, 8.5 x 14 inches
-                     --- 'custom': placing markers on custom background (poster board etc.) larger or smaller
-    - **custom_ratio** --- null: Use null if using predefined scale-sheet
-                      --- float: floating point number between 0 and 1 (0.65 OR 0.6111). To calculate, divide long side distance by short side
-    - **custom_short_distance** --- integer: distance in mm. between the two markers on the short side
+    - **use_predefined** 
+      - True: set contains images that used pre-defined scale-sheet
+      - False: using a custom setup
+    - **scale_size** 
+      - 'A3': largest scale-sheet, tabloid, 11 x 17 inches
+      - 'A4': default scale-sheet, A4, 8.5 x 11 inches
+      - 'A5': smallest scale-sheet, A5, 5.8 x 8.3 inches
+      - 'Legal': legal size, 8.5 x 14 inches
+      - 'Tabloid': 11 x 17 inches
+      - 'Letter': 8.5 x 11 inches
+      - 'custom': placing markers on custom background (poster board etc.) larger or smaller
+    - **custom_ratio**
+      - null: Use null if using predefined scale-sheet
+      - float: floating point number between 0 and 1 (0.65 OR 0.6111). To calculate, divide long side distance by short side
+    - **custom_short_distance**
+      - integer: distance in mm. between the two markers on the short side
 
 ##### Make Images Vertical
 FP requires vertical images. If you are re-running a set you can set this to True to save time.
-- **skip_make_images_vertical** --- False: boolean, only set to True if you are re-running images that are already vertical!
+- **skip_make_images_vertical**
+   - False: boolean, only set to True if you are re-running images that are already vertical!
 
 ##### Processing Options
-- **strict_distortion_correction** --- False: default. will use center of detected marker bbox if exact center cannot be determined. 
-                                 --- True: requires all 4 boxes within all 4 markers to correct distortion, need good lighting for this option 
-- **use_template_for_pixel_to_metric_conversion** --- False: default. 
-                                                 --- True: If all four boxes inside at least one marker are not regularly found then this will 
-                                                           find a very close approximation, usually +-3 % of true conversion 
-- **do_remove_overlap** --- False: default. start with False. set to True for images that may become heavily distorted OR if 
-                       --- True: for images that may become extremely warped after processing OR if QR codes and rulers are predicted incorrectly,  
-                                 If a barcode in the middle of the image is predicted to be a ruler, then either the image will not go 
-                                 through distortion correction or it will be wildly warped. Setting to True can help correct this
-- **overlap_priority** --- 'barcode': rulers that intersect with barcodes will be ignored
-                      --- 'ruler': barcodes that intersect with rulers will be ignored
-- **insert_clean_QR_codes** --- True: insert a new QR code over the original one, which can be useful when the original QR code is difficult to read due to glare or other issues
-                                - False: default. use the original QR code for processing
+- **strict_distortion_correction**
+   - False: default. will use center of detected marker bbox if exact center cannot be determined.
+   - True: requires all 4 boxes within all 4 markers to correct distortion, need good lighting for this option 
+- **use_template_for_pixel_to_metric_conversion**
+   - False: default.
+   - True: If all four boxes inside at least one marker are not regularly found then this will find a very close approximation, usually +-3 % of true conversion 
+- **do_remove_overlap**
+   - False: default. start with False. set to True for images that may become heavily distorted OR if 
+   - True: for images that may become extremely warped after processing OR if QR codes and rulers are predicted incorrectly. If a barcode in the middle of the image is predicted to be a ruler, then either the image will not go through distortion correction or it will be wildly warped. Setting to True can help correct this.
+- **overlap_priority**
+   - 'barcode': rulers that intersect with barcodes will be ignored
+   - 'ruler': barcodes that intersect with rulers will be ignored
+- **insert_clean_QR_codes**
+   - True: insert a new QR code over the original one, which can be useful when the original QR code is difficult to read due to glare or other issues
+   - False: default. use the original QR code for processing
+
+##### Justify the Distortion Corrected Images
+- **justify_corrected_images:**
+    - **do_justify**
+      - True: top left marker will be placed at the origin, padding will be added if needed, helps make images more uniform, especially if originals are heavily distorted
+      - False: no image manipulation takes place after the image is corrected for distortion. overrides make_uniform
+    - **justify_corrected_images_origin**
+      - integer: x and y coordinate of where the center of the top left marker should be placed 500 works in most cases 
+    - **make_uniform**
+      - True: after distortion correction images are transformed into uniform dimensions images are scaled to the same size relative to the scale markers and will be resized to the same resolution
+      - False: if do_justify = False, then make_uniform will be False
+    - **make_uniform_buffer**
+      - integer: distance in mm to leave around the edges outside of the scale markers, 40 is a good start
+    - **uniform_h**
+      - integer: pixel height of final image, eg. 4000
+    - **uniform_w**
+      - integer: pixel width of final image, eg. 3000
+
+##### Images to Process
+- **dir_images_unprocessed**
+   - directory of the images that you want to process 
+- **dir_images_unprocessed_labels**
+   - directory of the labels for previously processed images. You can speed up processing by adding the folder that contains the machine learning predictions/labels from a previous run. The labels are in the /Labels_Not_Corrected folder. So set to '/path/to/Labels_Not_Corrected'
