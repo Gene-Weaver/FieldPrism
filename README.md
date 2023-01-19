@@ -261,4 +261,4 @@ FP requires vertical images. If you are re-running a set you can set this to Tru
 - **overlap_priority** --- 'barcode': rulers that intersect with barcodes will be ignored
                       --- 'ruler': barcodes that intersect with rulers will be ignored
 - **insert_clean_QR_codes** --- True: insert a new QR code over the original one, which can be useful when the original QR code is difficult to read due to glare or other issues
-                                --- False: default. use the original QR code for processing
+                                - False: default. use the original QR code for processing
