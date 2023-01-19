@@ -312,3 +312,29 @@ FP requires vertical images. If you are re-running a set you can set this to Tru
    - True: Did use FieldStation
 - **path_to_FieldStation_csv**
    - full path to CSV data file: `path/to/file/FieldPrism_Data.csv`
+
+##### ML Detection Options
+- **model_size**
+   - 'best': use the best model. Currently only one model is provided. More may come.
+- **min_confidence_threshold**
+   - float: default is 0.70, going lower may cause fals positives causing rulers to be confused with QR codes
+- **show_predicted_text**
+   - False: default. Skips placing bounding boxes around text labels
+   - True: Places bounding boxes around text labels
+
+##### QR Code File Renaming Options
+- **use_unstable_QR_code_decoder**
+   - False: default. Uses a stable method to detect and decode QR codes
+   - True: uses an unstable method to decode QR codes. This method will detect QR codes in difficult situations, *BUT* this method relies on a dependency (a package in open-cv2) that can cause random memory faults. This may cause FieldPrism to crash without any explanation - the program will just die. We recommend moving images with undetected barcodes to a new folder and then setting this to True to process a subset of your images. If it doesn't crash, then great! You'll get even more successful QR code decodings. But if it crashes without explanation, this is why.
+- **do_rename_images**
+   - False: default. do not rename output images to match the QR codes in the image. 
+   - True: rename output images to match the QR codes in the image. 
+- **n_QR_codes**
+   - integer: default 4. Tells how many levels to expect when reading QR codes. 
+- **sep_value**
+   - string: default '__'. The separator used to reconstruct the filenames
+- **fail_value**
+   - string: default null. What to put into a file name in place of a failed QR code. Default is recommended.
+- **do_keep_original_name_if_fail**
+   - True: default. If QR codes all fail, keep the original file name
+   - False: If QR codes all fail the new file name will be "Level1__Level2.jpg" etc. Not recommended
