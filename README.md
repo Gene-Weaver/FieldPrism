@@ -137,7 +137,7 @@ A virtual environment is a tool to keep the dependencies required by different p
 - We have not validated CUDA 11.6 or CUDA 11.7, but our code is likely to work with them too. If you have success with other versions of CUDA/pytorch, let us know and we will update our instructions. 
 
 ## Using FieldPrism
-Generating the FieldSheets, QR codes, and size check document can all be run at the same time. Enable or disable each of the three option in the `FieldSheetBuilder.yaml`file.
+The FieldSheets, QR codes, and size check document can all be generated at the same time. Enable or disable each of the three option in the `FieldSheetBuilder.yaml`file. The `fieldsheetbuilder : field_sheet_builder : page_size` controls the size of the FieldSheet. The `fieldsheetbuilder : QR_code_builder : page_size` controls the size of paper that the QR codes will be printed on.
 
 ### FieldSheetBuilder
 
@@ -207,5 +207,11 @@ Then set the QR code density. We recommend leaving it at the default settings. I
 Everything below this point is overwritten by using the premade settings `'A4_Short_Names'` or `'A4_Long_Names'`
 Only change the remaining settings if you need to create custom QR codes. We have not validated larger, smaller, or different densities. Be sure to validate the performance of any custom settings.
 
+#### Run 
+1. To build FieldSheets we run FieldSheetBuilder.py
+2. In a terminal window, make sure that you have `cd`'d into the FieldPrism directory and that the virtual environment is activated. 
+3. To run: `python FieldSheetBuilder.py`
+4. Then go to either your output directory or the default location to view your QR code sheets
 
 ### FieldPrism - Image Processing
+
