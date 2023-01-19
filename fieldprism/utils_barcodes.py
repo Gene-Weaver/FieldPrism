@@ -1,4 +1,4 @@
-import os, cv2, pybboxes, torch, inspect, sys
+import os, cv2, pybboxes, torch, inspect, sys, imutils
 import numpy as np
 from dataclasses import dataclass, field
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
@@ -17,6 +17,7 @@ Main Function
 '''
 def process_barcodes(cfg, image_name_jpg, all_barcodes, image, image_bboxes, img_w, img_h, Dirs):
     color_fail = (200,80,80)
+    use_unstable_QR_code_decoder = cfg['fieldprism']['QR_codes']['use_unstable_QR_code_decoder']
     print(f"{bcolors.OKCYAN}      Processing QR Codes in {image_name_jpg}{bcolors.ENDC}")
     need_n_QR_codes = int(cfg['fieldprism']['QR_codes']['n_QR_codes'])
     if need_n_QR_codes > 0:
@@ -39,7 +40,7 @@ def process_barcodes(cfg, image_name_jpg, all_barcodes, image, image_bboxes, img
         print(f"{bcolors.BOLD}            Processing QR Code {i_candidate}{bcolors.ENDC}")
         box_dec = (row[1], row[2], row[3], row[4])
         bbox = pybboxes.convert_bbox(box_dec, from_type="yolo", to_type="voc", image_size=(img_w, img_h))
-        QR_Candidate = QRcode(i_candidate, image_name_jpg, image, image_bboxes, row, bbox, Dirs.path_QRcodes_raw, Dirs.path_QRcodes_summary)
+        QR_Candidate = QRcode(i_candidate, image_name_jpg, image, image_bboxes, row, bbox, Dirs.path_QRcodes_raw, Dirs.path_QRcodes_summary, use_unstable_QR_code_decoder)
         if QR_Candidate.text_raw != '':
             i_pass += 1
             QR_List_Pass[i_pass-1] = QR_Candidate
@@ -97,9 +98,11 @@ class QRcode:
     name_QR_raw_png: str = ''
 
     straight_qrcode: list = field(default_factory=None)
+
+    use_unstable_QR_code_decoder: bool = False
     
 
-    def __init__(self, number, image_name_jpg, image, image_bboxes, row, bbox, path_QRcodes_raw, path_QRcodes_summary) -> None:
+    def __init__(self, number, image_name_jpg, image, image_bboxes, row, bbox, path_QRcodes_raw, path_QRcodes_summary, use_unstable_QR_code_decoder) -> None:
         self.image_name_jpg = image_name_jpg
         self.path_QRcodes_raw = path_QRcodes_raw
         self.path_QRcodes_summary = path_QRcodes_summary
@@ -110,6 +113,7 @@ class QRcode:
         self.bbox = bbox
         self.image_name = self.image_name_jpg.split('.')[0]
         self.name_QR_raw_png = ''.join([self.image_name,'__QR_',self.number,'.png'])
+        self.use_unstable_QR_code_decoder = use_unstable_QR_code_decoder
         self.crop_QRcode()
         self.process_QRcode()
         self.parse_text()
@@ -141,6 +145,7 @@ class QRcode:
 
     def prepare_QRcode(self,bi) -> None:
         ret, self.qr_code_bi = cv2.threshold(self.croppped_QRcode,bi,255,cv2.THRESH_BINARY)
+        # self.qr_code_bi = imutils.rotate_bound(self.qr_code_bi, -5)
         # cv2.imshow('QR_Code', self.qr_code_bi)
         # cv2.waitKey(0)
 
@@ -237,19 +242,20 @@ class QRcode:
         # cv2.waitKey(0)
         # cv2.imshow('QR_Code success', self.qr_code_bi)
         # cv2.waitKey(0)
-        try:
-            content, pts, self.straight_qrcode = cv2.QRCodeDetector().detectAndDecode(self.croppped_QRcode)
-        except:
-            content = ''
-            self.straight_qrcode = None
-
-        # try:
-        #     content, pts, self.straight_qrcode = cv2.QRCodeDetector().detectAndDecode(self.croppped_QRcode)
-        #     if content == '':
-        #         content, pts, self.straight_qrcode = cv2.QRCodeDetector().detectAndDecodeCurved(self.croppped_QRcode)
-        # except:
-        #     content = ''
-        #     self.straight_qrcode = None
+        if not self.use_unstable_QR_code_decoder:
+            try:
+                content, pts, self.straight_qrcode = cv2.QRCodeDetector().detectAndDecode(self.croppped_QRcode)
+            except:
+                content = ''
+                self.straight_qrcode = None
+        else: ### **** Using detectAndDecodeCurved can cause a memory exception. This will kill the program without any explanation.
+            try:
+                content, pts, self.straight_qrcode = cv2.QRCodeDetector().detectAndDecode(self.croppped_QRcode)
+                if content == '':
+                    content, pts, self.straight_qrcode = cv2.QRCodeDetector().detectAndDecodeCurved(self.croppped_QRcode)
+            except:
+                content = ''
+                self.straight_qrcode = None
 
         if content != '':
             self.text_raw = content
@@ -259,18 +265,20 @@ class QRcode:
         return bad_code
 
     def decode_QRcode(self) -> None:
-        try:
-            content, pts, self.straight_qrcode = cv2.QRCodeDetector().detectAndDecode(self.qr_code_bi)
-        except:
-            content = ''
-            self.straight_qrcode = None
-        # try:
-        #     content, pts, self.straight_qrcode = cv2.QRCodeDetector().detectAndDecode(self.qr_code_bi)
-        #     if content == '':
-        #         content, pts, self.straight_qrcode = cv2.QRCodeDetector().detectAndDecodeCurved(self.qr_code_bi)
-        # except:
-        #     content = ''
-        #     self.straight_qrcode = None
+        if not self.use_unstable_QR_code_decoder:
+            try:
+                content, pts, self.straight_qrcode = cv2.QRCodeDetector().detectAndDecode(self.qr_code_bi)
+            except:
+                content = ''
+                self.straight_qrcode = None
+        else: ### **** Using detectAndDecodeCurved can cause a memory exception. This will kill the program without any explanation.
+            try:
+                content, pts, self.straight_qrcode = cv2.QRCodeDetector().detectAndDecode(self.qr_code_bi)
+                if content == '':
+                    content, pts, self.straight_qrcode = cv2.QRCodeDetector().detectAndDecodeCurved(self.qr_code_bi)
+            except:
+                content = ''
+                self.straight_qrcode = None
 
         if content != '':
             self.text_raw = content

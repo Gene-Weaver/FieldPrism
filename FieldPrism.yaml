@@ -30,7 +30,7 @@
 # Processing images with FieldPrism
 ########################################################################
 
-# ----- Set the Scale-sheet Version ------------------------------------
+# ----- FieldSheet Options ------------------------------------
 # scale:
 #       use_predefined --- True: set contains images that used pre-defined scale-sheet
 #                      --- False: using a custom setup
@@ -41,7 +41,6 @@
 #                  --- 'custom': placing markers on custom background (poster board etc.) larger or smaller
 #       custom_ratio --- null: Use null if using predefined scale-sheet
 #                    --- float: floating point number between 0 and 1 (0.65 OR 0.6111). To calculate, divide long side distance by short side
-#                    --- 
 #       custom_short_distance --- integer: distance in mm. between the two markers on the short side
 #
 # ----- Make Images Vertical ------------------------------------------
@@ -79,22 +78,67 @@
 #       make_uniform_buffer --- integer: distance in mm to leave around the edges outside of the scale markers, 40 is a good start
 #       uniform_h --- integer: pixel height of final image, eg. 4000
 #       uniform_w --- integer: pixel width of final image, eg. 3000
+#   
+# ----- Images to Process -----------------------
+#       dir_images_unprocessed --- directory of the images that you want to process 
+#       dir_images_unprocessed_labels --- directory of the labels for previously processed images. You can speed up processing by
+#                                         adding the folder that contains the machine learning predictions/labels from a previous run.
+#                                         The labels are in the /Labels_Not_Corrected folder. So set to '/path/to/Labels_Not_Corrected'
+# 
+# ----- Output Directories -----------------------
+#       dir_home --- parent folder for all output files. Will go to 'dir_home/dirname_images_processed/dirname_current_project/dirname_current_run'
+#       dirname_images_processed --- image set
+#       dirname_current_project --- project
+#       dirname_current_run --- run
+# 
+# ----- FieldStation Info  -----------------------
+# If you collected data with FieldStation, add the data output file here
+#       do_use_FieldStation_csv --- False: default. Did not use FieldStation
+#                               --- True: Did use FieldStation
+#       path_to_FieldStation_csv --- full path to CSV data file: 'path/to/file/FieldPrism_Data.csv''
+# 
+# ----- ML Detection Options  -----------------------
+# pick the ML model, confidence / detection threshold, show text labels
+#       model_size --- 'best': use the best model. Currently only one model is provided. More may come.
+#       min_confidence_threshold --- float: default is 0.70, going lower may cause fals positives causing rulers to be confused with QR codes
+#       show_predicted_text --- False: default. Skips placing bounding boxes around text labels
+#                           --- True: Places bounding boxes around text labels# 
+# 
+# ----- QR Code File Renaming Options  -----------------------
+# set how QR coeds are handled and detected
+#       use_unstable_QR_code_decoder --- False: default. Uses a stable method to detect and decode QR codes
+#                                    --- True: uses an unstable method to decode QR codes. This method will detect QR codes in difficult situations
+#                                              BUT this method relies on a dependency (a package in open-cv2) that can cause random memory faults.
+#                                              This may cause FieldPrism to crash without any explanation - the program will just die.
+#                                              We recommend moving images with undetected barcodes to a new folder and then setting this to True
+#                                              to process a subset of your images. If it doesn't crash, then great! You'll get even more successful
+#                                              QR code decodings. But if it crashes without explanation, this is why. 
+#       do_rename_images --- False: default. do not rename output images to match the QR codes in the image. 
+#                        --- True: rename output images to match the QR codes in the image. 
+#       n_QR_codes --- integer: default 4. Tells how many levels to expect when reading QR codes. 
+#       sep_value --- string: default '__'. The separator used to reconstruct the filenames
+#       fail_value --- string: default null. What to put into a file name in place of a failed QR code. Default is recommended. 
+#       do_keep_original_name_if_fail --- True: default. If QR codes all fail, keep the original file name
+#                                     --- False: If QR codes all fail the new file name will be "Level1__Level2.jpg" etc. Not recommended
 
 fieldprism:
-    #### Set the Scale-sheet Version ############################################
+    #### FieldSheet Options ############################################
     scale:
         use_predefined: True # bool |DEFAULT| True    
         scale_size: 'A4' # string |DEFAULT| 'A4' FROM 'A5' or 'A4' or 'A3' or 'legal' or 'custom'
         custom_ratio: null # null OR float |DEFAULT| null
         custom_short_distance: null # null or integer |DEFAULT| null
+
     #### Make Images Vertical ###################################################
     skip_make_images_vertical: False # bool |DEFAULT| False 
+
     #### Processing Options #####################################################
     strict_distortion_correction: False # bool |DEFAULT| False 
     use_template_for_pixel_to_metric_conversion: True # bool |DEFAULT| False 
     do_remove_overlap: True # bool |DEFAULT| False 
     overlap_priority: 'barcode' # string |DEFAULT| 'barcode' FROM 'ruler' OR 'barcode' 
     insert_clean_QR_codes: True # bool |DEFAULT| True
+
     #### Justify the Distortion Corrected Images ################################
     justify_corrected_images:
         do_justify: True # bool |DEFAULT| True
@@ -104,27 +148,33 @@ fieldprism:
         make_uniform_buffer: 40 # integer |DEFAULT| 40 
         uniform_h: 4000 # integer |DEFAULT| 4000 
         uniform_w: 3000 # integer |DEFAULT| 3000
+
     #### Images to Process ######################################################
-    dir_images_unprocessed: '/home/brlab/Dropbox/LM2_Env/Image_Datasets/FieldPrism_Training_Images/FP_Manu_REU' #'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/QR_Codes_Demo'
+    dir_images_unprocessed: 'D:/Dropbox/LM2_Env/Image_Datasets/FieldPrism_Training_Images/FP_Manu_REU' #'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/QR_Codes_Demo'
     dir_images_unprocessed_labels: null #'D:\Dropbox\LM2_Env\Image_Datasets\SET_FieldPrism_Test\TESTING_OUTPUT\Images_Processed\FieldPrism_Training_FS_Renaming_Data\Naming/Labels_Not_Corrected' #'D:\Dropbox\LM2_Env\Image_Datasets\SET_FieldPrism_Test\TESTING_OUTPUT\Images_Processed\FieldPrism_Training_Sheets\PREP_final_best\Labels_Not_Corrected' #'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/TESTING_OUTPUT/Images_Processed/FieldPrism_Training_Outside/PREP_final_best3/Labels_Not_Corrected' # null # 'D:/Dropbox/LM2_Env/Image_Datasets/FieldPrism_Training_Images/REU_Field_QR-Code-Images' #'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/QR_Codes_Demo'
+    
     #### Output Directories #####################################################
     # dir_home = /path/to/output/images/
     # all files from run will go to:
     #       dir_home/dirname_images_processed/dirname_current_project/dirname_current_run
-    dir_home: '/home/brlab/Dropbox\LM2_Env\FieldPrism_Manuscript\DELETE'
+    dir_home: 'D:/Dropbox/LM2_Env/FieldPrism_Manuscript/DELETE'
     dirname_images_processed: 'REU_All'
     dirname_current_project: 'uniform'
     dirname_current_run: 'uniform_23B' # nested inside of current_project
+    
     #### FieldStation Info ######################################################
     do_use_FieldStation_csv: False
     path_to_FieldStation_csv: 'D:\Dropbox\LM2_Env\Image_Datasets\FieldPrism_Training_Images\FieldPrism_Training_FS_Renaming_Data/FieldPrism_Data.csv'  # null is N/A
+    
     #### ML Detection Options ###################################################
     detector:
         model_size: 'best' # 'large' or 'best' --> use 'best' only
         min_confidence_threshold: 0.70 # float 0 > x < 1 default = 0.70 
         show_predicted_text: False # bool 
+    
     #### QR Code File Renaming Options ##########################################
     QR_codes:
+        use_unstable_QR_code_decoder: False # bool |DEFAULT| False
         do_rename_images: False # bool |DEFAULT| True
         n_QR_codes: 4 # int |DEFAULT| 3 
         sep_value: '__'

@@ -32,9 +32,9 @@ fieldsheetbuilder:
         create_size_check: True # bool True # Either True OR False
 
         # Input / Output
-        new_file_stem: 'Letter_Short' # str 'name_of_project' base name of created documents 'Demo_Levels_A4_QR-H-1_A3A4'
+        new_file_stem: 'A4_Max_Name_Length' # str 'name_of_project' base name of created documents 'Demo_Levels_A4_QR-H-1_A3A4'
         dir_containing_CSV_files: 'D:/Dropbox/FieldPrism/QR_code_builder/CSV_Files'
-        name_CSV_file: 'Demo_Levels_Short_Alias' # CSV file containing the naming hierarchy
+        name_CSV_file: 'Demo_Long_Names_Max' # CSV file containing the naming hierarchy
         dir_home: null # null or assign an output dir
 
     ### Set the size of the  field sheet ###
@@ -48,7 +48,7 @@ fieldsheetbuilder:
         ### Using default will override all following options ###
         #########################################################
         ues_default_setup: True # bool True
-        default_config: 'A4_Short_Names' # 'A4_Short_Names' OR 'A4_Long_Names'
+        default_config: 'A4_Long_Names' # 'A4_Short_Names' OR 'A4_Long_Names'
 
         # QR Code density
         # Default = 1. Results in larger 'pixels', best for low-res cameras
