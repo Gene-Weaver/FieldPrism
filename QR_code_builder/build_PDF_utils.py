@@ -10,9 +10,9 @@ currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentfram
 parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
 try:
-    from build_PDF_PageSizes import PageInfo
-except:
     from QR_code_builder.build_PDF_PageSizes import PageInfo
+except:
+    from build_PDF_PageSizes import PageInfo
 
 # from qrcode.image.styles.moduledrawers import RoundedModuleDrawer
 # from qrcode.image.styles.colormasks import RadialGradiantColorMask
