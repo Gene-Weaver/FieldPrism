@@ -28,7 +28,7 @@ Table of Contents
          * [fieldsheetbuilder : QR_code_builder](#fieldsheetbuilder--qr_code_builder)
          * [Run](#run-1)
       * [FieldPrism - Image Processing](#fieldprism---image-processing)
-         * [FieldPrism configurations](#fieldprism-configurations)
+         * [FieldPrism Configurations](#fieldprism-configurations)
             * [FieldSheet Options](#fieldSheet-options)
             * [Make Images Vertical](#make-images-vertical)
             * [Processing Options](#processing-options)
@@ -253,7 +253,7 @@ Here are a few tips:
 - Covering a subject with plastic to keep it flat is normally okay, just mind the glare from the sun or reflections.
 - The following descibes settings in the `FieldPrism.yaml` configuration file. Default settings are a good place to start. If a few images are being processed strangely or are problematic, copy those original files to a new directory and then start tuning processing settings. Some edge-case images will require different configurations to process successfully. Don't expect to process all images successfully using the same config, unless your dataset is quite homogeneous.
 
-#### FieldPrism configurations
+#### FieldPrism Configurations
 ##### FieldSheet Options
 - **scale:**
     - **use_predefined** 
