@@ -9,6 +9,7 @@ from qrcode.image.styledpil import StyledPilImage
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
+print(parentdir)
 try:
     from QR_code_builder.build_PDF_PageSizes import PageInfo
 except:

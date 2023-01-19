@@ -4,6 +4,8 @@ import os, inspect, sys
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
+print(parentdir)
+
 try:
     from QR_code_builder.build_PDF_utils import bcolors, Input, get_cfg_from_full_path, createProjectPDF
 except:
