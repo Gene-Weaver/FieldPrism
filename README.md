@@ -93,7 +93,7 @@ A virtual environment is a tool to keep the dependencies required by different p
 4. The FieldPrism machine learning algorithm requires PyTorch version 1.11 
     - `pip install torch==1.11.0 torchvision==0.12.0 torchaudio==0.11.0`
 5. Test the installation. test.py will test the QR code builder and image processing portions of FieldPrism:  
-    - `python3 test.py`
+    - `python test.py`
     - If you see large red messages, then the installation was not successful. The rror message will be below the large red boxes, providing information on how to correct the installation error. If you need more help, please submit an inquiry in the form at [FieldPrism.org](https://fieldprism.org/)
 6. Mac OS does not support the use of a GPU, so image processing will run more slowly.
 7. You can view the test output in `FieldPrism/demo/demo_output/`
@@ -125,7 +125,7 @@ A virtual environment is a tool to keep the dependencies required by different p
     - WITH GPU: `pip install torch==1.11.0+cu113 torchvision==0.12.0+cu113 torchaudio==0.11.0 --extra-index-url https://download.pytorch.org/whl/cu113`
     - WITH CPU ONLY: `pip install torch==1.11.0+cpu torchvision==0.12.0+cpu torchaudio==0.11.0 --extra-index-url https://download.pytorch.org/whl/cpu`
 5. Test the installation. test.py will test the QR code builder and image processing portions of FieldPrism:  
-    - `python3 test.py`
+    - `python test.py`
     - If you see large red messages, then the installation was not successful. The rror message will be below the large red boxes, providing information on how to correct the installation error. If you need more help, please submit an inquiry in the form at [FieldPrism.org](https://fieldprism.org/)
 6. You can view the test output in `FieldPrism/demo/demo_output/`
 
@@ -164,7 +164,7 @@ FieldSheetBuilder is a tool for creating field sheets and QR codes for use in Fi
 
 1. To build FieldSheets we run FieldSheetBuilder.py
 2. In a terminal window, make sure that you have `cd`'d into the FieldPrism directory and that the virtual environment is activated. 
-3. To run: `python3 FieldSheetBuilder.py`
+3. To run: `python FieldSheetBuilder.py`
 4. Then go to either your output directory or the default location to view your FieldSheets
 
 
