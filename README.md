@@ -29,7 +29,7 @@ Table of Contents
          * [Run](#run-1)
       * [FieldPrism - Image Processing](#fieldprism---image-processing)
          * [FieldPrism configurations](#fieldprism-configurations)
-            * [Set the Scale-sheet Version](#set-the-scale-sheet-version)
+            * [FieldSheet Optionsn](#fieldSheet-options)
             * [Make Images Vertical](#make-images-vertical)
             * [Processing Options](#processing-options)
             * [Justify the Distortion Corrected Images](#justify-the-distortion-corrected-images)
@@ -254,7 +254,7 @@ Here are a few tips:
 - The following descibes settings in the `FieldPrism.yaml` configuration file. Default settings are a good place to start. If a few images are being processed strangely or are problematic, copy those original files to a new directory and then start tuning processing settings. Some edge-case images will require different configurations to process successfully. Don't expect to process all images successfully using the same config, unless your dataset is quite homogeneous.
 
 #### FieldPrism configurations
-##### Set the Scale-sheet Version
+##### FieldSheet Options
 - **scale:**
     - **use_predefined** 
       - True: set contains images that used pre-defined scale-sheet
