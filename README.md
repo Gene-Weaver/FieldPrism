@@ -29,7 +29,7 @@ Table of Contents
          * [Run](#run-1)
       * [FieldPrism - Image Processing](#fieldprism---image-processing)
          * [FieldPrism configurations](#fieldprism-configurations)
-            * [FieldSheet Optionsn](#fieldSheet-options)
+            * [FieldSheet Options](#fieldSheet-options)
             * [Make Images Vertical](#make-images-vertical)
             * [Processing Options](#processing-options)
             * [Justify the Distortion Corrected Images](#justify-the-distortion-corrected-images)
