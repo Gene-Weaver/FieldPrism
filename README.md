@@ -244,8 +244,21 @@ Here are a few tips:
                       --- float: floating point number between 0 and 1 (0.65 OR 0.6111). To calculate, divide long side distance by short side
     - **custom_short_distance** --- integer: distance in mm. between the two markers on the short side
 
-### Make Images Vertical
+##### Make Images Vertical
 FP requires vertical images. If you are re-running a set you can set this to True to save time.
 - **skip_make_images_vertical** --- False: boolean, only set to True if you are re-running images that are already vertical!
 
-
+##### Processing Options
+- **strict_distortion_correction** --- False: default. will use center of detected marker bbox if exact center cannot be determined. 
+                                 --- True: requires all 4 boxes within all 4 markers to correct distortion, need good lighting for this option 
+- **use_template_for_pixel_to_metric_conversion** --- False: default. 
+                                                 --- True: If all four boxes inside at least one marker are not regularly found then this will 
+                                                           find a very close approximation, usually +-3 % of true conversion 
+- **do_remove_overlap** --- False: default. start with False. set to True for images that may become heavily distorted OR if 
+                       --- True: for images that may become extremely warped after processing OR if QR codes and rulers are predicted incorrectly,  
+                                 If a barcode in the middle of the image is predicted to be a ruler, then either the image will not go 
+                                 through distortion correction or it will be wildly warped. Setting to True can help correct this
+- **overlap_priority** --- 'barcode': rulers that intersect with barcodes will be ignored
+                      --- 'ruler': barcodes that intersect with rulers will be ignored
+- **insert_clean_QR_codes** --- True: insert a new QR code over the original one, which can be useful when the original QR code is difficult to read due to glare or other issues
+                                --- False: default. use the original QR code for processing
