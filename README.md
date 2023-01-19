@@ -137,6 +137,7 @@ A virtual environment is a tool to keep the dependencies required by different p
 - We have not validated CUDA 11.6 or CUDA 11.7, but our code is likely to work with them too. If you have success with other versions of CUDA/pytorch, let us know and we will update our instructions. 
 
 ## Using FieldPrism
+Generating the FieldSheets, QR codes, and size check document can all be run at the same time. Enable or disable each of the three option in the `FieldSheetBuilder.yaml`file.
 
 ### FieldSheetBuilder
 
@@ -144,6 +145,8 @@ FieldSheetBuilder is a tool for creating field sheets and QR codes for use in Fi
 
 #### Setup
 - Enable building FieldSheets by setting `create_field_sheet: True`
+   - If the other `create_` fields are set to `True` then you will also create QR codes and the size check
+   - We recommend setting `create_size_check: True` to generate the size check document 
 - Name your FieldSheets by setting `new_file_stem: 'my_project_name'`
    - For names, only use alphanumeric characters, underscores, or dashes.
 - Set the FieldSheet size in the `field_sheet_builder` section with `page_size: 'letter'`
@@ -161,18 +164,48 @@ FieldSheetBuilder is a tool for creating field sheets and QR codes for use in Fi
    - by default, output will be saved to `FieldPrism/QR_code_builder/bin_PDF` 
 
 #### Run 
-
 1. To build FieldSheets we run FieldSheetBuilder.py
 2. In a terminal window, make sure that you have `cd`'d into the FieldPrism directory and that the virtual environment is activated. 
 3. To run: `python FieldSheetBuilder.py`
 4. Then go to either your output directory or the default location to view your FieldSheets
 
-
-
-
-
-
-
 ### QR Code Generator
+#### fieldsheetbuilder : setup
+- Prepare your QR code naming file. This is a CSV file for naming and generating alias names, as mentioned in the paper. An example CSV file can be found in `FieldPrism/demo/names` or in the FieldPrism demo kit from [FieldPrism.org](https://fieldprism.org/).
+   - Note: All headers must follow the pattern 'Level_1', 'Level_2', etc. or if using alias names 'Level_1', 'Alias_1'
+   - Note: Specimen naming components cannot contain any characters other than letters, numbers, dashes, and underscores. All illegal characters will be replaced with a dash '-'.
+   - Note: We validated up to 6 levels and do not recommend using more.
+- Enable building QR codes by setting 
+   - `create_QR_codes: True`
+- Name your QR code project by setting
+   - `new_file_stem: 'my_project_name'`
+   - For names, only use alphanumeric characters, underscores, or dashes.
+- Set the location of your CSV naming file:
+   - `dir_containing_CSV_files: '/path/to/csv/folder'`   
+- Set the name of your CSV naming file, with or without the extension:
+   - `dir_containing_CSV_files: 'my_csv_file'`   
+- Optional, assign an ouput directory by setting
+   - `dir_home: '/path/to/output/folder'`
+   - by default, output will be saved to `FieldPrism/QR_code_builder/bin_PDF` 
+
+#### fieldsheetbuilder : QR_code_builder
+This section of the config file has two parts. Part one allows you to use one of two premade QR code templates. To use these templates set 
+- `ues_default_setup: True`
+Pick from `'A4_Short_Names'` or `'A4_Long_Names'`
+- A4_Short_Names
+   - Fits 40 QR codes into an A4 or Letter sized page
+   - Has enough room for 3-character names
+   - Designed for indeterminate naming schemes
+- A4_Long_Names
+   - Fits 24 QR codes into an A4 or Letter sized page
+   - Has enough room for 60-character names. We do NOT recommend long names. Long names shrink the pixel size of the QR codes and makes decoding less reliable.
+   - Keep your names as short as possible
+   - For long names, separate words with underscores. When long names are parsed, FieldPrism will attempt to put each word on a new line for better readability. See `A4_Max_Name_Length_QR_Codes.pdf` and its associated naming file `Demo_Long_Names_Max.csv` in the demo kit for more information. 
+Then set the QR code density. We recommend leaving it at the default settings. It will automatically adjust based on the content.
+   - `QR_density: 5`
+
+Everything below this point is overwritten by using the premade settings `'A4_Short_Names'` or `'A4_Long_Names'`
+Only change the remaining settings if you need to create custom QR codes. We have not validated larger, smaller, or different densities. Be sure to validate the performance of any custom settings.
+
 
 ### FieldPrism - Image Processing
