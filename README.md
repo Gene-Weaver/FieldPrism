@@ -1,4 +1,5 @@
-# FieldPrism Software
+(https://fieldprism.org/img/FieldPrism_Desktop_Large.jpg)
+# FieldPrism
 
 Table of Contents
 =================
