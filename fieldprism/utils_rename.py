@@ -131,7 +131,7 @@ def increment_filename_duplicate_barcodes(dir_path, new_filename, ext):
 
         return new_filename
 
-def rename_files_from_QR_codes(cfg, option, barcodes_added, Dirs, search_dirs, writing_dirs, DataVault):
+def rename_files_from_QR_codes(cfg, option, barcodes_added, Dirs, search_dirs, writing_dirs, DataVault):    
     if not barcodes_added:
         return DataVault
     if not cfg['fieldprism']['QR_codes']['do_rename_images']:

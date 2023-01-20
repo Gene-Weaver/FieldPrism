@@ -346,7 +346,7 @@ def get_scale_ratio(cfg):
             elif user_scale in ['letter', 'LETTER', 'Letter']:
                 scale = np.divide(14.55,20.2)  ### TODO check all ratios, good as of 01/12/2022
             elif user_scale in ['tabloid', 'TABLOID', 'Tabloid']:
-                scale = np.divide(22.4,0)  ### TODO check all ratios
+                scale = np.divide(20.9,35.5)  ### TODO check all ratios
             elif user_scale in ['legal', 'LEGAL', 'Legal']:
                 scale = np.divide(14.0,28.0)  ### TODO check all ratios, good as of 11/11/2022
             scale_success = True

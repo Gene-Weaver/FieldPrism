@@ -15,7 +15,7 @@ try:
     from utils_rulers import process_rulers
     from utils_barcodes import process_barcodes
     from utils_rename import rename_files_from_QR_codes
-    from utils_data import Data_Vault, Data_FS, build_empty_csv, write_datarow_to_file
+    from utils_data import Data_Vault, Data_FS, Data_Naming, build_empty_csv, write_datarow_to_file
 except:
     from fieldprism.utils_processing import (get_cfg_from_full_path, make_images_in_dir_vertical, get_scale_ratio, write_yaml, 
                                 make_file_names_valid, remove_overlapping_predictions, increment_path)
@@ -24,7 +24,7 @@ except:
     from fieldprism.utils_rulers import process_rulers
     from fieldprism.utils_barcodes import process_barcodes
     from fieldprism.utils_rename import rename_files_from_QR_codes
-    from fieldprism.utils_data import Data_Vault, Data_FS, build_empty_csv, write_datarow_to_file, get_weights
+    from fieldprism.utils_data import Data_Vault, Data_FS, Data_Naming, build_empty_csv, write_datarow_to_file, get_weights
 
 def identify_and_process_markers(cfg, option, ratio, dir_images_to_process, Dirs, path_CSV_out):
     # Get marker templates for maker matching
@@ -48,8 +48,11 @@ def identify_and_process_markers(cfg, option, ratio, dir_images_to_process, Dirs
     search_dirs = ['Labels_Not_Corrected',
                     'Labels_Corrected']
 
-    # Get FS data is applicable
+    # Get FS data if applicable
     DataFS = Data_FS(cfg)
+
+    # Open naming file
+    DataAlias = Data_Naming(cfg) # {0: {'A': 'Acer', '1': 'Stem', 'a': 'Red'}, 1: {'B': 'Alnus', '2': 'Leaf', 'b': 'Orange'}, 2: {'C': 'Betula', '3': 'Petiole', 'c': 'Yellow'}}
 
     for index, image_name_jpg in enumerate(os.listdir(dir_images_to_process)):
         if image_name_jpg.endswith((".jpg",".JPG",".jpeg",".JPEG")):
@@ -66,7 +69,7 @@ def identify_and_process_markers(cfg, option, ratio, dir_images_to_process, Dirs
             image_name_txt = '.'.join([image_name,'txt'])
 
             # Initialize empty data vault
-            DataVault = Data_Vault(cfg, Dirs, option, ratio, image_name_jpg, dir_images_to_process, index, n_total)
+            DataVault = Data_Vault(cfg, DataAlias, Dirs, option, ratio, image_name_jpg, dir_images_to_process, index, n_total)
 
             # Find image row in csv_FS if applicable
             if DataFS.has_FS:

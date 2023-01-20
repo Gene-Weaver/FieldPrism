@@ -91,11 +91,13 @@ class Data_Vault:
     rename_backup: str = ''
     rename_backup_dirs: list[str] = field(default_factory=list)
 
+    # DataAlias
+    DataAlias: list[str] = field(default_factory=list)
 
-
-    def __init__(self, cfg, Dirs, option, ratio, image_name_jpg, dir_images_to_process, index, n_total) -> None:
+    def __init__(self, cfg, DataAlias, Dirs, option, ratio, image_name_jpg, dir_images_to_process, index, n_total) -> None:
         # Initialize with these
         self.cfg = cfg
+        self.DataAlias = DataAlias
         self.Dirs = Dirs
         self.option = option
         self.ratio = ratio
@@ -172,7 +174,7 @@ class Data_Vault:
             n_QR_codes = self.cfg['fieldprism']['QR_codes']['n_QR_codes']
             sep_value = self.cfg['fieldprism']['QR_codes']['sep_value']
 
-            QR_Naming = QR_Deconstructor(QR_List_Pass, n_QR_codes, sep_value)
+            QR_Naming = QR_Deconstructor(self.DataAlias, QR_List_Pass, n_QR_codes, sep_value)
 
             self.new_full_name = QR_Naming.new_full_name
             self.rename_success = QR_Naming.rename_success
@@ -381,49 +383,98 @@ class QR_Deconstructor:
     new_full_name: str = ''
     rename_success: bool = False
 
-    def __init__(self, QR_List_Pass, n_QR_codes, sep_value) -> None:
+    def __init__(self, DataAlias, QR_List_Pass, n_QR_codes, sep_value) -> None:
         self.QR_raw_text = []
-        if len(QR_List_Pass) > 0:
-            for key in QR_List_Pass.values():
-                self.QR_raw_text.append(key.text_raw)
-                # print(f'pass:\n{key.text_raw}')
-                rank =  key.rank
-                QR_value = key.rank_value
 
-                if rank == 'Level_1':
-                    self.L1 = QR_value
-                elif rank == 'Level_2':
-                    self.L2 = QR_value
-                elif rank == 'Level_3':
-                    self.L3 = QR_value
-                elif rank == 'Level_4':
-                    self.L4 = QR_value
-                elif rank == 'Level_5':
-                    self.L5 = QR_value
-                elif rank == 'Level_6':
-                    self.L6 = QR_value
-                self.rename_success = True
-        else:
-            self.rename_success = False
+        if DataAlias.has_naming:
+            if len(QR_List_Pass) > 0:
+                rank_to_attribute = {
+                    'Level_1': 'L1',
+                    'Level_2': 'L2',
+                    'Level_3': 'L3',
+                    'Level_4': 'L4',
+                    'Level_5': 'L5',
+                    'Level_6': 'L6'
+                }
 
-        if n_QR_codes == 1:
-            self.new_full_name = sep_value.join([self.L1])
-        elif n_QR_codes == 2:
-            self.new_full_name = sep_value.join([self.L1, self.L2])
-        elif n_QR_codes == 3:
-            self.new_full_name = sep_value.join([self.L1, self.L2, self.L3])
-        elif n_QR_codes == 4:
-            self.new_full_name = sep_value.join([self.L1, self.L2, self.L3, self.L4])
-        elif n_QR_codes == 5:
-            self.new_full_name = sep_value.join([self.L1, self.L2, self.L3, self.L4, self.L5])
-        elif n_QR_codes == 6:
-            self.new_full_name = sep_value.join([self.L1, self.L2, self.L3, self.L4, self.L5, self.L6])
+                for key in QR_List_Pass.values():
+                    self.QR_raw_text.append(key.text_raw)
+                    rank = key.rank
+                    QR_value = key.rank_value
+                    # if '1' in rank:
+                        # alias = DataAlias.dict_naming[0]
+                    alias = DataAlias.dict_naming[QR_value]
+                    attribute_name = rank_to_attribute.get(rank)
+                    if attribute_name:
+                        setattr(self, attribute_name, alias)
+                    self.rename_success = True
         else:
+            if len(QR_List_Pass) > 0:
+                rank_to_attribute = {
+                    'Level_1': 'L1',
+                    'Level_2': 'L2',
+                    'Level_3': 'L3',
+                    'Level_4': 'L4',
+                    'Level_5': 'L5',
+                    'Level_6': 'L6'
+                }
+
+                for key in QR_List_Pass.values():
+                    self.QR_raw_text.append(key.text_raw)
+                    rank = key.rank
+                    QR_value = key.rank_value
+                    attribute_name = rank_to_attribute.get(rank)
+                    if attribute_name:
+                        setattr(self, attribute_name, QR_value)
+                    self.rename_success = True
+                # for key in QR_List_Pass.values():
+                #     self.QR_raw_text.append(key.text_raw)
+                #     # print(f'pass:\n{key.text_raw}')
+                #     rank =  key.rank
+                #     QR_value = key.rank_value
+
+                #     if rank == 'Level_1':
+                #         self.L1 = QR_value
+                #     elif rank == 'Level_2':
+                #         self.L2 = QR_value
+                #     elif rank == 'Level_3':
+                #         self.L3 = QR_value
+                #     elif rank == 'Level_4':
+                #         self.L4 = QR_value
+                #     elif rank == 'Level_5':
+                #         self.L5 = QR_value
+                #     elif rank == 'Level_6':
+                #         self.L6 = QR_value
+                #     self.rename_success = True
+            else:
+                self.rename_success = False
+
+        attributes = [self.L1, self.L2, self.L3, self.L4, self.L5, self.L6]
+        self.new_full_name = sep_value.join(attributes[:n_QR_codes])
+        if not 1 <= n_QR_codes <= 6:
             print(f"{bcolors.FAIL}      Number of barcode in config file is not valid.{bcolors.ENDC}")
             print(f"{bcolors.FAIL}      Set cfg['fieldprism']['QR_codes']['n_QR_codes'] to an integer from 1 - 6{bcolors.ENDC}")
             self.new_full_name = sep_value.join([self.L1, self.L2, self.L3, self.L4, self.L5, self.L6])
+        else:
+            attributes = [self.L1, self.L2, self.L3, self.L4, self.L5, self.L6]
+            self.new_full_name = sep_value.join(attributes[:n_QR_codes])
+            # if n_QR_codes == 1:
+            #     self.new_full_name = sep_value.join([self.L1])
+            # elif n_QR_codes == 2:
+            #     self.new_full_name = sep_value.join([self.L1, self.L2])
+            # elif n_QR_codes == 3:
+            #     self.new_full_name = sep_value.join([self.L1, self.L2, self.L3])
+            # elif n_QR_codes == 4:
+            #     self.new_full_name = sep_value.join([self.L1, self.L2, self.L3, self.L4])
+            # elif n_QR_codes == 5:
+            #     self.new_full_name = sep_value.join([self.L1, self.L2, self.L3, self.L4, self.L5])
+            # elif n_QR_codes == 6:
+            #     self.new_full_name = sep_value.join([self.L1, self.L2, self.L3, self.L4, self.L5, self.L6])
+            # else:
+            #     print(f"{bcolors.FAIL}      Number of barcode in config file is not valid.{bcolors.ENDC}")
+            #     print(f"{bcolors.FAIL}      Set cfg['fieldprism']['QR_codes']['n_QR_codes'] to an integer from 1 - 6{bcolors.ENDC}")
+            #     self.new_full_name = sep_value.join([self.L1, self.L2, self.L3, self.L4, self.L5, self.L6])
 
-        # self.new_full_name = sep_value.join([self.L1, self.L2, self.L3, self.L4, self.L5, self.L6])
 
 @dataclass
 class Data_FS:
@@ -447,6 +498,37 @@ class Data_FS:
         # image_row = self.csv_FS[self.csv_FS == image_name]
         return image_row
 
+@dataclass
+class Data_Naming:
+    csv_naming: list[str] = field(default_factory=list)
+    dict_naming: list[str] = field(default_factory=list)
+    has_naming: bool = False
+
+    def __init__(self, cfg) -> None:
+        # Open FieldStation csv file if applicable
+        if cfg['fieldprism']['path_to_alias_names']:
+            self.csv_naming = pd.read_csv(cfg['fieldprism']['path_to_alias_names'], dtype=str)
+
+            # select the odd columns
+            odd_columns = self.csv_naming.iloc[:, 1::2]
+
+            # stack the odd columns into one column
+            odd_columns = odd_columns.stack()
+
+            # select the even columns
+            even_columns = self.csv_naming.iloc[:, 0::2]
+
+            # stack the even columns into one column
+            even_columns = even_columns.stack()
+
+            # create the dictionary
+            self.dict_naming = dict(zip(even_columns, odd_columns))
+
+            # print the dictionary
+            # print(self.dict_naming)
+
+            self.has_naming = True
+            
 def get_weights(dir_FP):
     try:
         zipurl = 'https://fieldprism.org/data/fp/best.zip'

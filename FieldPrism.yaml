@@ -125,12 +125,12 @@ fieldprism:
     #### FieldSheet Options ############################################
     scale:
         use_predefined: True # bool |DEFAULT| True    
-        scale_size: 'A4' # string |DEFAULT| 'A4' FROM 'A5' or 'A4' or 'A3' or 'legal' or 'custom'
+        scale_size: 'A3' # string |DEFAULT| 'A4' FROM 'A5' or 'A4' or 'A3' or 'legal' or 'custom'
         custom_ratio: null # null OR float |DEFAULT| null
         custom_short_distance: null # null or integer |DEFAULT| null
 
     #### Make Images Vertical ###################################################
-    skip_make_images_vertical: False # bool |DEFAULT| False 
+    skip_make_images_vertical: True # bool |DEFAULT| False 
 
     #### Processing Options #####################################################
     strict_distortion_correction: False # bool |DEFAULT| False 
@@ -150,15 +150,16 @@ fieldprism:
         uniform_w: 3000 # integer |DEFAULT| 3000
 
     #### Images to Process ######################################################
-    dir_images_unprocessed: 'D:/Dropbox/LM2_Env/Image_Datasets/FieldPrism_Training_Images/FP_Manu_REU' #'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/QR_Codes_Demo'
+    dir_images_unprocessed: 'D:/Dropbox/LM2_Env/Image_Datasets/FieldPrism_Training_Images/FieldPrism_Training_FS_Renaming' #'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/QR_Codes_Demo'
     dir_images_unprocessed_labels: null #'D:\Dropbox\LM2_Env\Image_Datasets\SET_FieldPrism_Test\TESTING_OUTPUT\Images_Processed\FieldPrism_Training_FS_Renaming_Data\Naming/Labels_Not_Corrected' #'D:\Dropbox\LM2_Env\Image_Datasets\SET_FieldPrism_Test\TESTING_OUTPUT\Images_Processed\FieldPrism_Training_Sheets\PREP_final_best\Labels_Not_Corrected' #'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/TESTING_OUTPUT/Images_Processed/FieldPrism_Training_Outside/PREP_final_best3/Labels_Not_Corrected' # null # 'D:/Dropbox/LM2_Env/Image_Datasets/FieldPrism_Training_Images/REU_Field_QR-Code-Images' #'D:/Dropbox/LM2_Env/Image_Datasets/SET_FieldPrism_Test/QR_Codes_Demo'
-    
+    path_to_alias_names: 'D:/Dropbox/FieldPrism/QR_code_builder/CSV_Files/Demo_6_Levels_Alias.csv'
+
     #### Output Directories #####################################################
     # dir_home = /path/to/output/images/
     # all files from run will go to:
     #       dir_home/dirname_images_processed/dirname_current_project/dirname_current_run
     dir_home: 'D:/Dropbox/LM2_Env/FieldPrism_Manuscript/DELETE'
-    dirname_images_processed: 'REU_All'
+    dirname_images_processed: 'Names'
     dirname_current_project: 'uniform'
     dirname_current_run: 'uniform_23B' # nested inside of current_project
     
@@ -175,8 +176,8 @@ fieldprism:
     #### QR Code File Renaming Options ##########################################
     QR_codes:
         use_unstable_QR_code_decoder: False # bool |DEFAULT| False
-        do_rename_images: False # bool |DEFAULT| True
-        n_QR_codes: 4 # int |DEFAULT| 3 
+        do_rename_images: True # bool |DEFAULT| True
+        n_QR_codes: 6 # int |DEFAULT| 3 
         sep_value: '__'
         fail_value: null # null = default --> LEVEL1, LEVEL2... else "Error" or something else
         do_keep_original_name_if_fail: True
