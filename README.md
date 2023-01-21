@@ -4,6 +4,7 @@ Table of Contents
 =================
 
 * [FieldPrism Software](#fieldprism-software)
+* [FieldStation Guide]()
 * [Table of Contents](#table-of-contents)
    * [Installing FieldPrism](#installing-fieldprism)
       * [Prerequisites](#prerequisites)
