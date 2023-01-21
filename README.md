@@ -4,7 +4,7 @@ Table of Contents
 =================
 
 * [FieldPrism Software](#fieldprism-software)
-* [FieldStation Guide]()
+* [FieldStation Guide](https://github.com/Gene-Weaver/FieldPrism/tree/main/fieldstation)
 * [Table of Contents](#table-of-contents)
    * [Installing FieldPrism](#installing-fieldprism)
       * [Prerequisites](#prerequisites)
