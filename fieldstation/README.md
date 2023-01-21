@@ -3,9 +3,44 @@
 Below you will find a guide to use the FieldStation GUI and some tips for using it in the field.
 
 ## Installation
-- Install our Raspberry Pi OS image onto a Raspberry Pi 4
-  - We validated FieldStation using the 8GB version of the Raspberry Pi 4, but the 4GB should also work.
-- Download Pi Imager and our Raspberry Pi OS image
+### Raspberry Pi OS
+- Install our Raspberry Pi OS image onto a microSD card for the boot drive of your Raspberry Pi 4. We validated FieldStation using the 8GB version of the Raspberry Pi 4, but the 4GB version should also work.
+- On a computer, download [Pi Imager](https://www.raspberrypi.com/software/) and our [FieldStation R Pi OS Image](link to the image).
+- Open Pi Imager, for "Choose OS" select our FieldStation image. For "Choose storage" select your microSD card.
+- Write the image to the microSD card.
+- Insert the microSD card into the Raspberry Pi.
+
+### Updating the FieldStation software
+- Connect an ethernet cable (with internet access) to the Raspberry Pi's ethernet port. You should periodically check for updates, which requires an ethernet connection. The Wi-Fi connection is used to connect to the Raspberry Pi using [RealVNC Viewer](https://www.realvnc.com/en/connect/download/viewer/). Our Wi-Fi hotspot is based on [this implementation](https://www.raspberryconnect.com/projects/65-raspberrypi-hotspot-accesspoints/183-raspberry-pi-automatic-hotspot-and-static-hotspot-installer). You can consult this guide if you are having trouble connecting to your Raspberry Pi. If you are using a Raspberry Pi that needs a Wi-Fi dongle, you may have trouble. We have not validated this scenario.
+- Power on the Raspberry Pi by connecting it to a power bank. 
+- Wait a few seconds for the Wi-Fi hotspot to automatically begin. 
+- Connect to the FieldPrism Wi-Fi network. It may appear as "FieldPrism-A" or "FieldPrism-B". If you plan to use multiple FieldStations in close proximity, you will need to change the SSIDs to make them unique. The default Wi-Fi password is: fieldprism 
+  - Note: When connected to this Wi-Fi network, you will not have internet access. If your device complains about the lack of internet, that's expected behavior. 
+- Using any Wi-Fi connected device (we recommend a laptop/computer for the initial setup), open RealVNC Viewer and connect to the Raspberry Pi. The VNC address is 192.168.50.10::5900, the default login username is pi, and the default login password is fp.
+- You should now see the FieldPrism GUI
+- Double-click the update FieldPrism button, which will fetch updates from GitHub.
+
+## Building FieldStation
+- Visit this [Google Doc](https://docs.google.com/spreadsheets/d/1JehmKyVmFK3Lc9CnkLczqQ6QDvSGqS9bizb0PLSKSbI/edit?usp=sharing) for a list of components.
+- Many components can be configured or substituted to fit you needs. 
+- Insert microSD card into R Pi
+- Install heatsink case
+- Assemble GPS module:
+    - Connect the SMA to uFL adapter cable to the tiny connector on the GPS module.
+    - Attach the GPS antenna to the SMA to uFL adapter 
+    - Solder the battery holder to the back of the module
+- Plugging devices into the USB ports:
+    - Plug one USB storage device into one of the USB 2.0 ports (*not* a blue port). Once everything works, then plug in a USB hub for multiple storage devices. 
+    - Plug the keyboard into one of the USB 2.0 ports.
+    - Plug the GPS module into one of the USB 3.0 ports (blue).
+    - Plug the OAK camera data cable into one of the USB 3.0 ports (blue).
+- Plug the OAK power cable into a sepearte battery bank or power supply.
+- Power on the R Pi
+- Login
+- Mount the USB drives
+- Run FieldPrism
+- If you are able to open the FieldStation GUI and take a photo, then you are ready to begin customizing settings and assembling the rest of the apparatus.
+- There are many ways to attach the camera-holding arm to the clipboard. 
 
 ## GUI and Usage 
 - Critical features are visualized in the graphical user interface (GUI).
