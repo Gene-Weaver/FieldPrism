@@ -2,6 +2,11 @@
 
 Below you will find a guide to use the FieldStation GUI and some tips for using it in the field.
 
+## Installation
+- Install our Raspberry Pi OS image onto a Raspberry Pi 4
+  - We validated FieldStation using the 8GB version of the Raspberry Pi 4, but the 4GB should also work.
+- Download Pi Imager and our Raspberry Pi OS image
+
 ## GUI and Usage 
 - Critical features are visualized in the graphical user interface (GUI).
 - All quality control/diagnostic messages are output in the terminal.
