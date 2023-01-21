@@ -1,5 +1,7 @@
 # FieldPrism User Manual
 
+Below you will find a guide to use the FieldStation GUI and some tips for using it in the field.
+
 ## GUI and Usage 
 - Critical features are visualized in the GUI.
 - All QC / diagnostic messages are output in the terminal.
@@ -8,3 +10,66 @@
 - Since the live camera feed is slow, count to 3 before taking a photo after you make final adjustments to the specimen / subject.
 - Insufficient power delivery can cause several, strange issues. If you see an "Input/Output" error (in the terminal), then you need to supply more power.
 - The R Pi cannot deliver enough power for all components simultaneously. I recommend running the camera on a separate power bank, or at least using a power bank that is rated to charge multiple devices at the same time (at least 2 USB-A ports).
+
+## Storage 
+- FieldPrism can write all data (images and CSV files) to up to 6 USB storage devices. (This is hard coded, not dynamic).
+- On each FieldPrism startup, you *MUST* run the Mount USB command.
+- If you remove or add a USB drive, you *MUST* run the Mount USB command.
+- Errors and unexpected behavior will occur if you do not run the Mount USB command after each time that a USB drive is moved/added/removed.
+- If you get an "Input/Output" error (in the terminal) it is caused by insufficient power delivery.
+- You can save images to the boot SD card, but it is strongly not recommended.
+
+## Mount USB Commands
+- Can be run in three ways:
+  1. (Recommended) double click the Mount USB + icon on the desktop
+     * If successful, the mounted drives that are visible on the desktop should 
+       flash around, disappear, reappear
+     * Inspect the terminal output and look for errors
+  2. In the terminal:
+     * cd into the FieldPrism folder: cd FieldPrism/fieldstation
+     * run: python mount_usb_drives.py
+     * verify that the terminal output makes sense
+  3. In the terminal:
+     * cd into the FieldPrism folder: cd FieldPrism/fieldstation
+     * run: sh ./mount_usb_drives.sh
+     * verify that the terminal output makes sense
+
+## USB Speed
+- In the GUI, if USB Speed is not 'HIGH', then the USB cable connecting the camera to
+  the Raspberry Pi is not capable of high-speed data transfer. Replace it.
+  
+
+## GPS
+- See https://cdn-learn.adafruit.com/downloads/pdf/adafruit-ultimate-gps.pdf
+- The GPS will routinely timeout if not in use
+- Press the '2' key to wake it up without saving data or taking a photo
+- Time is reported in UTC time (aka. Greenwich Mean Time)  
+- GPS Speed: You can change the way FS gets a GPS point, but the default should work most of the time:
+  * 'fast' takes ~0.3sec. to get a fix 
+  * 'cautious' takes ~1.5sec.
+   Cautious adds a tiny delay to allow GPS lock and waits for 10 successful pings
+   Fast has no delay and only waits for 3 successful pings
+
+## Time
+- If there is no GPS signal, then the time will be based on the R Pi clock, which is likely to be wrong since it needs the internet to update.
+
+## Data Saving
+- All data is saved to two files:
+    1. A session CSV, new each time you launch FS
+    2. A cummulative CSV, all data rows
+- Session CSVs are a backup
+
+## Mapping Keys 
+- If you use a mini keyboard other than the one we validated, you should verify 
+  that the default key values of your keyboard. Connect it to any PC / MAC, see
+  what each key press returns, map your keys in the config file below
+- Feel free to change the values to suite you
+
+## Camera Rotation
+- Take a photo. If it looks strange in the Saved Image Window then adjust the 
+  rotation options below
+- Setting both rotations parameters to True will rotate image 270 degrees CW
+
+## Sharpness
+- cv2.Laplacian(img, cv2.CV_64F).var()
+- adds '__B' at the end of the jpg file name
