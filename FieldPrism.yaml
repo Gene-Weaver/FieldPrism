@@ -176,7 +176,7 @@ fieldprism:
     #### QR Code File Renaming Options ##########################################
     QR_codes:
         use_unstable_QR_code_decoder: False # bool |DEFAULT| False
-        do_rename_images: True # bool |DEFAULT| True
+        do_rename_images: False # bool |DEFAULT| True
         n_QR_codes: 6 # int |DEFAULT| 3 
         sep_value: '__'
         fail_value: null # null = default --> LEVEL1, LEVEL2... else "Error" or something else

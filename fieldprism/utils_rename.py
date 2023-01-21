@@ -17,8 +17,9 @@ def dv_rename_fail(DataVault, file_to_rename, path_search, ext):
     if DataVault.new_full_name == '':
         DataVault.add_process_barcodes([],[])
     
-    new_full_name = ''.join([DataVault.new_full_name, '___',DataVault.image_name]) #increment_filename_duplicate_barcodes(path_search, DataVault.new_full_name, ext)
-    new_file_name = ''.join([new_full_name, ext])
+    add_orig_name = DataVault.image_name.split('.')[0]
+    new_file_name = ''.join([DataVault.new_full_name, '___',add_orig_name]) #increment_filename_duplicate_barcodes(path_search, DataVault.new_full_name, ext)
+    # new_file_name = ''.join([new_full_name, ext])
 
     success_rename = rename_loop(file_to_rename, new_file_name)
     DataVault.rename = new_file_name
@@ -33,8 +34,9 @@ def dv_rename_success(DataVault, file_to_rename, path_search, ext):
         print(f"{bcolors.OKCYAN}      File Renamed: Original --> {''.join([os.path.basename(os.path.normpath(path_search)), '/', DataVault.image_name, ext])} New --> {''.join([os.path.basename(os.path.normpath(path_search)), '/', DataVault.new_full_name, ext])}{bcolors.ENDC}")
     # If the name already exists...
     else:
-        new_full_name = ''.join([DataVault.new_full_name, '___',DataVault.image_name]) #increment_filename_duplicate_barcodes(path_search, DataVault.new_full_name, ext)
-        new_file_name = ''.join([new_full_name, ext])
+        add_orig_name = DataVault.image_name.split('.')[0]
+        new_file_name = ''.join([DataVault.new_full_name, '___',add_orig_name]) #increment_filename_duplicate_barcodes(path_search, DataVault.new_full_name, ext)
+        # new_file_name = ''.join([new_full_name, ext])
         # _head, tail = os.path.split(new_file_name)
         success_rename = rename_loop(file_to_rename, os.path.join(path_search, new_file_name))
         print(f"{bcolors.OKCYAN}      File Renamed: Original --> {''.join([os.path.basename(os.path.normpath(path_search)), '/', DataVault.image_name, ext])} New --> {''.join([os.path.basename(os.path.normpath(path_search)), '/', new_file_name])}{bcolors.ENDC}")
@@ -61,8 +63,9 @@ def dv_rename_success_short(DataVault, file_to_rename, path_search, ext):
         print(f"{bcolors.OKCYAN}      File Renamed: Original --> {''.join([os.path.basename(os.path.normpath(path_search)), '/', DataVault.image_name, ext])} New --> {''.join([os.path.basename(os.path.normpath(path_search)), '/', DataVault.rename, ext])}{bcolors.ENDC}")
     # If the name already exists...
     else:
-        new_full_name = ''.join([DataVault.new_full_name, '___',DataVault.image_name]) #increment_filename_duplicate_barcodes(path_search, DataVault.new_full_name, ext)
-        new_file_name = ''.join([new_full_name, ext])
+        add_orig_name = DataVault.image_name.split('.')[0]
+        new_file_name = ''.join([DataVault.new_full_name, '___',add_orig_name]) #increment_filename_duplicate_barcodes(path_search, DataVault.new_full_name, ext)
+        # new_file_name = ''.join([new_full_name, ext])
         # _head, tail = os.path.split(new_file_name)
         # DataVault.rename_backup = tail.split('.')[0]
         # DataVault.rename_backup_dirs = DataVault.rename_backup_dirs.append(os.path.basename(os.path.normpath(path_search)))
