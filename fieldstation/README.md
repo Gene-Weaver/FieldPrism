@@ -5,7 +5,7 @@ Below you will find a guide to use the FieldStation GUI and some tips for using 
 ## Installation
 ### Raspberry Pi OS
 - Install our Raspberry Pi OS image onto a microSD card for the boot drive of your Raspberry Pi 4. We validated FieldStation using the 8GB version of the Raspberry Pi 4, but the 4GB version should also work.
-- On a computer, download [Pi Imager](https://www.raspberrypi.com/software/) and our [FieldStation R Pi OS Image](link to the image).
+- On a computer, download [Pi Imager](https://www.raspberrypi.com/software/) and our [FieldStation R Pi OS Image](https://fieldprism.org/rpi/FieldStation_v1-0-0.img.gz).
 - Open Pi Imager, for "Choose OS" select our FieldStation image. For "Choose storage" select your microSD card.
 - Write the image to the microSD card.
 - Insert the microSD card into the Raspberry Pi.
