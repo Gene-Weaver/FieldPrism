@@ -16,4 +16,4 @@ if __name__ == '__main__':
     ###      set: cfg_to_use = 'test_installation'
     
     cfg_to_use = None
-    process_images(None)
+    process_images(cfg_to_use)
