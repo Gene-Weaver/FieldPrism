@@ -40,6 +40,9 @@ Table of Contents
             * [ML Detection Options](#ml-detection-options)
             * [QR Code File Renaming Options](#qr-code-file-renaming-options)
 
+## FieldPrism Workflows
+[![FieldPrismWorkflows](https://fieldprism.org/img/use_case_figure.png "Field Prism")](https://fieldprism.org/)
+
 ## Installing FieldPrism
 
 ### Prerequisites
