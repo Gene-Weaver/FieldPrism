@@ -101,6 +101,10 @@ def run(
         save_dir = project
         if not os.path.exists(os.path.join(project, 'Labels_Corrected')):
             os.makedirs(os.path.join(project, 'Labels_Corrected'))
+    elif option == 'fs':
+        save_dir = project
+        if not os.path.exists(os.path.join(project, 'QR_Codes')):
+            os.makedirs(os.path.join(project, 'QR_Codes'))
     
 
     # Load model
@@ -166,6 +170,11 @@ def run(
                     txt_path = os.path.join(os.path.join(save_dir, 'Labels_Corrected'), p.stem)
                 else:
                     txt_path = os.path.join(os.path.join(save_dir, 'Labels_Corrected'), p.stem, f'_{frame}')
+            elif option == 'fs':
+                if dataset.mode == 'image':
+                    txt_path = os.path.join(os.path.join(save_dir, 'QR_Codes'), p.stem)
+                else:
+                    txt_path = os.path.join(os.path.join(save_dir, 'QR_Codes'), p.stem, f'_{frame}')
             
             s += '%gx%g ' % im.shape[2:]  # print string
             gn = torch.tensor(im0.shape)[[1, 0, 1, 0]]  # normalization gain whwh
@@ -222,10 +231,17 @@ def run(
                         path_image = os.path.join(save_path,'Detections_Corrected',p.name)
                         validate_dir(os.path.join(save_path,'Detections_Corrected'))
                         cv2.imwrite(path_image, im0)
-                    else:
+                        img_out = None
+                    elif option == 'distortion':
                         path_image = os.path.join(save_path,'Detections_Not_Corrected',p.name)
                         validate_dir(os.path.join(save_path,'Detections_Not_Corrected'))
                         cv2.imwrite(path_image, im0)
+                        img_out = None
+                    elif option == 'fs':
+                        path_image = os.path.join(save_path,'QR_Codes',p.name)
+                        validate_dir(os.path.join(save_path,'QR_Codes'))
+                        # cv2.imwrite(path_image, im0)
+                        img_out = im0
                 else:  # 'video' or 'stream'
                     if vid_path[i] != save_dir:  # new video
                         vid_path[i] = save_dir
@@ -258,7 +274,7 @@ def run(
     if update:
         strip_optimizer(weights[0])  # update model (to fix SourceChangeWarning)
 
-    return save_dir
+    return save_dir, img_out
 
 
 def parse_opt():

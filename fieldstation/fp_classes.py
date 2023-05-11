@@ -47,6 +47,14 @@ class SetupFP:
     dir_data_5: str = ''
     dir_data_6: str = ''
 
+    dir_qr_none: str = ''
+    dir_qr_1: str = ''
+    dir_qr_2: str = ''
+    dir_qr_3: str = ''
+    dir_qr_4: str = ''
+    dir_qr_5: str = ''
+    dir_qr_6: str = ''
+
     device_count: int = 0
 
     def __post_init__(self) -> None:
@@ -57,6 +65,8 @@ class SetupFP:
         self.dir_data = os.path.join('FieldPrism','Data')
         self.dir_data_session = os.path.join('FieldPrism','Data')
         self.name_session_csv = ''.join(['FieldPrism_Data__',self.session_time,'.csv'])
+        self.name_session = ''.join(['FieldPrism_Data__',self.session_time])
+        self.dir_data_session_qr = os.path.join('FieldPrism','QR',self.name_session)
 
         print(f"{bcolors.HEADER}Base USB Path: {self.usb_base_path}{bcolors.ENDC}")
         print(f"{bcolors.OKCYAN}       Possible USB Devices: {os.listdir(self.usb_base_path)}{bcolors.ENDC}")     
@@ -90,29 +100,37 @@ class SetupFP:
                     name_has = ''.join(['self.has_',str(drive_num),'_usb'])
                     name_is = ''.join(['self.usb_',str(drive_num)])
                     name_data = ''.join(['self.dir_data_',str(drive_num)])
+                    name_qr = ''.join(['self.dir_qr_',str(drive_num)])
                     exec("%s = %s" % (name_has, True))
                     exec("%s = %s" % (name_is, "os.path.join(self.usb_base_path, drive_name, self.dir_images_unprocessed)"))
                     exec("%s = %s" % (name_data, "os.path.join(self.usb_base_path, drive_name, self.dir_data_session)"))
+                    exec("%s = %s" % (name_qr, "os.path.join(self.usb_base_path, drive_name, self.dir_data_session_qr)"))
                     # print(f'self.usb_1 {self.usb_1}')
                     # print(f'self.has_1_usb {self.has_1_usb}')
         if self.usb_1 != '':             
             print(f"{bcolors.OKGREEN}              Path to USB Images {str(drive_num)} [{drive_name}]: {self.usb_1}{bcolors.ENDC}")
             print(f"{bcolors.OKGREEN}              Path to USB Data {str(drive_num)} [{drive_name}]: {self.dir_data_1}{bcolors.ENDC}")
+            print(f"{bcolors.OKGREEN}              Path to USB QR {str(drive_num)} [{drive_name}]: {self.dir_qr_1}{bcolors.ENDC}")
         if self.usb_2 != '':             
             print(f"{bcolors.OKGREEN}              Path to USB Images {str(drive_num)} [{drive_name}]: {self.usb_2}{bcolors.ENDC}")
             print(f"{bcolors.OKGREEN}              Path to USB Data {str(drive_num)} [{drive_name}]: {self.dir_data_2}{bcolors.ENDC}")
+            print(f"{bcolors.OKGREEN}              Path to USB QR {str(drive_num)} [{drive_name}]: {self.dir_qr_2}{bcolors.ENDC}")
         if self.usb_3 != '':             
             print(f"{bcolors.OKGREEN}              Path to USB Images {str(drive_num)} [{drive_name}]: {self.usb_3}{bcolors.ENDC}")
             print(f"{bcolors.OKGREEN}              Path to USB Data {str(drive_num)} [{drive_name}]: {self.dir_data_3}{bcolors.ENDC}")
+            print(f"{bcolors.OKGREEN}              Path to USB QR {str(drive_num)} [{drive_name}]: {self.dir_qr_3}{bcolors.ENDC}")
         if self.usb_4 != '':             
             print(f"{bcolors.OKGREEN}              Path to USB Images {str(drive_num)} [{drive_name}]: {self.usb_4}{bcolors.ENDC}")
             print(f"{bcolors.OKGREEN}              Path to USB Data {str(drive_num)} [{drive_name}]: {self.dir_data_4}{bcolors.ENDC}")
+            print(f"{bcolors.OKGREEN}              Path to USB QR {str(drive_num)} [{drive_name}]: {self.dir_qr_4}{bcolors.ENDC}")
         if self.usb_5 != '':             
             print(f"{bcolors.OKGREEN}              Path to USB Images {str(drive_num)} [{drive_name}]: {self.usb_5}{bcolors.ENDC}")
             print(f"{bcolors.OKGREEN}              Path to USB Data {str(drive_num)} [{drive_name}]: {self.dir_data_5}{bcolors.ENDC}")
+            print(f"{bcolors.OKGREEN}              Path to USB QR {str(drive_num)} [{drive_name}]: {self.dir_qr_5}{bcolors.ENDC}")
         if self.usb_6 != '':             
             print(f"{bcolors.OKGREEN}              Path to USB Images {str(drive_num)} [{drive_name}]: {self.usb_6}{bcolors.ENDC}")
             print(f"{bcolors.OKGREEN}              Path to USB Data {str(drive_num)} [{drive_name}]: {self.dir_data_6}{bcolors.ENDC}")
+            print(f"{bcolors.OKGREEN}              Path to USB QR {str(drive_num)} [{drive_name}]: {self.dir_qr_6}{bcolors.ENDC}")
 
         self.device_count = sum([self.save_to_boot, self.has_1_usb, self.has_2_usb, self.has_3_usb, self.has_4_usb, self.has_5_usb, self.has_6_usb])
         print(f"{bcolors.HEADER}Number of storage drives: {self.device_count}{bcolors.ENDC}")
@@ -140,38 +158,50 @@ class SetupFP:
             if self.has_1_usb:
                 print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.usb_1}{bcolors.ENDC}")
                 print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.dir_data_1}{bcolors.ENDC}")
+                print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.dir_qr_1}{bcolors.ENDC}")
                 Path(self.usb_1).mkdir(parents=True, exist_ok=True)
                 Path(self.dir_data_1).mkdir(parents=True, exist_ok=True)
+                Path(self.dir_qr_1).mkdir(parents=True, exist_ok=True)
                 self.storage_present = True
             if self.has_2_usb:
                 print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.usb_2}{bcolors.ENDC}")
                 print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.dir_data_2}{bcolors.ENDC}")
+                print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.dir_qr_2}{bcolors.ENDC}")
                 Path(self.usb_2).mkdir(parents=True, exist_ok=True)
                 Path(self.dir_data_2).mkdir(parents=True, exist_ok=True)
+                Path(self.dir_qr_2).mkdir(parents=True, exist_ok=True)
                 self.storage_present = True
             if self.has_3_usb:
                 print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.usb_3}{bcolors.ENDC}")
                 print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.dir_data_3}{bcolors.ENDC}")
+                print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.dir_qr_3}{bcolors.ENDC}")
                 Path(self.usb_3).mkdir(parents=True, exist_ok=True)
                 Path(self.dir_data_3).mkdir(parents=True, exist_ok=True)
+                Path(self.dir_qr_3).mkdir(parents=True, exist_ok=True)
                 self.storage_present = True
             if self.has_4_usb:
                 print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.usb_4}{bcolors.ENDC}")
                 print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.dir_data_4}{bcolors.ENDC}")
+                print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.dir_qr_4}{bcolors.ENDC}")
                 Path(self.usb_4).mkdir(parents=True, exist_ok=True)
                 Path(self.dir_data_4).mkdir(parents=True, exist_ok=True)
+                Path(self.dir_qr_4).mkdir(parents=True, exist_ok=True)
                 self.storage_present = True
             if self.has_5_usb:
                 print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.usb_5}{bcolors.ENDC}")
                 print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.dir_data_5}{bcolors.ENDC}")
+                print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.dir_qr_5}{bcolors.ENDC}")
                 Path(self.usb_5).mkdir(parents=True, exist_ok=True)
                 Path(self.dir_data_5).mkdir(parents=True, exist_ok=True)
+                Path(self.dir_qr_5).mkdir(parents=True, exist_ok=True)
                 self.storage_present = True
             if self.has_6_usb:
                 print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.usb_6}{bcolors.ENDC}")
                 print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.dir_data_6}{bcolors.ENDC}")
+                print(f"{bcolors.OKGREEN}       Creating (or verifying): {self.dir_qr_6}{bcolors.ENDC}")
                 Path(self.usb_6).mkdir(parents=True, exist_ok=True)
                 Path(self.dir_data_6).mkdir(parents=True, exist_ok=True)
+                Path(self.dir_qr_6).mkdir(parents=True, exist_ok=True)
                 self.storage_present = True
 
     def isblockdevice(self,path) -> None:
