@@ -2,12 +2,12 @@ import os, inspect, sys
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
-try:
-    from utils_processing import bcolors
-    from yolov5.detect import run
-except:
-    from fieldprism.utils_processing import bcolors
-    from fieldprism.yolov5.detect import run
+# try:
+#     from utils_processing import bcolors
+#     from yolov5.detect import run
+# except:
+from fieldprism.utils_processing import bcolors
+from fieldprism.yolov5.detect import run
 
 def detect_components_in_image(option, cfg, run_name, dir_out,existing_folder):
     dir_FP = os.path.dirname(os.path.dirname(__file__))
