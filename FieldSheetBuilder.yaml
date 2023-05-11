@@ -32,9 +32,9 @@ fieldsheetbuilder:
         create_size_check: True # bool True # Either True OR False
 
         # Input / Output
-        new_file_stem: 'A4_Max_Name_Length' # str 'name_of_project' base name of created documents 'Demo_Levels_A4_QR-H-1_A3A4'
+        new_file_stem: 'A4_Time_Series' # str 'name_of_project' base name of created documents 'Demo_Levels_A4_QR-H-1_A3A4'
         dir_containing_CSV_files: 'D:/Dropbox/FieldPrism/QR_code_builder/CSV_Files'
-        name_CSV_file: 'Demo_Long_Names_Max' # CSV file containing the naming hierarchy
+        name_CSV_file: 'Demo_Levels_Series' # CSV file containing the naming hierarchy
         dir_home: null # null or assign an output dir
 
     ### Set the size of the  field sheet ###

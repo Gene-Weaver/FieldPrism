@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import time, os, cv2, keyboard
+import time, os, cv2, keyboard, inspect, sys
 import depthai as dai
 from threading import Thread
 import tkinter as tk
@@ -12,6 +12,18 @@ from utils_sound import *
 from fp_align_camera  import align_camera
 from fp_classes import PreviewWindow, SaveWindow, Fragile, SetupFP, ImageData
 
+currentdir = os.path.dirname(os.path.dirname(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+sys.path.append(currentdir)
+# from fieldprism.utils_processing import (get_cfg_from_full_path, make_images_in_dir_vertical, get_scale_ratio, write_yaml, 
+                            # make_file_names_valid, remove_overlapping_predictions, increment_path)
+# from fieldprism.utils_processing import bcolors, File_Structure
+from fieldprism.component_detector import check_QR_codes
+from fieldprism.utils_rulers import process_rulers
+from fieldprism.utils_barcodes import process_barcodes
+# from fieldprism.utils_rename import rename_files_from_QR_codes
+# from fieldprism.utils_data import Data_Vault, Data_FS, Data_Naming, build_empty_csv, write_datarow_to_file, get_weights
 '''
  ______ _      _     _ _____ _        _   _             
  |  ___(_)    | |   | /  ___| |      | | (_)            
@@ -237,6 +249,28 @@ def route_save_image(Setup, cfg_user, save_frame, is_sharp):
     if Setup.has_6_usb:
         path_to_saved = save_image(save_frame, name_time, Setup.usb_6)
     return path_to_saved
+
+def route_save_image_qr(Setup, cfg_user, save_frame, is_sharp):
+    name_time = str(int(time.time() * 1000))
+    if not is_sharp:
+        if cfg_user['fieldstation']['add_flag_to_blurry_images']:
+            name_time = ''.join([name_time, '__B'])
+
+    if Setup.save_to_boot:
+        path_to_saved = save_image(save_frame, name_time, Setup.dir_qr_none)
+    if Setup.has_1_usb:
+        path_to_saved = save_image(save_frame, name_time, Setup.dir_qr_1)
+    if Setup.has_2_usb:
+        path_to_saved = save_image(save_frame, name_time, Setup.dir_qr_2)
+    if Setup.has_3_usb:
+        path_to_saved = save_image(save_frame, name_time, Setup.dir_qr_3)
+    if Setup.has_4_usb:
+        path_to_saved = save_image(save_frame, name_time, Setup.dir_qr_4)
+    if Setup.has_5_usb:
+        path_to_saved = save_image(save_frame, name_time, Setup.dir_qr_5)
+    if Setup.has_6_usb:
+        path_to_saved = save_image(save_frame, name_time, Setup.dir_qr_6)
+    return path_to_saved
 '''
 Button callbacks
 '''
@@ -268,6 +302,7 @@ def button_gps():
 def button_exit():
     global TAKE_EXIT
     TAKE_EXIT = True
+    
 '''
 Creates the pipeline that the OAK camera requires
     THE_12_MP allows us to use the full sensor of the OAK-1 camera
@@ -331,7 +366,7 @@ def run(pipeline, root):
     label_focus_saved_status, label_fname_status, label_gps_status, label_gps_lat_status, 
     label_gps_lon_status, label_gps_time_status, label_local_time_status, label_total_status, 
     label_session_status, label_csv_status, label_nimage_status, label_ndevice_status, 
-    label_usbspeed_status, label_version_status] = config_gui(root, software_version)
+    label_usbspeed_status, label_version_status, label_nqr_status] = config_gui(root, software_version)
 
     # -------------- Buttons
     # frame
@@ -440,6 +475,13 @@ def run(pipeline, root):
 
                     # Activate GPS, update GUI, and return GPS data
                     GPS_data = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
+
+                    # Check for valid QR code
+                    qr_found, img_out_qr = check_QR_codes(path_to_saved, cfg.dir_data_session_qr, cfg.name_session, label_nqr_status)
+                    path_to_saved_qr = route_save_image_qr(cfg, cfg_user, img_out_qr, is_sharp)
+
+                    # Update the image in the GUI by reading the image that was just written to storage
+                    Window_Saved.update_image(cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved_qr)))))
 
                     # Write data to CSV file
                     Image = ImageData(cfg, path_to_saved, GPS_data, height, width, sharpness_actual, sharpness_min_cutoff, is_sharp)

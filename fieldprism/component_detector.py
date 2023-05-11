@@ -27,7 +27,7 @@ def detect_components_in_image(option, cfg, run_name, dir_out,existing_folder):
         dir_weights =  os.path.join(dir_FP,'fieldprism','yolov5','weights','fp_large_v_1.pt')
         
     try:
-        actual_save_dir = run(weights=dir_weights,
+        actual_save_dir, img_out = run(weights=dir_weights,
         option = option,
         show_predicted_text = cfg['fieldprism']['detector']['show_predicted_text'],
         source = run_name,
@@ -45,4 +45,33 @@ def detect_components_in_image(option, cfg, run_name, dir_out,existing_folder):
     except Exception as e:
         print(f"{bcolors.WARNING}No images in {run_name}. \n      Error: {e}{bcolors.ENDC}")
 
+def detect_barcodes_FS(path_img, dir_out, run_name):
+    dir_FP = os.path.dirname(os.path.dirname(__file__))
+    dir_weights =  os.path.join(dir_FP,'fieldprism','yolov5','weights','fp_large_v_1.pt')
+    image_input_size = (1280, 1280)
+    try:
+        actual_save_dir, img_out = run(weights=dir_weights,
+        option = 'fs',
+        show_predicted_text = False,
+        source = path_img,
+        project = dir_out,
+        name = run_name,
+        imgsz = image_input_size,
+        conf_thres = 0.70,
+        exist_ok = True)
 
+        try:
+            actual_save_dir = actual_save_dir._str
+        except:
+            actual_save_dir = actual_save_dir
+        return actual_save_dir, img_out
+    except Exception as e:
+        print(f"{bcolors.WARNING}No images in {run_name}. \n      Error: {e}{bcolors.ENDC}")
+        
+
+def check_QR_codes(path_img, dir_out, run_name, label_nqr_status):
+    label_nqr_status = int(label_nqr_status)
+    actual_save_dir, img_out = detect_barcodes_FS(path_img, dir_out, run_name)
+
+    qr_found = True
+    return qr_found, img_out
