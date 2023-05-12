@@ -19,7 +19,7 @@ def detect_components_in_image(option, cfg, run_name, dir_out,existing_folder):
         dir_weights =  os.path.join(dir_FP,'fieldprism','yolov5','weights','fp_small_v_1.pt')
     elif cfg['fieldprism']['detector']['model_size'] == 'best':
         image_input_size = (1280, 1280)
-        dir_weights =  os.path.join(dir_FP,'fieldprism','yolov5','weights','best.pt')
+        dir_weights =  os.path.join(dir_FP,'fieldprism','yolov5','weights_nano','best.pt')
     else:
         print(f"{bcolors.FAIL}In FieldPrism.yaml the parameter: is set incorrectly. cfg['fieldprism']['detector']['model_size'] MUST be either 'small' or 'large'{bcolors.ENDC}")
         print(f"{bcolors.WARNING}Defaulting to cfg['fieldprism']['detector']['model_size'] = 'small'{bcolors.ENDC}")
