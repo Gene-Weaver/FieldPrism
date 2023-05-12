@@ -81,7 +81,7 @@ A virtual environment is a tool to keep the dependencies required by different p
 #### Installing Packages
 
 1. Install the required dependencies to use FieldPrism: 
-    - `pip install opencv-python pandas pybboxes scipy scikit-image numpy tqdm pyyaml IPython matplotlib seaborn tensorboard fpdf`
+    - `pip install opencv-python pandas pybboxes scipy scikit-image numpy tqdm pyyaml IPython matplotlib seaborn tensorboard fpdf imutils`
 2. Upgrade numpy: 
     - `pip install numpy -U`
 3. Install qrcode[pil]:  
@@ -112,7 +112,7 @@ A virtual environment is a tool to keep the dependencies required by different p
 #### Installing Packages
 
 1. Install the required dependencies to use FieldPrism:  
-    - `pip install opencv-python pandas pybboxes scipy scikit-image numpy tqdm pyyaml IPython matplotlib seaborn tensorboard fpdf`
+    - `pip install opencv-python pandas pybboxes scipy scikit-image numpy tqdm pyyaml IPython matplotlib seaborn tensorboard fpdf imutils`
 2. Upgrade numpy:  
     - `pip install numpy -U`
 3. Install qrcode[pil]:  
@@ -143,7 +143,7 @@ A virtual environment is a tool to keep the dependencies required by different p
 #### Installing Packages
 
 1. Install the required dependencies to use FieldPrism:  
-    - `pip install opencv-python pandas pybboxes scipy scikit-image numpy tqdm pyyaml IPython matplotlib seaborn tensorboard fpdf`
+    - `pip install opencv-python pandas pybboxes scipy scikit-image numpy tqdm pyyaml IPython matplotlib seaborn tensorboard fpdf imutils`
 2. Upgrade numpy:  
     - `pip install numpy -U`
 3. Install qrcode[pil]:  
