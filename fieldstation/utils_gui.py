@@ -263,12 +263,6 @@ def config_gui(root, software_version):
         if current_value > 0:  # Adjust as needed for the minimum value
             n_qr.set(current_value - 1)
         label_nqr_status.config(text=str(n_qr.get()))
-    
-    def get_int():
-        current_value = int(n_qr.get())
-        # Use the value of label_nqr_status in your code
-        # print(current_value)
-        return current_value
 
     b_nqr_increase = tk.Button(master=frame_buttons, command=increase_nqr, text="+", font=("Arial", 20), bg="green4", fg="black", activebackground="green2")
     b_nqr_increase.grid(row=0, column=2, sticky="nsew")
@@ -294,7 +288,7 @@ def config_gui(root, software_version):
 
     # -------------- Level 2
     frame_L2 = tk.Frame(master=frame_qr_data, height=60, width = 100, bg="black")
-    frame_L2.grid(row=4, column=0, sticky="nsew")
+    frame_L2.grid(row=5, column=0, sticky="nsew")
     frame_L2.rowconfigure(0, minsize=30)
     frame_L2.columnconfigure([0, 1], minsize=50)
 
@@ -305,7 +299,7 @@ def config_gui(root, software_version):
 
     # -------------- Level 3
     frame_L3 = tk.Frame(master=frame_qr_data, height=60, width = 100, bg="black")
-    frame_L3.grid(row=4, column=0, sticky="nsew")
+    frame_L3.grid(row=6, column=0, sticky="nsew")
     frame_L3.rowconfigure(0, minsize=30)
     frame_L3.columnconfigure([0, 1], minsize=50)
 
@@ -316,7 +310,7 @@ def config_gui(root, software_version):
 
     # -------------- Level 4
     frame_L4 = tk.Frame(master=frame_qr_data, height=60, width = 100, bg="black")
-    frame_L4.grid(row=4, column=0, sticky="nsew")
+    frame_L4.grid(row=7, column=0, sticky="nsew")
     frame_L4.rowconfigure(0, minsize=30)
     frame_L4.columnconfigure([0, 1], minsize=50)
 
@@ -327,7 +321,7 @@ def config_gui(root, software_version):
 
     # -------------- Level 5
     frame_L5 = tk.Frame(master=frame_qr_data, height=60, width = 100, bg="black")
-    frame_L5.grid(row=4, column=0, sticky="nsew")
+    frame_L5.grid(row=8, column=0, sticky="nsew")
     frame_L5.rowconfigure(0, minsize=30)
     frame_L5.columnconfigure([0, 1], minsize=50)
 
@@ -338,7 +332,7 @@ def config_gui(root, software_version):
 
     # -------------- Level 6
     frame_L6 = tk.Frame(master=frame_qr_data, height=60, width = 100, bg="black")
-    frame_L6.grid(row=4, column=0, sticky="nsew")
+    frame_L6.grid(row=9, column=0, sticky="nsew")
     frame_L6.rowconfigure(0, minsize=30)
     frame_L6.columnconfigure([0, 1], minsize=50)
 
