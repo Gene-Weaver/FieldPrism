@@ -613,8 +613,8 @@ def save_one_box_qr(xyxy, im, file=Path('im.jpg'), gain=1.02, pad=10, square=Fal
         b[:, 2:] = b[:, 2:].max(1)[0].unsqueeze(1)  # attempt rectangle to square
     b[:, 2:] = b[:, 2:] * gain + pad  # box wh * gain + pad
     
-    # Increase size by 5% in all directions
-    increase_percentage = 0.05
+    # Increase size by 10% in all directions
+    increase_percentage = 0.10
     size_increase = b[:, 2:] * increase_percentage
     b[:, :2] -= size_increase / 2
     b[:, 2:] += size_increase
