@@ -6,7 +6,7 @@ Configure the GUI
 '''
 def config_gui(root, software_version):
     root.rowconfigure([0, 1, 2, 3, 4], minsize=30)
-    root.columnconfigure([0, 1], minsize=100)
+    root.columnconfigure([0, 1, 2], minsize=100)
 
     # -------------- Camera Preview Window (Check Camera Focus)
     label_preview = tk.Label(master=root, text="Preview (Check Camera Focus)", bg="black", fg="white", font=("Arial", 20))
@@ -192,55 +192,6 @@ def config_gui(root, software_version):
     label_nimage_status.grid(row=0, column=1, sticky="w")
 
 
-    # -------------- n_qr parameter
-    frame_info_nqr = tk.Frame(master=frame_info, height=60, width=250, bg="black")
-    frame_info_nqr.grid(row=17, column=0, sticky="nsew")  # Assuming this is row 17, adjust according to your actual layout
-    frame_info_nqr.rowconfigure(0, minsize=30)
-    frame_info_nqr.columnconfigure([0, 1], minsize=250)
-
-    n_qr = tk.IntVar(value=0)
-
-    label_nqr = tk.Label(master=frame_info_nqr, text="# of QR Codes: ", bg="black", fg="White", font=("Calibri ", 16))
-    label_nqr.grid(row=0, column=0, sticky="e")
-
-    frame_buttons = tk.Frame(master=frame_info_nqr, bg="black")
-    frame_buttons.grid(row=0, column=1, sticky="nsew")
-    frame_buttons.columnconfigure([0, 1, 2], weight=1)
-
-    def increase_nqr():
-        current_value = n_qr.get()
-        if current_value < 6:  # Adjust as needed for the maximum value
-            n_qr.set(current_value + 1)
-        label_nqr_status.config(text=str(n_qr.get()))
-
-    def decrease_nqr():
-        current_value = n_qr.get()
-        if current_value > 0:  # Adjust as needed for the minimum value
-            n_qr.set(current_value - 1)
-        label_nqr_status.config(text=str(n_qr.get()))
-    
-    def get_int():
-        current_value = int(n_qr.get())
-        # Use the value of label_nqr_status in your code
-        # print(current_value)
-        return current_value
-
-    b_nqr_increase = tk.Button(master=frame_buttons, command=increase_nqr, text="+", font=("Arial", 20), bg="green4", fg="black", activebackground="green2")
-    b_nqr_increase.grid(row=0, column=2, sticky="nsew")
-
-    label_nqr_status = tk.Label(master=frame_buttons, text=str(n_qr.get()), bg="black", fg="white", font=("Calibri ", 16))
-    label_nqr_status.grid(row=0, column=1, sticky="ew")
-
-    b_nqr_decrease = tk.Button(master=frame_buttons, command=decrease_nqr, text="-", font=("Arial", 20), bg="maroon", fg="white", activebackground="red")
-    b_nqr_decrease.grid(row=0, column=0, sticky="nsew")
-
-    frame_info.columnconfigure(1, weight=1)
-
-
-
-
-
-
     # -------------- Number of storage devices
     frame_info_ndevice = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
     frame_info_ndevice.grid(row=18, column=0, sticky="nsew")
@@ -273,6 +224,74 @@ def config_gui(root, software_version):
     label_version.grid(row=0, column=0, sticky="e")
     label_version_status = tk.Label(master=frame_info_version, text=software_version, bg="black", fg="white", font=("Calibri ", 8))
     label_version_status.grid(row=0, column=1, sticky="w")
+
+
+
+    # -------------- QR header
+    label_top_qr = tk.Label(master=root, text="QR Codes", bg="black", fg="white", font=("Arial", 20))
+    label_top_qr.grid(row=0, column=2, sticky="nsew")
+
+    frame_qr = tk.Frame(master=root, width = 250, bg="black")
+    frame_qr.grid(row=1, column=2, rowspan=3, sticky="nsew")
+
+    frame_qr.rowconfigure([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,], minsize=30)
+    frame_qr.columnconfigure(0, minsize=250)
+
+    # -------------- n_qr parameter
+    frame_qr_data = tk.Frame(master=frame_qr, height=60, width=250, bg="black")
+    frame_qr_data.grid(row=2, column=0, sticky="nsew")  # Assuming this is row 17, adjust according to your actual layout
+    frame_qr_data.rowconfigure(0, minsize=30)
+    frame_qr_data.columnconfigure([0, 1], minsize=250)
+
+    n_qr = tk.IntVar(value=0)
+
+    label_nqr = tk.Label(master=frame_qr_data, text="# of QR Codes: ", bg="black", fg="White", font=("Calibri ", 16))
+    label_nqr.grid(row=0, column=0, sticky="e")
+
+    frame_buttons = tk.Frame(master=frame_qr_data, bg="black")
+    frame_buttons.grid(row=0, column=1, sticky="nsew")
+    frame_buttons.columnconfigure([0, 1, 2], weight=1)
+
+    def increase_nqr():
+        current_value = n_qr.get()
+        if current_value < 6:  # Adjust as needed for the maximum value
+            n_qr.set(current_value + 1)
+        label_nqr_status.config(text=str(n_qr.get()))
+
+    def decrease_nqr():
+        current_value = n_qr.get()
+        if current_value > 0:  # Adjust as needed for the minimum value
+            n_qr.set(current_value - 1)
+        label_nqr_status.config(text=str(n_qr.get()))
+    
+    def get_int():
+        current_value = int(n_qr.get())
+        # Use the value of label_nqr_status in your code
+        # print(current_value)
+        return current_value
+
+    b_nqr_increase = tk.Button(master=frame_buttons, command=increase_nqr, text="+", font=("Arial", 20), bg="green4", fg="black", activebackground="green2")
+    b_nqr_increase.grid(row=0, column=2, sticky="nsew")
+
+    label_nqr_status = tk.Label(master=frame_buttons, text=str(n_qr.get()), bg="black", fg="white", font=("Calibri ", 16))
+    label_nqr_status.grid(row=0, column=1, sticky="ew")
+
+    b_nqr_decrease = tk.Button(master=frame_buttons, command=decrease_nqr, text="-", font=("Arial", 20), bg="maroon", fg="white", activebackground="red")
+    b_nqr_decrease.grid(row=0, column=0, sticky="nsew")
+
+    frame_qr_data.columnconfigure(1, weight=1)
+
+    # -------------- Level 1
+    frame_L1 = tk.Frame(master=frame_qr_data, height=60, width = 250, bg="black")
+    frame_L1.grid(row=4, column=0, sticky="nsew")
+    frame_L1.rowconfigure(0, minsize=30)
+    frame_L1.columnconfigure([0, 1], minsize=250)
+
+    L1 = tk.Label(master=frame_L1, text="Level 1: ", bg="black", fg="White", font=("Calibri ", 16))
+    L1.grid(row=0, column=0, sticky="e")
+    L1 = tk.Label(master=frame_L1, text="none", bg="black", fg="white", font=("Calibri ", 16))
+    L1.grid(row=0, column=1, sticky="w")
+
 
     return root, frame_preview, frame_saved, label_camera_status, label_focus_live_status, label_focus_saved_status, label_fname_status, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_gps_time_status, label_local_time_status, label_total_status, label_session_status, label_csv_status, label_nimage_status, label_ndevice_status, label_usbspeed_status, label_version_status, label_nqr_status
 
