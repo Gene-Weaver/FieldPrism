@@ -240,7 +240,7 @@ def config_gui(root, software_version):
     # -------------- n_qr parameter
     frame_qr_data = tk.Frame(master=frame_qr, height=60, width=250, bg="black")
     frame_qr_data.grid(row=2, column=0, sticky="nsew")  # Assuming this is row 17, adjust according to your actual layout
-    frame_qr_data.rowconfigure(0, minsize=30)
+    frame_qr_data.rowconfigure([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, ], minsize=30)
     frame_qr_data.columnconfigure([0, 1], minsize=50)
 
     n_qr = tk.IntVar(value=50)
@@ -363,8 +363,8 @@ def config_gui(root, software_version):
     frame_mode_L.grid(row=rv_start, column=0, sticky="nsew")
     frame_mode_L.rowconfigure(0, minsize=30)
     frame_mode_L.columnconfigure([0], minsize=50)
-    mode_L = tk.Label(master=frame_mode_L, text="QR Reader Type:", bg="black", fg="white", font=("Calibri ", 16))
-    mode_L.grid(row=0, column=1, sticky="w")
+    mode_L = tk.Label(master=frame_mode_L, text="QR Reader Type", bg="black", fg="white", font=("Calibri ", 16))
+    mode_L.grid(row=0, column=0, sticky="w")
 
     rv_start += 1
     frame_mode = tk.Frame(master=frame_qr_data, height=60, width=100, bg="black")
