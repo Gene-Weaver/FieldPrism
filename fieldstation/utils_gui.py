@@ -252,6 +252,18 @@ def config_gui(root, software_version):
     frame_buttons.grid(row=1, column=0, sticky="nsew")
     frame_buttons.columnconfigure([0, 1, 2], weight=1)
 
+    def increase_nqr():
+        current_value = n_qr.get()
+        if current_value < 6:  # Adjust as needed for the maximum value
+            n_qr.set(current_value + 1)
+            update_visibility()
+
+    def decrease_nqr():
+        current_value = n_qr.get()
+        if current_value > 0:  # Adjust as needed for the minimum value
+            n_qr.set(current_value - 1)
+            update_visibility()
+
     
 
     b_nqr_increase = tk.Button(master=frame_buttons, command=increase_nqr, text="+", font=("Arial", 20), bg="green4", fg="black", activebackground="green2")
@@ -341,18 +353,6 @@ def config_gui(root, software_version):
     L6.grid(row=0, column=0, sticky="e")
     L6 = tk.Label(master=frame_L6, text="none", bg="black", fg="white", font=("Calibri ", 16))
     L6.grid(row=0, column=1, sticky="w")
-    
-    def increase_nqr():
-        current_value = n_qr.get()
-        if current_value < 6:  # Adjust as needed for the maximum value
-            n_qr.set(current_value + 1)
-            update_visibility()
-
-    def decrease_nqr():
-        current_value = n_qr.get()
-        if current_value > 0:  # Adjust as needed for the minimum value
-            n_qr.set(current_value - 1)
-            update_visibility()
 
     def update_visibility():
         n_qr_value = n_qr.get()
@@ -363,7 +363,7 @@ def config_gui(root, software_version):
                 level.grid()
             else:
                 level.grid_remove()
-
+                
     return root, frame_preview, frame_saved, label_camera_status, label_focus_live_status, label_focus_saved_status, label_fname_status, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_gps_time_status, label_local_time_status, label_total_status, label_session_status, label_csv_status, label_nimage_status, label_ndevice_status, label_usbspeed_status, label_version_status, label_nqr_status, L1, L2, L3, L4, L5, L6
 
 '''
