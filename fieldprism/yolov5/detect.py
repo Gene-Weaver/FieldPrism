@@ -206,7 +206,7 @@ def run(
                         label = None if hide_labels else (names[c] if hide_conf else f'{names[c]} {conf:.2f}')
                         if names[c] in accepted_classes: 
                             annotator.box_label(xyxy, label, color=colors(c, True))
-                    if save_crop:
+                    if save_crop or (option == 'fs'):
                         if names[c] in accepted_classes: 
                             save_one_box(xyxy, imc, file=save_dir / 'crops' / names[c] / f'{p.stem}.jpg', BGR=True)
 
