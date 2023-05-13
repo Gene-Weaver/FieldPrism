@@ -216,13 +216,14 @@ def config_gui(root, software_version):
         label_nqr_status.config(text=str(n_qr.get()))
 
     b_nqr_increase = tk.Button(master=frame_info_nqr, command=increase_nqr, text="+", font=("Arial", 20), bg="green4", fg="black", activebackground="green2")
-    b_nqr_increase.grid(row=0, column=1, sticky="nsew")
+    b_nqr_increase.grid(row=0, column=0, sticky="nsew")
 
     label_nqr_status = tk.Label(master=frame_info_nqr, text=str(n_qr.get()), bg="black", fg="white", font=("Calibri ", 16))
-    label_nqr_status.grid(row=0, column=2, sticky="e")
+    label_nqr_status.grid(row=0, column=1, sticky="ew")
 
     b_nqr_decrease = tk.Button(master=frame_info_nqr, command=decrease_nqr, text="-", font=("Arial", 20), bg="maroon", fg="white", activebackground="red")
-    b_nqr_decrease.grid(row=0, column=3, sticky="nsew")
+    b_nqr_decrease.grid(row=0, column=2, sticky="nsew")
+
 
 
 
