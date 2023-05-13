@@ -181,16 +181,15 @@ def config_gui(root, software_version):
     label_csv_status.grid(row=0, column=1, sticky="w")
 
     # -------------- Session Image Count
-    frame_info_nimage = tk.Frame(master=frame_info, height=60, width=250, bg="black")
+    frame_info_nimage = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
     frame_info_nimage.grid(row=16, column=0, sticky="nsew")
     frame_info_nimage.rowconfigure(0, minsize=30)
     frame_info_nimage.columnconfigure([0, 1], minsize=250)
 
-    label_nimage_status = tk.Label(master=frame_info_nimage, text="0", bg="black", fg="white", font=("Calibri ", 16))
-    label_nimage_status.grid(row=0, column=0, sticky="w")
     label_nimage = tk.Label(master=frame_info_nimage, text="Session Image Count: ", bg="black", fg="White", font=("Calibri ", 16))
-    label_nimage.grid(row=0, column=1, sticky="e")
-
+    label_nimage.grid(row=0, column=0, sticky="e")
+    label_nimage_status = tk.Label(master=frame_info_nimage, text="0", bg="black", fg="white", font=("Calibri ", 16))
+    label_nimage_status.grid(row=0, column=1, sticky="w")
 
 
     # -------------- n_qr parameter
@@ -201,7 +200,7 @@ def config_gui(root, software_version):
 
     n_qr = tk.IntVar(value=0)
 
-    label_nqr = tk.Label(master=frame_info_nqr, text="# of QR Codes: ", bg="black", fg="White", font=("Calibri ", 16))
+    label_nqr = tk.Label(master=frame_info_nqr, text="# of QR Codes: : ", bg="black", fg="White", font=("Calibri ", 16))
     label_nqr.grid(row=0, column=0, sticky="e")
 
     def increase_nqr():
@@ -216,14 +215,16 @@ def config_gui(root, software_version):
             n_qr.set(current_value - 1)
         label_nqr_status.config(text=str(n_qr.get()))
 
+    label_nqr_status = tk.Label(master=frame_info_nqr, text=str(n_qr.get()), bg="black", fg="white", font=("Calibri ", 16))
+    label_nqr_status.grid(row=0, column=1, sticky="w")
+    
     b_nqr_decrease = tk.Button(master=frame_info_nqr, command=decrease_nqr, text="-", font=("Arial", 20), bg="maroon", fg="white", activebackground="red")
-    b_nqr_decrease.grid(row=0, column=1, sticky="nsew")
+    b_nqr_decrease.grid(row=0, column=2, sticky="nsew")
 
     b_nqr_increase = tk.Button(master=frame_info_nqr, command=increase_nqr, text="+", font=("Arial", 20), bg="green4", fg="black", activebackground="green2")
-    b_nqr_increase.grid(row=0, column=2, sticky="nsew")
+    b_nqr_increase.grid(row=0, column=3, sticky="nsew")
 
-    label_nqr_status = tk.Label(master=frame_info_nqr, text=str(n_qr.get()), bg="black", fg="white", font=("Calibri ", 16))
-    label_nqr_status.grid(row=0, column=3, sticky="w")
+    
 
 
 
