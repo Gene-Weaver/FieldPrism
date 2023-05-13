@@ -208,7 +208,7 @@ def run(
                             annotator.box_label(xyxy, label, color=colors(c, True))
                     if save_crop or (option == 'fs'):
                         if names[c] in accepted_classes: 
-                            save_one_box(xyxy, imc, file=save_dir / 'crops' / names[c] / f'{p.stem}.jpg', BGR=True)
+                            save_one_box(xyxy, imc, file=os.path.join(save_dir, 'crops', names[c], f'{p.stem}.jpg'), BGR=True)
 
             # Stream results
             im0 = annotator.result()
