@@ -1,4 +1,5 @@
 import os, inspect, sys
+import numpy as np
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
@@ -51,6 +52,7 @@ def detect_barcodes_FS(path_img, dir_out, run_name, label_nqr_status):
     dir_weights =  os.path.join(dir_FP,'fieldprism','yolov5','weights_nano','best.pt')
     image_input_size = (256, 256)
     conf = float(label_nqr_status.cget("text"))
+    conf = np.divide(conf,100)
     # try:
     actual_save_dir, img_out, cropped_QRs = run(weights=dir_weights,
     option = 'fs',
