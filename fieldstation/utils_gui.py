@@ -243,7 +243,7 @@ def config_gui(root, software_version):
     frame_qr_data.rowconfigure([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, ], minsize=30)
     frame_qr_data.columnconfigure([0, 1], minsize=50)
 
-    n_qr = tk.IntVar(value=50)
+    n_qr = tk.IntVar(value=70)
 
     label_nqr = tk.Label(master=frame_qr_data, text="BBox Confidence", bg="black", fg="White", font=("Calibri ", 16))
     label_nqr.grid(row=0, column=0, sticky="nsew")
