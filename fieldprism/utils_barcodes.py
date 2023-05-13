@@ -360,11 +360,254 @@ class QRcode:
             # cv2.waitKey(0)
 
 
+@dataclass
+class QRcodeFS:
+    text_raw: str = ''
+
+    rank: str = ''
+    rank_value: str = ''
+
+    number: int = 0
+    success: bool = False
+    expanded: bool = False
+    expanded_n: int = 50
+
+    image_name_jpg: str = ''
+    image_name: str = ''
+    image: list = field(default_factory=None)
+    image_bboxes: list = field(default_factory=None)
+    image_centroids: list = field(default_factory=None)
+
+    bbox: list = field(default_factory=None)
+    rough_center: list = field(default_factory=None)
+    centroid_list: list = field(default_factory=None)
+    croppped_QRcode: list = field(default_factory=None)
+    qr_code_bi: list = field(default_factory=None)
+
+    path_QRcodes_raw: str = ''
+    path_QRcodes_summary: str = ''
+
+    name_QR_raw_png: str = ''
+
+    straight_qrcode: list = field(default_factory=None)
+
+    use_unstable_QR_code_decoder: bool = False
+    
+
+    def __init__(self, number, image, qr, use_unstable_QR_code_decoder) -> None:
+        # self.image_name_jpg = image_name_jpg
+        # self.path_QRcodes_raw = path_QRcodes_raw
+        # self.path_QRcodes_summary = path_QRcodes_summary
+        self.number = str(number)
+        self.image = image
+        self.row = qr
+        # self.image_bboxes = image_bboxes
+        self.image_name = self.image_name_jpg.split('.')[0]
+        self.name_QR_raw_png = ''.join([self.image_name,'__QR_',self.number,'.png'])
+        self.use_unstable_QR_code_decoder = use_unstable_QR_code_decoder
+        self.process_QRcode()
+        self.parse_text()
+
+    def parse_text(self) -> None:
+        if self.text_raw != '':
+            self.rank = self.text_raw.split(':')[0]
+            self.rank_value = self.text_raw.split(':')[1]
+
+
+    def prepare_QRcode(self,bi) -> None:
+        ret, self.qr_code_bi = cv2.threshold(self.croppped_QRcode,bi,255,cv2.THRESH_BINARY)
+
+    def get_QR_level(self) -> None:
+        use_default = False
+        if '|' in self.text_raw:
+            use_default = True
+        level = self.text_raw.split(':')[0]
+        level = level.split('_')[1]
+        sep = ""
+        name = sep.join(['L',str(level),'.jpg'])
+        image_QR_level = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'QR_code_builder', 'QR_levels',name)
+        return use_default, image_QR_level
+
+    def insert_straight_QR_code(self) -> None:
+        max_y, max_x, chan = self.image.shape
+        min_dim = min([self.qr_code_bi.shape[0],self.qr_code_bi.shape[1]])
+        
+        if self.expanded:
+            min_dim = min_dim - np.multiply(self.expanded_n, 2)
+
+        new_dim = int(np.multiply(min_dim, 0.9))
+        new_dim_offset = int(np.multiply(min_dim, 0.05))
+
+        start_x = self.bbox[0] + new_dim_offset
+        start_y = self.bbox[1] + new_dim_offset
+
+        # Build new QR code
+        # use_default, image_QR_level = self.get_QR_level()
+        use_default = False
+        if use_default:
+            new_QR_code = cv2.resize(self.straight_qrcode, (new_dim, new_dim), interpolation = cv2.INTER_AREA)
+            new_QR_code = cv2.cvtColor(new_QR_code,cv2.COLOR_GRAY2RGB)  
+            
+            new_bg = np.zeros((min_dim, min_dim,3))
+            new_bg[new_bg == 0] = 255
+
+            stop_x = start_x + min_dim
+            stop_y = start_y + min_dim
+
+            if stop_y >= max_y:
+                start_y = start_y - (stop_y - max_y)
+                stop_y = max_y
+            if stop_x >= max_x:
+                start_x = start_x - (stop_x - max_x)
+                stop_x = max_x
+
+            self.image[start_y : stop_y , start_x : stop_x] = new_bg.astype(np.uint8)
+            self.image[start_y + new_dim_offset : start_y + new_QR_code.shape[0] + new_dim_offset , start_x + new_dim_offset : start_x + new_QR_code.shape[0] + new_dim_offset ] = new_QR_code
+
+            
+        else: # Build new including level image
+            new_QR_code = cv2.QRCodeEncoder().create()
+            new_QR_code.Params.correction_level = 3
+            new_QR_code = new_QR_code.encode(self.text_raw)
+            new_QR_code = cv2.resize(new_QR_code, (new_dim, new_dim), interpolation = cv2.INTER_AREA)
+            new_QR_code = cv2.cvtColor(new_QR_code,cv2.COLOR_GRAY2RGB)  
+
+
+            stop_x = start_x + new_dim - new_dim_offset
+            stop_y = start_y + new_dim - new_dim_offset
+
+            if stop_y >= max_y:
+                start_y = start_y - (stop_y - max_y)
+                stop_y = max_y
+            if stop_x >= max_x:
+                start_x = start_x - (stop_x - max_x)
+                stop_x = max_x
+
+            self.image[start_y : start_y + new_QR_code.shape[0], start_x : start_x + new_QR_code.shape[0]] = new_QR_code
+
+    def decode_QRcode_RGB(self) -> None:
+
+        if not self.use_unstable_QR_code_decoder:
+            try:
+                content, pts, self.straight_qrcode = cv2.QRCodeDetector().detectAndDecode(self.croppped_QRcode)
+            except:
+                content = ''
+                self.straight_qrcode = None
+        else: ### **** Using detectAndDecodeCurved can cause a memory exception. This will kill the program without any explanation.
+            try:
+                content, pts, self.straight_qrcode = cv2.QRCodeDetector().detectAndDecode(self.croppped_QRcode)
+                if content == '':
+                    content, pts, self.straight_qrcode = cv2.QRCodeDetector().detectAndDecodeCurved(self.croppped_QRcode)
+            except:
+                content = ''
+                self.straight_qrcode = None
+
+        if content != '':
+            self.text_raw = content
+            bad_code = False
+        else:
+            bad_code = True
+        return bad_code
+
+    def decode_QRcode(self) -> None:
+        if not self.use_unstable_QR_code_decoder:
+            try:
+                content, pts, self.straight_qrcode = cv2.QRCodeDetector().detectAndDecode(self.qr_code_bi)
+            except:
+                content = ''
+                self.straight_qrcode = None
+        else: ### **** Using detectAndDecodeCurved can cause a memory exception. This will kill the program without any explanation.
+            try:
+                content, pts, self.straight_qrcode = cv2.QRCodeDetector().detectAndDecode(self.qr_code_bi)
+                if content == '':
+                    content, pts, self.straight_qrcode = cv2.QRCodeDetector().detectAndDecodeCurved(self.qr_code_bi)
+            except:
+                content = ''
+                self.straight_qrcode = None
+
+        if content != '':
+            self.text_raw = content
+            bad_code = False
+        else:
+            bad_code = True
+        return bad_code
+
+    def process_QRcode(self) -> None:
+        ''' First pass of QR code reader'''
+        bad_code = True
+
+        self.prepare_QRcode(80)
+        bad_code = self.decode_QRcode_RGB()
+        if not bad_code:
+            print(f"{bcolors.OKGREEN}            Success! Quick read RGB. QR Code Content: {self.text_raw}{bcolors.ENDC}")
+
+        if bad_code:
+            bad_code = self.decode_QRcode()
+            if not bad_code:
+                print(f"{bcolors.OKGREEN}            Success! Quick read binary. QR Code Content: {self.text_raw}{bcolors.ENDC}")
+
+        ''' If not successful, adjust binarization '''
+        bi_options = range(10, 200, 10)
+        if bad_code:
+            while bad_code:
+                print('            Trying binarization level:',end="")
+                for bi in bi_options:
+                    print(f' {bi},',end="")
+                    self.prepare_QRcode(bi)
+                    bad_code = self.decode_QRcode()
+                    if not bad_code:
+                        print('')
+                        print(f"{bcolors.OKGREEN}            Success! Changed binarization to {bi}. QR Code Content: {self.text_raw}{bcolors.ENDC}")
+                        break
+                    elif bi >= 190:
+                        print('')
+                        print(f"{bcolors.FAIL}            FAILED TO READ QR CODE{bcolors.ENDC}")
+                        bad_code = False
+                        break
+
 '''
 Helper Functions FS
 '''
 def read_QR_codes(n_qr, cropped_QRs):
+    RESULTS = {
+    "Level_1": "none",
+    "Level_2": "none",
+    "Level_3": "none",
+    "Level_4": "none",
+    "Level_5": "none",
+    "Level_6": "none"
+    }
+
+    use_unstable_QR_code_decoder = False
+
+    i_candidate = 0
+    i_pass = 0
+    i_fail = 0 
+    QR_List_Pass = {}
+    QR_List_Fail = {}
+    color = []
+    for qr in cropped_QRs:
+        i_candidate += 1
+        print(f"{bcolors.BOLD}            Processing QR Code {i_candidate}{bcolors.ENDC}")
+        QR_Candidate = QRcodeFS(i_candidate, image, qr, use_unstable_QR_code_decoder)
+        if QR_Candidate.text_raw != '':
+            i_pass += 1
+            QR_List_Pass[i_pass-1] = QR_Candidate
+
+            image = QR_Candidate.image
+        else:
+            i_fail += 1
+            QR_List_Fail[i_fail-1] = QR_Candidate
+
+    for key in QR_List_Pass.values():
+        # print(f'pass:\n{key.text_raw}')
+        if key.rank in RESULTS:
+            RESULTS[key.rank] = key.rank_value
+        # qr_label = ''.join(['L: ',key.rank, ' C: ',key.rank_value])
 
 
-    return qr_result
+    print("RESULTS:")
+    print(RESULTS)
+    return RESULTS
+
 
