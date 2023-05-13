@@ -193,10 +193,10 @@ def config_gui(root, software_version):
 
 
     # -------------- n_qr parameter
-    frame_info_nqr = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
+    frame_info_nqr = tk.Frame(master=frame_info, height=60, width=250, bg="black")
     frame_info_nqr.grid(row=17, column=0, sticky="nsew")  # Assuming this is row 17, adjust according to your actual layout
     frame_info_nqr.rowconfigure(0, minsize=30)
-    frame_info_nqr.columnconfigure([0, 1, 2], minsize=250)  # We need 3 columns: Label, Decrease Button, Increase Button
+    frame_info_nqr.columnconfigure([0, 1, 2, 3], weight=1)
 
     n_qr = tk.IntVar(value=0)
 
@@ -224,10 +224,11 @@ def config_gui(root, software_version):
     b_nqr_decrease = tk.Button(master=frame_info_nqr, command=decrease_nqr, text="-", font=("Arial", 20), bg="maroon", fg="white", activebackground="red")
     b_nqr_decrease.grid(row=0, column=3, sticky="nsew")
 
-    # frame_info_nqr.columnconfigure(0, weight=1)  # Set equal width for column 0
-    frame_info_nqr.columnconfigure(1, weight=1)  # Set equal width for column 1
-    frame_info_nqr.columnconfigure(2, weight=1)  # Set equal width for column 2
-    frame_info_nqr.columnconfigure(3, weight=1)  # Set equal width for column 3
+    frame_info_nqr.columnconfigure(1, uniform="buttons")
+    frame_info_nqr.columnconfigure(2, uniform="buttons")
+    frame_info_nqr.columnconfigure(3, uniform="buttons")
+
+
 
 
 
