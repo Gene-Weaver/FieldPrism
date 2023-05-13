@@ -496,7 +496,7 @@ def run(pipeline, root):
                 isp = ispFrames.getCvFrame()
 
                 # If keypress for photo on last loop, then save a still now
-                update_visibility(int(label_nqr_status.cget("text")), L1, L2, L3, L4, L5, L6)
+                # update_visibility(int(label_nqr_status.cget("text")), L1, L2, L3, L4, L5, L6)
                 if TAKE_PHOTO:
                     # Print status
                     label_camera_status.config(text = 'Camera Activated...', fg='goldenrod')
