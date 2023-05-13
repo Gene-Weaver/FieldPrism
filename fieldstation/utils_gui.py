@@ -251,16 +251,18 @@ def config_gui(root, software_version):
     frame_buttons = tk.Frame(master=frame_qr_data, bg="black")
     frame_buttons.grid(row=1, column=0, sticky="nsew")
     frame_buttons.columnconfigure([0, 1, 2], weight=1)
-
+    
     def increase_nqr():
         current_value = n_qr.get()
         if current_value < 95:  # Adjust as needed for the maximum value
             n_qr.set(current_value + 5)
+        label_nqr_status.config(text=str(n_qr.get()))
 
     def decrease_nqr():
         current_value = n_qr.get()
         if current_value > 5:  # Adjust as needed for the minimum value
             n_qr.set(current_value - 5)
+        label_nqr_status.config(text=str(n_qr.get()))
 
     
     b_nqr_increase = tk.Button(master=frame_buttons, command=increase_nqr, text="+", font=("Arial", 20), bg="green4", fg="black", activebackground="green2")
