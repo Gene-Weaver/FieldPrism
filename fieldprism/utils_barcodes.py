@@ -361,7 +361,10 @@ class QRcode:
 
 
 '''
-Helper Functions
+Helper Functions FS
 '''
+def read_QR_codes(n_qr, cropped_QRs):
 
+
+    return qr_result
 
