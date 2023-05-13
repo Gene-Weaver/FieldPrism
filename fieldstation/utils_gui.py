@@ -380,7 +380,7 @@ def config_gui(root, software_version):
 
     # Create the radio buttons
     standard_radio = tk.Radiobutton(frame_mode, text="Standard", variable=radio_var, value="standard", command=radio_selected,
-                                    bg="black", fg="black", font=("Calibri ", 16), highlightthickness=0,
+                                    bg="gray", fg="black", font=("Calibri ", 16), highlightthickness=0,
                                     indicatoron=0, selectcolor="green4")
     standard_radio.grid(row=0, column=0, sticky="nsew")
 
