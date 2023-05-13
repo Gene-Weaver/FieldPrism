@@ -245,13 +245,13 @@ def config_gui(root, software_version):
 
     n_qr = tk.IntVar(value=50)
 
-    label_nqr = tk.Label(master=frame_qr_data, text="# of QR Codes", bg="black", fg="White", font=("Calibri ", 16))
+    label_nqr = tk.Label(master=frame_qr_data, text="Confidence", bg="black", fg="White", font=("Calibri ", 16))
     label_nqr.grid(row=0, column=0, sticky="nsew")
 
     frame_buttons = tk.Frame(master=frame_qr_data, bg="black")
     frame_buttons.grid(row=1, column=0, sticky="nsew")
     frame_buttons.columnconfigure([0, 1, 2], weight=1)
-    
+
     def increase_nqr():
         current_value = n_qr.get()
         if current_value < 95:  # Adjust as needed for the maximum value
@@ -348,7 +348,39 @@ def config_gui(root, software_version):
     L6 = tk.Label(master=frame_L6, text="none", bg="black", fg="white", font=("Calibri ", 16))
     L6.grid(row=0, column=1, sticky="w")
 
-    return root, frame_preview, frame_saved, label_camera_status, label_focus_live_status, label_focus_saved_status, label_fname_status, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_gps_time_status, label_local_time_status, label_total_status, label_session_status, label_csv_status, label_nimage_status, label_ndevice_status, label_usbspeed_status, label_version_status, label_nqr_status, L1, L2, L3, L4, L5, L6
+    # Callback function for radio buttons
+    radio_var = tk.StringVar(value="standard")
+    # use_enhanced = False
+    def radio_selected():
+        global use_enhanced
+        selection = radio_var.get()
+        if selection == "standard":
+            use_enhanced = False
+        elif selection == "enhance":
+            use_enhanced = True
+    # -------------- Level 6
+    rv_start += 2
+    frame_mode_L = tk.Frame(master=frame_qr_data, height=60, width = 100, bg="black")
+    frame_mode_L.grid(row=rv_start, column=0, sticky="nsew")
+    frame_mode_L.rowconfigure(0, minsize=30)
+    frame_mode_L.columnconfigure([0], minsize=50)
+    mode_L = tk.Label(master=frame_mode_L, text="none", bg="black", fg="white", font=("Calibri ", 16))
+    mode_L.grid(row=0, column=1, sticky="w")
+
+    rv_start += 1
+    frame_mode = tk.Frame(master=frame_qr_data, height=60, width = 100, bg="black")
+    frame_mode.grid(row=rv_start, column=0, sticky="nsew")
+    frame_mode.rowconfigure(0, minsize=30)
+    frame_mode.columnconfigure([0, 1], minsize=50)
+
+    # Create the radio buttons
+    standard_radio = tk.Radiobutton(frame_mode, text="Standard", variable=radio_var, value="standard", command=radio_selected)
+    standard_radio.grid(row=rv_start, column=0, sticky="w")
+    enhance_radio = tk.Radiobutton(frame_mode, text="Enhanced", variable=radio_var, value="enhance", command=radio_selected)
+    enhance_radio.grid(row=rv_start, column=1, sticky="w")
+
+
+    return root, frame_preview, frame_saved, label_camera_status, label_focus_live_status, label_focus_saved_status, label_fname_status, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_gps_time_status, label_local_time_status, label_total_status, label_session_status, label_csv_status, label_nimage_status, label_ndevice_status, label_usbspeed_status, label_version_status, label_nqr_status, L1, L2, L3, L4, L5, L6, use_enhanced
 
 '''
     # Terminal out, but causes error
