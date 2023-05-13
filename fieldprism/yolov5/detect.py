@@ -129,6 +129,7 @@ def run(
     model.warmup(imgsz=(1 if pt or model.triton else bs, 3, *imgsz))  # warmup
     seen, windows, dt = 0, [], (Profile(), Profile(), Profile())
     for path, im, im0s, vid_cap, s in dataset:
+        img = im.copy()
         with dt[0]:
             im = torch.from_numpy(im).to(model.device)
             im = im.half() if model.fp16 else im.float()  # uint8 to fp16/32
@@ -211,7 +212,7 @@ def run(
                     
                     if option == 'fs':
                         if names[c] in ["barcode"]:#accepted_classes: 
-                            cropped_QR = save_one_box_qr(xyxy, im, file=os.path.join(save_dir, 'crops', names[c], f'{p.stem}.jpg'), BGR=True)
+                            cropped_QR = save_one_box_qr(xyxy, img, file=os.path.join(save_dir, 'crops', names[c], f'{p.stem}.jpg'), BGR=True)
                             cropped_QRs.append(cropped_QR)
                     else:
                         if save_crop:
