@@ -510,7 +510,7 @@ def run(pipeline, root):
                     # Check for valid QR code
                     n_qr = int(label_nqr_status.cget("text"))
                     label_camera_status.config(text = 'Detecting QR Codes and Markers', fg='magenta')
-                    qr_found, img_out_qr, cropped_QRs = check_QR_codes(path_to_saved, cfg.dir_data_session_qr, cfg.name_session, int(label_nqr_status.cget("text")))
+                    qr_found, img_out_qr, cropped_QRs = check_QR_codes(path_to_saved, cfg.dir_data_session_qr, cfg.name_session)
                     path_to_saved_qr = route_save_image_qr(cfg, cfg_user, img_out_qr, is_sharp, name_time)
                     path_to_saved_qr = route_save_image_qr_crop(cfg, cfg_user, cropped_QRs, is_sharp, name_time)
                     qr_result = read_QR_codes(n_qr, cropped_QRs)
