@@ -511,16 +511,16 @@ def run(pipeline, root):
                     n_qr = int(label_nqr_status.cget("text"))
                     label_camera_status.config(text = 'Detecting QR Codes and Markers', fg='magenta')
                     qr_found, img_out_qr, cropped_QRs = check_QR_codes(path_to_saved, cfg.dir_data_session_qr, cfg.name_session)
-                    path_to_saved_qr = route_save_image_qr(cfg, cfg_user, img_out_qr, is_sharp, name_time)
+                    path_to_saved_qr_whole = route_save_image_qr(cfg, cfg_user, img_out_qr, is_sharp, name_time)
                     path_to_saved_qr = route_save_image_qr_crop(cfg, cfg_user, cropped_QRs, is_sharp, name_time)
 
                     # Update the image in the GUI by reading the image that was just written to storage
                     try:
-                        Window_Saved.update_image(cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved_qr)))))
+                        Window_Saved.update_image(cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved_qr_whole)))))
                     except:
                         Window_Saved.update_image(cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
 
-                    qr_result = read_QR_codes(n_qr, cropped_QRs)
+                    # qr_result = read_QR_codes(n_qr, cropped_QRs)
 
                     # Write data to CSV file
                     Image = ImageData(cfg, path_to_saved, GPS_data, height, width, sharpness_actual, sharpness_min_cutoff, is_sharp)
