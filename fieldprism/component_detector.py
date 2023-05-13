@@ -50,24 +50,24 @@ def detect_barcodes_FS(path_img, dir_out, run_name):
     dir_FP = os.path.dirname(os.path.dirname(__file__))
     dir_weights =  os.path.join(dir_FP,'fieldprism','yolov5','weights_nano','best.pt')
     image_input_size = (256, 256)
-    try:
-        actual_save_dir, img_out = run(weights=dir_weights,
-        option = 'fs',
-        show_predicted_text = False,
-        source = path_img,
-        project = dir_out,
-        name = run_name,
-        imgsz = image_input_size,
-        conf_thres = 0.40,
-        exist_ok = True)
+    # try:
+    actual_save_dir, img_out = run(weights=dir_weights,
+    option = 'fs',
+    show_predicted_text = False,
+    source = path_img,
+    project = dir_out,
+    name = run_name,
+    imgsz = image_input_size,
+    conf_thres = 0.40,
+    exist_ok = True)
 
-        try:
-            actual_save_dir = actual_save_dir._str
-        except:
-            actual_save_dir = actual_save_dir
-        return actual_save_dir, img_out
-    except Exception as e:
-        print(f"{bcolors.WARNING}No images in {run_name}. \n      Error: {e}{bcolors.ENDC}")
+        # try:
+        #     actual_save_dir = actual_save_dir._str
+        # except:
+        #     actual_save_dir = actual_save_dir
+        # return actual_save_dir, img_out
+    # except Exception as e:
+        # print(f"{bcolors.WARNING}No images in {run_name}. \n      Error: {e}{bcolors.ENDC}")
         
 
 def check_QR_codes(path_img, dir_out, run_name, label_nqr_status):
