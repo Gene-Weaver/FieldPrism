@@ -256,13 +256,23 @@ def config_gui(root, software_version):
         current_value = n_qr.get()
         if current_value < 6:  # Adjust as needed for the maximum value
             n_qr.set(current_value + 1)
-        label_nqr_status.config(text=str(n_qr.get()))
+            update_visibility()
 
     def decrease_nqr():
         current_value = n_qr.get()
         if current_value > 0:  # Adjust as needed for the minimum value
             n_qr.set(current_value - 1)
-        label_nqr_status.config(text=str(n_qr.get()))
+            update_visibility()
+
+    def update_visibility():
+        n_qr_value = n_qr.get()
+        levels = [L1, L2, L3, L4, L5, L6]
+
+        for i, level in enumerate(levels):
+            if i < n_qr_value:
+                level.grid()
+            else:
+                level.grid_remove()
 
     b_nqr_increase = tk.Button(master=frame_buttons, command=increase_nqr, text="+", font=("Arial", 20), bg="green4", fg="black", activebackground="green2")
     b_nqr_increase.grid(row=0, column=2, sticky="nsew")
@@ -275,6 +285,17 @@ def config_gui(root, software_version):
 
     frame_qr_data.columnconfigure(1, weight=1)
 
+    # -------------- Level 0
+    frame_L0 = tk.Frame(master=frame_qr_data, height=60, width = 100, bg="black")
+    frame_L0.grid(row=4, column=0, sticky="nsew")
+    frame_L0.rowconfigure(0, minsize=30)
+    frame_L0.columnconfigure([0, 1], minsize=50)
+
+    L0 = tk.Label(master=frame_L0, text="None ", bg="black", fg="White", font=("Calibri ", 16))
+    L0.grid(row=0, column=0, sticky="e")
+    L0 = tk.Label(master=frame_L0, text="none", bg="black", fg="white", font=("Calibri ", 16))
+    L0.grid(row=0, column=1, sticky="w")
+    
     # -------------- Level 1
     frame_L1 = tk.Frame(master=frame_qr_data, height=60, width = 100, bg="black")
     frame_L1.grid(row=4, column=0, sticky="nsew")
