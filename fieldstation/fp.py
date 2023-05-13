@@ -187,15 +187,15 @@ def update_levels(L1, L2, L3, L4, L5, L6, RESULTS):
     update_level_labels(L5, RESULTS["Level_5"])
     update_level_labels(L6, RESULTS["Level_6"])
 
-def update_visibility(n_qr_value, L1, L2, L3, L4, L5, L6):
-    # n_qr_value = n_qr.get()
-    levels = [L1, L2, L3, L4, L5, L6]
+# def update_visibility(n_qr_value, L1, L2, L3, L4, L5, L6):
+#     # n_qr_value = n_qr.get()
+#     levels = [L1, L2, L3, L4, L5, L6]
 
-    for i, level in enumerate(levels):
-        if i < n_qr_value:
-            level.grid()
-        else:
-            level.grid_remove()
+#     for i, level in enumerate(levels):
+#         if i < n_qr_value:
+#             level.grid()
+#         else:
+#             level.grid_remove()
 
 def report_sharpness(live_or_saved, label_focus_live_status, label_focus_saved_status, is_sharp, sharpness_min_cutoff, sharpness_actual):
     if live_or_saved == 'live':
