@@ -187,6 +187,16 @@ def update_levels(L1, L2, L3, L4, L5, L6, RESULTS):
     update_level_labels(L5, RESULTS["Level_5"])
     update_level_labels(L6, RESULTS["Level_6"])
 
+def update_visibility(n_qr, L1, L2, L3, L4, L5, L6):
+    n_qr_value = n_qr.get()
+    levels = [L1, L2, L3, L4, L5, L6]
+
+    for i, level in enumerate(levels):
+        if i < n_qr_value:
+            level.grid()
+        else:
+            level.grid_remove()
+
 def report_sharpness(live_or_saved, label_focus_live_status, label_focus_saved_status, is_sharp, sharpness_min_cutoff, sharpness_actual):
     if live_or_saved == 'live':
         if is_sharp:
@@ -486,6 +496,7 @@ def run(pipeline, root):
                 isp = ispFrames.getCvFrame()
 
                 # If keypress for photo on last loop, then save a still now
+                update_visibility(int(label_nqr_status.cget("text")), L1, L2, L3, L4, L5, L6)
                 if TAKE_PHOTO:
                     # Print status
                     label_camera_status.config(text = 'Camera Activated...', fg='goldenrod')
@@ -521,7 +532,7 @@ def run(pipeline, root):
                     # Check for valid QR code
                     n_qr = int(label_nqr_status.cget("text"))
                     label_camera_status.config(text = 'Detecting QR Codes and Markers', fg='magenta')
-                    qr_found, img_out_qr, cropped_QRs = check_QR_codes(path_to_saved, cfg.dir_data_session_qr, cfg.name_session)
+                    qr_found, img_out_qr, cropped_QRs = check_QR_codes(path_to_saved, cfg.dir_data_session_qr, cfg.name_session, label_nqr_status)
                     path_to_saved_qr_whole = route_save_image_qr(cfg, cfg_user, img_out_qr, is_sharp, name_time)
                     path_to_saved_qr = route_save_image_qr_crop(cfg, cfg_user, cropped_QRs, is_sharp, name_time)
 
