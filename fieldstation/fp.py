@@ -187,8 +187,8 @@ def update_levels(L1, L2, L3, L4, L5, L6, RESULTS):
     update_level_labels(L5, RESULTS["Level_5"])
     update_level_labels(L6, RESULTS["Level_6"])
 
-def update_visibility(n_qr, L1, L2, L3, L4, L5, L6):
-    n_qr_value = n_qr.get()
+def update_visibility(n_qr_value, L1, L2, L3, L4, L5, L6):
+    # n_qr_value = n_qr.get()
     levels = [L1, L2, L3, L4, L5, L6]
 
     for i, level in enumerate(levels):
