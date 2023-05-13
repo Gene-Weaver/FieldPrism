@@ -228,8 +228,8 @@ def config_gui(root, software_version):
 
 
     # -------------- QR header
-    label_top_qr = tk.Label(master=root, text="QR Codes", bg="black", fg="white", font=("Arial", 20))
-    label_top_qr.grid(row=0, column=2, sticky="nsew")
+    label_top_qr = tk.Label(master=root, text="   QR Codes", bg="black", fg="white", font=("Arial", 20))
+    label_top_qr.grid(row=0, column=2, sticky="e")
 
     frame_qr = tk.Frame(master=root, width = 100, bg="black")
     frame_qr.grid(row=1, column=2, rowspan=3, sticky="nsew")
