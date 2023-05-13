@@ -542,7 +542,7 @@ def run(pipeline, root):
                     except:
                         Window_Saved.update_image(cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
 
-                    label_camera_status.config(text = 'Reading QR Codes', fg='cyan')
+                    label_camera_status.config(text = 'Reading QR Codes', fg='magenta')
                     RESULTS = read_QR_codes(n_qr, cropped_QRs, use_enhanced)
                     update_levels(L1, L2, L3, L4, L5, L6, RESULTS)
 
