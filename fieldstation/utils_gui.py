@@ -292,8 +292,63 @@ def config_gui(root, software_version):
     L1 = tk.Label(master=frame_L1, text="none", bg="black", fg="white", font=("Calibri ", 16))
     L1.grid(row=0, column=1, sticky="w")
 
+    # -------------- Level 2
+    frame_L2 = tk.Frame(master=frame_qr_data, height=60, width = 100, bg="black")
+    frame_L2.grid(row=4, column=0, sticky="nsew")
+    frame_L2.rowconfigure(0, minsize=30)
+    frame_L2.columnconfigure([0, 1], minsize=50)
 
-    return root, frame_preview, frame_saved, label_camera_status, label_focus_live_status, label_focus_saved_status, label_fname_status, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_gps_time_status, label_local_time_status, label_total_status, label_session_status, label_csv_status, label_nimage_status, label_ndevice_status, label_usbspeed_status, label_version_status, label_nqr_status
+    L2 = tk.Label(master=frame_L2, text="Level 2: ", bg="black", fg="White", font=("Calibri ", 16))
+    L2.grid(row=0, column=0, sticky="e")
+    L2 = tk.Label(master=frame_L2, text="none", bg="black", fg="white", font=("Calibri ", 16))
+    L2.grid(row=0, column=1, sticky="w")
+
+    # -------------- Level 3
+    frame_L3 = tk.Frame(master=frame_qr_data, height=60, width = 100, bg="black")
+    frame_L3.grid(row=4, column=0, sticky="nsew")
+    frame_L3.rowconfigure(0, minsize=30)
+    frame_L3.columnconfigure([0, 1], minsize=50)
+
+    L3 = tk.Label(master=frame_L3, text="Level 3: ", bg="black", fg="White", font=("Calibri ", 16))
+    L3.grid(row=0, column=0, sticky="e")
+    L3 = tk.Label(master=frame_L3, text="none", bg="black", fg="white", font=("Calibri ", 16))
+    L3.grid(row=0, column=1, sticky="w")
+
+    # -------------- Level 4
+    frame_L4 = tk.Frame(master=frame_qr_data, height=60, width = 100, bg="black")
+    frame_L4.grid(row=4, column=0, sticky="nsew")
+    frame_L4.rowconfigure(0, minsize=30)
+    frame_L4.columnconfigure([0, 1], minsize=50)
+
+    L4 = tk.Label(master=frame_L4, text="Level 4: ", bg="black", fg="White", font=("Calibri ", 16))
+    L4.grid(row=0, column=0, sticky="e")
+    L4 = tk.Label(master=frame_L4, text="none", bg="black", fg="white", font=("Calibri ", 16))
+    L4.grid(row=0, column=1, sticky="w")
+
+    # -------------- Level 5
+    frame_L5 = tk.Frame(master=frame_qr_data, height=60, width = 100, bg="black")
+    frame_L5.grid(row=4, column=0, sticky="nsew")
+    frame_L5.rowconfigure(0, minsize=30)
+    frame_L5.columnconfigure([0, 1], minsize=50)
+
+    L5 = tk.Label(master=frame_L5, text="Level 5: ", bg="black", fg="White", font=("Calibri ", 16))
+    L5.grid(row=0, column=0, sticky="e")
+    L5 = tk.Label(master=frame_L5, text="none", bg="black", fg="white", font=("Calibri ", 16))
+    L5.grid(row=0, column=1, sticky="w")
+
+    # -------------- Level 6
+    frame_L6 = tk.Frame(master=frame_qr_data, height=60, width = 100, bg="black")
+    frame_L6.grid(row=4, column=0, sticky="nsew")
+    frame_L6.rowconfigure(0, minsize=30)
+    frame_L6.columnconfigure([0, 1], minsize=50)
+
+    L6 = tk.Label(master=frame_L6, text="Level 6: ", bg="black", fg="White", font=("Calibri ", 16))
+    L6.grid(row=0, column=0, sticky="e")
+    L6 = tk.Label(master=frame_L6, text="none", bg="black", fg="white", font=("Calibri ", 16))
+    L6.grid(row=0, column=1, sticky="w")
+
+
+    return root, frame_preview, frame_saved, label_camera_status, label_focus_live_status, label_focus_saved_status, label_fname_status, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_gps_time_status, label_local_time_status, label_total_status, label_session_status, label_csv_status, label_nimage_status, label_ndevice_status, label_usbspeed_status, label_version_status, label_nqr_status, L1, L2, L3, L4, L5, L6
 
 '''
     # Terminal out, but causes error

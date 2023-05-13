@@ -175,6 +175,17 @@ def detect_sharpness(sharpness_min_cutoff, img):
         return False, sharpness_actual
     else:
         return True, sharpness_actual
+    
+def update_level_labels(label, result):
+    label.config(text=result)
+
+def update_levels(L1, L2, L3, L4, L5, L6, RESULTS):
+    update_level_labels(L1, RESULTS["Level_1"])
+    update_level_labels(L2, RESULTS["Level_2"])
+    update_level_labels(L3, RESULTS["Level_3"])
+    update_level_labels(L4, RESULTS["Level_4"])
+    update_level_labels(L5, RESULTS["Level_5"])
+    update_level_labels(L6, RESULTS["Level_6"])
 
 def report_sharpness(live_or_saved, label_focus_live_status, label_focus_saved_status, is_sharp, sharpness_min_cutoff, sharpness_actual):
     if live_or_saved == 'live':
@@ -395,7 +406,8 @@ def run(pipeline, root):
     label_focus_saved_status, label_fname_status, label_gps_status, label_gps_lat_status, 
     label_gps_lon_status, label_gps_time_status, label_local_time_status, label_total_status, 
     label_session_status, label_csv_status, label_nimage_status, label_ndevice_status, 
-    label_usbspeed_status, label_version_status, label_nqr_status] = config_gui(root, software_version)
+    label_usbspeed_status, label_version_status, label_nqr_status,
+    L1, L2, L3, L4, L5, L6] = config_gui(root, software_version)
 
     # -------------- Buttons
     # frame
@@ -519,7 +531,8 @@ def run(pipeline, root):
                     except:
                         Window_Saved.update_image(cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
 
-                    qr_result = read_QR_codes(n_qr, cropped_QRs)
+                    RESULTS = read_QR_codes(n_qr, cropped_QRs)
+                    update_levels(L1, L2, L3, L4, L5, L6, RESULTS)
 
                     # Write data to CSV file
                     Image = ImageData(cfg, path_to_saved, GPS_data, height, width, sharpness_actual, sharpness_min_cutoff, is_sharp)
