@@ -48,8 +48,8 @@ def detect_components_in_image(option, cfg, run_name, dir_out,existing_folder):
 
 def detect_barcodes_FS(path_img, dir_out, run_name):
     dir_FP = os.path.dirname(os.path.dirname(__file__))
-    dir_weights =  os.path.join(dir_FP,'fieldprism','yolov5','weights','fp_large_v_1.pt')
-    image_input_size = (1280, 1280)
+    dir_weights =  os.path.join(dir_FP,'fieldprism','yolov5','weights_nano','best.pt')
+    image_input_size = (256, 256)
     try:
         actual_save_dir, img_out = run(weights=dir_weights,
         option = 'fs',
@@ -58,7 +58,7 @@ def detect_barcodes_FS(path_img, dir_out, run_name):
         project = dir_out,
         name = run_name,
         imgsz = image_input_size,
-        conf_thres = 0.70,
+        conf_thres = 0.40,
         exist_ok = True)
 
         try:
