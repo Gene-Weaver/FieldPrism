@@ -395,15 +395,8 @@ class QRcodeFS:
     
 
     def __init__(self, number, qr, use_unstable_QR_code_decoder) -> None:
-        # self.image_name_jpg = image_name_jpg
-        # self.path_QRcodes_raw = path_QRcodes_raw
-        # self.path_QRcodes_summary = path_QRcodes_summary
         self.number = str(number)
-        self.image = image
         self.row = qr
-        # self.image_bboxes = image_bboxes
-        self.image_name = self.image_name_jpg.split('.')[0]
-        self.name_QR_raw_png = ''.join([self.image_name,'__QR_',self.number,'.png'])
         self.use_unstable_QR_code_decoder = use_unstable_QR_code_decoder
         self.process_QRcode()
         self.parse_text()
