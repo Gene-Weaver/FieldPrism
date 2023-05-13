@@ -176,6 +176,48 @@ def run(
                 else:
                     txt_path = os.path.join(os.path.join(save_dir, 'QR_Codes'), p.stem, f'_{frame}')
             
+
+            # Save results (image with detections)
+            if save_img:
+                if dataset.mode == 'image':
+                    # if option == 'distortion':
+                    #     path_image = os.path.join(save_path,'Detections_Not_Corrected',p.name)
+                    #     validate_dir(os.path.join(save_path,'Detections_Not_Corrected'))
+                    #     cv2.imwrite(path_image, im0)
+                    if option == 'corrected':
+                        path_image = os.path.join(save_path,'Detections_Corrected',p.name)
+                        validate_dir(os.path.join(save_path,'Detections_Corrected'))
+                        cv2.imwrite(path_image, im0)
+                        img_out = None
+                        path_crops = None
+                    elif option == 'distortion':
+                        path_image = os.path.join(save_path,'Detections_Not_Corrected',p.name)
+                        validate_dir(os.path.join(save_path,'Detections_Not_Corrected'))
+                        cv2.imwrite(path_image, im0)
+                        img_out = None
+                        path_crops = None
+                    elif option == 'fs':
+                        path_image = os.path.join(save_path,'QR_Codes',p.name)
+                        validate_dir(os.path.join(save_path,'QR_Codes'))
+                        # cv2.imwrite(path_image, im0)
+                        img_out = im0
+                        path_crops = path_crops
+                else:  # 'video' or 'stream'
+                    if vid_path[i] != save_dir:  # new video
+                        vid_path[i] = save_dir
+                        if isinstance(vid_writer[i], cv2.VideoWriter):
+                            vid_writer[i].release()  # release previous video writer
+                        if vid_cap:  # video
+                            fps = vid_cap.get(cv2.CAP_PROP_FPS)
+                            w = int(vid_cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+                            h = int(vid_cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+                        else:  # stream
+                            fps, w, h = 30, im0.shape[1], im0.shape[0]
+                        save_dir = str(Path(save_dir).with_suffix('.mp4'))  # force *.mp4 suffix on results videos
+                        vid_writer[i] = cv2.VideoWriter(save_dir, cv2.VideoWriter_fourcc(*'mp4v'), fps, (w, h))
+                    vid_writer[i].write(im0)
+
+                    
             s += '%gx%g ' % im.shape[2:]  # print string
             gn = torch.tensor(im0.shape)[[1, 0, 1, 0]]  # normalization gain whwh
             imc = im0.copy() if save_crop else im0  # for save_crop
@@ -222,45 +264,7 @@ def run(
                 cv2.imshow(str(p), im0)
                 cv2.waitKey(1)  # 1 millisecond
 
-            # Save results (image with detections)
-            if save_img:
-                if dataset.mode == 'image':
-                    # if option == 'distortion':
-                    #     path_image = os.path.join(save_path,'Detections_Not_Corrected',p.name)
-                    #     validate_dir(os.path.join(save_path,'Detections_Not_Corrected'))
-                    #     cv2.imwrite(path_image, im0)
-                    if option == 'corrected':
-                        path_image = os.path.join(save_path,'Detections_Corrected',p.name)
-                        validate_dir(os.path.join(save_path,'Detections_Corrected'))
-                        cv2.imwrite(path_image, im0)
-                        img_out = None
-                        path_crops = None
-                    elif option == 'distortion':
-                        path_image = os.path.join(save_path,'Detections_Not_Corrected',p.name)
-                        validate_dir(os.path.join(save_path,'Detections_Not_Corrected'))
-                        cv2.imwrite(path_image, im0)
-                        img_out = None
-                        path_crops = None
-                    elif option == 'fs':
-                        path_image = os.path.join(save_path,'QR_Codes',p.name)
-                        validate_dir(os.path.join(save_path,'QR_Codes'))
-                        # cv2.imwrite(path_image, im0)
-                        img_out = im0
-                        path_crops = path_crops
-                else:  # 'video' or 'stream'
-                    if vid_path[i] != save_dir:  # new video
-                        vid_path[i] = save_dir
-                        if isinstance(vid_writer[i], cv2.VideoWriter):
-                            vid_writer[i].release()  # release previous video writer
-                        if vid_cap:  # video
-                            fps = vid_cap.get(cv2.CAP_PROP_FPS)
-                            w = int(vid_cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-                            h = int(vid_cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-                        else:  # stream
-                            fps, w, h = 30, im0.shape[1], im0.shape[0]
-                        save_dir = str(Path(save_dir).with_suffix('.mp4'))  # force *.mp4 suffix on results videos
-                        vid_writer[i] = cv2.VideoWriter(save_dir, cv2.VideoWriter_fourcc(*'mp4v'), fps, (w, h))
-                    vid_writer[i].write(im0)
+            
 
         # Print time (inference-only)
         LOGGER.info(f"{s}{'' if len(det) else '(no detections), '}{dt[1].dt * 1E3:.1f}ms")
