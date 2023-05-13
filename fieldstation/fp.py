@@ -516,7 +516,11 @@ def run(pipeline, root):
                     qr_result = read_QR_codes(n_qr, cropped_QRs)
 
                     # Update the image in the GUI by reading the image that was just written to storage
-                    Window_Saved.update_image(cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved_qr)))))
+                    try:
+                        Window_Saved.update_image(cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved_qr)))))
+                    except:
+                        Window_Saved.update_image(cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
+
 
                     # Write data to CSV file
                     Image = ImageData(cfg, path_to_saved, GPS_data, height, width, sharpness_actual, sharpness_min_cutoff, is_sharp)
