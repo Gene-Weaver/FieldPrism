@@ -238,6 +238,7 @@ def config_gui(root, software_version):
 
 
 
+
     # -------------- Number of storage devices
     frame_info_ndevice = tk.Frame(master=frame_info, height=60, width = 250, bg="black")
     frame_info_ndevice.grid(row=18, column=0, sticky="nsew")
