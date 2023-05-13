@@ -43,7 +43,7 @@ from models.common import DetectMultiBackend
 from utils.dataloaders import IMG_FORMATS, VID_FORMATS, LoadImages, LoadScreenshots, LoadStreams
 from utils.general import (LOGGER, Profile, check_file, check_img_size, check_imshow, check_requirements, colorstr, cv2,
                            increment_path, non_max_suppression, print_args, scale_boxes, strip_optimizer, xyxy2xywh)
-from utils.plots import Annotator, colors, save_one_box
+from utils.plots import Annotator, colors, save_one_box, save_one_box_qr
 from utils.torch_utils import select_device, smart_inference_mode
 from torchvision.transforms.functional import get_image_size
 
@@ -208,10 +208,16 @@ def run(
                         label = None if hide_labels else (names[c] if hide_conf else f'{names[c]} {conf:.2f}')
                         if names[c] in accepted_classes: 
                             annotator.box_label(xyxy, label, color=colors(c, True))
-                    if save_crop or (option == 'fs'):
+                    
+                    if option == 'fs':
                         if names[c] in ["barcode"]:#accepted_classes: 
-                            cropped_QR = save_one_box(xyxy, imc, file=os.path.join(save_dir, 'crops', names[c], f'{p.stem}.jpg'), BGR=True)
+                            cropped_QR = save_one_box_qr(xyxy, imc, file=os.path.join(save_dir, 'crops', names[c], f'{p.stem}.jpg'), BGR=True)
                             cropped_QRs.append(cropped_QR)
+                    else:
+                        if save_crop:
+                            if names[c] in accepted_classes: 
+                                cropped_QR = save_one_box(xyxy, imc, file=os.path.join(save_dir, 'crops', names[c], f'{p.stem}.jpg'), BGR=True)
+                                cropped_QRs.append(cropped_QR)
 
             # Stream results
             im0 = annotator.result()

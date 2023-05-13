@@ -229,17 +229,17 @@ def config_gui(root, software_version):
 
     # -------------- QR header
     label_top_qr = tk.Label(master=root, text="   QR Codes", bg="black", fg="white", font=("Arial", 20))
-    label_top_qr.grid(row=0, column=2, sticky="e")
+    label_top_qr.grid(row=0, column=2, sticky="w")
 
     frame_qr = tk.Frame(master=root, width = 100, bg="black")
-    frame_qr.grid(row=1, column=2, rowspan=3, sticky="nsew")
+    frame_qr.grid(row=0, column=2, rowspan=3, sticky="nsew")
 
     frame_qr.rowconfigure([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], minsize=30)
     frame_qr.columnconfigure(0, minsize=50)
 
     # -------------- n_qr parameter
     frame_qr_data = tk.Frame(master=frame_qr, height=60, width=250, bg="black")
-    frame_qr_data.grid(row=2, column=0, sticky="nsew")  # Assuming this is row 17, adjust according to your actual layout
+    frame_qr_data.grid(row=1, column=0, sticky="nsew")  # Assuming this is row 17, adjust according to your actual layout
     frame_qr_data.rowconfigure(0, minsize=30)
     frame_qr_data.columnconfigure([0, 1], minsize=50)
 
