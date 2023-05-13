@@ -273,16 +273,12 @@ def route_save_image_qr(Setup, cfg_user, save_frame, is_sharp, name_time):
 def route_save_image_qr_crop(Setup, cfg_user, save_frame, is_sharp, name_time):
     path_to_saved = None  # Initialize the variable
     counter = 1  # Counter for appending "__n" to name_time
-    print(f"before: {name_time}")
-
-    if not is_sharp:
-        if cfg_user['fieldstation']['add_flag_to_blurry_images']:
-            name_time = ''.join([name_time, '__B'])
-    print(f"after: {name_time}")
 
     for frame in save_frame:
+        print(f"before: {name_time}")
         # Append "__n" to name_time
         name_time_with_counter = f"{name_time}__{counter}"
+        print(f"after: {name_time_with_counter}")
         
         if Setup.save_to_boot:
             path_to_saved = save_image(frame, name_time_with_counter, Setup.dir_qr_none)
@@ -301,6 +297,7 @@ def route_save_image_qr_crop(Setup, cfg_user, save_frame, is_sharp, name_time):
 
         counter += 1  # Increment the counter for the next iteration
 
+    print(f"counter = {counter}")
     return path_to_saved
 
 '''
