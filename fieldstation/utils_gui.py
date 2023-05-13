@@ -218,6 +218,12 @@ def config_gui(root, software_version):
         if current_value > 0:  # Adjust as needed for the minimum value
             n_qr.set(current_value - 1)
         label_nqr_status.config(text=str(n_qr.get()))
+    
+    def get_int():
+        current_value = int(n_qr.get())
+        # Use the value of label_nqr_status in your code
+        # print(current_value)
+        return current_value
 
     b_nqr_increase = tk.Button(master=frame_buttons, command=increase_nqr, text="+", font=("Arial", 20), bg="green4", fg="black", activebackground="green2")
     b_nqr_increase.grid(row=0, column=2, sticky="nsew")
