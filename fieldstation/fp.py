@@ -400,11 +400,12 @@ def run(pipeline, root):
 
     # -------------- Buttons
     # frame
+    root.configure(bg="black")
     frame_button = tk.Frame(master=root, height = 60, bg="black")
     frame_button.grid(row=4, column=0, columnspan= 2, sticky="nsew")
     
     frame_button.rowconfigure(0, minsize=60)
-    frame_button.columnconfigure([0, 1, 2, 3, 4, 5, 6, 7], minsize=200)
+    frame_button.columnconfigure([0, 1, 2, 3, 4, 5], minsize=200)
 
     b_photo = tk.Button(master=frame_button, command=lambda: button_photo(), text = "PHOTO", font=("Arial", 20), bg="green4", fg="black", activebackground="green2")
     b_gps = tk.Button(master=frame_button, command=lambda: button_gps(), text = "GPS", font=("Arial", 20), bg="royal blue", fg="black", activebackground="deep sky blue")
