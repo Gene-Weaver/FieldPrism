@@ -358,9 +358,9 @@ def config_gui(root, software_version):
     def radio_selected():
         selection = radio_var.get()
         if selection == "standard":
-            use_enhanced = False
+            pass
         elif selection == "enhance":
-            use_enhanced = True
+            pass
     # -------------- Level 6
     rv_start += 2
     frame_mode_L = tk.Frame(master=frame_qr_data, height=60, width = 100, bg="black")
