@@ -388,7 +388,7 @@ def createPipeline():
 Main code that runs the GUI, is called from start_gui()
 '''
 def run(pipeline, root):
-    software_version = '2022-12 v-1-0'
+    software_version = '2023-05 v-2-0'
     dir_root = os.path.dirname(os.path.dirname(__file__))
     '''
     Make sure the destination path is present before starting to store the examples
