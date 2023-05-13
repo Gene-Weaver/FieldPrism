@@ -561,7 +561,7 @@ class QRcodeFS:
 '''
 Helper Functions FS
 '''
-def read_QR_codes(n_qr, cropped_QRs, use_enhanced):
+def read_QR_codes(n_qr, cropped_QRs, radio_var):
     RESULTS = {
     "Level_1": "none",
     "Level_2": "none",
@@ -570,6 +570,12 @@ def read_QR_codes(n_qr, cropped_QRs, use_enhanced):
     "Level_5": "none",
     "Level_6": "none"
     }
+
+    selection = radio_var.get()
+    if selection == "standard":
+        use_enhanced = False
+    elif selection == "enhance":
+        use_enhanced = True
 
     use_unstable_QR_code_decoder = use_enhanced
 
