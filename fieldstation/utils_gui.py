@@ -243,7 +243,7 @@ def config_gui(root, software_version):
     frame_qr_data.rowconfigure(0, minsize=30)
     frame_qr_data.columnconfigure([0, 1], minsize=50)
 
-    n_qr = tk.IntVar(value=0)
+    n_qr = tk.IntVar(value=50)
 
     label_nqr = tk.Label(master=frame_qr_data, text="# of QR Codes", bg="black", fg="White", font=("Calibri ", 16))
     label_nqr.grid(row=0, column=0, sticky="nsew")
@@ -254,18 +254,15 @@ def config_gui(root, software_version):
 
     def increase_nqr():
         current_value = n_qr.get()
-        if current_value < 6:  # Adjust as needed for the maximum value
-            n_qr.set(current_value + 1)
-            update_visibility()
+        if current_value < 95:  # Adjust as needed for the maximum value
+            n_qr.set(current_value + 5)
 
     def decrease_nqr():
         current_value = n_qr.get()
-        if current_value > 0:  # Adjust as needed for the minimum value
-            n_qr.set(current_value - 1)
-            update_visibility()
+        if current_value > 5:  # Adjust as needed for the minimum value
+            n_qr.set(current_value - 5)
 
     
-
     b_nqr_increase = tk.Button(master=frame_buttons, command=increase_nqr, text="+", font=("Arial", 20), bg="green4", fg="black", activebackground="green2")
     b_nqr_increase.grid(row=0, column=2, sticky="nsew")
 
@@ -276,21 +273,11 @@ def config_gui(root, software_version):
     b_nqr_decrease.grid(row=0, column=0, sticky="nsew")
 
     frame_qr_data.columnconfigure(1, weight=1)
-
-    # -------------- Level 0
-    frame_L0 = tk.Frame(master=frame_qr_data, height=60, width = 100, bg="black")
-    frame_L0.grid(row=4, column=0, sticky="nsew")
-    frame_L0.rowconfigure(0, minsize=30)
-    frame_L0.columnconfigure([0, 1], minsize=50)
-
-    L0 = tk.Label(master=frame_L0, text="None ", bg="black", fg="White", font=("Calibri ", 16))
-    L0.grid(row=0, column=0, sticky="e")
-    L0 = tk.Label(master=frame_L0, text="none", bg="black", fg="white", font=("Calibri ", 16))
-    L0.grid(row=0, column=1, sticky="w")
     
     # -------------- Level 1
+    rv_start = 5
     frame_L1 = tk.Frame(master=frame_qr_data, height=60, width = 100, bg="black")
-    frame_L1.grid(row=4, column=0, sticky="nsew")
+    frame_L1.grid(row=rv_start, column=0, sticky="nsew")
     frame_L1.rowconfigure(0, minsize=30)
     frame_L1.columnconfigure([0, 1], minsize=50)
 
@@ -300,8 +287,9 @@ def config_gui(root, software_version):
     L1.grid(row=0, column=1, sticky="w")
 
     # -------------- Level 2
+    rv_start += 1
     frame_L2 = tk.Frame(master=frame_qr_data, height=60, width = 100, bg="black")
-    frame_L2.grid(row=5, column=0, sticky="nsew")
+    frame_L2.grid(row=rv_start, column=0, sticky="nsew")
     frame_L2.rowconfigure(0, minsize=30)
     frame_L2.columnconfigure([0, 1], minsize=50)
 
@@ -311,8 +299,9 @@ def config_gui(root, software_version):
     L2.grid(row=0, column=1, sticky="w")
 
     # -------------- Level 3
+    rv_start += 1
     frame_L3 = tk.Frame(master=frame_qr_data, height=60, width = 100, bg="black")
-    frame_L3.grid(row=6, column=0, sticky="nsew")
+    frame_L3.grid(row=rv_start, column=0, sticky="nsew")
     frame_L3.rowconfigure(0, minsize=30)
     frame_L3.columnconfigure([0, 1], minsize=50)
 
@@ -322,8 +311,9 @@ def config_gui(root, software_version):
     L3.grid(row=0, column=1, sticky="w")
 
     # -------------- Level 4
+    rv_start += 1
     frame_L4 = tk.Frame(master=frame_qr_data, height=60, width = 100, bg="black")
-    frame_L4.grid(row=7, column=0, sticky="nsew")
+    frame_L4.grid(row=rv_start, column=0, sticky="nsew")
     frame_L4.rowconfigure(0, minsize=30)
     frame_L4.columnconfigure([0, 1], minsize=50)
 
@@ -333,8 +323,9 @@ def config_gui(root, software_version):
     L4.grid(row=0, column=1, sticky="w")
 
     # -------------- Level 5
+    rv_start += 1
     frame_L5 = tk.Frame(master=frame_qr_data, height=60, width = 100, bg="black")
-    frame_L5.grid(row=8, column=0, sticky="nsew")
+    frame_L5.grid(row=rv_start, column=0, sticky="nsew")
     frame_L5.rowconfigure(0, minsize=30)
     frame_L5.columnconfigure([0, 1], minsize=50)
 
@@ -344,8 +335,9 @@ def config_gui(root, software_version):
     L5.grid(row=0, column=1, sticky="w")
 
     # -------------- Level 6
+    rv_start += 1
     frame_L6 = tk.Frame(master=frame_qr_data, height=60, width = 100, bg="black")
-    frame_L6.grid(row=9, column=0, sticky="nsew")
+    frame_L6.grid(row=rv_start, column=0, sticky="nsew")
     frame_L6.rowconfigure(0, minsize=30)
     frame_L6.columnconfigure([0, 1], minsize=50)
 
@@ -354,16 +346,6 @@ def config_gui(root, software_version):
     L6 = tk.Label(master=frame_L6, text="none", bg="black", fg="white", font=("Calibri ", 16))
     L6.grid(row=0, column=1, sticky="w")
 
-    def update_visibility():
-        n_qr_value = n_qr.get()
-        levels = [L1, L2, L3, L4, L5, L6]
-
-        for i, level in enumerate(levels):
-            if i < n_qr_value:
-                level.grid()
-            else:
-                level.grid_remove()
-                
     return root, frame_preview, frame_saved, label_camera_status, label_focus_live_status, label_focus_saved_status, label_fname_status, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_gps_time_status, label_local_time_status, label_total_status, label_session_status, label_csv_status, label_nimage_status, label_ndevice_status, label_usbspeed_status, label_version_status, label_nqr_status, L1, L2, L3, L4, L5, L6
 
 '''
