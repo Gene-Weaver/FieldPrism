@@ -209,7 +209,8 @@ def run(
                         label = None if hide_labels else (names[c] if hide_conf else f'{names[c]} {conf:.2f}')
                         if names[c] in accepted_classes: 
                             annotator.box_label(xyxy, label, color=colors(c, True))
-                    
+                    print(type(imc))
+
                     if option == 'fs':
                         if names[c] in ["barcode"]:#accepted_classes: 
                             cropped_QR = save_one_box_qr(xyxy, img, file=os.path.join(save_dir, 'crops', names[c], f'{p.stem}.jpg'), BGR=True)
