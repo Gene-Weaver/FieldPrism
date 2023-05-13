@@ -210,8 +210,6 @@ def run(
                         label = None if hide_labels else (names[c] if hide_conf else f'{names[c]} {conf:.2f}')
                         if names[c] in accepted_classes: 
                             annotator.box_label(xyxy, label, color=colors(c, True))
-                    print(type(imc))
-                    print(type(im0_copy))
 
                     if option == 'fs':
                         if names[c] in ["barcode"]:#accepted_classes: 

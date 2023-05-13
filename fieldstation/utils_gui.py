@@ -367,16 +367,17 @@ def config_gui(root, software_version):
     mode_L.grid(row=0, column=1, sticky="w")
 
     rv_start += 1
-    frame_mode = tk.Frame(master=frame_qr_data, height=60, width = 100, bg="black")
-    frame_mode.grid(row=rv_start, column=0, sticky="nsew")
+    frame_mode = tk.Frame(master=frame_qr_data, height=60, width=100, bg="black")
+    frame_mode.grid(row=rv_start, column=0, rowspan=2, sticky="nsew")
     frame_mode.rowconfigure(0, minsize=30)
-    frame_mode.columnconfigure([0, 1], minsize=50)
+    frame_mode.columnconfigure([0], minsize=50)
 
     # Create the radio buttons
     standard_radio = tk.Radiobutton(frame_mode, text="Standard", variable=radio_var, value="standard", command=radio_selected)
-    standard_radio.grid(row=rv_start, column=0, sticky="w")
+    standard_radio.grid(row=0, column=0, sticky="w")
     enhance_radio = tk.Radiobutton(frame_mode, text="Enhanced", variable=radio_var, value="enhance", command=radio_selected)
-    enhance_radio.grid(row=rv_start, column=1, sticky="w")
+    enhance_radio.grid(row=1, column=0, sticky="w")
+
 
 
     return root, frame_preview, frame_saved, label_camera_status, label_focus_live_status, label_focus_saved_status, label_fname_status, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_gps_time_status, label_local_time_status, label_total_status, label_session_status, label_csv_status, label_nimage_status, label_ndevice_status, label_usbspeed_status, label_version_status, label_nqr_status, L1, L2, L3, L4, L5, L6, radio_var

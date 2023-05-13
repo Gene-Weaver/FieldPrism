@@ -575,6 +575,7 @@ def read_QR_codes(n_qr, cropped_QRs, radio_var):
     if selection == "standard":
         use_enhanced = False
     elif selection == "enhance":
+        print(f"{bcolors.BOLD}            Using unstable enhanced QR reader{bcolors.ENDC}")
         use_enhanced = True
 
     use_unstable_QR_code_decoder = use_enhanced
@@ -603,8 +604,7 @@ def read_QR_codes(n_qr, cropped_QRs, radio_var):
             RESULTS[key.rank] = key.rank_value
         # qr_label = ''.join(['L: ',key.rank, ' C: ',key.rank_value])
 
-
-    print("RESULTS:")
+    print("QR code text:")
     print(RESULTS)
     return RESULTS
 
