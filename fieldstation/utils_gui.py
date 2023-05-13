@@ -204,7 +204,7 @@ def config_gui(root, software_version):
     label_nqr.grid(row=0, column=0, sticky="nsew")
 
     frame_buttons = tk.Frame(master=frame_info_nqr, bg="black")
-    frame_buttons.grid(row=17, column=1, sticky="nsew")
+    frame_buttons.grid(row=0, column=1, sticky="nsew")
     frame_buttons.columnconfigure([0, 1, 2], weight=1)
 
     def increase_nqr():
