@@ -203,7 +203,7 @@ def config_gui(root, software_version):
     label_nqr = tk.Label(master=frame_info_nqr, text="# of QR Codes: ", bg="black", fg="White", font=("Calibri ", 16))
     label_nqr.grid(row=0, column=0, sticky="nsew")
 
-    frame_buttons = tk.Frame(master=frame_info, bg="black")
+    frame_buttons = tk.Frame(master=frame_info_nqr, bg="black")
     frame_buttons.grid(row=17, column=1, sticky="nsew")
     frame_buttons.columnconfigure([0, 1, 2], weight=1)
 
@@ -229,10 +229,6 @@ def config_gui(root, software_version):
     b_nqr_decrease.grid(row=0, column=2, sticky="nsew")
 
     frame_info.columnconfigure(1, weight=1)
-
-
-
-
 
 
 
