@@ -210,6 +210,7 @@ def run(
                         if names[c] in accepted_classes: 
                             annotator.box_label(xyxy, label, color=colors(c, True))
                     print(type(imc))
+                    print(type(img))
 
                     if option == 'fs':
                         if names[c] in ["barcode"]:#accepted_classes: 
