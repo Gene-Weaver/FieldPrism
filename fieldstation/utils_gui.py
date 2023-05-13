@@ -200,7 +200,7 @@ def config_gui(root, software_version):
 
     n_qr = tk.IntVar(value=0)
 
-    label_nqr = tk.Label(master=frame_info_nqr, text="# of QR Codes: : ", bg="black", fg="White", font=("Calibri ", 16))
+    label_nqr = tk.Label(master=frame_info_nqr, text="# of QR Codes: ", bg="black", fg="White", font=("Calibri ", 16))
     label_nqr.grid(row=0, column=0, sticky="e")
 
     def increase_nqr():
@@ -223,6 +223,12 @@ def config_gui(root, software_version):
 
     b_nqr_decrease = tk.Button(master=frame_info_nqr, command=decrease_nqr, text="-", font=("Arial", 20), bg="maroon", fg="white", activebackground="red")
     b_nqr_decrease.grid(row=0, column=3, sticky="nsew")
+
+    # frame_info_nqr.columnconfigure(0, weight=1)  # Set equal width for column 0
+    frame_info_nqr.columnconfigure(1, weight=1)  # Set equal width for column 1
+    frame_info_nqr.columnconfigure(2, weight=1)  # Set equal width for column 2
+    frame_info_nqr.columnconfigure(3, weight=1)  # Set equal width for column 3
+
 
 
 
