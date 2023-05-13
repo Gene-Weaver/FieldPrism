@@ -72,7 +72,8 @@ def detect_barcodes_FS(path_img, dir_out, run_name):
 
 def check_QR_codes(path_img, dir_out, run_name, label_nqr_status):
     label_nqr_status = int(label_nqr_status)
-    actual_save_dir, img_out = detect_barcodes_FS(path_img, dir_out, run_name)
+    actual_save_dir, img_out, cropped_QRs = detect_barcodes_FS(path_img, dir_out, run_name)
 
     qr_found = True
-    return qr_found, img_out
+    return qr_found, img_out, cropped_QRs
+

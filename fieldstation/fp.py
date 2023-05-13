@@ -248,10 +248,9 @@ def route_save_image(Setup, cfg_user, save_frame, is_sharp):
         path_to_saved = save_image(save_frame, name_time, Setup.usb_5)
     if Setup.has_6_usb:
         path_to_saved = save_image(save_frame, name_time, Setup.usb_6)
-    return path_to_saved
+    return path_to_saved, name_time
 
-def route_save_image_qr(Setup, cfg_user, save_frame, is_sharp):
-    name_time = str(int(time.time() * 1000))
+def route_save_image_qr(Setup, cfg_user, save_frame, is_sharp, name_time):
     if not is_sharp:
         if cfg_user['fieldstation']['add_flag_to_blurry_images']:
             name_time = ''.join([name_time, '__B'])
@@ -271,6 +270,38 @@ def route_save_image_qr(Setup, cfg_user, save_frame, is_sharp):
     if Setup.has_6_usb:
         path_to_saved = save_image(save_frame, name_time, Setup.dir_qr_6)
     return path_to_saved
+
+def route_save_image_qr_crop(Setup, cfg_user, save_frame, is_sharp, name_time):
+    path_to_saved = None  # Initialize the variable
+    counter = 1  # Counter for appending "__n" to name_time
+
+    if not is_sharp:
+        if cfg_user['fieldstation']['add_flag_to_blurry_images']:
+            name_time = ''.join([name_time, '__B'])
+
+    for frame in save_frame:
+        # Append "__n" to name_time
+        name_time_with_counter = f"{name_time}__{counter}"
+        
+        if Setup.save_to_boot:
+            path_to_saved = save_image(frame, name_time_with_counter, Setup.dir_qr_none)
+        if Setup.has_1_usb:
+            path_to_saved = save_image(frame, name_time_with_counter, Setup.dir_qr_1)
+        if Setup.has_2_usb:
+            path_to_saved = save_image(frame, name_time_with_counter, Setup.dir_qr_2)
+        if Setup.has_3_usb:
+            path_to_saved = save_image(frame, name_time_with_counter, Setup.dir_qr_3)
+        if Setup.has_4_usb:
+            path_to_saved = save_image(frame, name_time_with_counter, Setup.dir_qr_4)
+        if Setup.has_5_usb:
+            path_to_saved = save_image(frame, name_time_with_counter, Setup.dir_qr_5)
+        if Setup.has_6_usb:
+            path_to_saved = save_image(frame, name_time_with_counter, Setup.dir_qr_6)
+
+        counter += 1  # Increment the counter for the next iteration
+
+    return path_to_saved
+
 '''
 Button callbacks
 '''
@@ -468,7 +499,7 @@ def run(pipeline, root):
                     report_sharpness('saved', label_focus_live_status, label_focus_saved_status, is_sharp, sharpness_min_cutoff, sharpness_actual)
 
                     # Save image
-                    path_to_saved = route_save_image(cfg, cfg_user, save_frame, is_sharp)
+                    path_to_saved, name_time = route_save_image(cfg, cfg_user, save_frame, is_sharp)
 
                     # Update the image in the GUI by reading the image that was just written to storage
                     Window_Saved.update_image(cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
@@ -477,9 +508,12 @@ def run(pipeline, root):
                     GPS_data = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
 
                     # Check for valid QR code
+                    n_qr = int(label_nqr_status.cget("text"))
                     label_camera_status.config(text = 'Detecting QR Codes and Markers', fg='magenta')
-                    qr_found, img_out_qr = check_QR_codes(path_to_saved, cfg.dir_data_session_qr, cfg.name_session, int(label_nqr_status.cget("text")))
-                    path_to_saved_qr = route_save_image_qr(cfg, cfg_user, img_out_qr, is_sharp)
+                    qr_found, img_out_qr, cropped_QRs = check_QR_codes(path_to_saved, cfg.dir_data_session_qr, cfg.name_session, int(label_nqr_status.cget("text")))
+                    path_to_saved_qr = route_save_image_qr(cfg, cfg_user, img_out_qr, is_sharp, name_time)
+                    path_to_saved_qr = route_save_image_qr_crop(cfg, cfg_user, cropped_QRs, is_sharp, name_time)
+                    qr_result = read_QR_codes(n_qr, cropped_QRs)
 
                     # Update the image in the GUI by reading the image that was just written to storage
                     Window_Saved.update_image(cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved_qr)))))
