@@ -417,7 +417,7 @@ def run(pipeline, root):
     label_gps_lon_status, label_gps_time_status, label_local_time_status, label_total_status, 
     label_session_status, label_csv_status, label_nimage_status, label_ndevice_status, 
     label_usbspeed_status, label_version_status, label_nqr_status,
-    L1, L2, L3, L4, L5, L6] = config_gui(root, software_version)
+    L1, L2, L3, L4, L5, L6, use_enhanced] = config_gui(root, software_version)
 
     # -------------- Buttons
     # frame
@@ -542,7 +542,8 @@ def run(pipeline, root):
                     except:
                         Window_Saved.update_image(cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
 
-                    RESULTS = read_QR_codes(n_qr, cropped_QRs)
+                    label_camera_status.config(text = 'Reading QR Codes', fg='cyan')
+                    RESULTS = read_QR_codes(n_qr, cropped_QRs, use_enhanced)
                     update_levels(L1, L2, L3, L4, L5, L6, RESULTS)
 
                     # Write data to CSV file

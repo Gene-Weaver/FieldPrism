@@ -561,7 +561,7 @@ class QRcodeFS:
 '''
 Helper Functions FS
 '''
-def read_QR_codes(n_qr, cropped_QRs):
+def read_QR_codes(n_qr, cropped_QRs, use_enhanced):
     RESULTS = {
     "Level_1": "none",
     "Level_2": "none",
@@ -571,7 +571,7 @@ def read_QR_codes(n_qr, cropped_QRs):
     "Level_6": "none"
     }
 
-    use_unstable_QR_code_decoder = False
+    use_unstable_QR_code_decoder = use_enhanced
 
     i_candidate = 0
     i_pass = 0
