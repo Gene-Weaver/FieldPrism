@@ -519,7 +519,7 @@ def run(pipeline, root):
                     except:
                         Window_Saved.update_image(cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
 
-                    # qr_result = read_QR_codes(n_qr, cropped_QRs)
+                    qr_result = read_QR_codes(n_qr, cropped_QRs)
 
                     # Write data to CSV file
                     Image = ImageData(cfg, path_to_saved, GPS_data, height, width, sharpness_actual, sharpness_min_cutoff, is_sharp)
