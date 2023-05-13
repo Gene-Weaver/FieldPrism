@@ -207,8 +207,10 @@ def run(
                         if names[c] in accepted_classes: 
                             annotator.box_label(xyxy, label, color=colors(c, True))
                     if save_crop or (option == 'fs'):
-                        if names[c] in accepted_classes: 
+                        if names[c] in ["barcode"]:#accepted_classes: 
+                            os.makedirs(os.path.join(save_dir, 'crops', names[c]), exist_ok=True)
                             save_one_box(xyxy, imc, file=os.path.join(save_dir, 'crops', names[c], f'{p.stem}.jpg'), BGR=True)
+                            path_crops = os.path.join(save_dir, 'crops', names[c])
 
             # Stream results
             im0 = annotator.result()
@@ -232,16 +234,19 @@ def run(
                         validate_dir(os.path.join(save_path,'Detections_Corrected'))
                         cv2.imwrite(path_image, im0)
                         img_out = None
+                        path_crops = None
                     elif option == 'distortion':
                         path_image = os.path.join(save_path,'Detections_Not_Corrected',p.name)
                         validate_dir(os.path.join(save_path,'Detections_Not_Corrected'))
                         cv2.imwrite(path_image, im0)
                         img_out = None
+                        path_crops = None
                     elif option == 'fs':
                         path_image = os.path.join(save_path,'QR_Codes',p.name)
                         validate_dir(os.path.join(save_path,'QR_Codes'))
                         # cv2.imwrite(path_image, im0)
                         img_out = im0
+                        path_crops = path_crops
                 else:  # 'video' or 'stream'
                     if vid_path[i] != save_dir:  # new video
                         vid_path[i] = save_dir
@@ -274,7 +279,7 @@ def run(
     if update:
         strip_optimizer(weights[0])  # update model (to fix SourceChangeWarning)
 
-    return save_dir, img_out
+    return save_dir, img_out, path_crops
 
 
 def parse_opt():
