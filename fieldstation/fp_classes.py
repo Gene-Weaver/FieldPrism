@@ -7,7 +7,7 @@ from PIL import Image, ImageTk
 import pandas as pd
 import tkinter as tk
 from tkinter import ttk, Canvas
-from utils import bcolors,  get_datetime
+from utils_general import bcolors,  get_datetime
 
 '''
 Main setup class.

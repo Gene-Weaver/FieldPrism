@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import keyboard, cv2
 import depthai as dai
-from utils import print_options, load_cfg
+from utils_general import print_options, load_cfg
 '''
 Align Camera:
     Due to bandwidth constraints, higher resolutions cannot be streamed in real-time.

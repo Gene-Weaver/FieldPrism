@@ -2,7 +2,7 @@
 import time
 from gps3.agps3threaded import AGPS3mechanism
 from dataclasses import dataclass
-from utils import bcolors, get_datetime
+from utils_general import bcolors, get_datetime
 
 '''
 Reference this guide for help:
