@@ -211,7 +211,7 @@ def run(
                     
                     if option == 'fs':
                         if names[c] in ["barcode"]:#accepted_classes: 
-                            cropped_QR = save_one_box_qr(xyxy, imc, file=os.path.join(save_dir, 'crops', names[c], f'{p.stem}.jpg'), BGR=True)
+                            cropped_QR = save_one_box_qr(xyxy, im, file=os.path.join(save_dir, 'crops', names[c], f'{p.stem}.jpg'), BGR=True)
                             cropped_QRs.append(cropped_QR)
                     else:
                         if save_crop:
