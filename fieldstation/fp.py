@@ -5,7 +5,7 @@ from threading import Thread
 import tkinter as tk
 from tkinter import Tk
 from gps3.agps3threaded import AGPS3mechanism
-from utils import bcolors, load_cfg, print_options, rotate_image_options
+from utils_general import bcolors, load_cfg, print_options, rotate_image_options
 from utils_gps import gps_activate, test_gps
 from utils_gui import init_ready, change_ready_ind, config_gui
 from utils_sound import *
