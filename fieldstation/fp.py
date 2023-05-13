@@ -477,6 +477,7 @@ def run(pipeline, root):
                     GPS_data = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
 
                     # Check for valid QR code
+                    label_camera_status.config(text = 'Detecting QR Codes and Markers', fg='magenta')
                     qr_found, img_out_qr = check_QR_codes(path_to_saved, cfg.dir_data_session_qr, cfg.name_session, int(label_nqr_status.cget("text")))
                     path_to_saved_qr = route_save_image_qr(cfg, cfg_user, img_out_qr, is_sharp)
 
