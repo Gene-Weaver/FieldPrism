@@ -394,7 +394,7 @@ class QRcodeFS:
     use_unstable_QR_code_decoder: bool = False
     
 
-    def __init__(self, number, image, qr, use_unstable_QR_code_decoder) -> None:
+    def __init__(self, number, qr, use_unstable_QR_code_decoder) -> None:
         # self.image_name_jpg = image_name_jpg
         # self.path_QRcodes_raw = path_QRcodes_raw
         # self.path_QRcodes_summary = path_QRcodes_summary
@@ -589,12 +589,11 @@ def read_QR_codes(n_qr, cropped_QRs):
     for qr in cropped_QRs:
         i_candidate += 1
         print(f"{bcolors.BOLD}            Processing QR Code {i_candidate}{bcolors.ENDC}")
-        QR_Candidate = QRcodeFS(i_candidate, image, qr, use_unstable_QR_code_decoder)
+        QR_Candidate = QRcodeFS(i_candidate, qr, use_unstable_QR_code_decoder)
         if QR_Candidate.text_raw != '':
             i_pass += 1
             QR_List_Pass[i_pass-1] = QR_Candidate
 
-            image = QR_Candidate.image
         else:
             i_fail += 1
             QR_List_Fail[i_fail-1] = QR_Candidate
