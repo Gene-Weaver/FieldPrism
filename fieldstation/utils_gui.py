@@ -245,7 +245,7 @@ def config_gui(root, software_version):
 
     n_qr = tk.IntVar(value=50)
 
-    label_nqr = tk.Label(master=frame_qr_data, text="Confidence", bg="black", fg="White", font=("Calibri ", 16))
+    label_nqr = tk.Label(master=frame_qr_data, text="BBox Confidence", bg="black", fg="White", font=("Calibri ", 16))
     label_nqr.grid(row=0, column=0, sticky="nsew")
 
     frame_buttons = tk.Frame(master=frame_qr_data, bg="black")
@@ -277,7 +277,11 @@ def config_gui(root, software_version):
     frame_qr_data.columnconfigure(1, weight=1)
     
     # -------------- Level 1
-    rv_start = 5
+    rv_start = 4
+    label_nqr = tk.Label(master=frame_qr_data, text="QR Code Values", bg="black", fg="White", font=("Calibri ", 16))
+    label_nqr.grid(row=rv_start, column=0, sticky="nsew")
+
+    rv_start += 1
     frame_L1 = tk.Frame(master=frame_qr_data, height=60, width = 100, bg="black")
     frame_L1.grid(row=rv_start, column=0, sticky="nsew")
     frame_L1.rowconfigure(0, minsize=30)
