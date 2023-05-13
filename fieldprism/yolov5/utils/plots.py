@@ -605,7 +605,7 @@ def save_one_box(xyxy, im, file=Path('im.jpg'), gain=1.02, pad=10, square=False,
 #     clip_boxes(xyxy, im.shape)
 #     crop = im[int(xyxy[0, 1]):int(xyxy[0, 3]), int(xyxy[0, 0]):int(xyxy[0, 2]), ::(1 if BGR else -1)]
 #     return crop
-def save_one_box_qr(xyxy, im, file=Path('im.jpg'), gain=1.02, pad=10, square=False, BGR=False, save=False):
+def save_one_box_qr(xyxy, im, file=Path('im.jpg'), gain=1.02, pad=100, square=False, BGR=False, save=False):
     # Save image crop as {file} with crop size multiple {gain} and {pad} pixels. Save and/or return crop
     xyxy = torch.tensor(xyxy).view(-1, 4)
     b = xyxy2xywh(xyxy)  # boxes
@@ -613,12 +613,6 @@ def save_one_box_qr(xyxy, im, file=Path('im.jpg'), gain=1.02, pad=10, square=Fal
         b[:, 2:] = b[:, 2:].max(1)[0].unsqueeze(1)  # attempt rectangle to square
     b[:, 2:] = b[:, 2:] * gain + pad  # box wh * gain + pad
     
-    # Increase size by 10% in all directions
-    increase_percentage = 0.10
-    size_increase = b[:, 2:] * increase_percentage
-    b[:, :2] -= size_increase / 2
-    b[:, 2:] += size_increase
-
     xyxy = xywh2xyxy(b).long()
     clip_boxes(xyxy, im.shape)
     crop = im[int(xyxy[0, 1]):int(xyxy[0, 3]), int(xyxy[0, 0]):int(xyxy[0, 2]), ::(1 if BGR else -1)]
