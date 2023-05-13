@@ -20,8 +20,7 @@ sys.path.append(currentdir)
                             # make_file_names_valid, remove_overlapping_predictions, increment_path)
 # from fieldprism.utils_processing import bcolors, File_Structure
 from fieldprism.component_detector import check_QR_codes
-from fieldprism.utils_rulers import process_rulers
-from fieldprism.utils_barcodes import process_barcodes
+from fieldprism.utils_barcodes import read_QR_codes
 # from fieldprism.utils_rename import rename_files_from_QR_codes
 # from fieldprism.utils_data import Data_Vault, Data_FS, Data_Naming, build_empty_csv, write_datarow_to_file, get_weights
 '''
