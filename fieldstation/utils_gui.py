@@ -381,12 +381,12 @@ def config_gui(root, software_version):
     # Create the radio buttons
     standard_radio = tk.Radiobutton(frame_mode, text="Standard", variable=radio_var, value="standard", command=radio_selected,
                                     bg="black", fg="black", font=("Calibri ", 16), highlightthickness=0,
-                                    indicatoron=0, selectcolor="red", indicatorsize=20)
+                                    indicatoron=0, selectcolor="red")
     standard_radio.grid(row=0, column=0, sticky="w")
 
     enhance_radio = tk.Radiobutton(frame_mode, text="Enhanced", variable=radio_var, value="enhance", command=radio_selected,
                                 bg="black", fg="black", font=("Calibri ", 16), highlightthickness=0,
-                                indicatoron=0, selectcolor="red", indicatorsize=20)
+                                indicatoron=0, selectcolor="red")
     enhance_radio.grid(row=1, column=0, sticky="w")
 
 
