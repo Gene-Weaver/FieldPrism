@@ -318,7 +318,7 @@ def route_save_image_qr_crop(Setup, cfg_user, save_frame, is_sharp, name_time):
 
         counter += 1  # Increment the counter for the next iteration
 
-    print(f"counter = {counter}")
+    # print(f"counter = {counter}")
     return path_to_saved
 
 '''
