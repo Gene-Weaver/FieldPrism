@@ -490,6 +490,7 @@ class QRcodeFS:
             try:
                 content, pts, self.straight_qrcode = cv2.QRCodeDetector().detectAndDecode(self.croppped_QRcode)
                 if content == '':
+                    print('curved')
                     content, pts, self.straight_qrcode = cv2.QRCodeDetector().detectAndDecodeCurved(self.croppped_QRcode)
             except:
                 content = ''
