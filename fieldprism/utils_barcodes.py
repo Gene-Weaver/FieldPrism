@@ -396,7 +396,7 @@ class QRcodeFS:
 
     def __init__(self, number, qr, use_unstable_QR_code_decoder) -> None:
         self.number = str(number)
-        self.row = qr
+        self.croppped_QRcode = qr
         self.use_unstable_QR_code_decoder = use_unstable_QR_code_decoder
         self.process_QRcode()
         self.parse_text()
