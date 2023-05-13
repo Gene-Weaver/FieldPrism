@@ -296,10 +296,10 @@ def route_save_image_qr_crop(Setup, cfg_user, save_frame, is_sharp, name_time):
     counter = 1  # Counter for appending "__n" to name_time
 
     for frame in save_frame:
-        print(f"before: {name_time}")
+        # print(f"before: {name_time}")
         # Append "__n" to name_time
         name_time_with_counter = f"{name_time}__{counter}"
-        print(f"after: {name_time_with_counter}")
+        # print(f"after: {name_time_with_counter}")
         
         if Setup.save_to_boot:
             path_to_saved = save_image(frame, name_time_with_counter, Setup.dir_qr_none)
