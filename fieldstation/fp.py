@@ -359,7 +359,7 @@ def run_gps_acc_test(label_camera_status, cfg, cfg_user, gps_acc, agps_thread, l
 
     if not gps_val:
         print(f"           5 Min Test")
-        label_camera_status.config(text = f'Waking GPS - {percent}%', fg='goldenrod')
+        label_camera_status.config(text = f'Waking GPS - 0%', fg='goldenrod')
         # Loop 60 times
         n_times = 100
         for nnn in range(n_times):
@@ -400,7 +400,7 @@ def run_gps_acc_test(label_camera_status, cfg, cfg_user, gps_acc, agps_thread, l
         GPSTest(cfg, GPS_all)
     else:
         print(f"           15 Min Test")
-        label_camera_status.config(text = f'Waking GPS - {percent}%', fg='goldenrod')
+        label_camera_status.config(text = f'Waking GPS - 0%', fg='goldenrod')
         # Loop 60 times
         n_times = 100
         for nnn in range(n_times):
