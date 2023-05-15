@@ -24,13 +24,13 @@ then
 	cd /home/pi/FieldPrism/
 	git pull --ff-only
 	# Copy update and reinstall files out of the FP dir
-	cp /home/pi/FieldPrism/fieldstation/git_clone_or_update.sh /home/pi
-	cp /home/pi/FieldPrism/fieldstation/reinstall_FieldPrism.sh /home/pi
+	cp -f /home/pi/FieldPrism/fieldstation/git_clone_or_update.sh /home/pi
+	cp -f /home/pi/FieldPrism/fieldstation/reinstall_FieldPrism.sh /home/pi
 	# Copy wallpapers 
-	sudo cp /home/pi/FieldPrism/img/FieldPrism_Desktop_Black.jpg /usr/share/rpd-wallpaper
-	sudo cp /home/pi/FieldPrism/img/FieldPrism_Desktop_Black_Plain.jpg /usr/share/rpd-wallpaper
+	sudo cp -f /home/pi/FieldPrism/img/FieldPrism_Desktop_Black.jpg /usr/share/rpd-wallpaper
+	sudo cp -f /home/pi/FieldPrism/img/FieldPrism_Desktop_Black_Plain.jpg /usr/share/rpd-wallpaper
 	# Copy desktop apps
-	sudo cp /home/pi/FieldPrism/fieldstation/desktop_app/* /home/pi/.local/share/applications
+	sudo cp -f /home/pi/FieldPrism/fieldstation/desktop_app/* /home/pi/.local/share/applications
 	pcmanfm --set-wallpaper="/usr/share/rpd-wallpaper/FieldPrism_Desktop_Black.jpg"
 	# GPS
 	ls /dev/ttyUSB*
