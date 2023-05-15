@@ -8,6 +8,7 @@ import pandas as pd
 import tkinter as tk
 from tkinter import ttk, Canvas
 from utils_general import bcolors,  get_datetime
+import webbrowser
 
 import folium
 import pandas as pd
@@ -420,9 +421,12 @@ class GPSTest:
         filename_parts = self.cfg.name_session_csv.split('.')
         filename_parts[0] += suffix
         gps_map_savename = '.'.join([filename_parts[0], 'html'])
-        self.map_gps.save(gps_map_savename)
+        full_path = os.path.join(data_name, gps_map_savename)
+        self.map_gps.save(full_path)
         # Save the map to an HTML file
         print(f'{bcolors.OKGREEN}\n       Saved GPS map to: {os.path.join(data_name, gps_map_savename)}{bcolors.ENDC}')
+        # Open the saved HTML file in the default web browser
+        webbrowser.open('file://' + os.path.realpath(full_path))
 
     def process_gps(self, df):
         # Initialize the results dataframe
@@ -493,7 +497,7 @@ class GPSTest:
 
         # Use the center for each marker
         for i, (rms, cep, min_bounding_polygon) in enumerate(zip(rms_errors, ceps, min_bounding_polygons)):
-            folium.Marker(location=[float(center[0]), float(center[1])], icon=None, popup=f"RMS: {round(rms, 3)} meters\nCEP: {round(cep, 3)} meters\nArea: {round(min_bounding_polygon.area, 3)} sq meters").add_to(self.map_gps)
+            folium.Marker(location=[float(center[0]), float(center[1])], icon=None, popup=f"RMS: {round(rms, 1)} meters\nCEP: {round(cep, 1)} meters\nArea: {round(min_bounding_polygon.area, 1)} sq meters").add_to(self.map_gps)
         
         results.append([std_dev_x,std_dev_y,rms_error,spread_x,spread_y,cep,min_rotated_rect.area,len(cluster_coords)])
 
