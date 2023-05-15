@@ -12,6 +12,7 @@ from utils_gui import init_ready, change_ready_ind, config_gui
 from utils_sound import *
 from fp_align_camera  import align_camera
 from fp_classes import PreviewWindow, SaveWindow, Fragile, SetupFP, ImageData, GPSTest
+import numpy as np
 
 currentdir = os.path.dirname(os.path.dirname(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
@@ -365,7 +366,8 @@ def run_gps_acc_test(label_camera_status, cfg, cfg_user, gps_acc, agps_thread, l
         # Loop 60 times
         n_times = 5
         for nnn in range(n_times):
-            label_camera_status.config(text = f'{n_times} Min GPS Test - {nnn+1/n_times}%', fg='goldenrod')
+            percent = round(np.divide(nnn+1,n_times))
+            label_camera_status.config(text = f'{n_times} Min GPS Test - {percent}%', fg='goldenrod')
             GPS_data = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
             if GPS_data.latitude == -999:
                 sound_gps_fail(Sound)
@@ -395,7 +397,8 @@ def run_gps_acc_test(label_camera_status, cfg, cfg_user, gps_acc, agps_thread, l
         # Loop 180 times
         n_times = 10
         for _ in range(10):
-            label_camera_status.config(text = f'{n_times} Min GPS Test - {nnn+1/n_times}%', fg='goldenrod')
+            percent = round(np.divide(nnn+1,n_times))
+            label_camera_status.config(text = f'{n_times} Min GPS Test - {percent}%', fg='goldenrod')
             GPS_data = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
             if GPS_data.latitude == -999:
                 sound_gps_fail(Sound)
@@ -521,7 +524,7 @@ def run(pipeline, root):
     b_exit.grid(row=0, column=0, sticky="nsew")
     b_gps.grid(row=0, column=3, sticky="nsew")
     b_photo.grid(row=0, column=4, sticky="nsew")
-    b_gps_acc_test.grid(row=14, column=0, sticky="w")
+    b_gps_acc_test.grid(row=16, column=0, sticky="w")
 
     '''
     Initialize the two camera windows in the GUI
