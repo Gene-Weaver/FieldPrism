@@ -412,7 +412,7 @@ class GPSTest:
         filename_parts[0] += suffix
         gps_savename = '.'.join(filename_parts)
 
-        df.to_csv(os.path.join(data_name, gps_savename), mode='a', header=False, index=False)
+        df.to_csv(os.path.join(data_name, gps_savename), mode='a', header=True, index=False)
         print(f'{bcolors.OKGREEN}\n       Added {len(df)} row(s) to session CSV: {os.path.join(data_name, gps_savename)}{bcolors.ENDC}')
 
     def save_map(self, data_name, suffix) -> None:
