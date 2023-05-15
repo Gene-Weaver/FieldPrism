@@ -240,7 +240,7 @@ def config_gui(root, software_version):
     # -------------- n_qr parameter
     frame_qr_data = tk.Frame(master=frame_qr, height=60, width=250, bg="black")
     frame_qr_data.grid(row=2, column=0, sticky="nsew")  # Assuming this is row 17, adjust according to your actual layout
-    frame_qr_data.rowconfigure([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, ], minsize=30)
+    frame_qr_data.rowconfigure([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,], minsize=30)
     frame_qr_data.columnconfigure([0, 1], minsize=50)
 
     n_qr = tk.IntVar(value=70)
@@ -277,7 +277,7 @@ def config_gui(root, software_version):
     frame_qr_data.columnconfigure(1, weight=1)
     
     # -------------- Level 1
-    rv_start = 3
+    rv_start = 1
     label_nqr = tk.Label(master=frame_qr_data, text="QR Code Values", bg="black", fg="White", font=("Calibri ", 16))
     label_nqr.grid(row=rv_start, column=0, sticky="w")
 
@@ -390,7 +390,46 @@ def config_gui(root, software_version):
     enhance_radio.grid(row=1, column=0, sticky="nsew")
 
 
-    return root, frame_preview, frame_saved, label_camera_status, label_focus_live_status, label_focus_saved_status, label_fname_status, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_gps_time_status, label_local_time_status, label_total_status, label_session_status, label_csv_status, label_nimage_status, label_ndevice_status, label_usbspeed_status, label_version_status, label_nqr_status, L1, L2, L3, L4, L5, L6, radio_var
+
+    # -------------- GPS Acc Test
+    radio_var_gps = tk.StringVar(value="min5")
+    gps_acc_test = False
+
+    def radio_selected():
+        global gps_acc_test
+        selection = radio_var_gps.get()
+        if selection == "min5":
+            gps_acc_test = False
+        elif selection == "min15":
+            gps_acc_test = True
+
+    rv_start += 2
+    frame_gps_L = tk.Frame(master=frame_qr_data, height=60, width=100, bg="black")
+    frame_gps_L.grid(row=rv_start, column=0, sticky="nsew")
+    frame_gps_L.rowconfigure(0, minsize=30)
+    frame_gps_L.columnconfigure([0], minsize=50)
+    gps_L = tk.Label(master=frame_gps_L, text="Test GPS Acc.", bg="black", fg="white", font=("Calibri ", 16))
+    gps_L.grid(row=0, column=0, sticky="w")
+
+    rv_start += 1
+    frame_gps = tk.Frame(master=frame_qr_data, height=60, width=100, bg="black")
+    frame_gps.grid(row=rv_start, column=0, rowspan=2, sticky="nsew")
+    frame_gps.rowconfigure(0, minsize=30)
+    frame_gps.columnconfigure([0], minsize=50)
+
+    # Create the radio buttons
+    min5_radio = tk.Radiobutton(frame_gps, text="5 Min", variable=radio_var_gps, value="min5", command=radio_selected,
+                                    bg="gray", fg="black", font=("Calibri ", 16), highlightthickness=0,
+                                    indicatoron=0, selectcolor="green4")
+    min5_radio.grid(row=0, column=0, sticky="nsew")
+
+    min15_radio = tk.Radiobutton(frame_gps, text="15 Min", variable=radio_var_gps, value="min15", command=radio_selected,
+                                bg="gray", fg="black", font=("Calibri ", 16), highlightthickness=0,
+                                indicatoron=0, selectcolor="green4")
+    min15_radio.grid(row=1, column=0, sticky="nsew")
+
+
+    return root, frame_preview, frame_saved, label_camera_status, label_focus_live_status, label_focus_saved_status, label_fname_status, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_gps_time_status, label_local_time_status, label_total_status, label_session_status, label_csv_status, label_nimage_status, label_ndevice_status, label_usbspeed_status, label_version_status, label_nqr_status, L1, L2, L3, L4, L5, L6, radio_var, radio_var_gps, frame_qr_data
 
 '''
     # Terminal out, but causes error
