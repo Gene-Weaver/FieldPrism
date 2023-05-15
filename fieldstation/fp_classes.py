@@ -371,8 +371,8 @@ class GPSTest:
 
         self.process_gps(df)
 
-        self.save_data(self.df_summary, "__GPS_Accuracy_Summary")
-        self.save_data_map(self.df_summary, "__GPS_Accuracy_Map")
+        self.save_data(self.results_df, "__GPS_Accuracy_Summary")
+        self.save_data_map("__GPS_Accuracy_Map")
 
     def save_data(self, df, suffix) -> None:
         if self.cfg.save_to_boot:
@@ -428,10 +428,10 @@ class GPSTest:
         # Initialize the results dataframe
         results = []
 
-        coordinates_df = df[['latitude', 'longitude']].query('latitude != -999 and longitude != -999')
+        self.coordinates_df = df[['latitude', 'longitude']].query('latitude != -999 and longitude != -999')
 
         # Convert the coordinates DataFrame to a list of lists
-        coordinates = coordinates_df.values.tolist()
+        coordinates = self.coordinates_df.values.tolist()
 
         # Calculate the center latitude and longitude
         center_lat = sum(float(coord[0]) for coord in coordinates) / len(coordinates)
