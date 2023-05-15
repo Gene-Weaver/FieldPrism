@@ -541,7 +541,7 @@ def run(pipeline, root):
     b_exit.grid(row=0, column=0, sticky="nsew")
     b_gps.grid(row=0, column=3, sticky="nsew")
     b_photo.grid(row=0, column=4, sticky="nsew")
-    b_gps_acc_test.grid(row=16, column=0, sticky="w")
+    b_gps_acc_test.grid(row=16, column=0, sticky="nsew")
 
     '''
     Initialize the two camera windows in the GUI
