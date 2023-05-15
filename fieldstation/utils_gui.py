@@ -413,7 +413,7 @@ def config_gui(root, software_version):
 
     rv_start += 1
     frame_gps = tk.Frame(master=frame_qr_data, height=60, width=100, bg="black")
-    frame_gps.grid(row=rv_start, column=0, rowspan=2, sticky="nsew")
+    frame_gps.grid(row=rv_start, column=0, columnspan=2, sticky="nsew")
     frame_gps.rowconfigure(0, minsize=30)
     frame_gps.columnconfigure([0], minsize=50)
 
@@ -426,7 +426,7 @@ def config_gui(root, software_version):
     min15_radio = tk.Radiobutton(frame_gps, text="15 Min", variable=radio_var_gps, value="min15", command=radio_selected,
                                 bg="gray", fg="black", font=("Calibri ", 16), highlightthickness=0,
                                 indicatoron=0, selectcolor="green4")
-    min15_radio.grid(row=1, column=0, sticky="nsew")
+    min15_radio.grid(row=0, column=1, sticky="nsew")
 
 
     return root, frame_preview, frame_saved, label_camera_status, label_focus_live_status, label_focus_saved_status, label_fname_status, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_gps_time_status, label_local_time_status, label_total_status, label_session_status, label_csv_status, label_nimage_status, label_ndevice_status, label_usbspeed_status, label_version_status, label_nqr_status, L1, L2, L3, L4, L5, L6, radio_var, radio_var_gps, frame_qr_data
