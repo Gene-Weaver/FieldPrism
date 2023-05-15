@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import os, stat, csv, cv2, psutil
+import os, stat, csv, cv2, psutil, subprocess
 from pathlib import Path
 from dataclasses import dataclass, field
 import matplotlib.pyplot as plt
@@ -427,9 +427,10 @@ class GPSTest:
         print(f'{bcolors.OKGREEN}\n       Saved GPS map to: {os.path.join(data_name, gps_map_savename)}{bcolors.ENDC}')
 
         # Open the HTML file in the Chromium browser
-        url = "http://192.168.2.128:5008/" + gps_map_savename
-        chrome_path = '/usr/lib/chromium-browser/chromium-browser'
-        webbrowser.get(chrome_path).open(url)
+        try:
+            subprocess.Popen(['chromium-browser', 'file://' + full_path])
+        except Exception as e:
+            print(f"Failed to open browser: {e}")
 
 
     def process_gps(self, df):
