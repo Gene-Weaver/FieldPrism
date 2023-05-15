@@ -13,7 +13,6 @@ import folium
 import pandas as pd
 import numpy as np
 from pyproj import Proj, Transformer
-from sklearn.cluster import KMeans
 from scipy.spatial import distance, ConvexHull
 from shapely.geometry import MultiPoint
 '''

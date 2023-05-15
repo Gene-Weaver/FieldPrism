@@ -409,7 +409,8 @@ def run_gps_acc_test(cfg, cfg_user, gps_acc, agps_thread, label_gps_status, labe
             GPS_all = GPS_all.append({"current_time": current_time, "latitude": latitude, "longitude": longitude, "altitude": altitude, "climb": climb, "speed": speed, "lat_error_est": lat_error_est, "lon_error_est": lon_error_est, "alt_error_est": alt_error_est}, ignore_index=True)
 
             time.sleep(4.8)
-        return GPS_all
+        GPSTest(cfg, GPS_all)
+
 
 def button_photo():
     global TAKE_PHOTO
