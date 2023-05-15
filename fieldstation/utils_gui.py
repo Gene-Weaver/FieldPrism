@@ -370,7 +370,7 @@ def config_gui(root, software_version):
     frame_mode_L.rowconfigure(0, minsize=30)
     frame_mode_L.columnconfigure([0], minsize=50)
     mode_L = tk.Label(master=frame_mode_L, text="QR Reader Type", bg="black", fg="white", font=("Calibri ", 16))
-    mode_L.grid(row=0, column=0, sticky="w")
+    mode_L.grid(row=0, column=0, sticky="nsew")
 
     rv_start += 1
     frame_mode = tk.Frame(master=frame_qr_data, height=60, width=100, bg="black")
@@ -409,7 +409,7 @@ def config_gui(root, software_version):
     frame_gps_L.rowconfigure(0, minsize=30)
     frame_gps_L.columnconfigure([0], minsize=50)
     gps_L = tk.Label(master=frame_gps_L, text="GPS Accuracy", bg="black", fg="white", font=("Calibri ", 16))
-    gps_L.grid(row=0, column=0, sticky="w")
+    gps_L.grid(row=0, column=0, sticky="nsew")
 
     rv_start += 1
     frame_gps = tk.Frame(master=frame_qr_data, height=60, width=100, bg="black")
