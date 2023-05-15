@@ -44,7 +44,7 @@ class SetupFP:
 
     session_time: str = ''
     name_session_csv: str = ''
-    name_total_csv: str = 'FieldPrism_Data.csv'
+    name_total_csv: str = 'FP_Data.csv'
 
     dir_data_none: str = ''
     dir_data_1: str = ''
@@ -71,8 +71,8 @@ class SetupFP:
         self.session_time = get_datetime()
         self.dir_data = os.path.join('FieldPrism','Data')
         self.dir_data_session = os.path.join('FieldPrism','Data')
-        self.name_session_csv = ''.join(['FieldPrism_Data__',self.session_time,'.csv'])
-        self.name_session = ''.join(['FieldPrism_Data__',self.session_time])
+        self.name_session_csv = ''.join(['FP_Data__',self.session_time,'.csv'])
+        self.name_session = ''.join(['FP_Data__',self.session_time])
         self.dir_data_session_qr = os.path.join('FieldPrism','QR',self.name_session)
 
         print(f"{bcolors.HEADER}Base USB Path: {self.usb_base_path}{bcolors.ENDC}")
@@ -347,7 +347,7 @@ class ImageData:
             # Try read csv 
             csv_total = pd.read_csv(os.path.join(data_name, self.cfg.name_total_csv),dtype=str)
         except Exception as e:
-            print(f"{bcolors.WARNING}       Initializing new FieldPrism_Data.csv file: {os.path.join(data_name, self.cfg.name_total_csv)}{bcolors.ENDC}")
+            print(f"{bcolors.WARNING}       Initializing new FP_Data.csv file: {os.path.join(data_name, self.cfg.name_total_csv)}{bcolors.ENDC}")
             # Create empty csv
             with open(os.path.join(data_name, self.cfg.name_total_csv), 'w', newline='') as csvfile:
                 csvwriter = csv.writer(csvfile)
