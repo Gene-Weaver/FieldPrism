@@ -277,7 +277,7 @@ def config_gui(root, software_version):
     frame_qr_data.columnconfigure(1, weight=1)
     
     # -------------- Level 1
-    rv_start = 1
+    rv_start = 3
     label_nqr = tk.Label(master=frame_qr_data, text="QR Code Values", bg="black", fg="White", font=("Calibri ", 16))
     label_nqr.grid(row=rv_start, column=0, sticky="w")
 
