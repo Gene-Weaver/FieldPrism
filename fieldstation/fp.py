@@ -4,13 +4,14 @@ import depthai as dai
 from threading import Thread
 import tkinter as tk
 from tkinter import Tk
+import pandas as pd
 from gps3.agps3threaded import AGPS3mechanism
 from utils_general import bcolors, load_cfg, print_options, rotate_image_options
 from utils_gps import gps_activate, test_gps
 from utils_gui import init_ready, change_ready_ind, config_gui
 from utils_sound import *
 from fp_align_camera  import align_camera
-from fp_classes import PreviewWindow, SaveWindow, Fragile, SetupFP, ImageData
+from fp_classes import PreviewWindow, SaveWindow, Fragile, SetupFP, ImageData, GPSTest
 
 currentdir = os.path.dirname(os.path.dirname(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
@@ -341,6 +342,75 @@ def command_gps(cfg_user, agps_thread, label_gps_status, label_gps_lat_status, l
             sound_gps_fail(Sound)
         else:
             sound_gps_success(Sound)
+
+def run_gps_acc_test(cfg, cfg_user, gps_acc, agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, Sound):
+    print(f"       Running GPS Accuracy Test")
+    selection = gps_acc.get()
+    if selection == "min5":
+        gps_val = False
+    elif selection == "min15":
+        print(f"{bcolors.BOLD}            Using unstable enhanced QR reader{bcolors.ENDC}")
+        gps_val = True
+
+
+
+    if not gps_val:
+        print(f"           5 Min Test")
+        # Initialize CSV file
+        GPS_all = pd.DataFrame(columns=["current_time", "latitude", "longitude", "altitude", "climb", "speed", "lat_error_est", "lon_error_est", "alt_error_est"])
+
+        # Loop 60 times
+        for _ in range(5):
+            GPS_data = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
+            if GPS_data.latitude == -999:
+                sound_gps_fail(Sound)
+            else:
+                sound_gps_success(Sound)
+
+            current_time = GPS_data.current_time
+            latitude = GPS_data.latitude
+            longitude = GPS_data.longitude
+            altitude = GPS_data.altitude
+            climb = GPS_data.climb
+            speed = GPS_data.speed
+            lat_error_est = GPS_data.lat_error_est
+            lon_error_est = GPS_data.lon_error_est
+            alt_error_est = GPS_data.alt_error_est
+
+            # Append data to DataFrame
+            GPS_all = GPS_all.append({"current_time": current_time, "latitude": latitude, "longitude": longitude, "altitude": altitude, "climb": climb, "speed": speed, "lat_error_est": lat_error_est, "lon_error_est": lon_error_est, "alt_error_est": alt_error_est}, ignore_index=True)
+
+            time.sleep(4.8)
+        
+        GPSTest(cfg, GPS_all)
+    else:
+        # Initialize CSV file
+        GPS_all = pd.DataFrame(columns=["current_time", "latitude", "longitude", "altitude", "climb", "speed", "lat_error_est", "lon_error_est", "alt_error_est"])
+
+        # Loop 180 times
+        for _ in range(10):
+            GPS_data = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
+            if GPS_data.latitude == -999:
+                sound_gps_fail(Sound)
+            else:
+                sound_gps_success(Sound)
+
+            current_time = GPS_data.current_time
+            latitude = GPS_data.latitude
+            longitude = GPS_data.longitude
+            altitude = GPS_data.altitude
+            climb = GPS_data.climb
+            speed = GPS_data.speed
+            lat_error_est = GPS_data.lat_error_est
+            lon_error_est = GPS_data.lon_error_est
+            alt_error_est = GPS_data.alt_error_est
+
+            # Append data to DataFrame
+            GPS_all = GPS_all.append({"current_time": current_time, "latitude": latitude, "longitude": longitude, "altitude": altitude, "climb": climb, "speed": speed, "lat_error_est": lat_error_est, "lon_error_est": lon_error_est, "alt_error_est": alt_error_est}, ignore_index=True)
+
+            time.sleep(4.8)
+        return GPS_all
+
 def button_photo():
     global TAKE_PHOTO
     TAKE_PHOTO = True
@@ -348,6 +418,10 @@ def button_photo():
 def button_gps():
     global TAKE_GPS
     TAKE_GPS = True
+
+def button_gps_test():
+    global TEST_GPS
+    TEST_GPS = True
 
 def button_exit():
     global TAKE_EXIT
@@ -408,6 +482,8 @@ def run(pipeline, root):
     TAKE_GPS = False
     global TAKE_EXIT
     TAKE_EXIT = False
+    global TEST_GPS
+    TEST_GPS = False
 
     '''
     Setup the GUI
@@ -417,7 +493,7 @@ def run(pipeline, root):
     label_gps_lon_status, label_gps_time_status, label_local_time_status, label_total_status, 
     label_session_status, label_csv_status, label_nimage_status, label_ndevice_status, 
     label_usbspeed_status, label_version_status, label_nqr_status,
-    L1, L2, L3, L4, L5, L6, use_enhanced] = config_gui(root, software_version)
+    L1, L2, L3, L4, L5, L6, use_enhanced, gps_acc, frame_qr_data] = config_gui(root, software_version)
 
     # -------------- Buttons
     # frame
@@ -431,10 +507,12 @@ def run(pipeline, root):
     b_photo = tk.Button(master=frame_button, command=lambda: button_photo(), text = "PHOTO", font=("Arial", 20), bg="green4", fg="black", activebackground="green2")
     b_gps = tk.Button(master=frame_button, command=lambda: button_gps(), text = "GPS", font=("Arial", 20), bg="royal blue", fg="black", activebackground="deep sky blue")
     b_exit = tk.Button(master=frame_button, command=lambda: button_exit(), text = "QUIT", font=("Arial", 20), bg="maroon", fg="white", activebackground="red")
+    b_gps_acc_test = tk.Button(master=frame_qr_data, command=lambda: button_gps_test(), text = "Test", font=("Arial", 20), bg="royal blue", fg="black", activebackground="deep sky blue")
 
     b_exit.grid(row=0, column=0, sticky="nsew")
     b_gps.grid(row=0, column=3, sticky="nsew")
     b_photo.grid(row=0, column=4, sticky="nsew")
+    b_gps_acc_test.grid(row=14, column=0, sticky="w")
 
     '''
     Initialize the two camera windows in the GUI
@@ -568,6 +646,10 @@ def run(pipeline, root):
                 elif (keyboard.is_pressed(cfg_user['fieldstation']['keymap']['test_gps']) or TAKE_GPS):
                     TAKE_GPS = False
                     command_gps(cfg_user, agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, Sound)
+
+                elif TEST_GPS:
+                    TEST_GPS = False
+                    run_gps_acc_test(cfg, cfg_user, gps_acc, agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, Sound)
 
 '''
 Initialize the tkinter GUI

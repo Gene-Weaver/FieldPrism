@@ -9,6 +9,13 @@ import tkinter as tk
 from tkinter import ttk, Canvas
 from utils_general import bcolors,  get_datetime
 
+import folium
+import pandas as pd
+import numpy as np
+from pyproj import Proj, Transformer
+from sklearn.cluster import KMeans
+from scipy.spatial import distance, ConvexHull
+from shapely.geometry import MultiPoint
 '''
 Main setup class.
     Begins with checking the environment, USB mounting points
@@ -350,6 +357,157 @@ class ImageData:
         new_data.to_csv(os.path.join(data_name, self.cfg.name_total_csv), mode='a', header=False, index=False)
         print(f'{bcolors.OKGREEN}\n       Added 1 row to session CSV: {os.path.join(data_name, self.cfg.name_session_csv)}{bcolors.ENDC}')
         print(f'{bcolors.OKGREEN}       Added 1 row to total CSV:   {os.path.join(data_name, self.cfg.name_total_csv)}{bcolors.ENDC}\n')
+
+@dataclass
+class GPSTest:
+    # Path data
+    cfg: object = field(init=False)
+    df_summary: object = field(init=False)
+    map_gps: object = field(init=False)
+    results_df: object = field(init=False)
+    
+    def __init__(self, cfg, df: pd.DataFrame):
+        self.cfg = cfg
+        self.save_data(df, "__GPS_Accuracy_Data")
+
+        self.process_gps(df)
+
+        self.save_data(self.df_summary, "__GPS_Accuracy_Summary")
+        self.save_data_map(self.df_summary, "__GPS_Accuracy_Map")
+
+    def save_data(self, df, suffix) -> None:
+        if self.cfg.save_to_boot:
+            self.save_csv(self.cfg.dir_data_none, df, suffix)
+        if self.cfg.has_1_usb:
+            self.save_csv(self.cfg.dir_data_1, df, suffix)
+        if self.cfg.has_2_usb:
+            self.save_csv(self.cfg.dir_data_2, df, suffix)
+        if self.cfg.has_3_usb:
+            self.save_csv(self.cfg.dir_data_3, df, suffix)
+        if self.cfg.has_4_usb:
+            self.save_csv(self.cfg.dir_data_4, df, suffix)
+        if self.cfg.has_5_usb:
+            self.save_csv(self.cfg.dir_data_5, df, suffix)
+        if self.cfg.has_6_usb:
+            self.save_csv(self.cfg.dir_data_6, df, suffix)
+    
+    def save_data_map(self, suffix) -> None:
+        if self.cfg.save_to_boot:
+            self.save_map(self.cfg.dir_data_none, suffix)
+        if self.cfg.has_1_usb:
+            self.save_map(self.cfg.dir_data_1, suffix)
+        if self.cfg.has_2_usb:
+            self.save_map(self.cfg.dir_data_2, suffix)
+        if self.cfg.has_3_usb:
+            self.save_map(self.cfg.dir_data_3, suffix)
+        if self.cfg.has_4_usb:
+            self.save_map(self.cfg.dir_data_4, suffix)
+        if self.cfg.has_5_usb:
+            self.save_map(self.cfg.dir_data_5, suffix)
+        if self.cfg.has_6_usb:
+            self.save_map(self.cfg.dir_data_6, suffix)
+
+    def save_csv(self, data_name, df, suffix) -> None:
+        # Save DataFrame to CSV
+        filename_parts = self.cfg.name_session_csv.split('.')
+        filename_parts[0] += suffix
+        gps_savename = '.'.join(filename_parts)
+
+        df.to_csv(os.path.join(data_name, gps_savename), mode='a', header=False, index=False)
+        print(f'{bcolors.OKGREEN}\n       Added {len(df)} row(s) to session CSV: {os.path.join(data_name, gps_savename)}{bcolors.ENDC}')
+
+    def save_map(self, data_name, suffix) -> None:
+        # Save DataFrame to CSV
+        filename_parts = self.cfg.name_session_csv.split('.')
+        filename_parts[0] += suffix
+        gps_map_savename = '.'.join([filename_parts[0], 'html'])
+        self.map_gps.save(gps_map_savename)
+        # Save the map to an HTML file
+        print(f'{bcolors.OKGREEN}\n       Saved GPS map to: {os.path.join(data_name, gps_map_savename)}{bcolors.ENDC}')
+
+    def process_gps(self, df):
+        # Initialize the results dataframe
+        self.results_df = pd.DataFrame(columns=['SD_Spread_X', 'SD_Spread_Y', 'RMS_Error', 'Spread_X', 'Spread_Y', 'CEP', 'Area', 'N'])
+
+        coordinates_df = df[['latitude', 'longitude']].query('latitude != -999 and longitude != -999')
+
+        # Convert the coordinates DataFrame to a list of lists
+        coordinates = coordinates_df.values.tolist()
+
+        # Calculate the center latitude and longitude
+        center_lat = sum(float(coord[0]) for coord in coordinates) / len(coordinates)
+        center_lon = sum(float(coord[1]) for coord in coordinates) / len(coordinates)
+
+        # Find the UTM zone and hemisphere
+        zone_number = int((180 + center_lon) / 6) + 1
+        hemisphere = 'north' if center_lat >= 0 else 'south'
+
+        # Create a transformer for converting latitude and longitude to UTM
+        transformer = Transformer.from_crs(
+            f'+proj=longlat +datum=WGS84 +no_defs',
+            f'+proj=utm +zone={zone_number} +{hemisphere} +datum=WGS84 +units=m +no_defs',
+            always_xy=True
+        )
+
+        # Convert the coordinates to UTM
+        utm_coords = [transformer.transform(coord[1], coord[0]) for coord in coordinates]
+
+        # Calculate the 1 SD spread and RMS error for each cluster
+        rms_errors = []
+        ceps = []
+        min_bounding_polygons = []
+
+        cluster_coords = utm_coords
+        std_dev_x = np.std([coord[0] for coord in cluster_coords])
+        std_dev_y = np.std([coord[1] for coord in cluster_coords])
+        rms_error = np.sqrt((std_dev_x**2 + std_dev_y**2) / 2)
+        rms_errors.append(rms_error)
+        print(f"Cluster - 1 SD spread (meters): X: {std_dev_x}, Y: {std_dev_y}")
+        print(f"Cluster - RMS error (meters): {rms_error}")
+
+        spread_x = max(coord[0] for coord in cluster_coords) - min(coord[0] for coord in cluster_coords)
+        spread_y = max(coord[1] for coord in cluster_coords) - min(coord[1] for coord in cluster_coords)
+        print(f"Cluster - Spread (meters): X: {spread_x}, Y: {spread_y}")
+        
+        center = np.mean(cluster_coords, axis=0)
+        distances = [distance.euclidean(coord, center) for coord in cluster_coords]
+        cep = np.percentile(distances, 50)
+        ceps.append(cep)
+        print(f"Cluster - CEP: {cep}") 
+
+        points = MultiPoint(cluster_coords)
+        min_rotated_rect = points.minimum_rotated_rectangle
+        min_bounding_polygons.append(min_rotated_rect)
+        print(f"Cluster - Area: {min_rotated_rect.area}") 
+
+        print(f"N = {len(cluster_coords)}")
+
+        # Create a map centered at the average of the coordinates
+        self.map_gps = folium.Map(location=[center_lat, center_lon], zoom_start=22)#, tiles='CartoDB Positron')
+
+        # Add the points to the map with different colors for each cluster
+        for coord in coordinates:
+            folium.Circle(location=[float(coord[0]), float(coord[1])], radius=1, color="green", fill=False, fill_opacity=0.1).add_to(self.map_gps)
+
+        # Calculate center of coordinates
+        center = np.mean(coordinates, axis=0)
+
+        # Use the center for each marker
+        for (rms, cep, min_bounding_polygon) in enumerate(zip(rms_errors, ceps, min_bounding_polygons)):
+            folium.Marker(location=[float(center[0]), float(center[1])], icon=None, popup=f"RMS: {round(rms, 3)} meters\nCEP: {round(cep, 3)} meters\nArea: {round(min_bounding_polygon.area, 3)} sq meters").add_to(self.map_gps)
+        
+        self.results_df = self.results_df.append({
+            'SD_Spread_X': std_dev_x,
+            'SD_Spread_Y': std_dev_y,
+            'RMS_Error': rms_error,
+            'Spread_X': spread_x,
+            'Spread_Y': spread_y,
+            'CEP': cep,
+            'Area': min_rotated_rect.area,
+            'N': len(cluster_coords)
+        }, ignore_index=True)
+
+
 
 class Fragile(object):
     class Break(Exception):
