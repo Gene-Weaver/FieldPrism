@@ -415,18 +415,30 @@ def config_gui(root, software_version):
     frame_gps = tk.Frame(master=frame_qr_data, height=60, width=100, bg="black")
     frame_gps.grid(row=rv_start, column=0, columnspan=2, sticky="nsew")
     frame_gps.rowconfigure(0, minsize=30)
-    frame_gps.columnconfigure([0], minsize=50)
+    frame_gps.columnconfigure([0,1,2,], minsize=50)
 
     # Create the radio buttons
-    min5_radio = tk.Radiobutton(frame_gps, text="5 Min", variable=radio_var_gps, value="min5", command=radio_selected,
-                                    bg="gray", fg="black", font=("Calibri ", 16), highlightthickness=0,
-                                    indicatoron=0, selectcolor="green4")
-    min5_radio.grid(row=0, column=0, sticky="w")
+    frame_min5 = tk.Frame(frame_gps, height=20)
+    frame_min5.grid(row=0, column=0)
+    frame_min5.grid_propagate(False)  # Prevent the frame from resizing to fit its contents
 
-    min15_radio = tk.Radiobutton(frame_gps, text="15 Min", variable=radio_var_gps, value="min15", command=radio_selected,
+    min5_radio = tk.Radiobutton(frame_min5, text="5 Min", variable=radio_var_gps, value="min5", command=radio_selected,
                                 bg="gray", fg="black", font=("Calibri ", 16), highlightthickness=0,
                                 indicatoron=0, selectcolor="green4")
-    min15_radio.grid(row=0, column=1, sticky="e")
+    min5_radio.pack(fill='both', expand=True)  # The button will fill the entire frame
+
+    gpsminlabel = tk.Label(master=frame_gps, text=" or ", bg="black", fg="white", font=("Calibri ", 16))
+    gpsminlabel.grid(row=0, column=1, sticky="nsew")
+
+    frame_min15 = tk.Frame(frame_gps, height=20)
+    frame_min15.grid(row=0, column=2)
+    frame_min15.grid_propagate(False)
+
+    min15_radio = tk.Radiobutton(frame_min15, text="15 Min", variable=radio_var_gps, value="min15", command=radio_selected,
+                                bg="gray", fg="black", font=("Calibri ", 16), highlightthickness=0,
+                                indicatoron=0, selectcolor="green4")
+    min15_radio.pack(fill='both', expand=True)
+
 
 
     return root, frame_preview, frame_saved, label_camera_status, label_focus_live_status, label_focus_saved_status, label_fname_status, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_gps_time_status, label_local_time_status, label_total_status, label_session_status, label_csv_status, label_nimage_status, label_ndevice_status, label_usbspeed_status, label_version_status, label_nqr_status, L1, L2, L3, L4, L5, L6, radio_var, radio_var_gps, frame_qr_data
