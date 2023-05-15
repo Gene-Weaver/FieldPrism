@@ -277,7 +277,7 @@ def config_gui(root, software_version):
     frame_qr_data.columnconfigure(1, weight=1)
     
     # -------------- Level 1
-    rv_start = 3
+    rv_start = 1
     label_nqr = tk.Label(master=frame_qr_data, text="QR Code Values", bg="black", fg="White", font=("Calibri ", 16))
     label_nqr.grid(row=rv_start, column=0, sticky="w")
 
@@ -403,12 +403,12 @@ def config_gui(root, software_version):
         elif selection == "min15":
             gps_acc_test = True
 
-    rv_start += 2
+    rv_start += 3
     frame_gps_L = tk.Frame(master=frame_qr_data, height=60, width=100, bg="black")
     frame_gps_L.grid(row=rv_start, column=0, sticky="nsew")
     frame_gps_L.rowconfigure(0, minsize=30)
     frame_gps_L.columnconfigure([0], minsize=50)
-    gps_L = tk.Label(master=frame_gps_L, text="Test GPS Acc.", bg="black", fg="white", font=("Calibri ", 16))
+    gps_L = tk.Label(master=frame_gps_L, text="GPS Accuracy", bg="black", fg="white", font=("Calibri ", 16))
     gps_L.grid(row=0, column=0, sticky="w")
 
     rv_start += 1
