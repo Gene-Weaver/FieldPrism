@@ -378,8 +378,8 @@ def run_gps_acc_test(cfg, cfg_user, gps_acc, agps_thread, label_gps_status, labe
             alt_error_est = GPS_data.alt_error_est
 
             # Append data to DataFrame
-            data.append({"current_time": current_time, "latitude": latitude, "longitude": longitude, "altitude": altitude, "climb": climb, "speed": speed, "lat_error_est": lat_error_est, "lon_error_est": lon_error_est, "alt_error_est": alt_error_est}, ignore_index=True)
-
+            data.append([current_time, latitude, longitude, altitude, climb, speed, lat_error_est, lon_error_est, alt_error_est])
+            
             time.sleep(4.8)
         GPS_all = pd.DataFrame(data, columns=["current_time", "latitude", "longitude", "altitude", "climb", "speed", "lat_error_est", "lon_error_est", "alt_error_est"])
         GPSTest(cfg, GPS_all)
