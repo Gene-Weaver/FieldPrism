@@ -359,6 +359,14 @@ def run_gps_acc_test(label_camera_status, cfg, cfg_user, gps_acc, agps_thread, l
 
     if not gps_val:
         print(f"           5 Min Test")
+        label_camera_status.config(text = f'Waking GPS - {percent}%', fg='goldenrod')
+        # Loop 60 times
+        n_times = 100
+        for nnn in range(n_times):
+            percent = round(np.multiply(np.divide(nnn+1,n_times),100))
+            label_camera_status.config(text = f'Waking GPS - {percent}%', fg='goldenrod')
+            ___ = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
+            time.sleep(0.1)
 
         # Initialize CSV file
         data = []
@@ -367,7 +375,7 @@ def run_gps_acc_test(label_camera_status, cfg, cfg_user, gps_acc, agps_thread, l
         n_times = 60
         for nnn in range(n_times):
             percent = round(np.multiply(np.divide(nnn+1,n_times),100))
-            label_camera_status.config(text = f'{n_times} Min GPS Test - {percent}%', fg='goldenrod')
+            label_camera_status.config(text = f'5 Min GPS Test - {percent}%', fg='goldenrod')
             GPS_data = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
             if GPS_data.latitude == -999:
                 sound_gps_fail(Sound)
@@ -391,6 +399,16 @@ def run_gps_acc_test(label_camera_status, cfg, cfg_user, gps_acc, agps_thread, l
         GPS_all = pd.DataFrame(data, columns=["current_time", "latitude", "longitude", "altitude", "climb", "speed", "lat_error_est", "lon_error_est", "alt_error_est"])
         GPSTest(cfg, GPS_all)
     else:
+        print(f"           15 Min Test")
+        label_camera_status.config(text = f'Waking GPS - {percent}%', fg='goldenrod')
+        # Loop 60 times
+        n_times = 100
+        for nnn in range(n_times):
+            percent = round(np.multiply(np.divide(nnn+1,n_times),100))
+            label_camera_status.config(text = f'Waking GPS - {percent}%', fg='goldenrod')
+            ___ = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
+            time.sleep(0.1)
+
         # Initialize CSV file
         data = []
 
@@ -398,7 +416,7 @@ def run_gps_acc_test(label_camera_status, cfg, cfg_user, gps_acc, agps_thread, l
         n_times = 180
         for _ in range(n_times):
             percent = round(np.multiply(np.divide(nnn+1,n_times),100))
-            label_camera_status.config(text = f'{n_times} Min GPS Test - {percent}%', fg='goldenrod')
+            label_camera_status.config(text = f'15 Min GPS Test - {percent}%', fg='goldenrod')
             GPS_data = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
             if GPS_data.latitude == -999:
                 sound_gps_fail(Sound)
