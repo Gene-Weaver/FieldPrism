@@ -492,7 +492,7 @@ class GPSTest:
         center = np.mean(coordinates, axis=0)
 
         # Use the center for each marker
-        for (rms, cep, min_bounding_polygon) in enumerate(zip(rms_errors, ceps, min_bounding_polygons)):
+        for i, (rms, cep, min_bounding_polygon) in enumerate(zip(rms_errors, ceps, min_bounding_polygons)):
             folium.Marker(location=[float(center[0]), float(center[1])], icon=None, popup=f"RMS: {round(rms, 3)} meters\nCEP: {round(cep, 3)} meters\nArea: {round(min_bounding_polygon.area, 3)} sq meters").add_to(self.map_gps)
         
         self.results_df = self.results_df.append({

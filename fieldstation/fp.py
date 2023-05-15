@@ -343,7 +343,9 @@ def command_gps(cfg_user, agps_thread, label_gps_status, label_gps_lat_status, l
         else:
             sound_gps_success(Sound)
 
-def run_gps_acc_test(cfg, cfg_user, gps_acc, agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, Sound):
+def run_gps_acc_test(label_camera_status, cfg, cfg_user, gps_acc, agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, Sound):
+    label_camera_status.config(text = 'Testing GPS Accuracy', fg='goldenrod')
+
     print(f"       Running GPS Accuracy Test")
     selection = gps_acc.get()
     if selection == "min5":
@@ -356,11 +358,14 @@ def run_gps_acc_test(cfg, cfg_user, gps_acc, agps_thread, label_gps_status, labe
 
     if not gps_val:
         print(f"           5 Min Test")
+
         # Initialize CSV file
         data = []
 
         # Loop 60 times
-        for _ in range(5):
+        n_times = 5
+        for nnn in range(n_times):
+            label_camera_status.config(text = f'{n_times} Min GPS Test - {nnn+1/n_times}%', fg='goldenrod')
             GPS_data = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
             if GPS_data.latitude == -999:
                 sound_gps_fail(Sound)
@@ -388,7 +393,9 @@ def run_gps_acc_test(cfg, cfg_user, gps_acc, agps_thread, label_gps_status, labe
         data = []
 
         # Loop 180 times
+        n_times = 10
         for _ in range(10):
+            label_camera_status.config(text = f'{n_times} Min GPS Test - {nnn+1/n_times}%', fg='goldenrod')
             GPS_data = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
             if GPS_data.latitude == -999:
                 sound_gps_fail(Sound)
@@ -651,7 +658,7 @@ def run(pipeline, root):
 
                 elif TEST_GPS:
                     TEST_GPS = False
-                    run_gps_acc_test(cfg, cfg_user, gps_acc, agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, Sound)
+                    run_gps_acc_test(label_camera_status, cfg, cfg_user, gps_acc, agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, Sound)
 
 '''
 Initialize the tkinter GUI
