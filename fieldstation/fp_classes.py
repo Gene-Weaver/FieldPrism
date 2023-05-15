@@ -427,7 +427,9 @@ class GPSTest:
         print(f'{bcolors.OKGREEN}\n       Saved GPS map to: {os.path.join(data_name, gps_map_savename)}{bcolors.ENDC}')
 
         # Open the HTML file in the Chromium browser
-        webbrowser.get('/usr/lib/chromium-browser/chromium-browser').open('file://' + full_path)
+        url = "http://192.168.2.128:5008/" + gps_map_savename
+        chrome_path = '/usr/lib/chromium-browser/chromium-browser'
+        webbrowser.get(chrome_path).open(url)
 
 
     def process_gps(self, df):
