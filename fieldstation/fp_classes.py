@@ -426,7 +426,7 @@ class GPSTest:
 
     def process_gps(self, df):
         # Initialize the results dataframe
-        self.results_df = pd.DataFrame(columns=['SD_Spread_X', 'SD_Spread_Y', 'RMS_Error', 'Spread_X', 'Spread_Y', 'CEP', 'Area', 'N'])
+        results = []
 
         coordinates_df = df[['latitude', 'longitude']].query('latitude != -999 and longitude != -999')
 
@@ -495,16 +495,9 @@ class GPSTest:
         for i, (rms, cep, min_bounding_polygon) in enumerate(zip(rms_errors, ceps, min_bounding_polygons)):
             folium.Marker(location=[float(center[0]), float(center[1])], icon=None, popup=f"RMS: {round(rms, 3)} meters\nCEP: {round(cep, 3)} meters\nArea: {round(min_bounding_polygon.area, 3)} sq meters").add_to(self.map_gps)
         
-        self.results_df = self.results_df.append({
-            'SD_Spread_X': std_dev_x,
-            'SD_Spread_Y': std_dev_y,
-            'RMS_Error': rms_error,
-            'Spread_X': spread_x,
-            'Spread_Y': spread_y,
-            'CEP': cep,
-            'Area': min_rotated_rect.area,
-            'N': len(cluster_coords)
-        }, ignore_index=True)
+        results.append([std_dev_x,std_dev_y,rms_error,spread_x,spread_y,cep,min_rotated_rect.area,len(cluster_coords)])
+
+        self.results_df = pd.DataFrame(results, columns=["SD_Spread_X", "SD_Spread_Y", "RMS", "Spread_X", "Spread_Y", "CEP", "Area", "N",])
 
 
 
