@@ -361,6 +361,7 @@ class ImageData:
 @dataclass
 class GPSTest:
     # Path data
+    has_points: bool = False
     cfg: object = field(init=False)
     df_summary: object = field(init=False)
     map_gps: object = field(init=False)
@@ -373,7 +374,9 @@ class GPSTest:
         self.process_gps(df)
 
         self.save_data(self.results_df, "__GPS_Accuracy_Summary")
-        self.save_data_map("__GPS_Accuracy_Map")
+
+        if self.has_points:
+            self.save_data_map("__GPS_Accuracy_Map")
 
     def save_data(self, df, suffix) -> None:
         if self.cfg.save_to_boot:
@@ -443,70 +446,75 @@ class GPSTest:
         coordinates = self.coordinates_df.values.tolist()
 
         # Calculate the center latitude and longitude
-        center_lat = sum(float(coord[0]) for coord in coordinates) / len(coordinates)
-        center_lon = sum(float(coord[1]) for coord in coordinates) / len(coordinates)
+        if len(coordinates) == 0:
+            results.append([0,0,0,0,0,0,0,0])
+            self.results_df = pd.DataFrame(results, columns=["SD_Spread_X", "SD_Spread_Y", "RMS", "Spread_X", "Spread_Y", "CEP", "Area", "N",])
+        else:
+            center_lat = sum(float(coord[0]) for coord in coordinates) / len(coordinates)
+            center_lon = sum(float(coord[1]) for coord in coordinates) / len(coordinates)
 
-        # Find the UTM zone and hemisphere
-        zone_number = int((180 + center_lon) / 6) + 1
-        hemisphere = 'north' if center_lat >= 0 else 'south'
+            # Find the UTM zone and hemisphere
+            zone_number = int((180 + center_lon) / 6) + 1
+            hemisphere = 'north' if center_lat >= 0 else 'south'
 
-        # Create a transformer for converting latitude and longitude to UTM
-        transformer = Transformer.from_crs(
-            f'+proj=longlat +datum=WGS84 +no_defs',
-            f'+proj=utm +zone={zone_number} +{hemisphere} +datum=WGS84 +units=m +no_defs',
-            always_xy=True
-        )
+            # Create a transformer for converting latitude and longitude to UTM
+            transformer = Transformer.from_crs(
+                f'+proj=longlat +datum=WGS84 +no_defs',
+                f'+proj=utm +zone={zone_number} +{hemisphere} +datum=WGS84 +units=m +no_defs',
+                always_xy=True
+            )
 
-        # Convert the coordinates to UTM
-        utm_coords = [transformer.transform(coord[1], coord[0]) for coord in coordinates]
+            # Convert the coordinates to UTM
+            utm_coords = [transformer.transform(coord[1], coord[0]) for coord in coordinates]
 
-        # Calculate the 1 SD spread and RMS error for each cluster
-        rms_errors = []
-        ceps = []
-        min_bounding_polygons = []
+            # Calculate the 1 SD spread and RMS error for each cluster
+            rms_errors = []
+            ceps = []
+            min_bounding_polygons = []
 
-        cluster_coords = utm_coords
-        std_dev_x = np.std([coord[0] for coord in cluster_coords])
-        std_dev_y = np.std([coord[1] for coord in cluster_coords])
-        rms_error = np.sqrt((std_dev_x**2 + std_dev_y**2) / 2)
-        rms_errors.append(rms_error)
-        print(f"Cluster - 1 SD spread (meters): X: {std_dev_x}, Y: {std_dev_y}")
-        print(f"Cluster - RMS error (meters): {rms_error}")
+            cluster_coords = utm_coords
+            std_dev_x = np.std([coord[0] for coord in cluster_coords])
+            std_dev_y = np.std([coord[1] for coord in cluster_coords])
+            rms_error = np.sqrt((std_dev_x**2 + std_dev_y**2) / 2)
+            rms_errors.append(rms_error)
+            print(f"Cluster - 1 SD spread (meters): X: {std_dev_x}, Y: {std_dev_y}")
+            print(f"Cluster - RMS error (meters): {rms_error}")
 
-        spread_x = max(coord[0] for coord in cluster_coords) - min(coord[0] for coord in cluster_coords)
-        spread_y = max(coord[1] for coord in cluster_coords) - min(coord[1] for coord in cluster_coords)
-        print(f"Cluster - Spread (meters): X: {spread_x}, Y: {spread_y}")
-        
-        center = np.mean(cluster_coords, axis=0)
-        distances = [distance.euclidean(coord, center) for coord in cluster_coords]
-        cep = np.percentile(distances, 50)
-        ceps.append(cep)
-        print(f"Cluster - CEP: {cep}") 
+            spread_x = max(coord[0] for coord in cluster_coords) - min(coord[0] for coord in cluster_coords)
+            spread_y = max(coord[1] for coord in cluster_coords) - min(coord[1] for coord in cluster_coords)
+            print(f"Cluster - Spread (meters): X: {spread_x}, Y: {spread_y}")
+            
+            center = np.mean(cluster_coords, axis=0)
+            distances = [distance.euclidean(coord, center) for coord in cluster_coords]
+            cep = np.percentile(distances, 50)
+            ceps.append(cep)
+            print(f"Cluster - CEP: {cep}") 
 
-        points = MultiPoint(cluster_coords)
-        min_rotated_rect = points.minimum_rotated_rectangle
-        min_bounding_polygons.append(min_rotated_rect)
-        print(f"Cluster - Area: {min_rotated_rect.area}") 
+            points = MultiPoint(cluster_coords)
+            min_rotated_rect = points.minimum_rotated_rectangle
+            min_bounding_polygons.append(min_rotated_rect)
+            print(f"Cluster - Area: {min_rotated_rect.area}") 
 
-        print(f"N = {len(cluster_coords)}")
+            print(f"N = {len(cluster_coords)}")
 
-        # Create a map centered at the average of the coordinates
-        self.map_gps = folium.Map(location=[center_lat, center_lon], zoom_start=22)#, tiles='CartoDB Positron')
+            # Create a map centered at the average of the coordinates
+            self.map_gps = folium.Map(location=[center_lat, center_lon], zoom_start=22)#, tiles='CartoDB Positron')
 
-        # Add the points to the map with different colors for each cluster
-        for coord in coordinates:
-            folium.Circle(location=[float(coord[0]), float(coord[1])], radius=1, color="green", fill=False, fill_opacity=0.1).add_to(self.map_gps)
+            # Add the points to the map with different colors for each cluster
+            for coord in coordinates:
+                folium.Circle(location=[float(coord[0]), float(coord[1])], radius=1, color="green", fill=False, fill_opacity=0.1).add_to(self.map_gps)
 
-        # Calculate center of coordinates
-        center = np.mean(coordinates, axis=0)
+            # Calculate center of coordinates
+            center = np.mean(coordinates, axis=0)
 
-        # Use the center for each marker
-        for i, (rms, cep, min_bounding_polygon) in enumerate(zip(rms_errors, ceps, min_bounding_polygons)):
-            folium.Marker(location=[float(center[0]), float(center[1])], icon=None, popup=f"RMS: {round(rms, 1)} meters\nCEP: {round(cep, 1)} meters\nArea: {round(min_bounding_polygon.area, 1)} sq meters").add_to(self.map_gps)
-        
-        results.append([std_dev_x,std_dev_y,rms_error,spread_x,spread_y,cep,min_rotated_rect.area,len(cluster_coords)])
+            # Use the center for each marker
+            for i, (rms, cep, min_bounding_polygon) in enumerate(zip(rms_errors, ceps, min_bounding_polygons)):
+                folium.Marker(location=[float(center[0]), float(center[1])], icon=None, popup=f"RMS: {round(rms, 1)} meters\nCEP: {round(cep, 1)} meters\nArea: {round(min_bounding_polygon.area, 1)} sq meters").add_to(self.map_gps)
+            
+            results.append([std_dev_x,std_dev_y,rms_error,spread_x,spread_y,cep,min_rotated_rect.area,len(cluster_coords)])
 
-        self.results_df = pd.DataFrame(results, columns=["SD_Spread_X", "SD_Spread_Y", "RMS", "Spread_X", "Spread_Y", "CEP", "Area", "N",])
+            self.results_df = pd.DataFrame(results, columns=["SD_Spread_X", "SD_Spread_Y", "RMS", "Spread_X", "Spread_Y", "CEP", "Area", "N",])
+            self.has_points = True
 
 
 
