@@ -425,8 +425,10 @@ class GPSTest:
         self.map_gps.save(full_path)
         # Save the map to an HTML file
         print(f'{bcolors.OKGREEN}\n       Saved GPS map to: {os.path.join(data_name, gps_map_savename)}{bcolors.ENDC}')
-        # Open the saved HTML file in the default web browser
-        webbrowser.get('chromium').open_new_tab('file:///' + os.path.realpath(full_path))
+
+        # Open the HTML file in the Chromium browser
+        webbrowser.get('/usr/lib/chromium-browser/chromium-browser').open('file://' + full_path)
+
 
     def process_gps(self, df):
         # Initialize the results dataframe
