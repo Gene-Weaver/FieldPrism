@@ -364,7 +364,7 @@ def run_gps_acc_test(label_camera_status, cfg, cfg_user, gps_acc, agps_thread, l
         data = []
 
         # Loop 60 times
-        n_times = 5
+        n_times = 60
         for nnn in range(n_times):
             percent = round(np.multiply(np.divide(nnn+1,n_times),100))
             label_camera_status.config(text = f'{n_times} Min GPS Test - {percent}%', fg='goldenrod')
@@ -395,8 +395,8 @@ def run_gps_acc_test(label_camera_status, cfg, cfg_user, gps_acc, agps_thread, l
         data = []
 
         # Loop 180 times
-        n_times = 10
-        for _ in range(10):
+        n_times = 180
+        for _ in range(n_times):
             percent = round(np.multiply(np.divide(nnn+1,n_times),100))
             label_camera_status.config(text = f'{n_times} Min GPS Test - {percent}%', fg='goldenrod')
             GPS_data = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
