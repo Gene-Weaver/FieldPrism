@@ -239,7 +239,7 @@ def config_gui(root, software_version):
 
     # -------------- n_qr parameter
     frame_qr_data = tk.Frame(master=frame_qr, height=60, width=250, bg="black")
-    frame_qr_data.grid(row=2, column=0, sticky="nsew")  # Assuming this is row 17, adjust according to your actual layout
+    frame_qr_data.grid(row=0, column=0, sticky="nsew")  # Assuming this is row 17, adjust according to your actual layout
     frame_qr_data.rowconfigure([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,], minsize=30)
     frame_qr_data.columnconfigure([0, 1], minsize=50)
 
@@ -277,7 +277,7 @@ def config_gui(root, software_version):
     frame_qr_data.columnconfigure(1, weight=1)
     
     # -------------- Level 1
-    rv_start = 1
+    rv_start = 3
     label_nqr = tk.Label(master=frame_qr_data, text="QR Code Values", bg="black", fg="White", font=("Calibri ", 16))
     label_nqr.grid(row=rv_start, column=0, sticky="w")
 
