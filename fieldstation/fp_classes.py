@@ -428,7 +428,7 @@ class GPSTest:
 
         # Open the HTML file in the Chromium browser
         try:
-            subprocess.Popen(['chromium-browser', 'file://' + full_path])
+            subprocess.Popen(['chromium-browser', '--no-sandbox', 'file://' + full_path])
         except Exception as e:
             print(f"Failed to open browser: {e}")
 
