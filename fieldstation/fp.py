@@ -366,13 +366,12 @@ def run_gps_acc_test(label_camera_status, cfg, cfg_user, gps_acc, agps_thread, l
             percent = round(np.multiply(np.divide(nnn+1,n_times),100))
             label_camera_status.config(text = f'Waking GPS - {percent}%', fg='goldenrod')
             ___ = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
-            time.sleep(0.1)
 
         # Initialize CSV file
         data = []
 
         # Loop 60 times
-        n_times = 60
+        n_times = 6
         for nnn in range(n_times):
             percent = round(np.multiply(np.divide(nnn+1,n_times),100))
             label_camera_status.config(text = f'5 Min GPS Test - {percent}%', fg='goldenrod')
