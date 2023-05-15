@@ -17,7 +17,7 @@ if [ "$ANSWER" = "DELETE" ];
 then
 	echo "Deleting /home/pi/FieldPrism"
 	cd /home/pi/
-	sudo rm -rf /FieldPrism
+	sudo rm -rf /home/pi/FieldPrism
 	echo "Old installation has been removed."
 	echo "Cloning GitHub repo..."
 	git clone https://github.com/Gene-Weaver/FieldPrism.git
