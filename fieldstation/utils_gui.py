@@ -403,7 +403,7 @@ def config_gui(root, software_version):
         elif selection == "min15":
             gps_acc_test = True
 
-    rv_start += 3
+    rv_start += 4
     frame_gps_L = tk.Frame(master=frame_qr_data, height=60, width=100, bg="black")
     frame_gps_L.grid(row=rv_start, column=0, sticky="nsew")
     frame_gps_L.rowconfigure(0, minsize=30)
