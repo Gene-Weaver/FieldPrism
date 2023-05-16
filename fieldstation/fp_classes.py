@@ -513,7 +513,10 @@ class GPSTest:
             print(f"N = {len(cluster_coords)}")
 
             # Create a map centered at the average of the coordinates
-            self.map_gps = folium.Map(location=[center_lat, center_lon], zoom_start=22)#, tiles='CartoDB Positron')
+            self.map_gps = folium.Map(location=[center_lat, center_lon], zoom_start=22, tiles='MapQuest Open Aerial')
+            folium.TileLayer('cartodbdark_matter').add_to(self.map_gps)
+            folium.TileLayer('CartoDB Positron').add_to(self.map_gps)
+
 
             # Add the points to the map with different colors for each cluster
             for coord in coordinates:
