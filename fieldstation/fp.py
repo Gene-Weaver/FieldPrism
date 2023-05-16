@@ -491,17 +491,12 @@ def run(pipeline, root):
     # Logo in right bottom corner
     # Load the image file
     img = Image.open("/home/pi/FieldPrism/img/FieldPrism_Desktop_Corner.jpg")
-
     # Convert the image to a PhotoImage
     photo = ImageTk.PhotoImage(img)
-
-    # Create a label with the photo
-    photo_label = tk.Label(master=frame_button, image=photo, bg="black")
-
-    # Add the photo to the grid
-    photo_label.grid(row=0, column=5, sticky="nsew")
-
-    # This line is necessary to prevent the image from being garbage collected
+    frame_photo = tk.Frame(master=root, bg="black")
+    photo_label = tk.Label(master=frame_photo, image=photo, bg="black")
+    photo_label.pack()
+    frame_photo.grid(row=1, column=2, sticky="e")
     photo_label.image = photo
 
 
