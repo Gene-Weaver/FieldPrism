@@ -441,10 +441,10 @@ def config_gui(root, software_version):
 
 
     rv_start += 2
-    frame_gps_acc = tk.Frame(master=frame_qr_data, height=60, width = 250, bg="black")
+    frame_gps_acc = tk.Frame(master=frame_qr_data, height=30, width = 100, bg="black")
     frame_gps_acc.grid(row=rv_start, column=0, rowspan=2, sticky="nsew")
     frame_gps_acc.rowconfigure(0, minsize=30)
-    frame_gps_acc.columnconfigure([0], minsize=250)
+    frame_gps_acc.columnconfigure([0], minsize=50)
 
     label_rms = tk.Label(master=frame_gps_acc, text="RMS: ", bg="black", fg="White", font=("Calibri ", 16))
     label_rms.grid(row=0, column=0, sticky="w")
