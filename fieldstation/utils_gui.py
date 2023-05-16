@@ -365,6 +365,7 @@ def config_gui(root, software_version):
             use_enhanced = True
 
     rv_start += 2
+    frame_qr_data.grid_rowconfigure(rv_start - 1, minsize=30)  # or whatever height you want for the empty row
     frame_mode_L = tk.Frame(master=frame_qr_data, height=60, width=100, bg="black")
     frame_mode_L.grid(row=rv_start, column=0, sticky="nsew")
     frame_mode_L.rowconfigure(0, minsize=30)
