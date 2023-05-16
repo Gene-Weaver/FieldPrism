@@ -487,6 +487,20 @@ def run(pipeline, root):
     b_photo.grid(row=0, column=4, sticky="nsew")
     b_gps_acc_test.grid(row=22, column=0, sticky="nsew")
 
+    # Logo in right bottom corner
+    # Load the photo
+    photo = tk.PhotoImage(file="/home/pi/FieldPrism/img/FieldPrism_Desktop_narrow.jpg")
+
+    # Create a label with the photo
+    photo_label = tk.Label(master=frame_button, image=photo, bg="black")
+
+    # Add the photo to the grid
+    photo_label.grid(row=0, column=5, sticky="nsew")
+
+    # This line is necessary to prevent the image from being garbage collected
+    photo_label.image = photo
+
+
     '''
     Initialize the two camera windows in the GUI
     '''
