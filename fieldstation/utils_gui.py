@@ -403,18 +403,18 @@ def config_gui(root, software_version):
         elif selection == "min15":
             gps_acc_test = True
 
-    rv_start += 2
+    rv_start += 4
     frame_gps_L = tk.Frame(master=frame_qr_data, height=60, width=100, bg="black")
     frame_gps_L.grid(row=rv_start, column=0, sticky="nsew")
-    frame_gps_L.rowconfigure(0, minsize=30)
+    # frame_gps_L.rowconfigure(0, minsize=30)
     frame_gps_L.columnconfigure([0], minsize=50)
     gps_L = tk.Label(master=frame_gps_L, text="GPS Accuracy", bg="black", fg="white", font=("Calibri ", 16))
     gps_L.grid(row=1, column=0, sticky="nsew")
 
-    rv_start += 1
+    rv_start += 2
     frame_gps = tk.Frame(master=frame_qr_data, height=60, width=100, bg="black")
     frame_gps.grid(row=rv_start, column=0, columnspan=2, sticky="nsew")
-    frame_gps.rowconfigure(0, minsize=30)
+    # frame_gps.rowconfigure(0, minsize=30)
     frame_gps.columnconfigure([0,1,2,], minsize=50)
 
     # Create the radio buttons
