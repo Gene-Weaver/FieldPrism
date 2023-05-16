@@ -278,6 +278,7 @@ def config_gui(root, software_version):
     
     # -------------- Level 1
     rv_start = 3
+    frame_qr_data.grid_rowconfigure(rv_start - 1, minsize=30)  # or whatever height you want for the empty row
     label_nqr = tk.Label(master=frame_qr_data, text="QR Code Values", bg="black", fg="White", font=("Calibri ", 16))
     label_nqr.grid(row=rv_start, column=0, sticky="w")
 
