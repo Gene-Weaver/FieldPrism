@@ -396,7 +396,7 @@ def run_gps_acc_test(label_camera_status, cfg, cfg_user, gps_acc, agps_thread, l
             
             time.sleep(4.8)
         GPS_all = pd.DataFrame(data, columns=["current_time", "latitude", "longitude", "altitude", "climb", "speed", "lat_error_est", "lon_error_est", "alt_error_est"])
-        GPSTest(cfg, GPS_all)
+        CEP, RMS = GPSTest(cfg, GPS_all)
     else:
         print(f"           15 Min Test")
         label_camera_status.config(text = f'Waking GPS - 0%', fg='goldenrod')
@@ -437,7 +437,7 @@ def run_gps_acc_test(label_camera_status, cfg, cfg_user, gps_acc, agps_thread, l
 
             time.sleep(4.8)
         GPS_all = pd.DataFrame(data, columns=["current_time", "latitude", "longitude", "altitude", "climb", "speed", "lat_error_est", "lon_error_est", "alt_error_est"])
-        GPSTest(cfg, GPS_all)
+        CEP, RMS = GPSTest(cfg, GPS_all)
 
 
 def button_photo():
