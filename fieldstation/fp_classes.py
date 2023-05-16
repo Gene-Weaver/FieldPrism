@@ -362,6 +362,8 @@ class ImageData:
 class GPSTest:
     # Path data
     has_points: bool = False
+    CEP: float = 0.0
+    RMS: float = 0.0
     cfg: object = field(init=False)
     df_summary: object = field(init=False)
     map_gps: object = field(init=False)
@@ -377,6 +379,8 @@ class GPSTest:
 
         if self.has_points:
             self.save_data_map("__GPS_Accuracy_Map")
+
+        return self.CEP, self.RMS
 
     def save_data(self, df, suffix) -> None:
         if self.cfg.save_to_boot:
@@ -515,6 +519,8 @@ class GPSTest:
 
             self.results_df = pd.DataFrame(results, columns=["SD_Spread_X", "SD_Spread_Y", "RMS", "Spread_X", "Spread_Y", "CEP", "Area", "N",])
             self.has_points = True
+            self.CEP = cep
+            self.RMS = rms_error
 
 
 
