@@ -496,7 +496,7 @@ def run(pipeline, root):
     frame_photo = tk.Frame(master=root, bg="black")
     photo_label = tk.Label(master=frame_photo, image=photo, bg="black")
     photo_label.pack()
-    frame_photo.grid(row=4, column=2, sticky="e")
+    frame_photo.grid(row=4, column=2, sticky="nsew")
     photo_label.image = photo
 
 
