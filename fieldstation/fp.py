@@ -13,6 +13,7 @@ from utils_sound import *
 from fp_align_camera  import align_camera
 from fp_classes import PreviewWindow, SaveWindow, Fragile, SetupFP, ImageData, GPSTest
 import numpy as np
+from PIL import Image, ImageTk
 
 currentdir = os.path.dirname(os.path.dirname(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
@@ -488,8 +489,11 @@ def run(pipeline, root):
     b_gps_acc_test.grid(row=22, column=0, sticky="nsew")
 
     # Logo in right bottom corner
-    # Load the photo
-    photo = tk.PhotoImage(file="/home/pi/FieldPrism/img/FieldPrism_Desktop_narrow.jpg")
+    # Load the image file
+    img = Image.open("/home/pi/FieldPrism/img/FieldPrism_Desktop_narrow.jpg")
+
+    # Convert the image to a PhotoImage
+    photo = ImageTk.PhotoImage(img)
 
     # Create a label with the photo
     photo_label = tk.Label(master=frame_button, image=photo, bg="black")
