@@ -440,7 +440,7 @@ def config_gui(root, software_version):
     min15_radio.pack(fill='both', expand=True)
 
 
-
+    rv_start += 2
     frame_gps_acc = tk.Frame(master=frame_qr_data, height=60, width = 250, bg="black")
     frame_gps_acc.grid(row=rv_start, column=0, rowspan=2, sticky="nsew")
     frame_gps_acc.rowconfigure(0, minsize=30)
