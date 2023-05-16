@@ -411,7 +411,7 @@ def config_gui(root, software_version):
     gps_L = tk.Label(master=frame_gps_L, text="GPS Accuracy", bg="black", fg="white", font=("Calibri ", 16))
     gps_L.grid(row=1, column=0, sticky="nsew")
 
-    rv_start += 2
+    rv_start += 1
     frame_gps = tk.Frame(master=frame_qr_data, height=60, width=100, bg="black")
     frame_gps.grid(row=rv_start, column=0, columnspan=2, sticky="nsew")
     frame_gps.rowconfigure(0, minsize=30)
