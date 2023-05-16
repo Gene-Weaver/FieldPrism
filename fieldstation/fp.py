@@ -179,7 +179,11 @@ def detect_sharpness(sharpness_min_cutoff, img):
         return True, sharpness_actual
     
 def update_level_labels(label, result):
-    label.config(text=result)
+    if result != 'none':
+        label.config(text=result, fg='green2')
+    else:
+        label.config(text=result)
+
 
 def update_levels(L1, L2, L3, L4, L5, L6, RESULTS):
     update_level_labels(L1, RESULTS["Level_1"])
