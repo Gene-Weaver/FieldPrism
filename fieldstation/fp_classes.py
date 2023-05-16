@@ -368,9 +368,12 @@ class GPSTest:
     df_summary: object = field(init=False)
     map_gps: object = field(init=False)
     results_df: object = field(init=False)
+
     
-    def __init__(self, cfg, df: pd.DataFrame):
+    def __init__(self, cfg, df, label_rms, label_cep):
         self.cfg = cfg
+        self.label_rms = label_rms
+        self.label_cep = label_cep
         self.save_data(df, "__GPS_Accuracy_Data")
 
         self.process_gps(df)
@@ -380,7 +383,13 @@ class GPSTest:
         if self.has_points:
             self.save_data_map("__GPS_Accuracy_Map")
 
-        return self.CEP, self.RMS
+    def show_error(self):
+        if (self.CEP == 0.0) or (self.RMS == 0.0):
+            self.label_rms.config(text = f'RMS: no signal', fg='red')
+            self.label_cep.config(text = f'CEP: no signal', fg='red')
+        else:
+            self.label_rms.config(text = f'RMS: {round(self.RMS,1)} m.', fg='green2')
+            self.label_cep.config(text = f'CEP: {round(self.CEP,1)} m.', fg='green2')
 
     def save_data(self, df, suffix) -> None:
         if self.cfg.save_to_boot:
