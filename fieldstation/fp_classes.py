@@ -383,6 +383,8 @@ class GPSTest:
         if self.has_points:
             self.save_data_map("__GPS_Accuracy_Map")
 
+        self.show_error()
+
     def show_error(self):
         if (self.CEP == 0.0) or (self.RMS == 0.0):
             self.label_rms.config(text = f'RMS: no signal', fg='red')
