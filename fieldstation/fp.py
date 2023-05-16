@@ -344,7 +344,7 @@ def command_gps(cfg_user, agps_thread, label_gps_status, label_gps_lat_status, l
         else:
             sound_gps_success(Sound)
 
-def run_gps_acc_test(label_camera_status, cfg, cfg_user, gps_acc, agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, Sound):
+def run_gps_acc_test(label_camera_status, label_rms, label_cep, cfg, cfg_user, gps_acc, agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, Sound):
     label_camera_status.config(text = 'Testing GPS Accuracy', fg='goldenrod')
 
     print(f"       Running GPS Accuracy Test")
@@ -397,6 +397,12 @@ def run_gps_acc_test(label_camera_status, cfg, cfg_user, gps_acc, agps_thread, l
             time.sleep(4.8)
         GPS_all = pd.DataFrame(data, columns=["current_time", "latitude", "longitude", "altitude", "climb", "speed", "lat_error_est", "lon_error_est", "alt_error_est"])
         CEP, RMS = GPSTest(cfg, GPS_all)
+        if (CEP == 0.0) or (RMS == 0.0):
+            label_rms.config(text = f'RMS: {round(RMS,1)} m.', fg='red')
+            label_cep.config(text = f'CEP: {round(CEP,1)} m.', fg='red')
+        else:
+            label_rms.config(text = f'RMS: {round(RMS,1)} m.', fg='green2')
+            label_cep.config(text = f'CEP: {round(CEP,1)} m.', fg='green2')
     else:
         print(f"           15 Min Test")
         label_camera_status.config(text = f'Waking GPS - 0%', fg='goldenrod')
@@ -438,6 +444,12 @@ def run_gps_acc_test(label_camera_status, cfg, cfg_user, gps_acc, agps_thread, l
             time.sleep(4.8)
         GPS_all = pd.DataFrame(data, columns=["current_time", "latitude", "longitude", "altitude", "climb", "speed", "lat_error_est", "lon_error_est", "alt_error_est"])
         CEP, RMS = GPSTest(cfg, GPS_all)
+        if (CEP == 0.0) or (RMS == 0.0):
+            label_rms.config(text = f'RMS: {round(RMS,1)} m.', fg='red')
+            label_cep.config(text = f'CEP: {round(CEP,1)} m.', fg='red')
+        else:
+            label_rms.config(text = f'RMS: {round(RMS,1)} m.', fg='green2')
+            label_cep.config(text = f'CEP: {round(CEP,1)} m.', fg='green2')
 
 
 def button_photo():
@@ -522,7 +534,7 @@ def run(pipeline, root):
     label_gps_lon_status, label_gps_time_status, label_local_time_status, label_total_status, 
     label_session_status, label_csv_status, label_nimage_status, label_ndevice_status, 
     label_usbspeed_status, label_version_status, label_nqr_status,
-    L1, L2, L3, L4, L5, L6, use_enhanced, gps_acc, frame_qr_data] = config_gui(root, software_version)
+    L1, L2, L3, L4, L5, L6, use_enhanced, gps_acc, frame_qr_data,label_rms, label_cep] = config_gui(root, software_version)
 
     # -------------- Buttons
     # frame
@@ -678,7 +690,7 @@ def run(pipeline, root):
 
                 elif TEST_GPS:
                     TEST_GPS = False
-                    run_gps_acc_test(label_camera_status, cfg, cfg_user, gps_acc, agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, Sound)
+                    run_gps_acc_test(label_camera_status, label_rms, label_cep, cfg, cfg_user, gps_acc, agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, Sound)
 
 '''
 Initialize the tkinter GUI
