@@ -364,7 +364,7 @@ def run_gps_acc_test(label_camera_status, label_rms, label_cep, cfg, cfg_user, g
 
     # Initialize data list
     data = []
-    n_times = 300 if gps_val else 100
+    n_times = 300 if gps_val else 10
     for n in range(n_times):
         percent = round((n + 1) / n_times * 100)
         label_camera_status.config(text = f'{test_minutes} Min GPS Test - {percent}%', fg='goldenrod')
