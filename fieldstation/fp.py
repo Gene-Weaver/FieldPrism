@@ -490,7 +490,7 @@ def run(pipeline, root):
 
     # Logo in right bottom corner
     # Load the image file
-    img = Image.open("/home/pi/FieldPrism/img/FieldPrism_Desktop_narrow.jpg")
+    img = Image.open("/home/pi/FieldPrism/img/FieldPrism_Desktop_Corner.jpg")
 
     # Convert the image to a PhotoImage
     photo = ImageTk.PhotoImage(img)
