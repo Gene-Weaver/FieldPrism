@@ -231,10 +231,10 @@ def report_camera_activated(cfg_user, label_camera_status, images_this_session, 
     images_this_session += 1
     return images_this_session
 
-def report_camera_complete(cfg_user, Image, images_this_session, label_csv_status, label_camera_status, label_fname_status, label_nimage_status, Sound):
+def report_camera_complete(cfg_user, FP_Image, images_this_session, label_csv_status, label_camera_status, label_fname_status, label_nimage_status, Sound):
     label_csv_status.config(text = 'Added 1 Row to CSV', fg='green2')
     label_camera_status.config(text = 'Ready!', fg='green2')
-    label_fname_status.config(text = Image.filename)
+    label_fname_status.config(text = FP_Image.filename)
     label_nimage_status.config(text = str(images_this_session))
     print(f"{bcolors.OKGREEN}Ready{bcolors.ENDC}")
     if cfg_user['fieldstation']['sound']['play_sound']:
@@ -616,10 +616,10 @@ def run(pipeline, root):
                     update_levels(L1, L2, L3, L4, L5, L6, RESULTS)
 
                     # Write data to CSV file
-                    Image = ImageData(cfg, path_to_saved, GPS_data, height, width, sharpness_actual, sharpness_min_cutoff, is_sharp)
+                    FP_Image = ImageData(cfg, path_to_saved, GPS_data, height, width, sharpness_actual, sharpness_min_cutoff, is_sharp)
 
                     # Print status
-                    report_camera_complete(cfg_user, Image, images_this_session, label_csv_status, label_camera_status, label_fname_status, label_nimage_status, Sound)
+                    report_camera_complete(cfg_user, FP_Image, images_this_session, label_csv_status, label_camera_status, label_fname_status, label_nimage_status, Sound)
 
                     # Reset TAKE_PHOTO
                     TAKE_PHOTO = False
