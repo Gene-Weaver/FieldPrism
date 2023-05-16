@@ -182,7 +182,7 @@ def update_level_labels(label, result):
     if result != 'none':
         label.config(text=result, fg='green2')
     else:
-        label.config(text=result)
+        label.config(text=result, fg='white')
 
 
 def update_levels(L1, L2, L3, L4, L5, L6, RESULTS):
