@@ -345,111 +345,39 @@ def command_gps(cfg_user, agps_thread, label_gps_status, label_gps_lat_status, l
             sound_gps_success(Sound)
 
 def run_gps_acc_test(label_camera_status, label_rms, label_cep, cfg, cfg_user, gps_acc, agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, Sound):
-    label_camera_status.config(text = 'Testing GPS Accuracy', fg='goldenrod')
-
-    print(f"       Running GPS Accuracy Test")
     selection = gps_acc.get()
-    if selection == "min5":
-        gps_val = False
-    elif selection == "min15":
-        print(f"{bcolors.BOLD}            Using unstable enhanced QR reader{bcolors.ENDC}")
-        gps_val = True
+    gps_val = selection == "min15"
+    test_minutes = 15 if gps_val else 5
+    print(f"Running {test_minutes} Min Test")
+    label_camera_status.config(text = f'Testing GPS Accuracy - {test_minutes} Min Test', fg='goldenrod')
 
+    if gps_val:
+        print(f"{bcolors.BOLD}Using unstable enhanced QR reader{bcolors.ENDC}")
 
-
-    if not gps_val:
-        print(f"           5 Min Test")
-        label_camera_status.config(text = f'Waking GPS - 0%', fg='goldenrod')
-        # Loop 60 times
-        n_times = 100
-        for nnn in range(n_times):
-            percent = round(np.multiply(np.divide(nnn+1,n_times),100))
-            label_camera_status.config(text = f'Waking GPS - {percent}%', fg='goldenrod')
-            ___ = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
-
-        # Initialize CSV file
-        data = []
-
-        # Loop 60 times
-        n_times = 6
-        for nnn in range(n_times):
-            percent = round(np.multiply(np.divide(nnn+1,n_times),100))
-            label_camera_status.config(text = f'5 Min GPS Test - {percent}%', fg='goldenrod')
-            GPS_data = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
-            if GPS_data.latitude == -999:
-                sound_gps_fail(Sound)
-            else:
-                sound_gps_success(Sound)
-
-            current_time = GPS_data.current_time
-            latitude = GPS_data.latitude
-            longitude = GPS_data.longitude
-            altitude = GPS_data.altitude
-            climb = GPS_data.climb
-            speed = GPS_data.speed
-            lat_error_est = GPS_data.lat_error_est
-            lon_error_est = GPS_data.lon_error_est
-            alt_error_est = GPS_data.alt_error_est
-
-            # Append data to DataFrame
-            data.append([current_time, latitude, longitude, altitude, climb, speed, lat_error_est, lon_error_est, alt_error_est])
-            
-            time.sleep(4.8)
-        GPS_all = pd.DataFrame(data, columns=["current_time", "latitude", "longitude", "altitude", "climb", "speed", "lat_error_est", "lon_error_est", "alt_error_est"])
-        CEP, RMS = GPSTest(cfg, GPS_all)
-        if (CEP == 0.0) or (RMS == 0.0):
-            label_rms.config(text = f'RMS: {round(RMS,1)} m.', fg='red')
-            label_cep.config(text = f'CEP: {round(CEP,1)} m.', fg='red')
-        else:
-            label_rms.config(text = f'RMS: {round(RMS,1)} m.', fg='green2')
-            label_cep.config(text = f'CEP: {round(CEP,1)} m.', fg='green2')
-    else:
-        print(f"           15 Min Test")
-        label_camera_status.config(text = f'Waking GPS - 0%', fg='goldenrod')
-        # Loop 60 times
-        n_times = 100
-        for nnn in range(n_times):
-            percent = round(np.multiply(np.divide(nnn+1,n_times),100))
-            label_camera_status.config(text = f'Waking GPS - {percent}%', fg='goldenrod')
-            ___ = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
+    # Wake up GPS
+    for n in range(100):
+        percent = round((n + 1) / 100 * 100)
+        label_camera_status.config(text = f'Waking GPS - {percent}%', fg='goldenrod')
+        ___ = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
+        if gps_val:  # Only sleep in the 15 min test case
             time.sleep(0.1)
 
-        # Initialize CSV file
-        data = []
+    # Initialize data list
+    data = []
+    n_times = 180 if gps_val else 6
+    for n in range(n_times):
+        percent = round((n + 1) / n_times * 100)
+        label_camera_status.config(text = f'{test_minutes} Min GPS Test - {percent}%', fg='goldenrod')
+        GPS_data = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
+        sound_gps_fail(Sound) if GPS_data.latitude == -999 else sound_gps_success(Sound)
+        data.append([GPS_data.current_time, GPS_data.latitude, GPS_data.longitude, GPS_data.altitude, GPS_data.climb, GPS_data.speed, GPS_data.lat_error_est, GPS_data.lon_error_est, GPS_data.alt_error_est])
+        if not gps_val:  # Only sleep in the 5 min test case
+            time.sleep(4.9)
 
-        # Loop 180 times
-        n_times = 180
-        for _ in range(n_times):
-            percent = round(np.multiply(np.divide(nnn+1,n_times),100))
-            label_camera_status.config(text = f'15 Min GPS Test - {percent}%', fg='goldenrod')
-            GPS_data = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
-            if GPS_data.latitude == -999:
-                sound_gps_fail(Sound)
-            else:
-                sound_gps_success(Sound)
+    GPS_all = pd.DataFrame(data, columns=["current_time", "latitude", "longitude", "altitude", "climb", "speed", "lat_error_est", "lon_error_est", "alt_error_est"])
+    GPSTest(cfg, GPS_all, label_rms, label_cep)
 
-            current_time = GPS_data.current_time
-            latitude = GPS_data.latitude
-            longitude = GPS_data.longitude
-            altitude = GPS_data.altitude
-            climb = GPS_data.climb
-            speed = GPS_data.speed
-            lat_error_est = GPS_data.lat_error_est
-            lon_error_est = GPS_data.lon_error_est
-            alt_error_est = GPS_data.alt_error_est
-
-            # Append data to DataFrame
-            data.append([current_time, latitude, longitude, altitude, climb, speed, lat_error_est, lon_error_est, alt_error_est])
-
-            time.sleep(4.8)
-        GPS_all = pd.DataFrame(data, columns=["current_time", "latitude", "longitude", "altitude", "climb", "speed", "lat_error_est", "lon_error_est", "alt_error_est"])
-        CEP, RMS = GPSTest(cfg, GPS_all)
-        if (CEP == 0.0) or (RMS == 0.0):
-            label_rms.config(text = f'RMS: {round(RMS,1)} m.', fg='red')
-            label_cep.config(text = f'CEP: {round(CEP,1)} m.', fg='red')
-        else:
-            label_rms.config(text = f'RMS: {round(RMS,1)} m.', fg='green2')
-            label_cep.config(text = f'CEP: {round(CEP,1)} m.', fg='green2')
+        
 
 
 def button_photo():
