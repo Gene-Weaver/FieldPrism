@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Stream GPS
+Exec=sh /home/pi/FieldPrism/fieldstation/gps_reset_and_test.sh
+Comment=Stream raw GPS data
+Terminal=true
+Icon=/home/pi/FieldPrism/img/icon_stream_gps.png
+Type=Application
