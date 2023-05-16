@@ -234,7 +234,7 @@ def config_gui(root, software_version):
     frame_qr = tk.Frame(master=root, width = 100, bg="black")
     frame_qr.grid(row=1, column=2, rowspan=3, sticky="nsew")
 
-    frame_qr.rowconfigure([0, 1, 2, 3, 4, 5, 6,], minsize=30)
+    frame_qr.rowconfigure([0, 1, 2, 3, 4, 5, 6,], minsize=1)
     frame_qr.columnconfigure(0, minsize=50)
 
     # -------------- n_qr parameter
