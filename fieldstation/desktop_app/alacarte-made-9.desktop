@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Clone OS
+Exec=sh /home/pi/FieldPrism/fieldstation/create_rpi_image.sh
+Comment=Clone current RPi image
+Terminal=true
+Icon=/home/pi/FieldPrism/img/icon_clone.png
+Type=Application
