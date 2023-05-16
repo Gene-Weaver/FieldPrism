@@ -240,7 +240,7 @@ def config_gui(root, software_version):
     # -------------- n_qr parameter
     frame_qr_data = tk.Frame(master=frame_qr, height=60, width=250, bg="black")
     frame_qr_data.grid(row=0, column=0, sticky="nsew")  # Assuming this is row 17, adjust according to your actual layout
-    frame_qr_data.rowconfigure([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,], minsize=30)
+    frame_qr_data.rowconfigure([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,], minsize=30)
     frame_qr_data.columnconfigure([0, 1], minsize=50)
 
     n_qr = tk.IntVar(value=50)
