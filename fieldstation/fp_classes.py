@@ -366,6 +366,7 @@ class GPSTest:
     has_points: bool = False
     CEP: float = 0.0
     RMS: float = 0.0
+    plot_path: str = ''
     cfg: object = field(init=False)
     df_summary: object = field(init=False)
     map_gps: object = field(init=False)
@@ -399,7 +400,7 @@ class GPSTest:
             self.label_cep.config(text = f'CEP: {round(self.CEP,1)} m.', fg='green2')
 
     def get_plot_path(self):
-        return plot_path
+        return self.plot_path
 
     def save_data(self, df, suffix) -> None:
         if self.cfg.save_to_boot:
@@ -450,6 +451,8 @@ class GPSTest:
         gps_plot_savename = ''.join([filename_parts[0],'_Plot', '.jpg'])
         full_path = os.path.join(data_name, gps_map_savename)
         self.map_gps.save(full_path)
+
+        self.plot_path = os.path.join(data_name, gps_plot_savename)
         cv2.imwrite(os.path.join(data_name, gps_plot_savename), self.gps_plot)
         # Save the map to an HTML file
         print(f'{bcolors.OKGREEN}\n       Saved GPS map to: {os.path.join(data_name, gps_map_savename)}{bcolors.ENDC}')
