@@ -544,11 +544,13 @@ class GPSTest:
             print(f"N = {len(cluster_coords)}")
 
             # Create a map centered at the average of the coordinates
-            self.map_gps = folium.Map(location=[center_lat, center_lon], zoom_start=18, tiles='Stamen Terrain')
-            folium.TileLayer('cartodbdark_matter').add_to(self.map_gps)
-            folium.TileLayer('CartoDB Positron').add_to(self.map_gps)
+            self.map_gps = folium.Map(location=[center_lat, center_lon], zoom_start=22, tiles='CartoDB Positron')
+            ### These are nice to have, but open very slowly on the RPi...
+            # self.map_gps = folium.Map(location=[center_lat, center_lon], zoom_start=22, tiles='Stamen Terrain')
+            # folium.TileLayer('cartodbdark_matter').add_to(self.map_gps)
+            # folium.TileLayer('CartoDB Positron').add_to(self.map_gps)
             # Add a layer control widget to the map
-            folium.LayerControl().add_to(self.map_gps)
+            # folium.LayerControl().add_to(self.map_gps)
 
             # Add the points to the map with different colors for each cluster
             for coord in coordinates:
