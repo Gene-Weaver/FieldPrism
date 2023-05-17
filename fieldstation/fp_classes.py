@@ -578,8 +578,17 @@ class GPSTest:
             center = np.mean(cluster_coords_array, axis=0)
             translated_coords = cluster_coords_array - center
 
+            # Create a DataFrame with the translated coordinates
+            df = pd.DataFrame(translated_coords, columns=['x', 'y'])
+
             # Create a figure and an axis in matplotlib
             fig, ax = plt.subplots()
+
+            # Create heatmap using seaborn's kdeplot
+            sns.kdeplot(data=df, x='x', y='y', ax=ax, cmap='viridis', shade=True)
+
+            # Add the points to the plot
+            ax.scatter(df['x'], df['y'], color="green")
 
             # Add RMS circle
             circle_rms = Circle((0, 0), rms_error, fill=False, color='blue', linestyle='dashed')
@@ -588,12 +597,6 @@ class GPSTest:
             # Add CEP circle
             circle_cep = Circle((0, 0), cep, fill=False, color='red')
             ax.add_patch(circle_cep)
-
-            # Create heatmap using seaborn's kdeplot
-            sns.kdeplot(translated_coords[:, 0], translated_coords[:, 1], ax=ax, cmap='viridis', shade=True)
-
-            # Add the points to the plot
-            ax.scatter(translated_coords[:, 0], translated_coords[:, 1], color="green")
 
             # Setting equal aspect so the circles look like circles
             ax.set_aspect('equal')
@@ -613,7 +616,7 @@ class GPSTest:
             gps_plot = gps_plot.reshape(canvas.get_width_height()[::-1] + (3,))
 
             # Convert RGB to BGR
-            self.gps_plot = cv2.cvtColor(gps_plot,cv2.COLOR_RGB2BGR)
+            self.gps_plot = cv2.cvtColor(gps_plot, cv2.COLOR_RGB2BGR)
 
 
 
