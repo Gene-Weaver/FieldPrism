@@ -585,7 +585,11 @@ class GPSTest:
             fig, ax = plt.subplots()
 
             # Create heatmap using seaborn's kdeplot
-            sns.kdeplot(data=df_coor, x='x', y='y', ax=ax, cmap='viridis', shade=True)
+            c_cmap = sns.cubehelix_palette(start=2, rot=0, dark=0.20, light=.90, reverse=False, as_cmap=True)
+
+            # Create heatmap using seaborn's kdeplot
+            sns.kdeplot(data=df_coor, x='x', y='y', ax=ax, cmap=c_cmap, shade=True)
+
 
             # Add the points to the plot
             ax.scatter(df_coor['x'], df_coor['y'], color="green")
