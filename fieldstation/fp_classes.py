@@ -3,6 +3,8 @@ import os, stat, csv, cv2, psutil, subprocess
 from pathlib import Path
 from dataclasses import dataclass, field
 import matplotlib.pyplot as plt
+from matplotlib.patches import Circle
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from PIL import Image, ImageTk
 import pandas as pd
 import tkinter as tk
@@ -367,6 +369,7 @@ class GPSTest:
     cfg: object = field(init=False)
     df_summary: object = field(init=False)
     map_gps: object = field(init=False)
+    gps_plot: object = field(init=False)
     results_df: object = field(init=False)
 
     
@@ -439,10 +442,14 @@ class GPSTest:
         filename_parts = self.cfg.name_session_csv.split('.')
         filename_parts[0] += suffix
         gps_map_savename = '.'.join([filename_parts[0], 'html'])
+        gps_plot_savename = ''.join([filename_parts[0],'_Plot', '.jpg'])
         full_path = os.path.join(data_name, gps_map_savename)
         self.map_gps.save(full_path)
+        cv2.imwrite(os.path.join(data_name, gps_plot_savename), self.gps_plot)
         # Save the map to an HTML file
         print(f'{bcolors.OKGREEN}\n       Saved GPS map to: {os.path.join(data_name, gps_map_savename)}{bcolors.ENDC}')
+        print(f'{bcolors.OKGREEN}\n       Saved GPS plot to: {os.path.join(data_name, gps_plot_savename)}{bcolors.ENDC}')
+
 
         # Open the HTML file in the Chromium browser
         try:
@@ -513,12 +520,11 @@ class GPSTest:
             print(f"N = {len(cluster_coords)}")
 
             # Create a map centered at the average of the coordinates
-            self.map_gps = folium.Map(location=[center_lat, center_lon], zoom_start=22, tiles='cartodbdark_matter')
-            folium.TileLayer('Stamen Terrain').add_to(self.map_gps)
+            self.map_gps = folium.Map(location=[center_lat, center_lon], zoom_start=18, tiles='Stamen Terrain')
+            folium.TileLayer('cartodbdark_matter').add_to(self.map_gps)
             folium.TileLayer('CartoDB Positron').add_to(self.map_gps)
             # Add a layer control widget to the map
             folium.LayerControl().add_to(self.map_gps)
-
 
             # Add the points to the map with different colors for each cluster
             for coord in coordinates:
@@ -537,6 +543,40 @@ class GPSTest:
             self.has_points = True
             self.CEP = cep
             self.RMS = rms_error
+
+            # Creating the x,y plot with the center translated to the origin
+            cluster_coords_array = np.array(cluster_coords)
+            center = np.mean(cluster_coords_array, axis=0)
+            translated_coords = cluster_coords_array - center
+
+            # Create a figure and an axis in matplotlib
+            fig, ax = plt.subplots()
+
+            # Add the points to the plot
+            ax.scatter(translated_coords[:, 0], translated_coords[:, 1], color="green")
+
+            # Add RMS circle
+            circle_rms = Circle((0, 0), rms_error, fill=False, color='blue', linestyle='dashed')
+            ax.add_patch(circle_rms)
+
+            # Add CEP circle
+            circle_cep = Circle((0, 0), cep, fill=False, color='red')
+            ax.add_patch(circle_cep)
+
+            # Setting equal aspect so the circles look like circles
+            ax.set_aspect('equal')
+
+            # Show legends
+            ax.legend([circle_rms, circle_cep], ['RMS', 'CEP'])
+
+            # Convert the Matplotlib figure to an OpenCV image
+            canvas = FigureCanvas(fig)
+            canvas.draw()
+            gps_plot = np.frombuffer(canvas.tostring_rgb(), dtype='uint8')
+            gps_plot = gps_plot.reshape(canvas.get_width_height()[::-1] + (3,))
+
+            # Convert RGB to BGR
+            self.gps_plot = cv2.cvtColor(gps_plot,cv2.COLOR_RGB2BGR)
 
 
 
