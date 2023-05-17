@@ -452,6 +452,7 @@ class GPSTest:
         gps_map_savename = '.'.join([base_map, 'html'])
         gps_plot_savename = ''.join([base_plot, '.jpg'])
         counter = 0
+        counterP = 0
 
         full_map_path = os.path.join(data_name, gps_map_savename)
         full_plot_path = os.path.join(data_name, gps_plot_savename)
@@ -466,7 +467,7 @@ class GPSTest:
 
         # Check if the plot file already exists, if it does, increment the counter and append it to the filename
         while os.path.isfile(full_plot_path):
-            counter += 1
+            counterP += 1
             gps_plot_savename = ''.join([f"{base_plot}_{counter}", '.jpg'])
             full_plot_path = os.path.join(data_name, gps_plot_savename)
 
