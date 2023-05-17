@@ -595,7 +595,7 @@ class GPSTest:
             ax.scatter(df_coor['x'], df_coor['y'], color="lime")
 
             # Add RMS circle
-            circle_rms = Circle((0, 0), rms_error, fill=False, color='magenta', linestyle='dashed')
+            circle_rms = Circle((0, 0), rms_error, fill=False, color='pink', linestyle='dashed')
             ax.add_patch(circle_rms)
 
             # Add CEP circle
