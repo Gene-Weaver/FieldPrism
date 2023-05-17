@@ -579,16 +579,16 @@ class GPSTest:
             translated_coords = cluster_coords_array - center
 
             # Create a DataFrame with the translated coordinates
-            df = pd.DataFrame(translated_coords, columns=['x', 'y'])
+            df_coor = pd.DataFrame(translated_coords, columns=['x', 'y'])
 
             # Create a figure and an axis in matplotlib
             fig, ax = plt.subplots()
 
             # Create heatmap using seaborn's kdeplot
-            sns.kdeplot(data=df, x='x', y='y', ax=ax, cmap='viridis', shade=True)
+            sns.kdeplot(data=df_coor, x='x', y='y', ax=ax, cmap='viridis', shade=True)
 
             # Add the points to the plot
-            ax.scatter(df['x'], df['y'], color="green")
+            ax.scatter(df_coor['x'], df_coor['y'], color="green")
 
             # Add RMS circle
             circle_rms = Circle((0, 0), rms_error, fill=False, color='blue', linestyle='dashed')
