@@ -370,13 +370,15 @@ class GPSTest:
     df_summary: object = field(init=False)
     map_gps: object = field(init=False)
     gps_plot: object = field(init=False)
+    Window_Saved: object = field(init=False)
     results_df: object = field(init=False)
 
     
-    def __init__(self, cfg, df, label_rms, label_cep):
+    def __init__(self, cfg, df, label_rms, label_cep, Window_Saved):
         self.cfg = cfg
         self.label_rms = label_rms
         self.label_cep = label_cep
+        self.Window_Saved = Window_Saved
         self.save_data(df, "__GPS_Accuracy_Data")
 
         self.process_gps(df)
@@ -395,6 +397,9 @@ class GPSTest:
         else:
             self.label_rms.config(text = f'RMS: {round(self.RMS,1)} m.', fg='green2')
             self.label_cep.config(text = f'CEP: {round(self.CEP,1)} m.', fg='green2')
+
+    def get_plot_path(self):
+        return plot_path
 
     def save_data(self, df, suffix) -> None:
         if self.cfg.save_to_boot:
@@ -565,6 +570,11 @@ class GPSTest:
 
             # Setting equal aspect so the circles look like circles
             ax.set_aspect('equal')
+
+            # Set axis labels and title
+            ax.set_xlabel("X or W-E (meters)")
+            ax.set_ylabel("Y or N-S (meters)")
+            ax.set_title("GPS Report")
 
             # Show legends
             ax.legend([circle_rms, circle_cep], ['RMS', 'CEP'])

@@ -349,7 +349,7 @@ def command_gps(cfg_user, agps_thread, label_gps_status, label_gps_lat_status, l
         else:
             sound_gps_success(Sound)
 
-def run_gps_acc_test(label_camera_status, label_rms, label_cep, cfg, cfg_user, gps_acc, agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, Sound):
+def run_gps_acc_test(Window_Saved, label_camera_status, label_rms, label_cep, cfg, cfg_user, gps_acc, agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, Sound):
     selection = gps_acc.get()
     gps_val = selection == "min15"
     test_minutes = 15 if gps_val else 5
@@ -380,10 +380,8 @@ def run_gps_acc_test(label_camera_status, label_rms, label_cep, cfg, cfg_user, g
             time.sleep(4.9)
 
     GPS_all = pd.DataFrame(data, columns=["current_time", "latitude", "longitude", "altitude", "climb", "speed", "lat_error_est", "lon_error_est", "alt_error_est"])
-    GPSTest(cfg, GPS_all, label_rms, label_cep)
-
-        
-
+    GPS_Test = GPSTest(cfg, GPS_all, label_rms, label_cep, Window_Saved)
+    return GPS_Test.get_plot_path()
 
 def button_photo():
     global TAKE_PHOTO
@@ -635,7 +633,8 @@ def run(pipeline, root):
 
                 elif TEST_GPS:
                     TEST_GPS = False
-                    run_gps_acc_test(label_camera_status, label_rms, label_cep, cfg, cfg_user, gps_acc, agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, Sound)
+                    plot_path = run_gps_acc_test(Window_Saved, label_camera_status, label_rms, label_cep, cfg, cfg_user, gps_acc, agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, Sound)
+                    Window_Saved.update_image(cv2.imread(plot_path))
 
 '''
 Initialize the tkinter GUI
