@@ -581,9 +581,6 @@ class GPSTest:
             # Create a figure and an axis in matplotlib
             fig, ax = plt.subplots()
 
-            # Add the points to the plot
-            ax.scatter(translated_coords[:, 0], translated_coords[:, 1], color="green")
-
             # Add RMS circle
             circle_rms = Circle((0, 0), rms_error, fill=False, color='blue', linestyle='dashed')
             ax.add_patch(circle_rms)
@@ -593,7 +590,10 @@ class GPSTest:
             ax.add_patch(circle_cep)
 
             # Create heatmap using seaborn's kdeplot
-            sns.kdeplot(translated_coords[:, 0], translated_coords[:, 1], ax=ax, fill=True, thresh=0, levels=100, cmap='viridis')
+            sns.kdeplot(translated_coords[:, 0], translated_coords[:, 1], ax=ax, cmap='viridis', shade=True)
+
+            # Add the points to the plot
+            ax.scatter(translated_coords[:, 0], translated_coords[:, 1], color="green")
 
             # Setting equal aspect so the circles look like circles
             ax.set_aspect('equal')
