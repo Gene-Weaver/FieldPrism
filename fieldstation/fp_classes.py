@@ -451,8 +451,8 @@ class GPSTest:
         base_plot = ''.join([filename_parts[0],'_Plot'])
         gps_map_savename = '.'.join([base_map, 'html'])
         gps_plot_savename = ''.join([base_plot, '.jpg'])
-        counter = 0
-        counterP = 0
+        counter = 1
+        counterP = 1
 
         full_map_path = os.path.join(data_name, gps_map_savename)
         full_plot_path = os.path.join(data_name, gps_plot_savename)
