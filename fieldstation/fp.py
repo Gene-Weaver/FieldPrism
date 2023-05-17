@@ -369,14 +369,14 @@ def run_gps_acc_test(Window_Saved, label_camera_status, label_rms, label_cep, cf
 
     # Initialize data list
     data = []
-    n_times = 180 if gps_val else 6
+    n_times = 180 if gps_val else 2
     for n in range(n_times):
         percent = round((n + 1) / n_times * 100)
         label_camera_status.config(text = f'{test_minutes} Min GPS Test - {percent}%', fg='goldenrod')
         GPS_data = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
         sound_gps_fail(Sound) if GPS_data.latitude == -999 else sound_gps_success(Sound)
         data.append([GPS_data.current_time, GPS_data.latitude, GPS_data.longitude, GPS_data.altitude, GPS_data.climb, GPS_data.speed, GPS_data.lat_error_est, GPS_data.lon_error_est, GPS_data.alt_error_est])
-        if not gps_val:  # Only sleep in the 5 min test case
+        if n < n_times - 1 and not gps_val: # Only sleep in the 5 min test case
             time.sleep(4.9)
 
     GPS_all = pd.DataFrame(data, columns=["current_time", "latitude", "longitude", "altitude", "climb", "speed", "lat_error_est", "lon_error_est", "alt_error_est"])
