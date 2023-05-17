@@ -10,7 +10,7 @@ import pandas as pd
 import tkinter as tk
 from tkinter import ttk, Canvas
 from utils_general import bcolors,  get_datetime
-import webbrowser
+import seaborn as sns
 
 import folium
 import pandas as pd
@@ -591,6 +591,9 @@ class GPSTest:
             # Add CEP circle
             circle_cep = Circle((0, 0), cep, fill=False, color='red')
             ax.add_patch(circle_cep)
+
+            # Create heatmap using seaborn's kdeplot
+            sns.kdeplot(translated_coords[:, 0], translated_coords[:, 1], ax=ax, fill=True, thresh=0, levels=100, cmap='viridis')
 
             # Setting equal aspect so the circles look like circles
             ax.set_aspect('equal')
