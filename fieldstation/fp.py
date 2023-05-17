@@ -634,6 +634,7 @@ def run(pipeline, root):
                 elif TEST_GPS:
                     TEST_GPS = False
                     plot_path = run_gps_acc_test(Window_Saved, label_camera_status, label_rms, label_cep, cfg, cfg_user, gps_acc, agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, Sound)
+                    print(f'plot_path = {plot_path}')
                     Window_Saved.update_image(cv2.imread(plot_path))
 
 '''
