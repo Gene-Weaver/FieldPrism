@@ -592,14 +592,14 @@ class GPSTest:
 
 
             # Add the points to the plot
-            ax.scatter(df_coor['x'], df_coor['y'], color="green")
+            ax.scatter(df_coor['x'], df_coor['y'], color="lime")
 
             # Add RMS circle
-            circle_rms = Circle((0, 0), rms_error, fill=False, color='blue', linestyle='dashed')
+            circle_rms = Circle((0, 0), rms_error, fill=False, color='magenta', linestyle='dashed')
             ax.add_patch(circle_rms)
 
             # Add CEP circle
-            circle_cep = Circle((0, 0), cep, fill=False, color='red')
+            circle_cep = Circle((0, 0), cep, fill=False, color='cyan')
             ax.add_patch(circle_cep)
 
             # Setting equal aspect so the circles look like circles
