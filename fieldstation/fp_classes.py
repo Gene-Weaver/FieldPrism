@@ -582,7 +582,7 @@ class GPSTest:
             df_coor = pd.DataFrame(translated_coords, columns=['x', 'y'])
 
             # Create a figure and an axis in matplotlib
-            fig, ax = plt.subplots()
+            fig, ax = plt.subplots(dpi=300)
 
             # Create heatmap using seaborn's kdeplot
             c_cmap = sns.cubehelix_palette(start=2, rot=0, dark=0.20, light=.90, reverse=False, as_cmap=True)
@@ -590,12 +590,11 @@ class GPSTest:
             # Create heatmap using seaborn's kdeplot
             sns.kdeplot(data=df_coor, x='x', y='y', ax=ax, cmap=c_cmap, shade=True)
 
-
             # Add the points to the plot
             ax.scatter(df_coor['x'], df_coor['y'], color="lime")
 
             # Add RMS circle
-            circle_rms = Circle((0, 0), rms_error, fill=False, color='pink', linestyle='dashed')
+            circle_rms = Circle((0, 0), rms_error, fill=False, color='hotpink', linestyle='dashed')
             ax.add_patch(circle_rms)
 
             # Add CEP circle
