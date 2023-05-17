@@ -447,8 +447,10 @@ class GPSTest:
         # Save DataFrame to CSV
         filename_parts = self.cfg.name_session_csv.split('.')
         filename_parts[0] += suffix
-        gps_map_savename = '.'.join([filename_parts[0], 'html'])
-        gps_plot_savename = ''.join([filename_parts[0],'_Plot', '.jpg'])
+        base_map = filename_parts[0]
+        base_plot = ''.join([filename_parts[0],'_Plot'])
+        gps_map_savename = '.'.join([base_map, 'html'])
+        gps_plot_savename = ''.join([base_plot, '.jpg'])
         counter = 0
 
         full_map_path = os.path.join(data_name, gps_map_savename)
@@ -457,7 +459,7 @@ class GPSTest:
         # Check if the map file already exists, if it does, increment the counter and append it to the filename
         while os.path.isfile(full_map_path):
             counter += 1
-            gps_map_savename = '.'.join([f"{filename_parts[0]}_{counter}", 'html'])
+            gps_map_savename = '.'.join([f"{base_map}_{counter}", 'html'])
             full_map_path = os.path.join(data_name, gps_map_savename)
 
         self.map_gps.save(full_map_path)
@@ -465,7 +467,7 @@ class GPSTest:
         # Check if the plot file already exists, if it does, increment the counter and append it to the filename
         while os.path.isfile(full_plot_path):
             counter += 1
-            gps_plot_savename = ''.join([f"{filename_parts[0]}_{counter}_Plot", '.jpg'])
+            gps_plot_savename = ''.join([f"{base_plot}_{counter}", '.jpg'])
             full_plot_path = os.path.join(data_name, gps_plot_savename)
 
         self.plot_path = full_plot_path
