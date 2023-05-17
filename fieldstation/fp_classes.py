@@ -591,8 +591,8 @@ class GPSTest:
             ax.set_aspect('equal')
 
             # Set axis labels and title
-            ax.set_xlabel("X or W-E (meters)")
-            ax.set_ylabel("Y or N-S (meters)")
+            ax.set_xlabel("West-East (meters)")
+            ax.set_ylabel("North-South (meters)")
             ax.set_title("GPS Report")
 
             # Show legends
