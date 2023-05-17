@@ -449,19 +449,35 @@ class GPSTest:
         filename_parts[0] += suffix
         gps_map_savename = '.'.join([filename_parts[0], 'html'])
         gps_plot_savename = ''.join([filename_parts[0],'_Plot', '.jpg'])
-        full_path = os.path.join(data_name, gps_map_savename)
-        self.map_gps.save(full_path)
+        counter = 0
 
-        self.plot_path = os.path.join(data_name, gps_plot_savename)
-        cv2.imwrite(os.path.join(data_name, gps_plot_savename), self.gps_plot)
+        full_map_path = os.path.join(data_name, gps_map_savename)
+        full_plot_path = os.path.join(data_name, gps_plot_savename)
+
+        # Check if the map file already exists, if it does, increment the counter and append it to the filename
+        while os.path.isfile(full_map_path):
+            counter += 1
+            gps_map_savename = '.'.join([f"{filename_parts[0]}_{counter}", 'html'])
+            full_map_path = os.path.join(data_name, gps_map_savename)
+
+        self.map_gps.save(full_map_path)
+
+        # Check if the plot file already exists, if it does, increment the counter and append it to the filename
+        while os.path.isfile(full_plot_path):
+            counter += 1
+            gps_plot_savename = ''.join([f"{filename_parts[0]}_{counter}_Plot", '.jpg'])
+            full_plot_path = os.path.join(data_name, gps_plot_savename)
+
+        self.plot_path = full_plot_path
+        cv2.imwrite(full_plot_path, self.gps_plot)
         # Save the map to an HTML file
-        print(f'{bcolors.OKGREEN}\n       Saved GPS map to: {os.path.join(data_name, gps_map_savename)}{bcolors.ENDC}')
-        print(f'{bcolors.OKGREEN}\n       Saved GPS plot to: {os.path.join(data_name, gps_plot_savename)}{bcolors.ENDC}')
+        print(f'{bcolors.OKGREEN}\n       Saved GPS map to: {full_map_path}{bcolors.ENDC}')
+        print(f'{bcolors.OKGREEN}\n       Saved GPS plot to: {full_plot_path}{bcolors.ENDC}')
 
 
         # Open the HTML file in the Chromium browser
         try:
-            subprocess.Popen(['chromium-browser', '--no-sandbox', 'file://' + full_path])
+            subprocess.Popen(['chromium-browser', '--no-sandbox', 'file://' + full_map_path])
         except Exception as e:
             print(f"Failed to open browser: {e}")
 
