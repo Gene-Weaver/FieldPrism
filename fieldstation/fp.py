@@ -459,10 +459,10 @@ def autofocus_trigger(device, lens_position=135, focus_value_label=None):
     ctrl.setAutoFocusTrigger()
     ctrl.setManualFocus(lens_position)
     device.getInputQueue('control').send(ctrl)
-def autofocus_continuous(device, lens_position=135, focus_value_label=None):
+def autofocus_continuous(device, focus_value_label=None):
     print("Autofocus enable, continuous")
 
-    new_text = f"Focus Auto - {lens_position}"
+    new_text = f"Focus Auto"
     focus_value_label.configure(text=new_text, fg='white')
 
     ctrl = dai.CameraControl()
@@ -561,8 +561,8 @@ def run(pipeline, root):
         frame_auto = tk.Frame(frame_control, height=60)
         frame_auto.grid(row=1, column=0)
         frame_auto.grid_propagate(False)  # Prevent the frame from resizing to fit its contents
-        auto_button = tk.Button(frame_auto, text="Autofocus Trigger", command=lambda: autofocus_trigger(device, lens_position, focus_value_label),
-                                bg="gray", fg="black", font=("Calibri ", 16), highlightthickness=0, 
+        auto_button = tk.Button(frame_auto, text="Lock Focus", command=lambda: autofocus_trigger(device, lens_position, focus_value_label),
+                                bg="black", fg="gray", font=("Calibri ", 16), highlightthickness=0, 
                                 activebackground="green4")
         auto_button.pack(fill='both', expand=True)  # The button will fill the entire frame
 
@@ -573,8 +573,8 @@ def run(pipeline, root):
         frame_cont = tk.Frame(frame_control, height=60)
         frame_cont.grid(row=1, column=2)
         frame_cont.grid_propagate(False)
-        cont_button = tk.Button(frame_cont, text="Continuous Autofocus", command=lambda: autofocus_continuous(device, lens_position, focus_value_label),
-                                bg="gray", fg="black", font=("Calibri ", 16), highlightthickness=0, 
+        cont_button = tk.Button(frame_cont, text="Refocus", command=lambda: autofocus_continuous(device, focus_value_label),
+                                bg="black", fg="gray", font=("Calibri ", 16), highlightthickness=0, 
                                 activebackground="green4")
         cont_button.pack(fill='both', expand=True)
 
