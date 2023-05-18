@@ -131,6 +131,7 @@ def run(
     seen, windows, dt = 0, [], (Profile(), Profile(), Profile())
     for path, im, im0s, vid_cap, s in dataset:
         im0_copy = copy.deepcopy(im0s)
+        saved_lines = []
         with dt[0]:
             im = torch.from_numpy(im).to(model.device)
             im = im.half() if model.fp16 else im.float()  # uint8 to fp16/32
@@ -199,9 +200,11 @@ def run(
                     if save_txt:  # Write to file
                         xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()  # normalized xywh
                         line = (cls, *xywh, conf) if save_conf else (cls, *xywh)  # label format
-                        with open(f'{txt_path}.txt', 'a') as f:
-                            f.write(('%g ' * len(line)).rstrip() % line + '\n')
-
+                        if option == 'fs':
+                            saved_lines.append(line)
+                        else:
+                            with open(f'{txt_path}.txt', 'a') as f:
+                                f.write(('%g ' * len(line)).rstrip() % line + '\n')
                     if show_predicted_text:
                         accepted_classes = ["ruler", "label", "barcode"]
                     else:
@@ -247,12 +250,14 @@ def run(
                         cv2.imwrite(path_image, im0)
                         img_out = None
                         cropped_QRs = None
+                        saved_lines = None
                     elif option == 'distortion':
                         path_image = os.path.join(save_path,'Detections_Not_Corrected',p.name)
                         validate_dir(os.path.join(save_path,'Detections_Not_Corrected'))
                         cv2.imwrite(path_image, im0)
                         img_out = None
                         cropped_QRs = None
+                        saved_lines = None
                     elif option == 'fs':
                         path_image = os.path.join(save_path,'QR_Codes',p.name)
                         validate_dir(os.path.join(save_path,'QR_Codes'))
@@ -292,7 +297,7 @@ def run(
     if update:
         strip_optimizer(weights[0])  # update model (to fix SourceChangeWarning)
 
-    return save_dir, img_out, cropped_QRs
+    return save_dir, img_out, cropped_QRs, saved_lines
 
 
 def parse_opt():
