@@ -444,8 +444,8 @@ def createPipeline():
 def sendCameraControl(device):
     # Create a control message
     ctrl = dai.CameraControl()
-    ctrl.setAutoFocusMode(dai.CameraControl.AutoFocusMode.MACRO)
-    ctrl.setAntiBandingMode(dai.CameraControl.AntiBandingMode.AUTO)
+    ctrl.AutoFocusMode.MACRO
+    ctrl.AntiBandingMode.AUTO
 
     # Send the control message
     device.getInputQueue('control').send(ctrl)
