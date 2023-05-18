@@ -175,7 +175,6 @@ def run(
                     txt_path = os.path.join(os.path.join(save_dir, 'Labels_Corrected'), p.stem, f'_{frame}')
             elif option == 'fs':
                 if dataset.mode == 'image':
-                    print(f"QR_Codes- {os.path.join(os.path.join(save_dir, 'QR_Codes'), p.stem)}")
                     txt_path = os.path.join(os.path.join(save_dir, 'QR_Codes'), p.stem)
                 else:
                     txt_path = os.path.join(os.path.join(save_dir, 'QR_Codes'), p.stem, f'_{frame}')
@@ -218,7 +217,6 @@ def run(
                     if option == 'fs':
                         if names[c] in ["barcode"]:#accepted_classes: 
                             # print("in option")
-                            print(f"crops- {os.path.join(save_dir, 'crops', names[c], f'{p.stem}.jpg')}")
                             cropped_QR = save_one_box_qr(xyxy, im0_copy, file=os.path.join(save_dir, 'crops', names[c], f'{p.stem}.jpg'), BGR=True, pad=70)
                             cropped_QRs.append(cropped_QR)
                     else:
