@@ -513,36 +513,6 @@ def run(pipeline, root):
     b_photo.grid(row=0, column=4, sticky="nsew")
     b_gps_acc_test.grid(row=22, column=0, sticky="nsew")
 
-    ### AutoFocus Options
-    # Create the radio buttons
-    frame_control = tk.Frame(master=frame_button)
-    frame_control.grid(row=0, column=1, columnspan=2, sticky="nsew")
-
-    radio_var_focus = tk.StringVar()
-
-    # Autofocus trigger
-    frame_auto = tk.Frame(frame_control, height=20)
-    frame_auto.grid(row=0, column=0)
-    frame_auto.grid_propagate(False)  # Prevent the frame from resizing to fit its contents
-
-    auto_radio = tk.Radiobutton(frame_auto, text="Autofocus Trigger", variable=radio_var_focus, value="auto", command=autofocus_trigger(device),
-                                bg="gray", fg="black", font=("Calibri ", 16), highlightthickness=0,
-                                indicatoron=0, selectcolor="green4")
-    auto_radio.pack(fill='both', expand=True)  # The button will fill the entire frame
-
-    focuslabel = tk.Label(master=frame_control, text=" or ", bg="black", fg="white", font=("Calibri ", 16))
-    focuslabel.grid(row=0, column=1, sticky="nsew")
-
-    # Continuous autofocus
-    frame_cont = tk.Frame(frame_control, height=20)
-    frame_cont.grid(row=0, column=2)
-    frame_cont.grid_propagate(False)
-
-    cont_radio = tk.Radiobutton(frame_cont, text="Continuous Autofocus", variable=radio_var_focus, value="cont", command=autofocus_continuous(device),
-                                bg="gray", fg="black", font=("Calibri ", 16), highlightthickness=0,
-                                indicatoron=0, selectcolor="green4")
-    cont_radio.pack(fill='both', expand=True)
-
 
     # Logo in right bottom corner
     # Load the image file
@@ -568,6 +538,36 @@ def run(pipeline, root):
     '''
     with Fragile(dai.Device(pipeline)) as device:
         sendCameraControl(device)
+        ### AutoFocus Options
+        # Create the radio buttons
+        frame_control = tk.Frame(master=frame_button)
+        frame_control.grid(row=0, column=1, columnspan=2, sticky="nsew")
+
+        radio_var_focus = tk.StringVar()
+
+        # Autofocus trigger
+        frame_auto = tk.Frame(frame_control, height=20)
+        frame_auto.grid(row=0, column=0)
+        frame_auto.grid_propagate(False)  # Prevent the frame from resizing to fit its contents
+
+        auto_radio = tk.Radiobutton(frame_auto, text="Autofocus Trigger", variable=radio_var_focus, value="auto", command=autofocus_trigger(device),
+                                    bg="gray", fg="black", font=("Calibri ", 16), highlightthickness=0,
+                                    indicatoron=0, selectcolor="green4")
+        auto_radio.pack(fill='both', expand=True)  # The button will fill the entire frame
+
+        focuslabel = tk.Label(master=frame_control, text=" or ", bg="black", fg="white", font=("Calibri ", 16))
+        focuslabel.grid(row=0, column=1, sticky="nsew")
+
+        # Continuous autofocus
+        frame_cont = tk.Frame(frame_control, height=20)
+        frame_cont.grid(row=0, column=2)
+        frame_cont.grid_propagate(False)
+
+        cont_radio = tk.Radiobutton(frame_cont, text="Continuous Autofocus", variable=radio_var_focus, value="cont", command=autofocus_continuous(device),
+                                    bg="gray", fg="black", font=("Calibri ", 16), highlightthickness=0,
+                                    indicatoron=0, selectcolor="green4")
+        cont_radio.pack(fill='both', expand=True)
+        
         # Test GPS, takes 34 seconds to wake, try to get signal 
         cfg, cfg_user, Sound, sharpness_min_cutoff = startup(dir_root, device, agps_thread, label_total_status,
                                                             label_session_status, label_ndevice_status, label_usbspeed_status,
