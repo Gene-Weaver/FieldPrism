@@ -447,6 +447,7 @@ def sendCameraControl(device):
     ctrl.setAutoFocusMode(dai.CameraControl.AutoFocusMode.MACRO)
     device.getInputQueue('control').send(ctrl)
 def autofocus_trigger(device, lens_position=50):
+    print(f"Lens Position{lens_position}")
     print("Autofocus trigger (hold current focus and disable continuous)")
     ctrl = dai.CameraControl()
     ctrl.setAutoFocusMode(dai.CameraControl.AutoFocusMode.AUTO)
