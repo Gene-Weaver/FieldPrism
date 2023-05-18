@@ -441,6 +441,14 @@ def createPipeline():
     camRgb.video.link(videoOut.input)
 
     return pipeline
+def sendCameraControl(device):
+    # Create a control message
+    ctrl = dai.CameraControl()
+    ctrl.setAutoFocusMode(dai.CameraControl.AutoFocusMode.MACRO)
+    ctrl.setAntiBandingMode(dai.CameraControl.AntiBandingMode.AUTO)
+
+    # Send the control message
+    device.getInputQueue('control').send(ctrl)
 
 '''
 Main code that runs the GUI, is called from start_gui()
@@ -521,6 +529,7 @@ def run(pipeline, root):
         Fragile class allows the whole pipeline and GUI to terminate on exit keypress
     '''
     with Fragile(dai.Device(pipeline)) as device:
+        sendCameraControl(device)
         # Test GPS, takes 34 seconds to wake, try to get signal 
         cfg, cfg_user, Sound, sharpness_min_cutoff = startup(dir_root, device, agps_thread, label_total_status,
                                                             label_session_status, label_ndevice_status, label_usbspeed_status,
@@ -664,6 +673,10 @@ Initialize the tkinter GUI
 '''
 def start_gui():
     pipeline = createPipeline()
+    # Connect to device and start pipeline
+    # with dai.Device(pipeline) as device:
+    #     # Send the control message
+    #     sendCameraControl(device)
     root = Tk()
     root.title("FieldPrism - Field Station")
     root.minsize(width=507, height=450)
