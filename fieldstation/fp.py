@@ -424,6 +424,9 @@ def createPipeline():
     camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_12_MP)
     camRgb.setFps(30)
 
+    # Set autofocus mode to MACRO
+    camRgb.setAutoFocusMode(dai.ColorCameraProperties.AutoFocusMode.MACRO)
+
     ispOut = pipeline.create(dai.node.XLinkOut)
     videoOut = pipeline.create(dai.node.XLinkOut)
 
