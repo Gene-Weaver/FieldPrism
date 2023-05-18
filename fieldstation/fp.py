@@ -424,11 +424,8 @@ def createPipeline():
     camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_12_MP)
     camRgb.setFps(30)
 
-    controlIn = pipeline.create(dai.node.cameraControl)
-    xinControl = pipeline.create(dai.node.XLinkIn)
-
-    xinControl.setStreamName('control')
-    xinControl.out.link(controlIn.input)
+    controlIn = pipeline.create(dai.node.XLinkIn)
+    controlIn.setStreamName('control')
     controlIn.out.link(camRgb.inputControl)
 
     ispOut = pipeline.create(dai.node.XLinkOut)
@@ -446,17 +443,10 @@ def createPipeline():
 
     return pipeline
 def sendCameraControl(device):
-    # Create a control message
     ctrl = dai.CameraControl()
     ctrl.setAutoFocusMode(dai.CameraControl.AutoFocusMode.MACRO)
-    ctrl.setAutoFocusMode(dai.CameraControl.AutoFocusMode.MACRO)
-    ctrl.setAntiBandingMode(dai.CameraControl.AntiBandingMode.AUTO)
-
-    # ctrl.AutoFocusMode.MACRO
-    # ctrl.AntiBandingMode.AUTO
-
-    # Send the control message
     device.getInputQueue('control').send(ctrl)
+
 
 '''
 Main code that runs the GUI, is called from start_gui()
