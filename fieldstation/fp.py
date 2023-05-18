@@ -446,16 +446,25 @@ def sendCameraControl(device):
     ctrl = dai.CameraControl()
     ctrl.setAutoFocusMode(dai.CameraControl.AutoFocusMode.MACRO)
     device.getInputQueue('control').send(ctrl)
-def autofocus_trigger(device, lens_position=135):
+
+def autofocus_trigger(device, lens_position=135, focus_value_label=None):
     print(f"Lens Position{lens_position}")
     print("Autofocus trigger (hold current focus and disable continuous)")
+    
+    new_text = f"Focus Locked - {lens_position}"
+    focus_value_label.configure(text=new_text, fg='magenta')
+
     ctrl = dai.CameraControl()
     ctrl.setAutoFocusMode(dai.CameraControl.AutoFocusMode.OFF)
     ctrl.setAutoFocusTrigger()
     ctrl.setManualFocus(lens_position)
     device.getInputQueue('control').send(ctrl)
-def autofocus_continuous(device):
+def autofocus_continuous(device, lens_position=135, focus_value_label=None):
     print("Autofocus enable, continuous")
+
+    new_text = f"Focus Auto - {lens_position}"
+    focus_value_label.configure(text=new_text, fg='white')
+
     ctrl = dai.CameraControl()
     ctrl.setAutoFocusMode(dai.CameraControl.AutoFocusMode.AUTO)
     ctrl.setAutoFocusTrigger()
@@ -544,23 +553,27 @@ def run(pipeline, root):
         frame_control = tk.Frame(master=frame_button)
         frame_control.grid(row=0, column=1, columnspan=2, sticky="nsew")
 
+        # Create a label that spans all three columns in row 0
+        focus_value_label = tk.Label(master=frame_control, text="Focus - Auto", bg="black", fg="white", font=("Calibri ", 16))
+        focus_value_label.grid(row=0, column=0, columnspan=3, sticky="nsew")
+
         # Autofocus trigger button
         frame_auto = tk.Frame(frame_control, height=60)
-        frame_auto.grid(row=0, column=0)
+        frame_auto.grid(row=1, column=0)
         frame_auto.grid_propagate(False)  # Prevent the frame from resizing to fit its contents
-        auto_button = tk.Button(frame_auto, text="Autofocus Trigger", command=lambda: autofocus_trigger(device, lens_position),
+        auto_button = tk.Button(frame_auto, text="Autofocus Trigger", command=lambda: autofocus_trigger(device, lens_position, focus_value_label),
                                 bg="gray", fg="black", font=("Calibri ", 16), highlightthickness=0, 
                                 activebackground="green4")
         auto_button.pack(fill='both', expand=True)  # The button will fill the entire frame
 
-        focuslabel = tk.Label(master=frame_control, text=" or ", bg="black", fg="white", font=("Calibri ", 16))
-        focuslabel.grid(row=0, column=1, sticky="nsew")
+        focuslabel = tk.Label(master=frame_control, text=" 135 ", bg="black", fg="white", font=("Calibri ", 16))
+        focuslabel.grid(row=1, column=1, sticky="nsew")
 
         # Continuous autofocus button
         frame_cont = tk.Frame(frame_control, height=60)
-        frame_cont.grid(row=0, column=2)
+        frame_cont.grid(row=1, column=2)
         frame_cont.grid_propagate(False)
-        cont_button = tk.Button(frame_cont, text="Continuous Autofocus", command=lambda: autofocus_continuous(device),
+        cont_button = tk.Button(frame_cont, text="Continuous Autofocus", command=lambda: autofocus_continuous(device, lens_position, focus_value_label),
                                 bg="gray", fg="black", font=("Calibri ", 16), highlightthickness=0, 
                                 activebackground="green4")
         cont_button.pack(fill='both', expand=True)
