@@ -458,6 +458,7 @@ def autofocus_continuous(device):
     print("Autofocus enable, continuous")
     ctrl = dai.CameraControl()
     ctrl.setAutoFocusMode(dai.CameraControl.AutoFocusMode.AUTO)
+    ctrl.setAutoFocusTrigger()
     device.getInputQueue('control').send(ctrl)
 '''
 Main code that runs the GUI, is called from start_gui()
