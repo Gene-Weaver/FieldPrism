@@ -525,7 +525,7 @@ def run(pipeline, root):
     frame_auto.grid(row=0, column=0)
     frame_auto.grid_propagate(False)  # Prevent the frame from resizing to fit its contents
 
-    auto_radio = tk.Radiobutton(frame_auto, text="Autofocus Trigger", variable=radio_var_focus, value="auto", command=autofocus_trigger,
+    auto_radio = tk.Radiobutton(frame_auto, text="Autofocus Trigger", variable=radio_var_focus, value="auto", command=autofocus_trigger(device),
                                 bg="gray", fg="black", font=("Calibri ", 16), highlightthickness=0,
                                 indicatoron=0, selectcolor="green4")
     auto_radio.pack(fill='both', expand=True)  # The button will fill the entire frame
@@ -538,7 +538,7 @@ def run(pipeline, root):
     frame_cont.grid(row=0, column=2)
     frame_cont.grid_propagate(False)
 
-    cont_radio = tk.Radiobutton(frame_cont, text="Continuous Autofocus", variable=radio_var_focus, value="cont", command=autofocus_continuous,
+    cont_radio = tk.Radiobutton(frame_cont, text="Continuous Autofocus", variable=radio_var_focus, value="cont", command=autofocus_continuous(device),
                                 bg="gray", fg="black", font=("Calibri ", 16), highlightthickness=0,
                                 indicatoron=0, selectcolor="green4")
     cont_radio.pack(fill='both', expand=True)
