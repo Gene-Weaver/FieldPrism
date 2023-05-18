@@ -550,7 +550,7 @@ def run(pipeline, root):
         sendCameraControl(device)
         ### AutoFocus Options
         # Create the control buttons
-        frame_control = tk.Frame(master=frame_button)
+        frame_control = tk.Frame(master=frame_button, height = 60, bg="black")
         frame_control.grid(row=0, column=1, columnspan=2, sticky="nsew")
 
         # Create a label that spans all three columns in row 0
@@ -566,7 +566,7 @@ def run(pipeline, root):
                                 activebackground="green4")
         auto_button.pack(fill='both', expand=True)  # The button will fill the entire frame
 
-        focuslabel = tk.Label(master=frame_control, text=" 135 ", bg="black", fg="white", font=("Calibri ", 16))
+        focuslabel = tk.Label(master=frame_control, text=" Zone 135 ", bg="black", fg="white", font=("Calibri ", 16))
         focuslabel.grid(row=1, column=1, sticky="nsew")
 
         # Continuous autofocus button
