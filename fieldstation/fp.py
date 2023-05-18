@@ -446,18 +446,18 @@ def sendCameraControl(device):
     ctrl = dai.CameraControl()
     ctrl.setAutoFocusMode(dai.CameraControl.AutoFocusMode.MACRO)
     device.getInputQueue('control').send(ctrl)
-def autofocus_trigger(device, lens_position=50):
+def autofocus_trigger(device, lens_position=135):
     print(f"Lens Position{lens_position}")
     print("Autofocus trigger (hold current focus and disable continuous)")
     ctrl = dai.CameraControl()
-    ctrl.setAutoFocusMode(dai.CameraControl.AutoFocusMode.AUTO)
+    ctrl.setAutoFocusMode(dai.CameraControl.AutoFocusMode.OFF)
     ctrl.setAutoFocusTrigger()
     ctrl.setManualFocus(lens_position)
     device.getInputQueue('control').send(ctrl)
 def autofocus_continuous(device):
     print("Autofocus enable, continuous")
     ctrl = dai.CameraControl()
-    ctrl.setAutoFocusMode(dai.CameraControl.AutoFocusMode.CONTINUOUS_VIDEO)
+    ctrl.setAutoFocusMode(dai.CameraControl.AutoFocusMode.AUTO)
     device.getInputQueue('control').send(ctrl)
 '''
 Main code that runs the GUI, is called from start_gui()
@@ -613,6 +613,7 @@ def run(pipeline, root):
                 ispFrames = ispQueue.get()
                 isp = ispFrames.getCvFrame()
                 lens_position = ispFrames.getLensPosition()
+                print(f"get LP - {lens_position}")
 
                 # If keypress for photo on last loop, then save a still now
                 # update_visibility(int(label_nqr_status.cget("text")), L1, L2, L3, L4, L5, L6)
