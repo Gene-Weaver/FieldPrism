@@ -424,9 +424,6 @@ def createPipeline():
     camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_12_MP)
     camRgb.setFps(30)
 
-    # Set autofocus mode to MACRO
-    camRgb.setAutoFocusMode(dai.ColorCameraProperties.AutoFocusMode.MACRO)
-
     ispOut = pipeline.create(dai.node.XLinkOut)
     videoOut = pipeline.create(dai.node.XLinkOut)
 
@@ -444,8 +441,12 @@ def createPipeline():
 def sendCameraControl(device):
     # Create a control message
     ctrl = dai.CameraControl()
-    ctrl.AutoFocusMode.MACRO
-    ctrl.AntiBandingMode.AUTO
+    ctrl.setAutoFocusMode(dai.CameraControl.AutoFocusMode.MACRO)
+    ctrl.setAutoFocusMode(dai.CameraControl.AutoFocusMode.MACRO)
+    ctrl.setAntiBandingMode(dai.CameraControl.AntiBandingMode.AUTO)
+
+    # ctrl.AutoFocusMode.MACRO
+    # ctrl.AntiBandingMode.AUTO
 
     # Send the control message
     device.getInputQueue('control').send(ctrl)
