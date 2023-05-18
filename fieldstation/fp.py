@@ -424,6 +424,13 @@ def createPipeline():
     camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_12_MP)
     camRgb.setFps(30)
 
+    controlIn = pipeline.create(dai.node.cameraControl)
+    xinControl = pipeline.create(dai.node.XLinkIn)
+
+    xinControl.setStreamName('control')
+    xinControl.out.link(controlIn.input)
+    controlIn.out.link(camRgb.inputControl)
+
     ispOut = pipeline.create(dai.node.XLinkOut)
     videoOut = pipeline.create(dai.node.XLinkOut)
 
