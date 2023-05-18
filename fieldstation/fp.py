@@ -446,7 +446,7 @@ def sendCameraControl(device):
     ctrl = dai.CameraControl()
     ctrl.setAutoFocusMode(dai.CameraControl.AutoFocusMode.MACRO)
     device.getInputQueue('control').send(ctrl)
-def autofocus_trigger(device, lens_position):
+def autofocus_trigger(device, lens_position=50):
     print("Autofocus trigger (hold current focus and disable continuous)")
     ctrl = dai.CameraControl()
     ctrl.setAutoFocusMode(dai.CameraControl.AutoFocusMode.AUTO)
@@ -514,7 +514,6 @@ def run(pipeline, root):
     b_photo.grid(row=0, column=4, sticky="nsew")
     b_gps_acc_test.grid(row=22, column=0, sticky="nsew")
 
-
     # Logo in right bottom corner
     # Load the image file
     img = Image.open("/home/pi/FieldPrism/img/FieldPrism_Desktop_Corner.jpg")
@@ -525,7 +524,6 @@ def run(pipeline, root):
     photo_label.pack()
     frame_photo.grid(row=4, column=2, sticky="nsew")
     photo_label.image = photo
-
 
     '''
     Initialize the two camera windows in the GUI
@@ -539,6 +537,32 @@ def run(pipeline, root):
     '''
     with Fragile(dai.Device(pipeline)) as device:
         sendCameraControl(device)
+        ### AutoFocus Options
+        # Create the control buttons
+        frame_control = tk.Frame(master=frame_button)
+        frame_control.grid(row=0, column=1, columnspan=2, sticky="nsew")
+
+        # Autofocus trigger button
+        frame_auto = tk.Frame(frame_control, height=60)
+        frame_auto.grid(row=0, column=0)
+        frame_auto.grid_propagate(False)  # Prevent the frame from resizing to fit its contents
+        auto_button = tk.Button(frame_auto, text="Autofocus Trigger", command=lambda: autofocus_trigger(device, lens_position),
+                                bg="gray", fg="black", font=("Calibri ", 16), highlightthickness=0, 
+                                activebackground="green4")
+        auto_button.pack(fill='both', expand=True)  # The button will fill the entire frame
+
+        focuslabel = tk.Label(master=frame_control, text=" or ", bg="black", fg="white", font=("Calibri ", 16))
+        focuslabel.grid(row=0, column=1, sticky="nsew")
+
+        # Continuous autofocus button
+        frame_cont = tk.Frame(frame_control, height=60)
+        frame_cont.grid(row=0, column=2)
+        frame_cont.grid_propagate(False)
+        cont_button = tk.Button(frame_cont, text="Continuous Autofocus", command=lambda: autofocus_continuous(device),
+                                bg="gray", fg="black", font=("Calibri ", 16), highlightthickness=0, 
+                                activebackground="green4")
+        cont_button.pack(fill='both', expand=True)
+
 
         # Test GPS, takes 34 seconds to wake, try to get signal 
         cfg, cfg_user, Sound, sharpness_min_cutoff = startup(dir_root, device, agps_thread, label_total_status,
@@ -588,32 +612,6 @@ def run(pipeline, root):
                 ispFrames = ispQueue.get()
                 isp = ispFrames.getCvFrame()
                 lens_position = ispFrames.getLensPosition()
-
-                 ### AutoFocus Options
-                # Create the radio buttons
-                frame_control = tk.Frame(master=frame_button)
-                frame_control.grid(row=0, column=1, columnspan=2, sticky="nsew")
-                radio_var_focus = tk.StringVar()
-                # Autofocus trigger
-                frame_auto = tk.Frame(frame_control, height=60)
-                frame_auto.grid(row=0, column=0)
-                frame_auto.grid_propagate(False)  # Prevent the frame from resizing to fit its contents
-                auto_radio = tk.Radiobutton(frame_auto, text="Autofocus Trigger", variable=radio_var_focus, value="auto", command=autofocus_trigger(device, lens_position),
-                                            bg="gray", fg="black", font=("Calibri ", 16), highlightthickness=0,
-                                            indicatoron=0, selectcolor="green4")
-                auto_radio.pack(fill='both', expand=True)  # The button will fill the entire frame
-                focuslabel = tk.Label(master=frame_control, text=" or ", bg="black", fg="white", font=("Calibri ", 16))
-                focuslabel.grid(row=0, column=1, sticky="nsew")
-                # Continuous autofocus
-                frame_cont = tk.Frame(frame_control, height=60)
-                frame_cont.grid(row=0, column=2)
-                frame_cont.grid_propagate(False)
-                cont_radio = tk.Radiobutton(frame_cont, text="Continuous Autofocus", variable=radio_var_focus, value="cont", command=autofocus_continuous(device),
-                                            bg="gray", fg="black", font=("Calibri ", 16), highlightthickness=0,
-                                            indicatoron=0, selectcolor="green4")
-                cont_radio.pack(fill='both', expand=True)
-
-                
 
                 # If keypress for photo on last loop, then save a still now
                 # update_visibility(int(label_nqr_status.cget("text")), L1, L2, L3, L4, L5, L6)
