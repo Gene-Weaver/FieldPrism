@@ -466,7 +466,7 @@ def autofocus_continuous(device, focus_value_label=None):
     focus_value_label.configure(text=new_text, fg='white')
 
     ctrl = dai.CameraControl()
-    ctrl.setAutoFocusMode(dai.CameraControl.AutoFocusMode.AUTO)
+    ctrl.setAutoFocusMode(dai.CameraControl.AutoFocusMode.CONTINUOUS_PICTURE)
     ctrl.setAutoFocusTrigger()
     device.getInputQueue('control').send(ctrl)
 '''
