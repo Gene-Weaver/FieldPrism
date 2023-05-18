@@ -140,9 +140,9 @@ def run(
 
         # Inference
         with dt[1]:
-            if option != 'fs':
-                visualize = increment_path(save_dir / Path(path).stem, mkdir=True) if visualize else False
-                pred = model(im, augment=augment, visualize=visualize)
+            # if option != 'fs':
+            visualize = increment_path(save_dir / Path(path).stem, mkdir=True) if visualize else False
+            pred = model(im, augment=augment, visualize=visualize)
 
         # NMS
         with dt[2]:
@@ -259,8 +259,8 @@ def run(
                         cropped_QRs = None
                         saved_lines = None
                     elif option == 'fs':
-                        path_image = os.path.join(save_path,'QR_Codes',p.name)
-                        validate_dir(os.path.join(save_path,'QR_Codes'))
+                        # path_image = os.path.join(save_path,'QR_Codes',p.name)
+                        # validate_dir(os.path.join(save_path,'QR_Codes'))
                         # cv2.imwrite(path_image, im0)
                         img_out = im0
                         cropped_QRs = cropped_QRs
