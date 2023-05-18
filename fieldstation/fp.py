@@ -554,7 +554,7 @@ def run(pipeline, root):
         frame_control.grid(row=0, column=1, columnspan=2, sticky="nsew")
 
         # Create a label that spans all three columns in row 0
-        focus_value_label = tk.Label(master=frame_control, text="Focus - Auto", bg="black", fg="white", font=("Calibri ", 16))
+        focus_value_label = tk.Label(master=frame_control, text="Autofocus Active", bg="black", fg="white", font=("Calibri ", 16))
         focus_value_label.grid(row=0, column=0, columnspan=3, sticky="nsew")
 
         # Autofocus trigger button
