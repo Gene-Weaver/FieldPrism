@@ -251,6 +251,12 @@ def save_image(save_frame, name_time, save_dir):
 
     print(f"{bcolors.OKGREEN}       Image Saved: {path_to_saved}{bcolors.ENDC}")    
     return path_to_saved
+def save_txt_bbox(saved_lines, name_time, save_dir):
+    path_to_saved = "".join([name_time,'.txt'])
+    path_to_saved = os.path.join(save_dir,path_to_saved)
+    with open(path_to_saved, 'w') as f:
+        for line in saved_lines:
+            f.write(('%g ' * len(line)).rstrip() % line + '\n')
 
 '''
 Route the photo to each attached storage device. 
@@ -277,25 +283,28 @@ def route_save_image(Setup, cfg_user, save_frame, is_sharp):
         path_to_saved = save_image(save_frame, name_time, Setup.usb_6)
     return path_to_saved, name_time
 
-def route_save_image_qr(Setup, cfg_user, save_frame, is_sharp, name_time):
-    if not is_sharp:
-        if cfg_user['fieldstation']['add_flag_to_blurry_images']:
-            name_time = ''.join([name_time, '__B'])
-
+def route_save_image_qr(Setup, save_frame, saved_lines, name_time):
     if Setup.save_to_boot:
         path_to_saved = save_image(save_frame, name_time, Setup.dir_qr_none)
+        save_txt_bbox(saved_lines, name_time, Setup.dir_qr_none)
     if Setup.has_1_usb:
         path_to_saved = save_image(save_frame, name_time, Setup.dir_qr_1)
+        save_txt_bbox(saved_lines, name_time, Setup.dir_qr_1)
     if Setup.has_2_usb:
         path_to_saved = save_image(save_frame, name_time, Setup.dir_qr_2)
+        save_txt_bbox(saved_lines, name_time, Setup.dir_qr_2)
     if Setup.has_3_usb:
         path_to_saved = save_image(save_frame, name_time, Setup.dir_qr_3)
+        save_txt_bbox(saved_lines, name_time, Setup.dir_qr_3)
     if Setup.has_4_usb:
         path_to_saved = save_image(save_frame, name_time, Setup.dir_qr_4)
+        save_txt_bbox(saved_lines, name_time, Setup.dir_qr_4)
     if Setup.has_5_usb:
         path_to_saved = save_image(save_frame, name_time, Setup.dir_qr_5)
+        save_txt_bbox(saved_lines, name_time, Setup.dir_qr_5)
     if Setup.has_6_usb:
         path_to_saved = save_image(save_frame, name_time, Setup.dir_qr_6)
+        save_txt_bbox(saved_lines, name_time, Setup.dir_qr_6)
     return path_to_saved
 
 def route_save_image_qr_crop(Setup, cfg_user, save_frame, is_sharp, name_time):
@@ -594,8 +603,8 @@ def run(pipeline, root):
                     # Check for valid QR code
                     n_qr = int(label_nqr_status.cget("text"))
                     label_camera_status.config(text = 'Detecting QR Codes and Markers', fg='magenta')
-                    qr_found, img_out_qr, cropped_QRs = check_QR_codes(path_to_saved, cfg.dir_data_session_qr, cfg.name_session, label_nqr_status)
-                    path_to_saved_qr_whole = route_save_image_qr(cfg, cfg_user, img_out_qr, is_sharp, name_time)
+                    qr_found, img_out_qr, cropped_QRs, saved_lines = check_QR_codes(path_to_saved, cfg.dir_data_session_qr, cfg.name_session, label_nqr_status)
+                    path_to_saved_qr_whole = route_save_image_qr(cfg, img_out_qr, saved_lines, name_time)
                     path_to_saved_qr = route_save_image_qr_crop(cfg, cfg_user, cropped_QRs, is_sharp, name_time)
 
                     # Update the image in the GUI by reading the image that was just written to storage

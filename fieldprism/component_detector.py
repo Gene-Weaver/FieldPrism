@@ -54,7 +54,7 @@ def detect_barcodes_FS(path_img, dir_out, run_name, label_nqr_status):
     conf = float(label_nqr_status.cget("text"))
     conf = np.divide(conf,100)
     # try:
-    actual_save_dir, img_out, cropped_QRs = run(weights=dir_weights,
+    actual_save_dir, img_out, cropped_QRs, saved_lines = run(weights=dir_weights,
     option = 'fs',
     show_predicted_text = False,
     source = path_img,
@@ -71,14 +71,14 @@ def detect_barcodes_FS(path_img, dir_out, run_name, label_nqr_status):
         # return actual_save_dir, img_out
     # except Exception as e:
         # print(f"{bcolors.WARNING}No images in {run_name}. \n      Error: {e}{bcolors.ENDC}")
-    return actual_save_dir, img_out, cropped_QRs 
+    return actual_save_dir, img_out, cropped_QRs, saved_lines
         
 
 def check_QR_codes(path_img, dir_out, run_name, label_nqr_status):
-    actual_save_dir, img_out, cropped_QRs = detect_barcodes_FS(path_img, dir_out, run_name, label_nqr_status)
+    actual_save_dir, img_out, cropped_QRs, saved_lines = detect_barcodes_FS(path_img, dir_out, run_name, label_nqr_status)
     
     qr_found = False
     if len(cropped_QRs) > 0:
         qr_found = True
-    return qr_found, img_out, cropped_QRs
+    return qr_found, img_out, cropped_QRs, saved_lines
 
