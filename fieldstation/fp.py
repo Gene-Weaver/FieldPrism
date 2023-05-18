@@ -627,7 +627,6 @@ def run(pipeline, root):
                 ispFrames = ispQueue.get()
                 isp = ispFrames.getCvFrame()
                 lens_position = ispFrames.getLensPosition()
-                print(f"get LP - {lens_position}")
 
                 # If keypress for photo on last loop, then save a still now
                 # update_visibility(int(label_nqr_status.cget("text")), L1, L2, L3, L4, L5, L6)
