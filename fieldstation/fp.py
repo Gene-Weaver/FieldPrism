@@ -446,8 +446,17 @@ def sendCameraControl(device):
     ctrl = dai.CameraControl()
     ctrl.setAutoFocusMode(dai.CameraControl.AutoFocusMode.MACRO)
     device.getInputQueue('control').send(ctrl)
-
-
+def autofocus_trigger(device):
+    print("Autofocus trigger (and disable continuous)")
+    ctrl = dai.CameraControl()
+    ctrl.setAutoFocusMode(dai.CameraControl.AutoFocusMode.AUTO)
+    ctrl.setAutoFocusTrigger()
+    device.getInputQueue('control').send(ctrl)
+def autofocus_continuous(device):
+    print("Autofocus enable, continuous")
+    ctrl = dai.CameraControl()
+    ctrl.setAutoFocusMode(dai.CameraControl.AutoFocusMode.CONTINUOUS_VIDEO)
+    device.getInputQueue('control').send(ctrl)
 '''
 Main code that runs the GUI, is called from start_gui()
 '''
@@ -503,6 +512,37 @@ def run(pipeline, root):
     b_gps.grid(row=0, column=3, sticky="nsew")
     b_photo.grid(row=0, column=4, sticky="nsew")
     b_gps_acc_test.grid(row=22, column=0, sticky="nsew")
+
+    ### AutoFocus Options
+    # Create the radio buttons
+    frame_control = tk.Frame(master=frame_button)
+    frame_control.grid(row=0, column=1, columnspan=2, sticky="nsew")
+    frame_control.pack()
+
+    radio_var_focus = tk.StringVar()
+    # Autofocus trigger
+    frame_auto = tk.Frame(frame_control, height=20)
+    frame_auto.grid(row=0, column=0)
+    frame_auto.grid_propagate(False)  # Prevent the frame from resizing to fit its contents
+
+    auto_radio = tk.Radiobutton(frame_auto, text="Autofocus Trigger", variable=radio_var_focus, value="auto", command=autofocus_trigger,
+                                bg="gray", fg="black", font=("Calibri ", 16), highlightthickness=0,
+                                indicatoron=0, selectcolor="green4")
+    auto_radio.pack(fill='both', expand=True)  # The button will fill the entire frame
+
+    focuslabel = tk.Label(master=frame_control, text=" or ", bg="black", fg="white", font=("Calibri ", 16))
+    focuslabel.grid(row=0, column=1, sticky="nsew")
+
+    # Continuous autofocus
+    frame_cont = tk.Frame(frame_control, height=20)
+    frame_cont.grid(row=0, column=2)
+    frame_cont.grid_propagate(False)
+
+    cont_radio = tk.Radiobutton(frame_cont, text="Continuous Autofocus", variable=radio_var_focus, value="cont", command=autofocus_continuous,
+                                bg="gray", fg="black", font=("Calibri ", 16), highlightthickness=0,
+                                indicatoron=0, selectcolor="green4")
+    cont_radio.pack(fill='both', expand=True)
+
 
     # Logo in right bottom corner
     # Load the image file
