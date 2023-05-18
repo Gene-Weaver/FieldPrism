@@ -563,10 +563,10 @@ def run(pipeline, root):
         frame_auto.grid_propagate(False)  # Prevent the frame from resizing to fit its contents
         auto_button = tk.Button(frame_auto, text="Lock Focus", command=lambda: autofocus_trigger(device, lens_position, focus_value_label),
                                 bg="black", fg="gray", font=("Calibri ", 16), highlightthickness=0, 
-                                activebackground="green4")
+                                activebackground="magenta")
         auto_button.pack(fill='both', expand=True)  # The button will fill the entire frame
 
-        focuslabel = tk.Label(master=frame_control, text=" Zone 135 ", bg="black", fg="white", font=("Calibri ", 16))
+        focuslabel = tk.Label(master=frame_control, text=" Zone 135 ", bg="black", fg="silver", font=("Calibri ", 16))
         focuslabel.grid(row=1, column=1, sticky="nsew")
 
         # Continuous autofocus button
@@ -628,7 +628,7 @@ def run(pipeline, root):
                 isp = ispFrames.getCvFrame()
                 lens_position = ispFrames.getLensPosition()
                 new_text = f" Zone {lens_position} "
-                focuslabel.configure(text=new_text, fg='white')
+                focuslabel.configure(text=new_text, fg='silver')
 
                 # If keypress for photo on last loop, then save a still now
                 # update_visibility(int(label_nqr_status.cget("text")), L1, L2, L3, L4, L5, L6)
