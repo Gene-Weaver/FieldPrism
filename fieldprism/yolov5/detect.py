@@ -103,10 +103,10 @@ def run(
         if not os.path.exists(os.path.join(project, 'Labels_Corrected')):
             os.makedirs(os.path.join(project, 'Labels_Corrected'))
     elif option == 'fs':
-        save_dir = project
-        if not os.path.exists(os.path.join(project, 'QR_Codes')):
-            os.makedirs(os.path.join(project, 'QR_Codes'))
-    
+        # save_dir = project
+        # if not os.path.exists(os.path.join(project, 'QR_Codes')):
+        #     os.makedirs(os.path.join(project, 'QR_Codes'))
+        saved_lines = []
 
     # Load model
     device = select_device(device)
@@ -131,7 +131,6 @@ def run(
     seen, windows, dt = 0, [], (Profile(), Profile(), Profile())
     for path, im, im0s, vid_cap, s in dataset:
         im0_copy = copy.deepcopy(im0s)
-        saved_lines = []
         with dt[0]:
             im = torch.from_numpy(im).to(model.device)
             im = im.half() if model.fp16 else im.float()  # uint8 to fp16/32
