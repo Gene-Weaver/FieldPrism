@@ -451,7 +451,7 @@ def autofocus_trigger(device, lens_position=135, focus_value_label=None):
     print(f"Lens Position{lens_position}")
     print("Autofocus trigger (hold current focus and disable continuous)")
     
-    new_text = f"Focus Locked - {lens_position}"
+    new_text = f"Focus Locked [{lens_position}]"
     focus_value_label.configure(text=new_text, fg='magenta')
 
     ctrl = dai.CameraControl()
@@ -462,7 +462,7 @@ def autofocus_trigger(device, lens_position=135, focus_value_label=None):
 def autofocus_continuous(device, focus_value_label=None):
     print("Autofocus enable, continuous")
 
-    new_text = f"Focus Auto"
+    new_text = f"Autofocus Active"
     focus_value_label.configure(text=new_text, fg='white')
 
     ctrl = dai.CameraControl()
@@ -573,7 +573,7 @@ def run(pipeline, root):
         frame_cont = tk.Frame(frame_control, height=60)
         frame_cont.grid(row=1, column=2)
         frame_cont.grid_propagate(False)
-        cont_button = tk.Button(frame_cont, text="Refocus", command=lambda: autofocus_continuous(device, focus_value_label),
+        cont_button = tk.Button(frame_cont, text="Autofocus", command=lambda: autofocus_continuous(device, focus_value_label),
                                 bg="black", fg="gray", font=("Calibri ", 16), highlightthickness=0, 
                                 activebackground="green4")
         cont_button.pack(fill='both', expand=True)
