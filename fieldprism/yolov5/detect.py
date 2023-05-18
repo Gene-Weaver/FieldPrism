@@ -103,7 +103,7 @@ def run(
         if not os.path.exists(os.path.join(project, 'Labels_Corrected')):
             os.makedirs(os.path.join(project, 'Labels_Corrected'))
     elif option == 'fs':
-        # save_dir = project
+        save_dir = project
         # if not os.path.exists(os.path.join(project, 'QR_Codes')):
         #     os.makedirs(os.path.join(project, 'QR_Codes'))
         saved_lines = []
