@@ -620,7 +620,8 @@ def run(pipeline, root):
                 label_camera_status.config(text = text_ready, fg='green2')
                 
                 # Get latest frame from camera video feed (center crop)
-                vidFrames = device.getOutputQueue('preview', maxSize=1, blocking=True).tryGetAll()
+                vidQueue = device.getOutputQueue('preview', maxSize=1, blocking=True)
+                vidFrames = vidQueue.tryGetAll()
                 for vidFrame in vidFrames:
                     print('here')
                     vframe = vidFrame.getCvFrame()
@@ -631,6 +632,10 @@ def run(pipeline, root):
                     Window_Preview.update_image(vframe)
                     is_sharp, sharpness_actual = detect_sharpness(sharpness_min_cutoff, vframe)
                     report_sharpness('live', label_focus_live_status, label_focus_saved_status, is_sharp, sharpness_min_cutoff, sharpness_actual)
+                    
+                    # Get lens position
+                    lens_position = vidFrame.getLensPosition()
+                    print(f' Lens Position: {lens_position}')
                 print('done')
 
                 # Get latest frame from camera full sensor
