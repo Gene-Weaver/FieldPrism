@@ -479,7 +479,7 @@ def createPipeline():
 
 def sendCameraControl(device):
     ctrl = dai.CameraControl()
-    ctrl.setAutoFocusMode(dai.CameraControl.AutoFocusMode.MACRO)
+    ctrl.setAutoFocusMode(dai.CameraControl.AutoFocusMode.CONTINUOUS_VIDEO)
     ctrl.setManualFocus(135)
     device.getInputQueue('control').send(ctrl)
 
@@ -689,72 +689,74 @@ def run(pipeline, root):
 
                 if TAKE_PHOTO:
                     print('1')
-                    stillQueue = device.getOutputQueue('fullRes', maxSize=1, blocking=True)
+                    save_frame = []
+                    stillQueue = device.getOutputQueue('fullRes', maxSize=1, blocking=False)
                     stillFrame = stillQueue.get()
                     save_frame = stillFrame.getCvFrame()
-                    # ispQueue = device.getOutputQueue('fullRes', maxSize=1, blocking=False)
+                    if save_frame != []:
+                        # ispQueue = device.getOutputQueue('fullRes', maxSize=1, blocking=False)
 
-                    # print('2')
-                    # ispFrames = ispQueue.get()
-                    # print('3')
-                    # isp = ispFrames.getCvFrame()
+                        # print('2')
+                        # ispFrames = ispQueue.get()
+                        # print('3')
+                        # isp = ispFrames.getCvFrame()
 
-                    # Print status
-                    label_camera_status.config(text = 'Camera Activated...', fg='goldenrod')
-                    label_csv_status.config(text = 'Collecting Data', fg='goldenrod')
-                    
-                    images_this_session = report_camera_activated(cfg_user, label_camera_status, images_this_session, Sound)
+                        # Print status
+                        label_camera_status.config(text = 'Camera Activated...', fg='goldenrod')
+                        label_csv_status.config(text = 'Collecting Data', fg='goldenrod')
+                        
+                        images_this_session = report_camera_activated(cfg_user, label_camera_status, images_this_session, Sound)
 
-                    # Get latest frame
-                    # ispFrames = device.getOutputQueue('fullRes', maxSize=1, blocking=True).get()
-                    # save_frame = ispFrames.getCvFrame()
+                        # Get latest frame
+                        # ispFrames = device.getOutputQueue('fullRes', maxSize=1, blocking=True).get()
+                        # save_frame = ispFrames.getCvFrame()
 
-                    # Get pixel dimensions
-                    height = save_frame.shape[0]
-                    width = save_frame.shape[1]
+                        # Get pixel dimensions
+                        height = save_frame.shape[0]
+                        width = save_frame.shape[1]
 
-                    # Rotate Camera
-                    # Can rotate 270 by setting both to True
-                    save_frame = rotate_image_options(save_frame,cfg_user)
+                        # Rotate Camera
+                        # Can rotate 270 by setting both to True
+                        save_frame = rotate_image_options(save_frame,cfg_user)
 
-                    # Check focus
-                    is_sharp, sharpness_actual = detect_sharpness(sharpness_min_cutoff, save_frame)
-                    report_sharpness('saved', label_focus_live_status, label_focus_saved_status, is_sharp, sharpness_min_cutoff, sharpness_actual)
+                        # Check focus
+                        is_sharp, sharpness_actual = detect_sharpness(sharpness_min_cutoff, save_frame)
+                        report_sharpness('saved', label_focus_live_status, label_focus_saved_status, is_sharp, sharpness_min_cutoff, sharpness_actual)
 
-                    # Save image
-                    path_to_saved, name_time = route_save_image(cfg, cfg_user, save_frame, is_sharp)
+                        # Save image
+                        path_to_saved, name_time = route_save_image(cfg, cfg_user, save_frame, is_sharp)
 
-                    # Update the image in the GUI by reading the image that was just written to storage
-                    Window_Saved.update_image(cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
-
-                    # Activate GPS, update GUI, and return GPS data
-                    GPS_data = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
-
-                    # Check for valid QR code
-                    n_qr = int(label_nqr_status.cget("text"))
-                    label_camera_status.config(text = 'Detecting QR Codes and Markers', fg='magenta')
-                    qr_found, img_out_qr, cropped_QRs, saved_lines = check_QR_codes(path_to_saved, cfg.dir_data_session_qr, cfg.name_session, label_nqr_status)
-                    path_to_saved_qr_whole = route_save_image_qr(cfg, img_out_qr, saved_lines, name_time)
-                    path_to_saved_qr = route_save_image_qr_crop(cfg, cfg_user, cropped_QRs, is_sharp, name_time)
-
-                    # Update the image in the GUI by reading the image that was just written to storage
-                    try:
-                        Window_Saved.update_image(cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved_qr_whole)))))
-                    except:
+                        # Update the image in the GUI by reading the image that was just written to storage
                         Window_Saved.update_image(cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
 
-                    label_camera_status.config(text = 'Reading QR Codes', fg='magenta')
-                    RESULTS = read_QR_codes(n_qr, cropped_QRs, use_enhanced)
-                    update_levels(L1, L2, L3, L4, L5, L6, RESULTS)
+                        # Activate GPS, update GUI, and return GPS data
+                        GPS_data = gps_activate(agps_thread, label_gps_status, label_gps_lat_status, label_gps_lon_status, label_local_time_status, label_gps_time_status, cfg_user,True,True)
 
-                    # Write data to CSV file
-                    FP_Image = ImageData(cfg, path_to_saved, GPS_data, height, width, sharpness_actual, sharpness_min_cutoff, is_sharp)
+                        # Check for valid QR code
+                        n_qr = int(label_nqr_status.cget("text"))
+                        label_camera_status.config(text = 'Detecting QR Codes and Markers', fg='magenta')
+                        qr_found, img_out_qr, cropped_QRs, saved_lines = check_QR_codes(path_to_saved, cfg.dir_data_session_qr, cfg.name_session, label_nqr_status)
+                        path_to_saved_qr_whole = route_save_image_qr(cfg, img_out_qr, saved_lines, name_time)
+                        path_to_saved_qr = route_save_image_qr_crop(cfg, cfg_user, cropped_QRs, is_sharp, name_time)
 
-                    # Print status
-                    report_camera_complete(cfg_user, FP_Image, images_this_session, label_csv_status, label_camera_status, label_fname_status, label_nimage_status, Sound)
+                        # Update the image in the GUI by reading the image that was just written to storage
+                        try:
+                            Window_Saved.update_image(cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved_qr_whole)))))
+                        except:
+                            Window_Saved.update_image(cv2.pyrDown(cv2.pyrDown(cv2.pyrDown(cv2.imread(path_to_saved)))))
 
-                    # Reset TAKE_PHOTO
-                    TAKE_PHOTO = False
+                        label_camera_status.config(text = 'Reading QR Codes', fg='magenta')
+                        RESULTS = read_QR_codes(n_qr, cropped_QRs, use_enhanced)
+                        update_levels(L1, L2, L3, L4, L5, L6, RESULTS)
+
+                        # Write data to CSV file
+                        FP_Image = ImageData(cfg, path_to_saved, GPS_data, height, width, sharpness_actual, sharpness_min_cutoff, is_sharp)
+
+                        # Print status
+                        report_camera_complete(cfg_user, FP_Image, images_this_session, label_csv_status, label_camera_status, label_fname_status, label_nimage_status, Sound)
+
+                        # Reset TAKE_PHOTO
+                        TAKE_PHOTO = False
 
                 # Key Press Options
                 _key = cv2.waitKey(50)
