@@ -624,12 +624,12 @@ def run(pipeline, root):
                 for vidFrame in vidFrames:
                     print('here')
                     vframe = vidFrame.getCvFrame()
-                    vframe = rotate_image_options(vframe,cfg_user)
+                    vframe2 = rotate_image_options(vframe,cfg_user)
                     # cv2.imshow('preview', vframe)
                     # PreviewWindow(FS.frame_preview,vframe)
                     # Window_Preview.change_image(vframe)
-                    Window_Preview.update_image(vframe)
-                    is_sharp, sharpness_actual = detect_sharpness(sharpness_min_cutoff, vframe)
+                    Window_Preview.update_image(vframe2)
+                    is_sharp, sharpness_actual = detect_sharpness(sharpness_min_cutoff, vframe2)
                     report_sharpness('live', label_focus_live_status, label_focus_saved_status, is_sharp, sharpness_min_cutoff, sharpness_actual)
                 print('done')
 
