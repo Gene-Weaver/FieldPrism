@@ -645,8 +645,8 @@ def run(pipeline, root):
                 # print('2')
                 # isp = ispFrames.getCvFrame()
                 # print('3')
-                vidFramesL = vidFrames.get()
-                lens_position = vidFramesL.getLensPosition()
+                # vidFramesL = vidFrames.get()
+                # lens_position = vidFramesL.getLensPosition()
                 print('4')
                 new_text = f" Zone {lens_position} "
                 focuslabel.configure(text=new_text, fg='silver')
