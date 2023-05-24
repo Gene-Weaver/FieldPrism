@@ -601,6 +601,7 @@ def run(pipeline, root):
             print('start')
             
             # Get data queues from camera
+            # ispQueue = device.getOutputQueue('fullRes', maxSize=1, blocking=False)
             # videoQueue = device.getOutputQueue('video', maxSize=1, blocking=True)
             print('start2')
 
@@ -633,13 +634,13 @@ def run(pipeline, root):
                 print('done')
 
                 # Get latest frame from camera full sensor
-                ispQueue = device.getOutputQueue('fullRes', maxSize=1, blocking=False)
-                print('1')
-                ispFrames = ispQueue.get()
-                print('2')
-                isp = ispFrames.getCvFrame()
-                print('3')
-                lens_position = ispFrames.getLensPosition()
+                # ispQueue = device.getOutputQueue('fullRes', maxSize=1, blocking=False)
+                # print('1')
+                # ispFrames = ispQueue.get()
+                # print('2')
+                # isp = ispFrames.getCvFrame()
+                # print('3')
+                lens_position = vframe.getLensPosition()
                 print('4')
                 new_text = f" Zone {lens_position} "
                 focuslabel.configure(text=new_text, fg='silver')
@@ -647,6 +648,15 @@ def run(pipeline, root):
                 # If keypress for photo on last loop, then save a still now
                 # update_visibility(int(label_nqr_status.cget("text")), L1, L2, L3, L4, L5, L6)
                 if TAKE_PHOTO:
+                    device.camRgb.still.capture()
+                    print('1')
+                    ispQueue = device.getOutputQueue('fullRes', maxSize=1, blocking=False)
+
+                    print('2')
+                    ispFrames = ispQueue.get()
+                    print('3')
+                    isp = ispFrames.getCvFrame()
+
                     # Print status
                     label_camera_status.config(text = 'Camera Activated...', fg='goldenrod')
                     label_csv_status.config(text = 'Collecting Data', fg='goldenrod')
@@ -654,7 +664,7 @@ def run(pipeline, root):
                     images_this_session = report_camera_activated(cfg_user, label_camera_status, images_this_session, Sound)
 
                     # Get latest frame
-                    ispFrames = device.getOutputQueue('fullRes', maxSize=1, blocking=True).get()
+                    # ispFrames = device.getOutputQueue('fullRes', maxSize=1, blocking=True).get()
                     save_frame = ispFrames.getCvFrame()
 
                     # Get pixel dimensions
