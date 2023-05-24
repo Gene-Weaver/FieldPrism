@@ -688,12 +688,12 @@ def run(pipeline, root):
                 # update_visibility(int(label_nqr_status.cget("text")), L1, L2, L3, L4, L5, L6)
 
                 if TAKE_PHOTO:
-                    print('1')
                     save_frame = []
                     stillQueue = device.getOutputQueue('fullRes', maxSize=1, blocking=False)
-                    stillFrame = stillQueue.get()
-                    save_frame = stillFrame.getCvFrame()
-                    if save_frame != []:
+                    stillFrame = stillQueue.tryGet()
+                    
+                    if stillFrame is not None:
+                        save_frame = stillFrame.getCvFrame()
                         # ispQueue = device.getOutputQueue('fullRes', maxSize=1, blocking=False)
 
                         # print('2')
