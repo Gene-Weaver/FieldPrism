@@ -778,8 +778,8 @@ def run(pipeline, root):
 
                     # Reset TAKE_PHOTO
                     TAKE_PHOTO = False
-                    break
-
+                    
+                    # break
                         # else:
                         #     time.sleep(0.1)
 
