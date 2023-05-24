@@ -468,11 +468,25 @@ def createPipeline():
 
     controlIn.out.link(camRgb.inputControl)
     camRgb.preview.link(previewOut.input)  # Changed this line
-    camRgb.video.link(fullResOut.input)
+    # camRgb.video.link(fullResOut.input)
 
     # Properties
     camRgb.setPreviewSize(426, 240)  # Changed this line
     camRgb.setFps(10)
+
+    camRgb.isp.link(fullResOut.input)
+
+
+    # ispOut = pipeline.create(dai.node.XLinkOut)
+    # videoOut = pipeline.create(dai.node.XLinkOut)
+
+    # ispOut.setStreamName('isp')
+    # videoOut.setStreamName('video')
+
+    # # Properties
+    # camRgb.setVideoSize(426, 240)
+
+    # Linking
 
     return pipeline
 
