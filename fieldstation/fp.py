@@ -440,7 +440,8 @@ def createPipeline():
     camRgb.still.link(fullResOut.input)
 
     # Properties
-    camRgb.setVideoSize(426, 240)
+    # camRgb.setVideoSize(426, 240)
+    camRgb.setVideoSize(1920, 1080)
     camRgb.setFps(15)
 
     return pipeline
