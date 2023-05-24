@@ -601,7 +601,6 @@ def run(pipeline, root):
             print('start')
             
             # Get data queues from camera
-            ispQueue = device.getOutputQueue('fullRes', maxSize=1, blocking=False)
             # videoQueue = device.getOutputQueue('video', maxSize=1, blocking=True)
             print('start2')
 
@@ -634,9 +633,14 @@ def run(pipeline, root):
                 print('done')
 
                 # Get latest frame from camera full sensor
+                ispQueue = device.getOutputQueue('fullRes', maxSize=1, blocking=False)
+                print('1')
                 ispFrames = ispQueue.get()
+                print('2')
                 isp = ispFrames.getCvFrame()
+                print('3')
                 lens_position = ispFrames.getLensPosition()
+                print('4')
                 new_text = f" Zone {lens_position} "
                 focuslabel.configure(text=new_text, fg='silver')
                 print('loop')
