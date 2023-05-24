@@ -468,7 +468,7 @@ def createPipeline():
 
     controlIn.out.link(camRgb.inputControl)
     camRgb.preview.link(previewOut.input)  # Changed this line
-    camRgb.still.link(fullResOut.input)
+    camRgb.video.link(fullResOut.input)
 
     # Properties
     camRgb.setPreviewSize(426, 240)  # Changed this line
