@@ -780,6 +780,8 @@ def run(pipeline, root):
                         # Resize the image
                         gps_plot_resized = cv2.resize(gps_plot_og, (new_width, new_height))
                         Window_Saved.update_image(gps_plot_resized)
+                else:
+                    time.sleep(0.1)
 
 '''
 Initialize the tkinter GUI
