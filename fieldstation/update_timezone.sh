@@ -21,3 +21,6 @@ if [[ $? -eq 0 ]]; then
 else
     echo "Failed to change the timezone."
 fi
+echo ""
+echo "This window will automatically close in 10 seconds..."
+sleep 10
