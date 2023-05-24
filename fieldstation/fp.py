@@ -502,7 +502,7 @@ def autofocus_continuous(device, focus_value_label=None):
     focus_value_label.configure(text=new_text, fg='white')
 
     ctrl = dai.CameraControl()
-    ctrl.setAutoFocusMode(dai.CameraControl.AutoFocusMode.CONTINUOUS_PICTURE)
+    ctrl.setAutoFocusMode(dai.CameraControl.AutoFocusMode.CONTINUOUS_VIDEO)
     ctrl.setAutoFocusTrigger()
     device.getInputQueue('control').send(ctrl)
 '''
@@ -634,6 +634,8 @@ def run(pipeline, root):
             print('start')
             
             # Get data queues from camera
+            stillQueue = device.getOutputQueue('fullRes', maxSize=1, blocking=False)
+
             # ispQueue = device.getOutputQueue('fullRes', maxSize=1, blocking=False)
             # videoQueue = device.getOutputQueue('video', maxSize=1, blocking=True)
             print('start2')
@@ -686,10 +688,8 @@ def run(pipeline, root):
                 print('loop')
                 # If keypress for photo on last loop, then save a still now
                 # update_visibility(int(label_nqr_status.cget("text")), L1, L2, L3, L4, L5, L6)
-
+                print(f"TAKE_PHOTO = {TAKE_PHOTO}")
                 if TAKE_PHOTO:
-                    save_frame = []
-                    stillQueue = device.getOutputQueue('fullRes', maxSize=1, blocking=False)
                     stillFrame = stillQueue.tryGet()
                     
                     if stillFrame is not None:
