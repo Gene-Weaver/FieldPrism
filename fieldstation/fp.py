@@ -599,7 +599,7 @@ def run(pipeline, root):
             raise Fragile.Break
         else:
             # Get data queues from camera
-            ispQueue = device.getOutputQueue('isp', maxSize=1, blocking=False)
+            ispQueue = device.getOutputQueue('fullRes', maxSize=1, blocking=False)
             videoQueue = device.getOutputQueue('video', maxSize=1, blocking=False)
 
             # Initialize "Ready" animated text for the GUI
@@ -627,7 +627,8 @@ def run(pipeline, root):
                     report_sharpness('live', label_focus_live_status, label_focus_saved_status, is_sharp, sharpness_min_cutoff, sharpness_actual)
 
                 # Get latest frame from camera full sensor
-                ispFrames = device.getOutputQueue('fullRes', maxSize=1, blocking=False).get()
+                ispFrames = ispQueue.get()
+                isp = ispFrames.getCvFrame()
                 lens_position = ispFrames.getLensPosition()
                 new_text = f" Zone {lens_position} "
                 focuslabel.configure(text=new_text, fg='silver')
@@ -642,7 +643,7 @@ def run(pipeline, root):
                     images_this_session = report_camera_activated(cfg_user, label_camera_status, images_this_session, Sound)
 
                     # Get latest frame
-                    ispFrames = ispQueue.get()
+                    ispFrames = device.getOutputQueue('fullRes', maxSize=1, blocking=False).get()
                     save_frame = ispFrames.getCvFrame()
 
                     # Get pixel dimensions
