@@ -472,7 +472,7 @@ def createPipeline():
 
     # Properties
     camRgb.setPreviewSize(426, 240)  # Changed this line
-    camRgb.setFps(15)
+    camRgb.setFps(10)
 
     return pipeline
 
