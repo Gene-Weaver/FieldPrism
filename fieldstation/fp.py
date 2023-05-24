@@ -629,15 +629,15 @@ def run(pipeline, root):
                     # cv2.imshow('preview', vframe)
                     # PreviewWindow(FS.frame_preview,vframe)
                     # Window_Preview.change_image(vframe)
-                    Window_Preview.update_image(vframe)
-                    is_sharp, sharpness_actual = detect_sharpness(sharpness_min_cutoff, vframe)
-                    report_sharpness('live', label_focus_live_status, label_focus_saved_status, is_sharp, sharpness_min_cutoff, sharpness_actual)
+                    
                     
                     # Get lens position
                     lens_position = vidFrame.getLensPosition()
                     print(f' Lens Position: {lens_position}')
                 print('done')
-
+                Window_Preview.update_image(vframe)
+                is_sharp, sharpness_actual = detect_sharpness(sharpness_min_cutoff, vframe)
+                report_sharpness('live', label_focus_live_status, label_focus_saved_status, is_sharp, sharpness_min_cutoff, sharpness_actual)
                 # Get latest frame from camera full sensor
                 # ispQueue = device.getOutputQueue('fullRes', maxSize=1, blocking=False)
                 # print('1')
