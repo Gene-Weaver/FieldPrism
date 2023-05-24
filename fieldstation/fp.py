@@ -640,7 +640,8 @@ def run(pipeline, root):
             
             # Get data queues from camera
             # stillQueue = device.getOutputQueue('fullRes', maxSize=1, blocking=False)
-            fullResQueue = device.getOutputQueue(name='fullRes', maxSize=1, blocking=False)
+            # fullResQueue = device.getOutputQueue(name='fullRes', maxSize=1, blocking=False)
+            qFullRes = device.getOutputQueue(name="fullRes", maxSize=4, blocking=False)
 
             qControl = device.getInputQueue(name="control_take")
 
@@ -703,13 +704,24 @@ def run(pipeline, root):
                         # stillFrame = stillQueue.tryGet()
                         # if stillFrame is not None:
                             # save_frame = stillFrame.getCvFrame()
+
                     ctrl = dai.CameraControl()
                     ctrl.setCaptureStill(True)
-                    qControl = device.getInputQueue(name="control_take")
                     qControl.send(ctrl)
-                    print("Sent 'still' event to the camera!")
-                    fullResFrame = fullResQueue.get()
-                    save_frame = fullResFrame.getCvFrame()
+                    fullResFrame = qFullRes.get().getCvFrame()
+
+
+                    # ctrl = dai.CameraControl()
+                    # ctrl.setCaptureStill(True)
+                    # qControl = device.getInputQueue(name="control_take")
+                    # qControl.send(ctrl)
+                    # print("Sent 'still' event to the camera!")
+                    # fullResFrame = fullResQueue.get()
+                    # save_frame = fullResFrame.getCvFrame()
+
+
+
+
 
                     # stillFrame = stillQueue.get()  # This will now wait for the next still frame
                     # save_frame = stillFrame.getCvFrame()
