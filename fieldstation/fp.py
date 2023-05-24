@@ -422,26 +422,29 @@ def createPipeline():
     camRgb = pipeline.create(dai.node.ColorCamera)
     camRgb.setBoardSocket(dai.CameraBoardSocket.RGB)
     camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_12_MP)
-    camRgb.setFps(30)
 
+    # For full resolution stream (for capturing stills)
+    fullResOut = pipeline.create(dai.node.XLinkOut)
+    fullResOut.setStreamName('fullRes')
+
+    # For preview resolution stream
+    previewOut = pipeline.create(dai.node.XLinkOut)
+    previewOut.setStreamName('preview')
+
+    # For control stream
     controlIn = pipeline.create(dai.node.XLinkIn)
     controlIn.setStreamName('control')
+
     controlIn.out.link(camRgb.inputControl)
-
-    ispOut = pipeline.create(dai.node.XLinkOut)
-    videoOut = pipeline.create(dai.node.XLinkOut)
-
-    ispOut.setStreamName('isp')
-    videoOut.setStreamName('video')
+    camRgb.video.link(previewOut.input)
+    camRgb.still.link(fullResOut.input)
 
     # Properties
     camRgb.setVideoSize(426, 240)
-
-    # Linking
-    camRgb.isp.link(ispOut.input)
-    camRgb.video.link(videoOut.input)
+    camRgb.setFps(30)
 
     return pipeline
+
 def sendCameraControl(device):
     ctrl = dai.CameraControl()
     ctrl.setAutoFocusMode(dai.CameraControl.AutoFocusMode.MACRO)
@@ -612,7 +615,7 @@ def run(pipeline, root):
                 label_camera_status.config(text = text_ready, fg='green2')
                 
                 # Get latest frame from camera video feed (center crop)
-                vidFrames = videoQueue.tryGetAll()
+                vidFrames = device.getOutputQueue('preview', maxSize=1, blocking=False).tryGetAll()
                 for vidFrame in vidFrames:
                     vframe = vidFrame.getCvFrame()
                     vframe = rotate_image_options(vframe,cfg_user)
@@ -624,8 +627,7 @@ def run(pipeline, root):
                     report_sharpness('live', label_focus_live_status, label_focus_saved_status, is_sharp, sharpness_min_cutoff, sharpness_actual)
 
                 # Get latest frame from camera full sensor
-                ispFrames = ispQueue.get()
-                isp = ispFrames.getCvFrame()
+                ispFrames = device.getOutputQueue('fullRes', maxSize=1, blocking=False).get()
                 lens_position = ispFrames.getLensPosition()
                 new_text = f" Zone {lens_position} "
                 focuslabel.configure(text=new_text, fg='silver')
