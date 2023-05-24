@@ -441,7 +441,7 @@ def createPipeline():
 
     # Properties
     camRgb.setVideoSize(426, 240)
-    camRgb.setFps(30)
+    camRgb.setFps(15)
 
     return pipeline
 
