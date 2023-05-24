@@ -599,8 +599,8 @@ def run(pipeline, root):
             raise Fragile.Break
         else:
             # Get data queues from camera
-            ispQueue = device.getOutputQueue('fullRes', maxSize=1, blocking=False)
-            # videoQueue = device.getOutputQueue('video', maxSize=1, blocking=False)
+            ispQueue = device.getOutputQueue('fullRes', maxSize=1, blocking=True)
+            videoQueue = device.getOutputQueue('video', maxSize=1, blocking=True)
 
             # Initialize "Ready" animated text for the GUI
             ind_ready, direction = init_ready()
@@ -615,7 +615,7 @@ def run(pipeline, root):
                 label_camera_status.config(text = text_ready, fg='green2')
                 
                 # Get latest frame from camera video feed (center crop)
-                vidFrames = device.getOutputQueue('preview', maxSize=1, blocking=False).tryGetAll()
+                vidFrames = device.getOutputQueue('preview', maxSize=1, blocking=True).tryGetAll()
                 for vidFrame in vidFrames:
                     vframe = vidFrame.getCvFrame()
                     vframe = rotate_image_options(vframe,cfg_user)
@@ -643,7 +643,7 @@ def run(pipeline, root):
                     images_this_session = report_camera_activated(cfg_user, label_camera_status, images_this_session, Sound)
 
                     # Get latest frame
-                    ispFrames = device.getOutputQueue('fullRes', maxSize=1, blocking=False).get()
+                    ispFrames = device.getOutputQueue('fullRes', maxSize=1, blocking=True).get()
                     save_frame = ispFrames.getCvFrame()
 
                     # Get pixel dimensions
