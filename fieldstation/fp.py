@@ -414,6 +414,37 @@ Creates the pipeline that the OAK camera requires
     'isp' will save the still
     'video' shows the check camera focus window
 '''
+# def createPipeline():
+#     # Create pipeline
+#     pipeline = dai.Pipeline()
+
+#     # Define sources and outputs
+#     camRgb = pipeline.create(dai.node.ColorCamera)
+#     camRgb.setBoardSocket(dai.CameraBoardSocket.RGB)
+#     camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_12_MP)
+
+#     # For full resolution stream (for capturing stills)
+#     fullResOut = pipeline.create(dai.node.XLinkOut)
+#     fullResOut.setStreamName('fullRes')
+
+#     # For preview resolution stream
+#     previewOut = pipeline.create(dai.node.XLinkOut)
+#     previewOut.setStreamName('preview')
+
+#     # For control stream
+#     controlIn = pipeline.create(dai.node.XLinkIn)
+#     controlIn.setStreamName('control')
+
+#     controlIn.out.link(camRgb.inputControl)
+#     camRgb.video.link(previewOut.input)
+#     camRgb.still.link(fullResOut.input)
+
+#     # Properties
+#     camRgb.setVideoSize(426, 240)
+#     camRgb.setFps(15)
+
+#     return pipeline
+
 def createPipeline():
     # Create pipeline
     pipeline = dai.Pipeline()
@@ -436,14 +467,15 @@ def createPipeline():
     controlIn.setStreamName('control')
 
     controlIn.out.link(camRgb.inputControl)
-    camRgb.video.link(previewOut.input)
+    camRgb.preview.link(previewOut.input)  # Changed this line
     camRgb.still.link(fullResOut.input)
 
     # Properties
-    camRgb.setPreviewSize(426, 240)
+    camRgb.setPreviewSize(426, 240)  # Changed this line
     camRgb.setFps(15)
 
     return pipeline
+
 
 def sendCameraControl(device):
     ctrl = dai.CameraControl()
