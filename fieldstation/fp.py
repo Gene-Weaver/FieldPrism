@@ -631,6 +631,7 @@ def run(pipeline, root):
                     Window_Preview.update_image(vframe)
                     is_sharp, sharpness_actual = detect_sharpness(sharpness_min_cutoff, vframe)
                     report_sharpness('live', label_focus_live_status, label_focus_saved_status, is_sharp, sharpness_min_cutoff, sharpness_actual)
+                print('done')
 
                 # Get latest frame from camera full sensor
                 ispFrames = ispQueue.get()
@@ -638,7 +639,7 @@ def run(pipeline, root):
                 lens_position = ispFrames.getLensPosition()
                 new_text = f" Zone {lens_position} "
                 focuslabel.configure(text=new_text, fg='silver')
-
+                print('loop')
                 # If keypress for photo on last loop, then save a still now
                 # update_visibility(int(label_nqr_status.cget("text")), L1, L2, L3, L4, L5, L6)
                 if TAKE_PHOTO:
