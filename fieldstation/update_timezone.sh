@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Check if the script is being run with root privileges
-if [[ $(id -u) -ne 0 ]]; then
+if [ "$(id -u)" -ne 0 ]; then
     echo "This script needs to be run with root privileges. Please use sudo or run as root."
     exit 1
 fi
@@ -16,7 +16,7 @@ fi
 raspi-config nonint do_change_timezone
 
 # Check the exit status of raspi-config
-if [[ $? -eq 0 ]]; then
+if [ $? -eq 0 ]; then
     echo "Timezone changed successfully."
 else
     echo "Failed to change the timezone."
