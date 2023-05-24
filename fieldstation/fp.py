@@ -480,6 +480,7 @@ def createPipeline():
 def sendCameraControl(device):
     ctrl = dai.CameraControl()
     ctrl.setAutoFocusMode(dai.CameraControl.AutoFocusMode.MACRO)
+    ctrl.setManualFocus(135)
     device.getInputQueue('control').send(ctrl)
 
 def autofocus_trigger(device, lens_position=135, focus_value_label=None):
@@ -644,6 +645,7 @@ def run(pipeline, root):
             if cfg_user['fieldstation']['sound']['play_sound']:
                 sound_start(Sound)
             # Data collection / imaging loop, exit on keypress, using Fragile class
+            stillQueue = device.getOutputQueue('fullRes', maxSize=1, blocking=True)
             while True:
                 print('there')
 
@@ -685,15 +687,17 @@ def run(pipeline, root):
                 print('loop')
                 # If keypress for photo on last loop, then save a still now
                 # update_visibility(int(label_nqr_status.cget("text")), L1, L2, L3, L4, L5, L6)
-                if TAKE_PHOTO:
-                    device.camRgb.still.capture()
-                    print('1')
-                    ispQueue = device.getOutputQueue('fullRes', maxSize=1, blocking=False)
 
-                    print('2')
-                    ispFrames = ispQueue.get()
-                    print('3')
-                    isp = ispFrames.getCvFrame()
+                if TAKE_PHOTO:
+                    print('1')
+                    stillFrame = stillQueue.get()
+                    save_frame = stillFrame.getCvFrame()
+                    # ispQueue = device.getOutputQueue('fullRes', maxSize=1, blocking=False)
+
+                    # print('2')
+                    # ispFrames = ispQueue.get()
+                    # print('3')
+                    # isp = ispFrames.getCvFrame()
 
                     # Print status
                     label_camera_status.config(text = 'Camera Activated...', fg='goldenrod')
@@ -703,7 +707,7 @@ def run(pipeline, root):
 
                     # Get latest frame
                     # ispFrames = device.getOutputQueue('fullRes', maxSize=1, blocking=True).get()
-                    save_frame = ispFrames.getCvFrame()
+                    # save_frame = ispFrames.getCvFrame()
 
                     # Get pixel dimensions
                     height = save_frame.shape[0]
