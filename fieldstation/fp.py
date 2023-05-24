@@ -598,9 +598,12 @@ def run(pipeline, root):
                 sound_storage_error(Sound)
             raise Fragile.Break
         else:
+            print('start')
+            
             # Get data queues from camera
-            ispQueue = device.getOutputQueue('fullRes', maxSize=1, blocking=True)
+            ispQueue = device.getOutputQueue('fullRes', maxSize=1, blocking=False)
             # videoQueue = device.getOutputQueue('video', maxSize=1, blocking=True)
+            print('start2')
 
             # Initialize "Ready" animated text for the GUI
             ind_ready, direction = init_ready()
@@ -610,6 +613,8 @@ def run(pipeline, root):
                 sound_start(Sound)
             # Data collection / imaging loop, exit on keypress, using Fragile class
             while True:
+                print('there')
+
                 # Update "Ready" each loop
                 text_ready, ind_ready, direction = change_ready_ind(ind_ready,direction)
                 label_camera_status.config(text = text_ready, fg='green2')
@@ -617,6 +622,7 @@ def run(pipeline, root):
                 # Get latest frame from camera video feed (center crop)
                 vidFrames = device.getOutputQueue('preview', maxSize=1, blocking=True).tryGetAll()
                 for vidFrame in vidFrames:
+                    print('here')
                     vframe = vidFrame.getCvFrame()
                     vframe = rotate_image_options(vframe,cfg_user)
                     # cv2.imshow('preview', vframe)
