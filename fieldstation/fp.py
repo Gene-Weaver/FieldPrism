@@ -600,7 +600,7 @@ def run(pipeline, root):
         else:
             # Get data queues from camera
             ispQueue = device.getOutputQueue('fullRes', maxSize=1, blocking=True)
-            videoQueue = device.getOutputQueue('video', maxSize=1, blocking=True)
+            # videoQueue = device.getOutputQueue('video', maxSize=1, blocking=True)
 
             # Initialize "Ready" animated text for the GUI
             ind_ready, direction = init_ready()
