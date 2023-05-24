@@ -645,7 +645,6 @@ def run(pipeline, root):
             if cfg_user['fieldstation']['sound']['play_sound']:
                 sound_start(Sound)
             # Data collection / imaging loop, exit on keypress, using Fragile class
-            stillQueue = device.getOutputQueue('fullRes', maxSize=1, blocking=True)
             while True:
                 print('there')
 
@@ -690,6 +689,7 @@ def run(pipeline, root):
 
                 if TAKE_PHOTO:
                     print('1')
+                    stillQueue = device.getOutputQueue('fullRes', maxSize=1, blocking=True)
                     stillFrame = stillQueue.get()
                     save_frame = stillFrame.getCvFrame()
                     # ispQueue = device.getOutputQueue('fullRes', maxSize=1, blocking=False)
